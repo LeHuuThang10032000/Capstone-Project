@@ -10,6 +10,7 @@ import CheckBox from '@react-native-community/checkbox';
 
 const Index = function () {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [hide, setHide] = useState(true);
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
@@ -29,7 +30,11 @@ const Index = function () {
           <Utitle style={{fontSize: 18}}>Password</Utitle>
           <View style={styles.itemField}>
             <LockIcon />
-            <TextInput placeholder="Password" style={styles.textInput} />
+            <TextInput
+              placeholder="Password"
+              secureTextEntry={hide}
+              style={styles.textInput}
+            />
           </View>
         </View>
         <View style={styles.itemContainer}>
