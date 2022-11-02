@@ -14,11 +14,11 @@ const theme = {
 };
 
 const App = () => {
-  return(
+  return (
     <PaperProvider theme={theme}>
-      <AppRouter/>
+      <AppRouter />
     </PaperProvider>
-  )
-}
+  );
+};
 
 export default App;
