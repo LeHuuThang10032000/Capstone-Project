@@ -8,7 +8,7 @@ import MailIcon from '../../assets/svg/mail.svg';
 
 type Props = {}
 
-const index = (props: Props) => {
+const Index = (props: Props) => {
     return (
         <LinearGradient
             colors={['#FEB7B1', '#FFFFFF']}
@@ -31,4 +31,4 @@ const index = (props: Props) => {
     )
 }
 
-export default index
+export default Index

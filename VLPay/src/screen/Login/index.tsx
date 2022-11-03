@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
-import {UText, Utitle} from '../../components/UText';
+import React, { useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import { UText, Utitle } from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
 import MailIcon from '../../assets/svg/mail.svg';
 import styles from './styles';
@@ -21,14 +21,14 @@ const Index = function () {
           <Utitle style={styles.headerItem}>Login</Utitle>
         </View>
         <View>
-          <Utitle style={{fontSize: 18}}>E-mail</Utitle>
+          <Utitle style={{ fontSize: 18 }}>E-mail</Utitle>
           <View style={styles.itemField}>
             <MailIcon width={20} height={20} />
             <TextInput placeholder="Email" style={styles.textInput} />
           </View>
         </View>
         <View>
-          <Utitle style={{fontSize: 18}}>Password</Utitle>
+          <Utitle style={{ fontSize: 18 }}>Password</Utitle>
           <View style={styles.itemField}>
             <LockIcon />
             <TextInput placeholder="Password" style={styles.textInput} />
@@ -42,7 +42,7 @@ const Index = function () {
           </View>
         </View>
         <View style={styles.itemContainer}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <CheckBox
               disabled={false}
               value={toggleCheckBox}
@@ -60,7 +60,7 @@ const Index = function () {
       </View>
       <View style={styles.footer}>
         <UText>Don't have an account?</UText>
-        <UText style={{color: '#2805FF'}}> Signup</UText>
+        <UText style={{ color: '#2805FF' }}> Signup</UText>
       </View>
     </LinearGradient>
   );
