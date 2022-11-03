@@ -1,11 +1,12 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import Register from '../screen/Register';
+import MainStack from './MainStack';
 
 const AppRouter = () => {
   return (
     <NavigationContainer>
-      <Register />
+      <MainStack />
     </NavigationContainer>
   );
 };
