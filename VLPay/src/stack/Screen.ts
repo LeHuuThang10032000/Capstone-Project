@@ -3,6 +3,7 @@ import ForgotPwd from '../screen/ForgotPassword';
 import Register from '../screen/Register';
 import {Screen} from './type';
 import BottomTabStack from './BottomTabStack';
+import Search from '../screen/Search';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -20,5 +21,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'Register',
     component: Register
+  },
+  {
+    name: 'Search',
+    component: Search
   },
 ];

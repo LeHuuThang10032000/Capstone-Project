@@ -34,6 +34,7 @@ export type MainStackParamList = {
   QR: undefined;
   Notification: undefined;
   MyWallet: undefined;
+  Search: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
