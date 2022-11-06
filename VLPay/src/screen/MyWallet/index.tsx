@@ -1,17 +1,189 @@
-import { View, Text, Button } from 'react-native'
-import React from 'react'
+import { View, Text, Button, Image, StyleSheet, ScrollView } from 'react-native';
+import React from 'react';
 import { MainStackNavigation } from '../../stack/Navigation';
 import { useNavigation } from '@react-navigation/native';
+import HeaderComp from '../../components/HeaderComp';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import ExtendIcon from '../../assets/svg/extend.svg';
+import QRcodeIcon from '../../assets/svg/qrcode.svg';
+import LogoIcon from '../../assets/svg/logoIcon.svg';
+import WalletIcon from '../../assets/svg/wallet.svg';
+import PersonIcon from '../../assets/svg/person_icon.svg';
+import SettingIcon from '../../assets/svg/settings.svg';
+import PrivacyIcon from '../../assets/svg/privacy.svg';
+import SupportIcon from '../../assets/svg/support.svg';
+import ShopIcon from '../../assets/svg/shop.svg';
 
-type Props = {}
+type Props = {};
 
 const Index = (props: Props) => {
     const navigation = useNavigation<MainStackNavigation>();
     return (
-        <View>
-            <Text>My wallet</Text>
-        </View>
-    )
-}
+        <ScrollView showsVerticalScrollIndicator={false}>
+            <HeaderComp title="My Wallet" />
+            <View style={{ marginHorizontal: 20, marginVertical: 20 }}>
+                <View style={styles.wrapperButton}>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <Image
+                                source={require('../../assets/img/user_default.jpg')}
+                                style={styles.image}
+                            />
+                            <View style={{ paddingLeft: 10 }}>
+                                <Text>LÂM THÁI BẢO NGUYÊN</Text>
+                                <Text>0902876778</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <View style={styles.info}>
+                                <QRcodeIcon height={18} width={18} style={{ paddingLeft: 35 }} />
+                                <View style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                    <Text>Your QR code</Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <View style={styles.info}>
+                                <LogoIcon />
+                                <View style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                    <Text>About us</Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
 
-export default Index
+            <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
+                <Text style={{ marginVertical: 3 }}>My Wallet</Text>
+                <View style={styles.wrapperButton}>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <WalletIcon style={{ paddingLeft: 30 }} />
+                            <View style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                <Text>Wallet</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
+                <Text style={{ marginVertical: 3 }}>My Social</Text>
+                <View style={styles.wrapperButton}>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <PersonIcon height={15} width={15} style={{ paddingLeft: 30 }} />
+                            <View style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                <Text>Friends</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            <View style={{ marginHorizontal: 20, marginVertical: 20 }}>
+                <View style={styles.wrapperButton}>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <SettingIcon style={{ paddingLeft: 30 }} />
+                            <View style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                <Text>Setting app</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <PrivacyIcon style={{ paddingLeft: 30 }} />
+                            <View style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                <Text>Privacy</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <SupportIcon style={{ paddingLeft: 30 }} />
+                            <View style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                <Text>Support</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.info}>
+                            <ShopIcon style={{ paddingLeft: 30 }} />
+                            <View style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                <Text>Shop</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <ExtendIcon />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </ScrollView >
+    );
+};
+
+const styles = StyleSheet.create({
+    image: {
+        width: 35,
+        height: 35,
+        borderRadius: 50,
+    },
+    info: {
+        flexDirection: 'row',
+    },
+    button: {
+        backgroundColor: '#FFFFFF',
+        width: '100%',
+        paddingHorizontal: 25,
+        padding: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderRadius: 10,
+    },
+    wrapperButton: {
+        backgroundColor: '#ffffff',
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+        elevation: 2,
+    }
+});
+
+export default Index;
