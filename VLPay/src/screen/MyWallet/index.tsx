@@ -1,4 +1,4 @@
-import { View, Text, Button, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 import { MainStackNavigation } from '../../stack/Navigation';
 import { useNavigation } from '@react-navigation/native';

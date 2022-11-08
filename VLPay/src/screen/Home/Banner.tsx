@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, TouchableWithoutFeedback, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, ImageBackground, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import TopUp from '../../assets/svg/topup.svg';
 import Withdraw from '../../assets/svg/withdraw.svg';
