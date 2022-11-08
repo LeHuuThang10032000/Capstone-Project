@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react';
 import SearchIcon from '../../assets/svg/search.svg';
 import { useNavigation } from '@react-navigation/native';
@@ -10,12 +10,10 @@ const Header = (props: Props) => {
     const navigation = useNavigation<MainStackNavigation>();
     return (
         <View style={styles.wrapperButton}>
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('Search')}>
-                <View style={styles.searchBtn}>
+            <TouchableOpacity style={styles.searchBtn} onPress={() => navigation.navigate('Search')}>
                     <Text>Search...</Text>
                     <SearchIcon />
-                </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         </View>
     )
 }

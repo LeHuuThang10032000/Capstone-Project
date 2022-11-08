@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, ImageBackground } from 'react-native'
+import { ScrollView } from 'react-native'
 import React from 'react'
 import Header from './Header'
 import Banner from './Banner'
