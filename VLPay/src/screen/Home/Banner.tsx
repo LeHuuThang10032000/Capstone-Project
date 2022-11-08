@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, TouchableWithoutFeedback, TouchableHighlight, StyleSheet } from 'react-native'
+import { View, Text, ImageBackground, TouchableWithoutFeedback, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import TopUp from '../../assets/svg/topup.svg';
 import Withdraw from '../../assets/svg/withdraw.svg';
@@ -13,41 +13,41 @@ const Banner = (props: Props) => {
         <View>
             <ImageBackground source={require('../../assets/img/banner.png')} resizeMode="cover" style={{ justifyContent: "center", height: 150 }}>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'center' }}>
-                    <TouchableWithoutFeedback onPress={() => console.log('top up!')}>
-                        <View style={styles.wrapperButton}>
+                    <View style={styles.wrapperButton}>
+                        <TouchableOpacity onPress={() => console.log('top up!')}>
                             <View style={styles.button}>
                                 <TopUp />
                             </View>
-                            <Text style={styles.text}>TOP UP</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                        </TouchableOpacity>
+                        <Text style={styles.text}>TOP UP</Text>
+                    </View>
 
-                    <TouchableWithoutFeedback onPress={() => console.log('with draw!')}>
-                        <View style={styles.wrapperButton}>
+                    <View style={styles.wrapperButton}>
+                        <TouchableOpacity onPress={() => console.log('with draw!')}>
                             <View style={styles.button}>
                                 <Withdraw />
                             </View>
-                            <Text style={styles.text}>WITH DRAW</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                        </TouchableOpacity>
+                        <Text style={styles.text}>WITH DRAW</Text>
+                    </View>
 
-                    <TouchableWithoutFeedback onPress={() => console.log('qr code!')}>
-                        <View style={styles.wrapperButton}>
+                    <View style={styles.wrapperButton}>
+                        <TouchableOpacity onPress={() => console.log('qr code!')}>
                             <View style={styles.button}>
                                 <QRcode />
                             </View>
-                            <Text style={styles.text}>QR CODE</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                        </TouchableOpacity>
+                        <Text style={styles.text}>QR CODE</Text>
+                    </View>
 
-                    <TouchableWithoutFeedback onPress={() => console.log('scan qr!')}>
-                        <View style={styles.wrapperButton}>
+                    <View style={styles.wrapperButton}>
+                        <TouchableOpacity onPress={() => console.log('scan qr!')}>
                             <View style={styles.button}>
                                 <ScanQR />
                             </View>
-                            <Text style={styles.text}>SCAN QR</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                        </TouchableOpacity>
+                        <Text style={styles.text}>SCAN QR</Text>
+                    </View>
                 </View>
             </ImageBackground>
         </View>
