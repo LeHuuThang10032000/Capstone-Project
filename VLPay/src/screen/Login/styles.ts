@@ -64,4 +64,8 @@ export default StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 30,
   },
+  passwordIcon: {
+    position: 'absolute',
+    right: 10,
+  },
 });
