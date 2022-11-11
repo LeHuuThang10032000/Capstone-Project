@@ -111,7 +111,11 @@ const BottomTabStack = () => {
           // })}
           options={{
             headerShown: false,
-            tabBarLabelStyle: {fontWeight: 'bold'},
+            tabBarLabelStyle: {
+              fontWeight: 'bold',
+              fontFamily: 'Poppins-Regular',
+            },
+
             tabBarInactiveTintColor: 'black',
             // tabBarActiveTintColor: color_base,
             tabBarLabel: item.tabBarLabel ? item.tabBarLabel : 'home',
