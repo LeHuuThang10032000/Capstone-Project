@@ -1,14 +1,15 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import {View, Text} from 'react-native';
+import React from 'react';
+import HeaderComp from '../../components/HeaderComp';
 
-type Props = {}
+type Props = {};
 
 const Index = (props: Props) => {
-    return (
-        <View>
-            <Text>QR code</Text>
-        </View>
-    )
-}
+  return (
+    <View>
+      <HeaderComp title="QR code" />
+    </View>
+  );
+};
 
-export default Index
+export default Index;
