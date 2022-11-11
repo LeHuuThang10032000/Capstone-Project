@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { UText, Utitle } from '../../components/UText';
+import React, {useCallback, useState} from 'react';
+import {Button, TouchableOpacity, View} from 'react-native';
+import {UText, Utitle} from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
 import MailIcon from '../../assets/svg/mail.svg';
 import styles from './styles';
@@ -9,59 +8,75 @@ import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import BlindIcon from '../../assets/svg/blind_icon.svg';
 import EyeIcon from '../../assets/svg/eye_icon.svg';
+import {Flex, HStack, Image, VStack} from 'native-base';
+import strings from '../../components/helpers/Strings';
+import Input from '../../components/InputForm';
+import LoginByAzure from './LoginByApiAzure';
+
 const Index = function () {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [hide, setHide] = useState(true);
+
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
-      <View style={styles.container}>
+      <VStack>
         <View style={styles.header}>
-          <Utitle style={styles.headerItem}>Login</Utitle>
+          <Utitle style={styles.headerItem}>{strings.login}</Utitle>
         </View>
         <View>
-          <Utitle style={{ fontSize: 18 }}>E-mail</Utitle>
-          <View style={styles.itemField}>
-            <MailIcon width={20} height={20} />
-            <TextInput placeholder="Email" style={styles.textInput} />
-          </View>
+          <Utitle style={{fontSize: 18}}>{strings.email}</Utitle>
+          <Input
+            LeftIcon={<MailIcon width={20} height={20} />}
+            placeholder={strings.email_placeholder}
+            style={styles.textInput}
+          />
         </View>
         <View>
-          <Utitle style={{ fontSize: 18 }}>Password</Utitle>
-          <View style={styles.itemField}>
-            <LockIcon />
-            <TextInput placeholder="Password" style={styles.textInput} />
-            <TouchableOpacity
-              style={styles.passwordIcon}
-              onPress={() => {
-                setHide(!hide);
-              }}>
-              {hide ? <BlindIcon /> : <EyeIcon />}
-            </TouchableOpacity>
-          </View>
+          <Utitle style={{fontSize: 18}}>Password</Utitle>
+          <Input
+            LeftIcon={<LockIcon width={20} height={20} />}
+            placeholder={strings.password_placeholder}
+            style={styles.textInput}
+            secureTextEntry={hide}
+            RightIcon={
+              <TouchableOpacity
+                style={styles.passwordIcon}
+                onPress={() => {
+                  setHide(!hide);
+                }}>
+                {hide ? <BlindIcon /> : <EyeIcon />}
+              </TouchableOpacity>
+            }
+          />
         </View>
-        <View style={styles.itemContainer}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <HStack alignItems={'center'} justifyContent={'space-between'}>
+          <HStack alignItems={'center'}>
             <CheckBox
               disabled={false}
               value={toggleCheckBox}
               onValueChange={newValue => setToggleCheckBox(newValue)}
             />
-            <UText>Remember Me</UText>
-          </View>
+            <UText>{strings.rememberMe}</UText>
+          </HStack>
           <TouchableOpacity>
-            <UText style={styles.textButtonOpacity}>Forgot Password?</UText>
+            <UText style={styles.textButtonOpacity}>
+              {strings.forgotPassword}
+            </UText>
           </TouchableOpacity>
-        </View>
-        <View style={styles.buttonInput}>
-          <UText style={styles.textButtonInput}>Login</UText>
-        </View>
-      </View>
-      <View style={styles.footer}>
-        <UText>Don't have an account?</UText>
-        <UText style={{ color: '#2805FF' }}> Signup</UText>
-      </View>
+        </HStack>
+        <Flex style={styles.buttonInput}>
+          <UText style={styles.textButtonInput}>{strings.login}</UText>
+        </Flex>
+        <Flex>
+          <UText style={styles.textButtonInput}>
+            {strings.loginByMicrosoft}
+          </UText>
+
+          <LoginByAzure />
+        </Flex>
+      </VStack>
     </LinearGradient>
   );
 };
