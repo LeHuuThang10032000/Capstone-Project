@@ -30,8 +30,8 @@ const Index = () => {
                 style={styles.image}
               />
               <View style={{paddingLeft: 10}}>
-                <Text>LÂM THÁI BẢO NGUYÊN</Text>
-                <Text>0902876778</Text>
+                <Text style={styles.text}>LÂM THÁI BẢO NGUYÊN</Text>
+                <Text style={styles.text}>0902876778</Text>
               </View>
             </View>
             <View>
@@ -43,7 +43,7 @@ const Index = () => {
               <View style={styles.info}>
                 <QRcodeIcon height={18} width={18} style={{paddingLeft: 35}} />
                 <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                  <Text>Your QR code</Text>
+                  <Text style={styles.text}>Your QR code</Text>
                 </View>
               </View>
             </View>
@@ -56,7 +56,7 @@ const Index = () => {
               <View style={styles.info}>
                 <LogoIcon />
                 <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                  <Text>About us</Text>
+                  <Text style={styles.text}>About us</Text>
                 </View>
               </View>
             </View>
@@ -68,13 +68,15 @@ const Index = () => {
       </View>
 
       <View style={{marginHorizontal: 20, marginVertical: 10}}>
-        <Text style={{marginVertical: 3}}>My Wallet</Text>
+        <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
+          My Wallet
+        </Text>
         <View style={styles.wrapperButton}>
           <TouchableOpacity style={styles.button}>
             <View style={styles.info}>
               <WalletIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text>Wallet</Text>
+                <Text style={styles.text}>Wallet</Text>
               </View>
             </View>
             <View>
@@ -85,13 +87,15 @@ const Index = () => {
       </View>
 
       <View style={{marginHorizontal: 20, marginVertical: 10}}>
-        <Text style={{marginVertical: 3}}>My Social</Text>
+        <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
+          My Social
+        </Text>
         <View style={styles.wrapperButton}>
           <TouchableOpacity style={styles.button}>
             <View style={styles.info}>
               <PersonIcon height={15} width={15} style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text>Friends</Text>
+                <Text style={styles.text}>Friends</Text>
               </View>
             </View>
             <View>
@@ -107,7 +111,7 @@ const Index = () => {
             <View style={styles.info}>
               <SettingIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text>Setting app</Text>
+                <Text style={styles.text}>Setting app</Text>
               </View>
             </View>
             <View>
@@ -118,7 +122,7 @@ const Index = () => {
             <View style={styles.info}>
               <PrivacyIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text>Privacy</Text>
+                <Text style={styles.text}>Privacy</Text>
               </View>
             </View>
             <View>
@@ -129,7 +133,7 @@ const Index = () => {
             <View style={styles.info}>
               <SupportIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text>Support</Text>
+                <Text style={styles.text}>Support</Text>
               </View>
             </View>
             <View>
@@ -140,7 +144,7 @@ const Index = () => {
             <View style={styles.info}>
               <ShopIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text>Shop</Text>
+                <Text style={styles.text}>Shop</Text>
               </View>
             </View>
             <View>
@@ -183,6 +187,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
+  },
+  text: {
+    fontFamily: 'Poppins-Regular',
   },
 });
 

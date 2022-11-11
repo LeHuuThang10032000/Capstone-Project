@@ -1,14 +1,13 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import {View, Text} from 'react-native';
+import React from 'react';
+import HeaderComp from '../../components/HeaderComp';
 
-type Props = {}
+const Index = () => {
+  return (
+    <View>
+      <HeaderComp title="History" />
+    </View>
+  );
+};
 
-const Index = (props: Props) => {
-    return (
-        <View>
-            <Text>history</Text>
-        </View>
-    )
-}
-
-export default Index
+export default Index;
