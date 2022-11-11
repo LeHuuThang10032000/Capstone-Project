@@ -4,6 +4,7 @@ import Register from '../screen/Register';
 import {Screen} from './type';
 import BottomTabStack from './BottomTabStack';
 import Search from '../screen/Search';
+import ProfileUser from '../screen/ProfileUser';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -25,5 +26,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'Search',
     component: Search
+  },
+  {
+    name: 'ProfileUser',
+    component: ProfileUser
   },
 ];

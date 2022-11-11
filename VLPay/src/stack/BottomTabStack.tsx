@@ -1,20 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/core';
+import React, {useContext, useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/core';
 // import {useTranslation} from 'react-i18next';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 // import {color_base, Role} from '../utils/constant';
 // import {moderateScale} from '../utils/scaleUtils';
 // import {AuthUserContext} from '../context/AuthUserProvider';
-import { MainStackNavigation } from './Navigation';
+import {MainStackNavigation} from './Navigation';
 import Icons from '../assets/icons/icons';
-import { ScreenParams, BottomTabScreen } from './type';
+import {ScreenParams, BottomTabScreen} from './type';
 import Home from '../screen/Home';
 import TranSactionHistory from '../screen/TransactionHistory';
 import QR from '../screen/QR';
 import Notification from '../screen/Notification';
 import MyWallet from '../screen/MyWallet';
-
 
 const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
   {
@@ -46,7 +45,7 @@ const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
     component: MyWallet,
     tabBarLabel: 'My wallet',
     icon: Icons.User,
-  }
+  },
 ];
 
 const Tab = createBottomTabNavigator<ScreenParams>();
@@ -112,11 +111,14 @@ const BottomTabStack = () => {
           // })}
           options={{
             headerShown: false,
-            tabBarLabelStyle: { fontWeight: 'bold' },
+            tabBarLabelStyle: {
+              fontWeight: 'bold',
+              fontFamily: 'Poppins-Regular',
+            },
             tabBarInactiveTintColor: 'black',
             // tabBarActiveTintColor: color_base,
-            tabBarLabel: (item.tabBarLabel ? item.tabBarLabel : 'home'),
-            tabBarIcon: ({ color, size }: any) => {
+            tabBarLabel: item.tabBarLabel ? item.tabBarLabel : 'home',
+            tabBarIcon: ({color, size}: any) => {
               return <item.icon color={color}></item.icon>;
             },
           }}

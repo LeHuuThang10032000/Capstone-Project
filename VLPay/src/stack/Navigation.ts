@@ -35,6 +35,7 @@ export type MainStackParamList = {
   Notification: undefined;
   MyWallet: undefined;
   Search: undefined;
+  ProfileUser: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

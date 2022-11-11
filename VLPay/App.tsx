@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import {NativeBaseProvider} from 'native-base';
 import AppRouter from './src/stack/AppRouter';
 
 const theme = {
@@ -15,9 +16,9 @@ const theme = {
 
 const App = () => {
   return (
-    <PaperProvider theme={theme}>
+    <NativeBaseProvider>
       <AppRouter />
-    </PaperProvider>
+    </NativeBaseProvider>
   );
 };
 
