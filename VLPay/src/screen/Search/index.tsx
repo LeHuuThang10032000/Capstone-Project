@@ -20,6 +20,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {MainStackNavigation} from '../../stack/Navigation';
+import {UserData} from '../../model/UserData';
+
+type Props = {
+  text: string;
+};
 
 const App = () => {
   const [search, setSearch] = useState('');
@@ -43,12 +48,12 @@ const App = () => {
       });
   }, []);
 
-  const searchFilterFunction = text => {
+  const searchFilterFunction = (text: string) => {
     // Check if searched text is not blank
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = masterDataSource.filter(function (item) {
+      const newData = masterDataSource.filter(function (item: UserData) {
         // Applying filter for the inserted text in search bar
         const itemData = item.name.last ? item.name.last : '';
         const textData = text;
@@ -64,7 +69,7 @@ const App = () => {
     }
   };
 
-  const ItemView = ({item}) => {
+  const ItemView = ({item}: any) => {
     return (
       // Flat List Item
       <HStack alignItems="center" p="5">
@@ -97,7 +102,7 @@ const App = () => {
     );
   };
 
-  const getItem = item => {
+  const getItem = (item: UserData) => {
     // Function for click on an item
     Alert.alert(item.name.title + ' ' + item.name.first + ' ' + item.name.last);
   };
