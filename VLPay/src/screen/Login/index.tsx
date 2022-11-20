@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {Button, TouchableOpacity, View} from 'react-native';
 import {UText, Utitle} from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
-import MailIcon from '../../assets/svg/mail.svg';
+import PhoneIcon from '../../assets/svg/phone_icon.svg';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
@@ -11,10 +11,28 @@ import EyeIcon from '../../assets/svg/eye_icon.svg';
 import {Flex, HStack, Image, VStack} from 'native-base';
 import strings from '../../components/helpers/Strings';
 import Input from '../../components/InputForm';
-import LoginByAzure from './LoginByApiAzure';
+import {Control, Controller, useForm} from 'react-hook-form';
+import {ILoginInfoValue} from './useHook';
+
+interface IFormInputControllerProps {
+  control: Control<ILoginInfoValue, any>;
+  name: keyof ILoginInfoValue;
+  required: boolean;
+}
 
 const Index = function () {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const {
+    setValue,
+    handleSubmit,
+    control,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
   const [hide, setHide] = useState(true);
 
   return (
@@ -25,32 +43,34 @@ const Index = function () {
         <View style={styles.header}>
           <Utitle style={styles.headerItem}>{strings.login}</Utitle>
         </View>
-        <View>
-          <Utitle style={{fontSize: 18}}>{strings.email}</Utitle>
-          <Input
-            LeftIcon={<MailIcon width={20} height={20} />}
-            placeholder={strings.email_placeholder}
-            style={styles.textInput}
-          />
-        </View>
-        <View>
-          <Utitle style={{fontSize: 18}}>Password</Utitle>
-          <Input
-            LeftIcon={<LockIcon width={20} height={20} />}
-            placeholder={strings.password_placeholder}
-            style={styles.textInput}
-            secureTextEntry={hide}
-            RightIcon={
-              <TouchableOpacity
-                style={styles.passwordIcon}
-                onPress={() => {
-                  setHide(!hide);
-                }}>
-                {hide ? <BlindIcon /> : <EyeIcon />}
-              </TouchableOpacity>
-            }
-          />
-        </View>
+        <FormInputController
+          title={strings.email}
+          LeftIcon={<PhoneIcon width={20} height={20} />}
+          placeHolder={strings.phone_placeholder}
+          styles={styles.textInput}
+          control={control}
+          name={'email'}
+          required={true}
+        />
+        <FormInputController
+          title={strings.password}
+          LeftIcon={<LockIcon width={20} height={20} />}
+          placeHolder={strings.password_placeholder}
+          styles={styles.textInput}
+          control={control}
+          name={'password'}
+          required={true}
+          RightIcon={
+            <TouchableOpacity
+              style={styles.passwordIcon}
+              onPress={() => {
+                setHide(!hide);
+              }}>
+              {hide ? <BlindIcon /> : <EyeIcon />}
+            </TouchableOpacity>
+          }
+          hide={hide}
+        />
         <HStack alignItems={'center'} justifyContent={'space-between'}>
           <HStack alignItems={'center'}>
             <CheckBox
@@ -69,15 +89,43 @@ const Index = function () {
         <Flex style={styles.buttonInput}>
           <UText style={styles.textButtonInput}>{strings.login}</UText>
         </Flex>
-        <Flex>
-          <UText style={styles.textButtonInput}>
-            {strings.loginByMicrosoft}
-          </UText>
-
-          <LoginByAzure />
-        </Flex>
       </VStack>
     </LinearGradient>
+  );
+};
+
+const FormInputController = (
+  props: IFormInputControllerProps & {
+    title: string;
+    placeHolder: string;
+    styles?: any;
+    RightIcon?: React.ReactNode;
+    LeftIcon?: React.ReactNode;
+    hide?: boolean;
+    setHide?: any;
+  },
+) => {
+  const {control, name, title, placeHolder, required} = props;
+  return (
+    <>
+      <Utitle style={{fontSize: 18}}>{title}</Utitle>
+      <Controller
+        name={name}
+        control={control}
+        rules={{required: required}}
+        render={({field: {value, onChange}}) => (
+          <Input
+            LeftIcon={props.LeftIcon}
+            placeholder={placeHolder}
+            style={props.styles}
+            secureTextEntry={props.hide}
+            RightIcon={props.RightIcon}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+    </>
   );
 };
 
