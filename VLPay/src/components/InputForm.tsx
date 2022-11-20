@@ -8,17 +8,20 @@ type props = {
   placeholder?: string;
   secureTextEntry?: boolean;
   style?: any;
+  onChangeText?: any;
+  value?: any;
 };
 const Index = (props: props) => {
-  const inputLength = () => {};
   return (
     <HStack style={styles.inputWrapper} alignItems={'center'}>
       {props.LeftIcon && props.LeftIcon}
       <Input
         {...props.style}
         placeholder={props.placeholder}
+        onChangeText={props.onChangeText}
         variant={'unstyled'}
         w="90%"
+        value={props.value}
         secureTextEntry={props.secureTextEntry}
       />
       {props.RightIcon && props.RightIcon}
