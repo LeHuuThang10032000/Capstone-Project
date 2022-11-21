@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {Button, TouchableOpacity, View} from 'react-native';
+import {Button, Text, TouchableOpacity, View} from 'react-native';
 import {UText, Utitle} from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
 import PhoneIcon from '../../assets/svg/phone_icon.svg';
@@ -13,6 +13,8 @@ import strings from '../../components/helpers/Strings';
 import Input from '../../components/InputForm';
 import {Control, Controller, useForm} from 'react-hook-form';
 import {ILoginInfoValue} from './useHook';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 interface IFormInputControllerProps {
   control: Control<ILoginInfoValue, any>;
@@ -21,6 +23,7 @@ interface IFormInputControllerProps {
 }
 
 const Index = function () {
+  const navigation = useNavigation<MainStackNavigation>();
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const {
     setValue,
@@ -88,6 +91,14 @@ const Index = function () {
         </HStack>
         <Flex style={styles.buttonInput}>
           <UText style={styles.textButtonInput}>{strings.login}</UText>
+        </Flex>
+        <Flex flexDirection={'row'} justifyContent={'flex-end'} mt="1">
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Register');
+            }}>
+            <UText>{strings.register}</UText>
+          </TouchableOpacity>
         </Flex>
       </VStack>
     </LinearGradient>
