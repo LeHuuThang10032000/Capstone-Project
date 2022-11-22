@@ -4,7 +4,7 @@
 // import React in our code
 import {useNavigation} from '@react-navigation/native';
 import {HStack, Icon, Image, Input, VStack} from 'native-base';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import BackIcon from '../../assets/svg/left-arrow.svg';
 import SearchIcon from '../../assets/svg/search.svg';
 
@@ -30,6 +30,25 @@ const App = () => {
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
+
+  const onPress = useCallback(
+    (
+      email: string,
+      picture: string,
+      title: string,
+      first: string,
+      last: string,
+    ) => {
+      navigation.navigate('DetailUser', {
+        email: email,
+        picture: picture,
+        title: title,
+        first: first,
+        last: last,
+      });
+    },
+    [],
+  );
 
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
@@ -72,20 +91,31 @@ const App = () => {
   const ItemView = ({item}: any) => {
     return (
       // Flat List Item
-      <HStack alignItems="center" p="5">
-        <Image
-          source={{uri: `${item.picture.large}`}}
-          alt="rduser"
-          size="sm"
-          borderRadius="50"
-        />
-        <VStack>
-          <Text style={styles.itemStyle} onPress={() => getItem(item)}>
-            {item.name.title} {item.name.first} {item.name.last}
-          </Text>
-          <Text style={styles.itemStyle}>{item.email}</Text>
-        </VStack>
-      </HStack>
+      <TouchableOpacity
+        onPress={() => {
+          onPress(
+            item.email,
+            item.picture.large,
+            item.name.title,
+            item.name.first,
+            item.name.last,
+          );
+        }}>
+        <HStack alignItems="center" p="5">
+          <Image
+            source={{uri: `${item.picture.large}`}}
+            alt="rduser"
+            size="sm"
+            borderRadius="50"
+          />
+          <VStack>
+            <Text style={styles.itemStyle}>
+              {item.name.title} {item.name.first} {item.name.last}
+            </Text>
+            <Text style={styles.itemStyle}>{item.email}</Text>
+          </VStack>
+        </HStack>
+      </TouchableOpacity>
     );
   };
 

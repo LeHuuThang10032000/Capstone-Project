@@ -44,7 +44,9 @@ const Index = () => {
               <ExtendIcon />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('QR')}>
             <View style={styles.info}>
               <View style={styles.info}>
                 <QRcodeIcon height={18} width={18} style={{paddingLeft: 35}} />
