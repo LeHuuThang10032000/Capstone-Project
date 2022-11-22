@@ -37,6 +37,13 @@ export type MainStackParamList = {
   Search: undefined;
   ProfileUser: undefined;
   Settings: undefined;
+  DetailUser: {
+    email: string;
+    picture: string;
+    title: string;
+    first: string;
+    last: string;
+  };
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
