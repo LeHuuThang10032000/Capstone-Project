@@ -13,9 +13,15 @@ import SettingIcon from '../../assets/svg/settings.svg';
 import PrivacyIcon from '../../assets/svg/privacy.svg';
 import SupportIcon from '../../assets/svg/support.svg';
 import ShopIcon from '../../assets/svg/shop.svg';
+import LogoutIcon from '../../assets/svg/logout.svg';
+import ModalProvider from '../../context/ModalProvider';
+import Modal from 'react-native-modal';
+import HeaderModal from '../../components/CustomLogout/HeaderModal';
+import BodyModal from '../../components/CustomLogout/BodyModal';
 
 const Index = () => {
   const navigation = useNavigation<MainStackNavigation>();
+  const {modalVisible, toggleModal, closeModal} = ModalProvider();
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <HeaderComp title="My wallet" />
@@ -107,7 +113,9 @@ const Index = () => {
 
       <View style={{marginHorizontal: 20, marginVertical: 20}}>
         <View style={styles.wrapperButton}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Settings')}>
             <View style={styles.info}>
               <SettingIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
@@ -153,6 +161,43 @@ const Index = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <View style={{marginHorizontal: 20, marginVertical: 10}}>
+        <View style={styles.wrapperButton}>
+          <TouchableOpacity style={styles.button} onPress={toggleModal}>
+            <View style={styles.info}>
+              <LogoutIcon height={15} width={15} style={{paddingLeft: 30}} />
+              <View style={{paddingLeft: 10, justifyContent: 'center'}}>
+                <Text style={styles.text}>Log out</Text>
+              </View>
+            </View>
+            <View>
+              <ExtendIcon />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <Modal
+        isVisible={modalVisible}
+        animationIn="slideInUp"
+        animationOut="fadeOutDown"
+        style={{margin: 0, justifyContent: 'center', alignItems: 'center'}}>
+        <View
+          style={{
+            height: 230,
+            backgroundColor: '#FFFFFF',
+            borderRadius: 15,
+          }}>
+          <HeaderModal title="Log Out" onPress={closeModal} />
+          <BodyModal
+            cancel="cancel"
+            confirm="confirm"
+            onPressCancel={closeModal}
+            onPressConfirm={() => console.log('log out!')}
+          />
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -165,6 +210,7 @@ const styles = StyleSheet.create({
   },
   info: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: '#FFFFFF',
@@ -190,6 +236,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Poppins-Regular',
+    color: '#000000',
   },
 });
 

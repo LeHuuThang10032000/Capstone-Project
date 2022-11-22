@@ -5,6 +5,7 @@ import {Screen} from './type';
 import BottomTabStack from './BottomTabStack';
 import Search from '../screen/Search';
 import ProfileUser from '../screen/ProfileUser';
+import Settings from '../screen/Settings';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -30,5 +31,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'ProfileUser',
     component: ProfileUser,
+  },
+  {
+    name: 'Settings',
+    component: Settings,
   },
 ];
