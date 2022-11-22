@@ -22,7 +22,7 @@ const Index = (props: Props) => {
       <HeaderComp title="Notification" />
       <HeaderDivider />
       <ScrollView>
-        <VStack space={4} alignItems="center">
+        <VStack space={4} alignItems="center" pt={5} pb={5}>
           <Center
             w="90%"
             h="20"
