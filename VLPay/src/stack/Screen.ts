@@ -17,18 +17,18 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   },
   {
     name: 'ForgotPwd',
-    component: ForgotPwd
+    component: ForgotPwd,
   },
   {
     name: 'Register',
-    component: Register
+    component: Register,
   },
   {
     name: 'Search',
-    component: Search
+    component: Search,
   },
   {
     name: 'ProfileUser',
-    component: ProfileUser
+    component: ProfileUser,
   },
 ];
