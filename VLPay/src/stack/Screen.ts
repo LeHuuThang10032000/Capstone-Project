@@ -5,6 +5,7 @@ import {Screen} from './type';
 import BottomTabStack from './BottomTabStack';
 import Search from '../screen/Search';
 import ProfileUser from '../screen/ProfileUser';
+import Settings from '../screen/Settings';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -17,18 +18,22 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   },
   {
     name: 'ForgotPwd',
-    component: ForgotPwd
+    component: ForgotPwd,
   },
   {
     name: 'Register',
-    component: Register
+    component: Register,
   },
   {
     name: 'Search',
-    component: Search
+    component: Search,
   },
   {
     name: 'ProfileUser',
-    component: ProfileUser
+    component: ProfileUser,
+  },
+  {
+    name: 'Settings',
+    component: Settings,
   },
 ];
