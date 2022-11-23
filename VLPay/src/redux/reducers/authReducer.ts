@@ -1,4 +1,4 @@
-import {LOGIN} from '../constants';
+import {LOGIN, LOGOUT} from '../constants';
 
 const initialState = {
   authToken: null,
@@ -11,6 +11,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         authToken: action.payload,
+      };
+
+    case LOGOUT:
+      console.log(' tui day ne');
+
+      return {
+        authToken: null,
       };
 
     default:
