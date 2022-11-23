@@ -48,7 +48,7 @@ const Index = function () {
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <VStack>
+        <VStack style={{paddingBottom: 20}}>
           <View style={styles.header}>
             <Utitle style={styles.headerItem}>{strings.login}</Utitle>
           </View>
@@ -108,32 +108,15 @@ const Index = function () {
             }
             hide={hideConfirm}
           />
-          <HStack alignItems={'center'} justifyContent={'space-between'}>
-            <HStack alignItems={'center'}>
-              <CheckBox
-                disabled={false}
-                value={toggleCheckBox}
-                onValueChange={newValue => setToggleCheckBox(newValue)}
-              />
-              <UText>{strings.rememberMe}</UText>
-            </HStack>
-            <TouchableOpacity>
-              <UText style={styles.textButtonOpacity}>
-                {strings.forgotPassword}
-              </UText>
-            </TouchableOpacity>
-          </HStack>
           <Flex style={styles.buttonInput}>
-            <UText style={styles.textButtonInput}>{strings.login}</UText>
+            <UText style={styles.textButtonInput}>{strings.register}</UText>
           </Flex>
-          <Flex flexDirection={'row'} justifyContent={'flex-end'} mt="1">
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Register');
-              }}>
-              <UText>{strings.register}</UText>
-            </TouchableOpacity>
-          </Flex>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Login');
+            }}>
+            <Text>Quay lại đăng nhập</Text>
+          </TouchableOpacity>
         </VStack>
       </ScrollView>
     </LinearGradient>

@@ -61,6 +61,7 @@ const Index = function () {
           styles={styles.textInput}
           control={control}
           name={'phoneNumber'}
+          keyboardType="phone-pad"
           required={true}
         />
         <FormInputController
@@ -126,7 +127,7 @@ const FormInputController = (
     setHide?: any;
   },
 ) => {
-  const {control, name, title, placeHolder, required} = props;
+  const {control, name, title, placeHolder, required, ...rest} = props;
   return (
     <>
       <Utitle style={{fontSize: 18}}>{title}</Utitle>
@@ -143,6 +144,7 @@ const FormInputController = (
             RightIcon={props.RightIcon}
             onChangeText={onChange}
             value={value}
+            {...rest}
           />
         )}
       />
