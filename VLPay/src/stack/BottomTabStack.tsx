@@ -14,6 +14,7 @@ import TranSactionHistory from '../screen/TransactionHistory';
 import QR from '../screen/QR';
 import Notification from '../screen/Notification';
 import MyWallet from '../screen/MyWallet';
+import {useSelector} from 'react-redux';
 
 const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
   {
@@ -52,6 +53,7 @@ const Tab = createBottomTabNavigator<ScreenParams>();
 const BottomTabStack = () => {
   // const {t} = useTranslation();
   // const auth = useContext(AuthUserContext);
+  const token = useSelector(state => state.authReducer.authToken);
   const navigation = useNavigation<MainStackNavigation>();
   const [bottomData, setBottomData] = useState<BottomTabScreen[]>(
     BOTTOM_TAB_STACK_SCREEN,
@@ -101,14 +103,14 @@ const BottomTabStack = () => {
           key={item.name}
           name={item.name}
           component={item.component}
-          // listeners={({route}) => ({
-          //   tabPress: e => {
-          //     if (route.name === 'Manicurists' && !auth.isAuth) {
-          //       e.preventDefault();
-          //       navigation.navigate('Login', {type: 'login'});
-          //     }
-          //   },
-          // })}
+          listeners={({route}) => ({
+            tabPress: e => {
+              if (!token) {
+                e.preventDefault();
+                navigation.navigate('Login', {type: 'login'});
+              }
+            },
+          })}
           options={{
             headerShown: false,
             tabBarLabelStyle: {
