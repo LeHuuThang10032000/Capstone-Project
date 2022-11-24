@@ -28,6 +28,7 @@ export type MainStackParamList = {
   Home: HomeProps | undefined;
   Profile: undefined;
   Login: {type: 'login'};
+  Otp: undefined;
   ForgotPwd: undefined;
   Register: undefined;
   TranSactionHistory: undefined;
