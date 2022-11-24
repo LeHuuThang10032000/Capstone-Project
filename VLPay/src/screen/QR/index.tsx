@@ -12,6 +12,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 
 import QRCode from 'react-native-qrcode-svg';
@@ -19,7 +21,9 @@ import HeaderComp from '../../components/HeaderComp';
 
 const App = () => {
   const [inputText, setInputText] = useState('');
-  const [qrvalue, setQrvalue] = useState('');
+  const [qrvalue, setQrvalue] = useState('quet cai cc');
+
+  console.log(qrvalue);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -31,14 +35,15 @@ const App = () => {
         <QRCode
           //QR code value
           value={qrvalue ? qrvalue : 'NA'}
+          // value="https://randomuser.me/api/portraits/men/78.jpg"
           //size of QR Code
-          size={250}
+          size={300}
           //Color of the QR Code (Optional)
           color="black"
           //Background Color of the QR Code (Optional)
           backgroundColor="white"
           //Logo of in the center of QR Code (Optional)
-          logo={require('../../assets/img/logo.png')}
+          logo={{uri: 'https://randomuser.me/api/portraits/men/78.jpg'}}
           //Center Logo size  (Optional)
           logoSize={30}
           //Center Logo margin (Optional)
@@ -49,19 +54,17 @@ const App = () => {
           logoBackgroundColor="#B5EAD8"
         />
         <Text style={styles.textStyle}>
-          Please insert any value to generate QR code
+          Please scan the QR code to pay the transaction
         </Text>
-        <TextInput
+        {/* <TextInput
           style={styles.textInputStyle}
           onChangeText={inputText => setInputText(inputText)}
           placeholder="Enter Any Value"
           value={inputText}
-        />
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() => setQrvalue(inputText)}>
+        /> */}
+        {/* <TouchableOpacity style={styles.buttonStyle}>
           <Text style={styles.buttonTextStyle}>Generate QR Code</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );
@@ -85,6 +88,9 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'center',
     margin: 10,
+    paddingTop: 20,
+    fontFamily: 'Poppins-SemiBold',
+    // color: '#000000',
   },
   textInputStyle: {
     flexDirection: 'row',

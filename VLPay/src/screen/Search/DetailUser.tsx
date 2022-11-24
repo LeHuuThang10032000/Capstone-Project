@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   homeButton: {
-    width: '80%',
+    width: '90%',
     backgroundColor: '#B5EAD8',
     padding: 10,
     alignItems: 'center',
