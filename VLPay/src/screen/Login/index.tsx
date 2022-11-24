@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {useSelector, useDispatch} from 'react-redux';
 import {Login} from '../../redux/actions/authAction';
+import {InputProps} from '@rneui/base';
 
 interface IFormInputControllerProps {
   control: Control<ILoginInfoValue, any>;
@@ -61,7 +62,7 @@ const Index = function () {
           styles={styles.textInput}
           control={control}
           name={'phoneNumber'}
-          keyboardType="phone-pad"
+          keyboardType={'phone-pad'}
           required={true}
         />
         <FormInputController
@@ -117,15 +118,16 @@ const Index = function () {
 };
 
 const FormInputController = (
-  props: IFormInputControllerProps & {
-    title: string;
-    placeHolder: string;
-    styles?: any;
-    RightIcon?: React.ReactNode;
-    LeftIcon?: React.ReactNode;
-    hide?: boolean;
-    setHide?: any;
-  },
+  props: IFormInputControllerProps &
+    InputProps & {
+      title: string;
+      placeHolder: string;
+      styles?: any;
+      RightIcon?: any;
+      LeftIcon?: any;
+      hide?: boolean;
+      setHide?: any;
+    },
 ) => {
   const {control, name, title, placeHolder, required, ...rest} = props;
   return (
@@ -137,11 +139,11 @@ const FormInputController = (
         rules={{required: required}}
         render={({field: {value, onChange}}) => (
           <Input
-            LeftIcon={props.LeftIcon}
+            leftIcon={props.LeftIcon}
             placeholder={placeHolder}
             style={props.styles}
             secureTextEntry={props.hide}
-            RightIcon={props.RightIcon}
+            rightIcon={props.RightIcon}
             onChangeText={onChange}
             value={value}
             {...rest}
