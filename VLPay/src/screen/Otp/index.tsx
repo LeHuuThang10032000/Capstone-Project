@@ -12,7 +12,7 @@ import NormalButton from '../../components/helpers/NormalButton';
 const RESEND_OTP_TIME_LIMIT = 60; // 60 secs
 let resendOtpTimerInterval: any;
 
-const index = (props: any) => {
+const Otp = (props: any) => {
   const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT,
   );
@@ -32,7 +32,15 @@ const index = (props: any) => {
     }, 1000);
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    startResendOtpTimer();
+
+    return () => {
+      if (resendOtpTimerInterval) {
+        clearInterval(resendOtpTimerInterval);
+      }
+    };
+  }, [resendButtonDisabledTime, startResendOtpTimer]);
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
@@ -61,11 +69,11 @@ const index = (props: any) => {
             containerStyle={styles.btnMain}
           />
           <View style={styles.containerOPT}>
-            <Text style={styles.optText}>{t<string>('notReceiveOpt')}</Text>
+            <Text style={styles.optText}>Not receipt otp</Text>
             {resendButtonDisabledTime > 0 ? (
               <View>
                 <Text style={styles.optText}>
-                  {`${t<string>('resend')} (${resendButtonDisabledTime}s)`}
+                  {`Resend (${resendButtonDisabledTime || ''}s)`}
                 </Text>
               </View>
             ) : (
@@ -80,4 +88,4 @@ const index = (props: any) => {
   );
 };
 
-export default index;
+export default Otp;
