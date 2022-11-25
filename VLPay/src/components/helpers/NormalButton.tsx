@@ -1,7 +1,7 @@
 import {StyleProp, StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import React from 'react';
 import {Button} from '@rneui/base';
-import Colors from '../helper/Colors';
+import Colors from '../helpers/Colors';
 
 type Props = {
   containerStyle?: StyleProp<ViewStyle>;
