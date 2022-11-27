@@ -17,6 +17,7 @@ import {IRegisterInfoValue} from './useHook';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {InputProps} from '@rneui/base';
+import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
 
 interface IFormInputControllerProps {
   control: Control<IRegisterInfoValue, any>;
@@ -43,82 +44,90 @@ const Index = function () {
   const [hide, setHide] = useState(true);
   const [hideConfirm, setHideConfirm] = useState(true);
 
+  const submit = data => {
+    console.log(data);
+  };
+
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <VStack style={{paddingBottom: 20}}>
-          <View style={styles.header}>
-            <Utitle style={styles.headerItem}>{strings.login}</Utitle>
-          </View>
-          <FormInputController
-            title={strings.email}
-            LeftIcon={<Mail width={20} height={20} />}
-            placeHolder={strings.phone_placeholder}
-            styles={styles.textInput}
-            control={control}
-            name={'email'}
-            required={true}
-          />
-          <FormInputController
-            title={strings.phone_number}
-            LeftIcon={<PhoneIcon width={20} height={20} />}
-            placeHolder={strings.phone_placeholder}
-            styles={styles.textInput}
-            control={control}
-            name={'phoneNumber'}
-            keyboardType={'phone-pad'}
-            required={true}
-          />
-          <FormInputController
-            title={strings.password}
-            LeftIcon={<LockIcon width={20} height={20} />}
-            placeHolder={strings.password_placeholder}
-            styles={styles.textInput}
-            control={control}
-            name={'password'}
-            required={true}
-            RightIcon={
-              <TouchableOpacity
-                style={styles.passwordIcon}
-                onPress={() => {
-                  setHide(!hide);
-                }}>
-                {hide ? <BlindIcon /> : <EyeIcon />}
-              </TouchableOpacity>
-            }
-            hide={hide}
-          />
-          <FormInputController
-            title={strings.password}
-            LeftIcon={<LockIcon width={20} height={20} />}
-            placeHolder={strings.password_confirmation}
-            styles={styles.textInput}
-            control={control}
-            name={'password'}
-            required={true}
-            RightIcon={
-              <TouchableOpacity
-                style={styles.passwordIcon}
-                onPress={() => {
-                  setHideConfirm(!hide);
-                }}>
-                {hideConfirm ? <BlindIcon /> : <EyeIcon />}
-              </TouchableOpacity>
-            }
-            hide={hideConfirm}
-          />
-          <Flex style={styles.buttonInput}>
-            <UText style={styles.textButtonInput}>{strings.register}</UText>
-          </Flex>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Login');
-            }}>
-            <Text>Quay lại đăng nhập</Text>
-          </TouchableOpacity>
-        </VStack>
+        <KeyboardInputScrollView>
+          <VStack style={{paddingBottom: 20}}>
+            <View style={styles.header}>
+              <Utitle style={styles.headerItem}>{strings.login}</Utitle>
+            </View>
+            <FormInputController
+              title={strings.email}
+              LeftIcon={<Mail width={20} height={20} />}
+              placeHolder={strings.phone_placeholder}
+              styles={styles.textInput}
+              control={control}
+              name={'email'}
+              required={false}
+            />
+            <FormInputController
+              title={strings.phone_number}
+              LeftIcon={<PhoneIcon width={20} height={20} />}
+              placeHolder={strings.phone_placeholder}
+              styles={styles.textInput}
+              control={control}
+              name={'phoneNumber'}
+              keyboardType={'phone-pad'}
+              required={false}
+            />
+            <FormInputController
+              title={strings.password}
+              LeftIcon={<LockIcon width={20} height={20} />}
+              placeHolder={strings.password_placeholder}
+              styles={styles.textInput}
+              control={control}
+              name={'password'}
+              required={false}
+              RightIcon={
+                <TouchableOpacity
+                  style={styles.passwordIcon}
+                  onPress={() => {
+                    setHide(!hide);
+                  }}>
+                  {hide ? <BlindIcon /> : <EyeIcon />}
+                </TouchableOpacity>
+              }
+              hide={hide}
+            />
+            <FormInputController
+              title={strings.password}
+              LeftIcon={<LockIcon width={20} height={20} />}
+              placeHolder={strings.password_confirmation}
+              styles={styles.textInput}
+              control={control}
+              name={'passwordConfirmation'}
+              required={false}
+              RightIcon={
+                <TouchableOpacity
+                  style={styles.passwordIcon}
+                  onPress={() => {
+                    setHideConfirm(!hide);
+                  }}>
+                  {hideConfirm ? <BlindIcon /> : <EyeIcon />}
+                </TouchableOpacity>
+              }
+              hide={hideConfirm}
+            />
+            <TouchableOpacity
+              onPress={() => handleSubmit(submit)}
+              style={styles.buttonInput}>
+              <UText style={styles.textButtonInput}>{strings.register}</UText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login');
+              }}>
+              <Text>Quay lại đăng nhập</Text>
+            </TouchableOpacity>
+          </VStack>
+        </KeyboardInputScrollView>
       </ScrollView>
     </LinearGradient>
   );
@@ -144,18 +153,20 @@ const FormInputController = (
         name={name}
         control={control}
         rules={{required: required}}
-        render={({field: {value, onChange}}) => (
-          <Input
-            leftIcon={props.LeftIcon}
-            placeholder={placeHolder}
-            style={props.styles}
-            secureTextEntry={props.hide}
-            rightIcon={props.RightIcon}
-            onChangeText={onChange}
-            value={value}
-            {...rest}
-          />
-        )}
+        render={({field: {value, onChange}}) => {
+          return (
+            <Input
+              leftIcon={props.LeftIcon}
+              placeholder={placeHolder}
+              style={props.styles}
+              secureTextEntry={props.hide}
+              rightIcon={props.RightIcon}
+              onChangeText={onChange}
+              value={value}
+              {...rest}
+            />
+          );
+        }}
       />
     </>
   );

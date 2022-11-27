@@ -27,8 +27,14 @@ export type AuthStackNavigation = StackNavigationProp<AuthStackParamList>;
 export type MainStackParamList = {
   Home: HomeProps | undefined;
   Profile: undefined;
-  Login: {type: 'login'};
-  Otp: undefined;
+  Login: undefined;
+  Otp: {
+    isHoldingLogin?: boolean;
+    email?: string;
+    phone: string;
+    password: string;
+    password_confirmation: string;
+  };
   ForgotPwd: undefined;
   Register: undefined;
   TranSactionHistory: undefined;

@@ -10,15 +10,14 @@ const screenOptions = {headerShown: false};
 const MainStack = () => {
   return (
     <Stack.Navigator initialRouteName={'MainTab'} screenOptions={screenOptions}>
-      {/* {MAIN_STACK_SCREEN.map(item => (
+      {MAIN_STACK_SCREEN.map(item => (
         <Stack.Screen
           key={item.name}
           name={item.name}
           component={item.component}
           options={item?.options}
         />
-      ))} */}
-      <Stack.Screen name="Otp" component={Otp} />
+      ))}
     </Stack.Navigator>
   );
 };
