@@ -10,10 +10,13 @@ export default StyleSheet.create({
   },
   titleBG: {
     fontSize: moderateScale(30),
+    paddingTop: moderateScale(30 / 2),
     fontFamily: 'Ubuntu',
     marginBottom: 10,
     color: '#242A37',
     fontWeight: 'bold',
+    alignSelf: 'center',
+    marginTop: 100,
   },
   desText: {
     fontSize: moderateScale(17),
@@ -23,7 +26,7 @@ export default StyleSheet.create({
   },
   underlineStyleBase: {
     borderWidth: 0,
-    borderBottomColor: '#D8D8D8',
+    borderBottomColor: '#FFFFFF',
     borderBottomWidth: 4,
     width: 50,
     height: 70,
