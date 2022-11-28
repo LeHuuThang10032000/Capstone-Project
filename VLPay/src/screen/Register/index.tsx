@@ -56,7 +56,7 @@ const Index = function () {
         <KeyboardInputScrollView>
           <VStack style={{paddingBottom: 20}}>
             <View style={styles.header}>
-              <Utitle style={styles.headerItem}>{strings.login}</Utitle>
+              <Utitle style={styles.headerItem}>{strings.register}</Utitle>
             </View>
             <FormInputController
               title={strings.email}
