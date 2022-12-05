@@ -18,12 +18,24 @@ import {
 
 import QRCode from 'react-native-qrcode-svg';
 import HeaderComp from '../../components/HeaderComp';
+import ModalProvider from '../../context/ModalProvider';
+import Modal from 'react-native-modal';
+import HeaderModal from '../../components/CustomLogout/HeaderModal';
+import BodyModal from '../Settings/ChangeLngComp/BodyModal';
+import {Input} from 'native-base';
 
 const App = () => {
   const [inputText, setInputText] = useState('');
-  const [qrvalue, setQrvalue] = useState('quet cai cc');
-
-  console.log(qrvalue);
+  const [qrvalue, setQrvalue] = useState('');
+  const {modalVisible, setModalVisible, closeModal} = ModalProvider();
+  const toggleModal = () => {
+    setModalVisible(true);
+  };
+  const setValueQR = () => setQrvalue(inputText);
+  const saveQR = () => {
+    setValueQR();
+    closeModal();
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -56,15 +68,43 @@ const App = () => {
         <Text style={styles.textStyle}>
           Please scan the QR code to pay the transaction
         </Text>
-        {/* <TextInput
-          style={styles.textInputStyle}
-          onChangeText={inputText => setInputText(inputText)}
-          placeholder="Enter Any Value"
-          value={inputText}
-        /> */}
-        {/* <TouchableOpacity style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>Generate QR Code</Text>
-        </TouchableOpacity> */}
+
+        <TouchableOpacity style={styles.buttonStyle} onPress={toggleModal}>
+          <Text style={styles.buttonTextStyle}>+ Thêm số tiền nhận</Text>
+        </TouchableOpacity>
+
+        <Modal
+          isVisible={modalVisible}
+          animationIn="slideInUp"
+          animationOut="fadeOutDown"
+          style={{
+            margin: 0,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              height: 230,
+              backgroundColor: '#FFFFFF',
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              width: '100%',
+              alignItems: 'center',
+            }}>
+            <HeaderModal title="Tùy chỉnh số tiền" onPress={closeModal} />
+            <Input
+              placeholder="Enter money"
+              w="90%"
+              onChangeText={inputText => setInputText(inputText)}
+              keyboardType="numeric"
+              value={inputText}
+              maxLength={8}
+            />
+            <TouchableOpacity style={styles.buttonStyle} onPress={saveQR}>
+              <Text style={styles.buttonTextStyle}>Generate QR Code</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -90,15 +130,6 @@ const styles = StyleSheet.create({
     margin: 10,
     paddingTop: 20,
     fontFamily: 'Poppins-SemiBold',
-    // color: '#000000',
-  },
-  textInputStyle: {
-    flexDirection: 'row',
-    height: 40,
-    marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
-    margin: 10,
   },
   buttonStyle: {
     backgroundColor: '#B5EAD8',
