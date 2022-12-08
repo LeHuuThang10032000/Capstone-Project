@@ -1,75 +1,174 @@
-import React, {useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import React, {useCallback, useState} from 'react';
+import {Button, Text, TouchableOpacity, View} from 'react-native';
 import {UText, Utitle} from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
-import MailIcon from '../../assets/svg/mail.svg';
-import BlindIcon from '../../assets/svg/blind_icon.svg';
-import EyeIcon from '../../assets/svg/eye_icon.svg';
+import Mail from '../../assets/svg/mail.svg';
+import PhoneIcon from '../../assets/svg/phone_icon.svg';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
-import GenderIcon from '../../assets/svg/gender_icon.svg';
-import PersonIcon from '../../assets/svg/person_icon.svg';
+import CheckBox from '@react-native-community/checkbox';
+import BlindIcon from '../../assets/svg/blind_icon.svg';
+import EyeIcon from '../../assets/svg/eye_icon.svg';
+import {Flex, HStack, Image, ScrollView, VStack} from 'native-base';
+import strings from '../../components/helpers/Strings';
+import Input from '../../components/InputForm';
+import {Control, Controller, useForm} from 'react-hook-form';
+import {IRegisterInfoValue} from './useHook';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
+import {InputProps} from '@rneui/base';
+import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
+
+interface IFormInputControllerProps {
+  control: Control<IRegisterInfoValue, any>;
+  name: keyof IRegisterInfoValue;
+  required: boolean;
+}
 
 const Index = function () {
+  const navigation = useNavigation<MainStackNavigation>();
+  const {
+    setValue,
+    handleSubmit,
+    control,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      phoneNumber: '',
+      passwordConfirmation: '',
+      gender: 0,
+    },
+  });
   const [hide, setHide] = useState(true);
+  const [hideConfirm, setHideConfirm] = useState(true);
+
+  const submit = data => {
+    console.log(data);
+  };
+
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Utitle style={styles.headerItem}>Register</Utitle>
-        </View>
-        <View>
-          <Utitle style={{fontSize: 18}}>Full name</Utitle>
-          <View style={styles.itemField}>
-            <PersonIcon width={20} height={20} />
-            <TextInput placeholder="Full name" style={styles.textInput} />
-          </View>
-        </View>
-        <View>
-          <Utitle style={{fontSize: 18}}>E-mail</Utitle>
-          <View style={styles.itemField}>
-            <MailIcon width={20} height={20} />
-            <TextInput placeholder="Email" style={styles.textInput} />
-          </View>
-        </View>
-        <View>
-          <Utitle style={{fontSize: 18}}>Gender</Utitle>
-          <View style={styles.itemField}>
-            <GenderIcon width={20} height={20} />
-            <TextInput placeholder="Female" style={styles.textInput} />
-          </View>
-        </View>
-        <View>
-          <Utitle style={{fontSize: 18}}>Password</Utitle>
-          <View style={styles.itemField}>
-            <LockIcon />
-            <TextInput
-              placeholder="Password"
-              style={styles.textInput}
-              secureTextEntry={hide}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardInputScrollView>
+          <VStack style={{paddingBottom: 20}}>
+            <View style={styles.header}>
+              <Utitle style={styles.headerItem}>{strings.register}</Utitle>
+            </View>
+            <FormInputController
+              title={strings.email}
+              LeftIcon={<Mail width={20} height={20} />}
+              placeHolder={strings.phone_placeholder}
+              styles={styles.textInput}
+              control={control}
+              name={'email'}
+              required={false}
+            />
+            <FormInputController
+              title={strings.phone_number}
+              LeftIcon={<PhoneIcon width={20} height={20} />}
+              placeHolder={strings.phone_placeholder}
+              styles={styles.textInput}
+              control={control}
+              name={'phoneNumber'}
+              keyboardType={'phone-pad'}
+              required={false}
+            />
+            <FormInputController
+              title={strings.password}
+              LeftIcon={<LockIcon width={20} height={20} />}
+              placeHolder={strings.password_placeholder}
+              styles={styles.textInput}
+              control={control}
+              name={'password'}
+              required={false}
+              RightIcon={
+                <TouchableOpacity
+                  style={styles.passwordIcon}
+                  onPress={() => {
+                    setHide(!hide);
+                  }}>
+                  {hide ? <BlindIcon /> : <EyeIcon />}
+                </TouchableOpacity>
+              }
+              hide={hide}
+            />
+            <FormInputController
+              title={strings.password}
+              LeftIcon={<LockIcon width={20} height={20} />}
+              placeHolder={strings.password_confirmation}
+              styles={styles.textInput}
+              control={control}
+              name={'passwordConfirmation'}
+              required={false}
+              RightIcon={
+                <TouchableOpacity
+                  style={styles.passwordIcon}
+                  onPress={() => {
+                    setHideConfirm(!hide);
+                  }}>
+                  {hideConfirm ? <BlindIcon /> : <EyeIcon />}
+                </TouchableOpacity>
+              }
+              hide={hideConfirm}
             />
             <TouchableOpacity
-              style={styles.passwordIcon}
-              onPress={() => {
-                setHide(!hide);
-              }}>
-              {hide ? <BlindIcon /> : <EyeIcon />}
+              onPress={() => handleSubmit(submit)}
+              style={styles.buttonInput}>
+              <UText style={styles.textButtonInput}>{strings.register}</UText>
             </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.buttonInput}>
-          <UText style={styles.textButtonInput}>Register</UText>
-        </View>
-      </View>
-      <View style={styles.footer}>
-        <UText>Don't have an account?</UText>
-        <UText style={{color: '#2805FF'}}> Login</UText>
-      </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login');
+              }}>
+              <Text>Quay lại đăng nhập</Text>
+            </TouchableOpacity>
+          </VStack>
+        </KeyboardInputScrollView>
+      </ScrollView>
     </LinearGradient>
+  );
+};
+
+const FormInputController = (
+  props: IFormInputControllerProps &
+    InputProps & {
+      title: string;
+      placeHolder: string;
+      styles?: any;
+      RightIcon?: any;
+      LeftIcon?: any;
+      hide?: boolean;
+      setHide?: any;
+    },
+) => {
+  const {control, name, title, placeHolder, required, ...rest} = props;
+  return (
+    <>
+      <Utitle style={{fontSize: 18}}>{title}</Utitle>
+      <Controller
+        name={name}
+        control={control}
+        rules={{required: required}}
+        render={({field: {value, onChange}}) => {
+          return (
+            <Input
+              leftIcon={props.LeftIcon}
+              placeholder={placeHolder}
+              style={props.styles}
+              secureTextEntry={props.hide}
+              rightIcon={props.RightIcon}
+              onChangeText={onChange}
+              value={value}
+              {...rest}
+            />
+          );
+        }}
+      />
+    </>
   );
 };
 

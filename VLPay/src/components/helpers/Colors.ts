@@ -1,0 +1,45 @@
+const enum EColors {
+  cloudBurst = '#222B45',
+  white = '#ffffff',
+  cornflowerBlue = '#4285F4',
+  black = '#000000',
+  ebonyClay = '#242E42',
+  clear = 'transparent',
+  primary = '#4285F4',
+  catskill_white = '#E4E9F2',
+  dusty_gray = '#979797',
+  orange = '#FF8900',
+  athensGray = '#F7F8FA',
+  frenchGray = '#C8C7CC',
+  jumbo = '#838385',
+  anakiwa = '#A4CDFF',
+  vidaloca = '#3ABF24',
+  gray = '#888889',
+}
+
+const Colors = {
+  primary: '#4285F4',
+  cloudBurst: '#222B45',
+  white: '#ffffff',
+  cornflowerBlue: '#4285F4',
+  clear: EColors.clear,
+  black: '#000000',
+  bali_hai: '#8F9BB3',
+  catskill_white: '#E4E9F2',
+  facebook: '#4267B2',
+  twitter: '#00acee',
+  alto: '#D9D9D9',
+  altoA: (alpha: number) => `rgba(217, 217, 217, ${alpha})`,
+  cadetBlue: '#ACB1C0',
+  mirage: '#192038',
+  blueHazed: '#C5CEE0',
+  athensGray: '#F7F8FA',
+  frenchGray: '#C8C7CC',
+  ghost: '#BEC2CE',
+  athenGray2: '#F1F2F6',
+  ebonyClay: EColors.ebonyClay,
+  pizazz: '#FF8900',
+};
+
+export default Colors;
+export {EColors};

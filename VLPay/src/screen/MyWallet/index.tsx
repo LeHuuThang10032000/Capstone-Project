@@ -18,10 +18,13 @@ import ModalProvider from '../../context/ModalProvider';
 import Modal from 'react-native-modal';
 import HeaderModal from '../../components/CustomLogout/HeaderModal';
 import BodyModal from '../../components/CustomLogout/BodyModal';
-
+import {useDispatch} from 'react-redux';
+import {Logout} from '../../redux/actions/authAction';
+import RNRestart from 'react-native-restart';
 const Index = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {modalVisible, toggleModal, closeModal} = ModalProvider();
+  const dispatch = useDispatch();
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <HeaderComp title="My wallet" />
@@ -44,7 +47,9 @@ const Index = () => {
               <ExtendIcon />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('QR')}>
             <View style={styles.info}>
               <View style={styles.info}>
                 <QRcodeIcon height={18} width={18} style={{paddingLeft: 35}} />
@@ -194,7 +199,10 @@ const Index = () => {
             cancel="cancel"
             confirm="confirm"
             onPressCancel={closeModal}
-            onPressConfirm={() => console.log('log out!')}
+            onPressConfirm={() => {
+              RNRestart.Restart();
+              dispatch(Logout());
+            }}
           />
         </View>
       </Modal>

@@ -1,31 +1,40 @@
-import {HStack, Input} from 'native-base';
+import {Flex, HStack} from 'native-base';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-
-type props = {
-  LeftIcon?: any;
-  RightIcon?: any;
+import {Input, InputProps} from '@rneui/themed';
+export interface FormInputProps extends InputProps {
   placeholder?: string;
   secureTextEntry?: boolean;
   style?: any;
   onChangeText?: any;
   value?: any;
-};
-const Index = (props: props) => {
+}
+
+const Index = ({
+  placeholder,
+  secureTextEntry,
+  style,
+  onChangeText,
+  value,
+  ...rest
+}: FormInputProps) => {
   return (
-    <HStack style={styles.inputWrapper} alignItems={'center'}>
-      {props.LeftIcon && props.LeftIcon}
-      <Input
-        {...props.style}
-        placeholder={props.placeholder}
-        onChangeText={props.onChangeText}
-        variant={'unstyled'}
-        w="90%"
-        value={props.value}
-        secureTextEntry={props.secureTextEntry}
-      />
-      {props.RightIcon && props.RightIcon}
-    </HStack>
+    <Input
+      {...style}
+      placeholder={placeholder}
+      onChangeText={onChangeText}
+      inputContainerStyle={{
+        borderBottomWidth: 0,
+        borderWidth: 1,
+        borderColor: '#A2A2A6',
+        backgroundColor: '#ffffff',
+        borderRadius: 4,
+        paddingHorizontal: 12,
+      }}
+      value={value}
+      secureTextEntry={secureTextEntry}
+      {...rest}
+    />
   );
 };
 
@@ -35,16 +44,6 @@ const styles = StyleSheet.create({
     left: '3%',
     zIndex: 1,
     top: '35%',
-  },
-  inputWrapper: {
-    borderWidth: 1,
-    borderColor: '#A2A2A6',
-    borderRadius: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginTop: 10,
-    marginBottom: 12,
-    backgroundColor: '#ffffff',
   },
 });
 

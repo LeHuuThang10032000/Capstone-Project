@@ -40,7 +40,7 @@ export default StyleSheet.create({
     marginBottom: 12,
   },
   textInput: {
-    marginRight: 100,
+    marginRight: 30,
     fontSize: 16,
     color: '#747980',
   },

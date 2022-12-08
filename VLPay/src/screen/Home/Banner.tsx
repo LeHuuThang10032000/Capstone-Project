@@ -10,10 +10,13 @@ import TopUp from '../../assets/svg/topup.svg';
 import Withdraw from '../../assets/svg/withdraw.svg';
 import QRcode from '../../assets/svg/qrcode.svg';
 import ScanQR from '../../assets/svg/scanqr.svg';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 type Props = {};
 
 const Banner = (props: Props) => {
+  const navigation = useNavigation<MainStackNavigation>();
   return (
     <View>
       <ImageBackground
@@ -45,7 +48,7 @@ const Banner = (props: Props) => {
           </View>
 
           <View style={styles.wrapperButton}>
-            <TouchableOpacity onPress={() => console.log('qr code!')}>
+            <TouchableOpacity onPress={() => navigation.navigate('QR')}>
               <View style={styles.button}>
                 <QRcode />
               </View>

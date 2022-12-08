@@ -14,7 +14,7 @@ export default StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 150,
+    marginTop: 100,
   },
   headerItem: {
     fontWeight: '700',
@@ -38,10 +38,9 @@ export default StyleSheet.create({
     paddingVertical: 6,
     marginTop: 10,
     marginBottom: 12,
-    backgroundColor: '#ffffff',
   },
   textInput: {
-    marginRight: 100,
+    marginRight: 30,
     fontSize: 16,
     color: '#747980',
   },
@@ -60,13 +59,13 @@ export default StyleSheet.create({
   textButtonOpacity: {
     color: '#283FB1',
   },
-  passwordIcon: {
-    position: 'absolute',
-    right: 20,
-  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 30,
+  },
+  passwordIcon: {
+    position: 'absolute',
+    right: 10,
   },
 });

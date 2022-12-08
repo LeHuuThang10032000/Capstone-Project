@@ -27,7 +27,14 @@ export type AuthStackNavigation = StackNavigationProp<AuthStackParamList>;
 export type MainStackParamList = {
   Home: HomeProps | undefined;
   Profile: undefined;
-  Login: {type: 'login'};
+  Login: undefined;
+  Otp: {
+    isHoldingLogin?: boolean;
+    email?: string;
+    phone: string;
+    password: string;
+    password_confirmation: string;
+  };
   ForgotPwd: undefined;
   Register: undefined;
   TranSactionHistory: undefined;
@@ -37,6 +44,13 @@ export type MainStackParamList = {
   Search: undefined;
   ProfileUser: undefined;
   Settings: undefined;
+  DetailUser: {
+    email: string;
+    picture: string;
+    title: string;
+    first: string;
+    last: string;
+  };
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

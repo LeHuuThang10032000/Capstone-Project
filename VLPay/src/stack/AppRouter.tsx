@@ -3,12 +3,16 @@ import {NavigationContainer} from '@react-navigation/native';
 
 import MainStack from './MainStack';
 import {NativeBaseProvider} from 'native-base';
+import {Provider} from 'react-redux';
+import {store} from '../redux/store';
 
 const AppRouter = () => {
   return (
     <NavigationContainer>
       <NativeBaseProvider>
-        <MainStack />
+        <Provider store={store}>
+          <MainStack />
+        </Provider>
       </NativeBaseProvider>
     </NavigationContainer>
   );

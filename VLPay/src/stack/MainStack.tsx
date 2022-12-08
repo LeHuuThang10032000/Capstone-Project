@@ -1,11 +1,12 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import { MAIN_STACK_SCREEN } from './Screen';
-import { ScreenParams } from './type';
+import {MAIN_STACK_SCREEN} from './Screen';
+import {ScreenParams} from './type';
+import Otp from '../screen/Otp';
 
 const Stack = createStackNavigator<ScreenParams>();
-const screenOptions = { headerShown: false };
+const screenOptions = {headerShown: false};
 const MainStack = () => {
   return (
     <Stack.Navigator initialRouteName={'MainTab'} screenOptions={screenOptions}>

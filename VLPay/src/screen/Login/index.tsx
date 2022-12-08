@@ -15,6 +15,9 @@ import {Control, Controller, useForm} from 'react-hook-form';
 import {ILoginInfoValue} from './useHook';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
+import {useSelector, useDispatch} from 'react-redux';
+import {Login} from '../../redux/actions/authAction';
+import {InputProps} from '@rneui/base';
 
 interface IFormInputControllerProps {
   control: Control<ILoginInfoValue, any>;
@@ -24,6 +27,12 @@ interface IFormInputControllerProps {
 
 const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
+  const dispatch = useDispatch();
+
+  const submit = async (phoneNumber: string, password: string) => {
+    dispatch(Login(phoneNumber, password));
+  };
+
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const {
     setValue,
@@ -32,7 +41,7 @@ const Index = function () {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      email: '',
+      phoneNumber: '',
       password: '',
     },
   });
@@ -47,12 +56,13 @@ const Index = function () {
           <Utitle style={styles.headerItem}>{strings.login}</Utitle>
         </View>
         <FormInputController
-          title={strings.email}
+          title={strings.phone_number}
           LeftIcon={<PhoneIcon width={20} height={20} />}
           placeHolder={strings.phone_placeholder}
           styles={styles.textInput}
           control={control}
-          name={'email'}
+          name={'phoneNumber'}
+          keyboardType={'phone-pad'}
           required={true}
         />
         <FormInputController
@@ -90,7 +100,9 @@ const Index = function () {
           </TouchableOpacity>
         </HStack>
         <Flex style={styles.buttonInput}>
-          <UText style={styles.textButtonInput}>{strings.login}</UText>
+          <TouchableOpacity onPress={() => submit('123321', '123123123')}>
+            <UText style={styles.textButtonInput}>{strings.login}</UText>
+          </TouchableOpacity>
         </Flex>
         <Flex flexDirection={'row'} justifyContent={'flex-end'} mt="1">
           <TouchableOpacity
@@ -106,17 +118,18 @@ const Index = function () {
 };
 
 const FormInputController = (
-  props: IFormInputControllerProps & {
-    title: string;
-    placeHolder: string;
-    styles?: any;
-    RightIcon?: React.ReactNode;
-    LeftIcon?: React.ReactNode;
-    hide?: boolean;
-    setHide?: any;
-  },
+  props: IFormInputControllerProps &
+    InputProps & {
+      title: string;
+      placeHolder: string;
+      styles?: any;
+      RightIcon?: any;
+      LeftIcon?: any;
+      hide?: boolean;
+      setHide?: any;
+    },
 ) => {
-  const {control, name, title, placeHolder, required} = props;
+  const {control, name, title, placeHolder, required, ...rest} = props;
   return (
     <>
       <Utitle style={{fontSize: 18}}>{title}</Utitle>
@@ -126,13 +139,14 @@ const FormInputController = (
         rules={{required: required}}
         render={({field: {value, onChange}}) => (
           <Input
-            LeftIcon={props.LeftIcon}
+            leftIcon={props.LeftIcon}
             placeholder={placeHolder}
             style={props.styles}
             secureTextEntry={props.hide}
-            RightIcon={props.RightIcon}
+            rightIcon={props.RightIcon}
             onChangeText={onChange}
             value={value}
+            {...rest}
           />
         )}
       />

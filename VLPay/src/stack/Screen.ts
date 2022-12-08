@@ -6,7 +6,8 @@ import BottomTabStack from './BottomTabStack';
 import Search from '../screen/Search';
 import ProfileUser from '../screen/ProfileUser';
 import Settings from '../screen/Settings';
-
+import DetailUser from '../screen/Search/DetailUser';
+import Otp from '../screen/Otp';
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'MainTab',
@@ -25,6 +26,10 @@ export const MAIN_STACK_SCREEN: Screen[] = [
     component: Register,
   },
   {
+    name: 'Otp',
+    component: Otp,
+  },
+  {
     name: 'Search',
     component: Search,
   },
@@ -35,5 +40,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'Settings',
     component: Settings,
+  },
+  {
+    name: 'DetailUser',
+    component: DetailUser,
   },
 ];

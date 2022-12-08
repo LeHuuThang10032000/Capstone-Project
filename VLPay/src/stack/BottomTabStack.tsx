@@ -2,10 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/core';
 // import {useTranslation} from 'react-i18next';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
-// import {color_base, Role} from '../utils/constant';
-// import {moderateScale} from '../utils/scaleUtils';
-// import {AuthUserContext} from '../context/AuthUserProvider';
 import {MainStackNavigation} from './Navigation';
 import Icons from '../assets/icons/icons';
 import {ScreenParams, BottomTabScreen} from './type';
@@ -14,6 +10,7 @@ import TranSactionHistory from '../screen/TransactionHistory';
 import QR from '../screen/QR';
 import Notification from '../screen/Notification';
 import MyWallet from '../screen/MyWallet';
+import {useSelector} from 'react-redux';
 
 const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
   {
@@ -50,8 +47,7 @@ const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
 
 const Tab = createBottomTabNavigator<ScreenParams>();
 const BottomTabStack = () => {
-  // const {t} = useTranslation();
-  // const auth = useContext(AuthUserContext);
+  const token = useSelector(state => state.authReducer.authToken);
   const navigation = useNavigation<MainStackNavigation>();
   const [bottomData, setBottomData] = useState<BottomTabScreen[]>(
     BOTTOM_TAB_STACK_SCREEN,
@@ -60,40 +56,12 @@ const BottomTabStack = () => {
   const handleBottomData = () => {
     const items: BottomTabScreen[] = [];
     BOTTOM_TAB_STACK_SCREEN.forEach(screen => {
-      // if (auth.data?.roles?.[0].title) {
-      //   if (
-      //     auth.data?.roles?.[0].title === Role.Employer &&
-      //     (screen.options?.isEmployer || !screen?.options)
-      //   ) {
-      //     items.push(screen);
-      //     return;
-      //   }
-
-      //   if (
-      //     auth.data?.roles?.[0].title === Role.JobSeeker &&
-      //     (!screen.options?.isEmployer || !screen?.options)
-      //   ) {
-      //     items.push(screen);
-      //     return;
-      //   }
-      // } else {
-      //   !screen?.options && items.push(screen);
-      // }
       items.push(screen);
       return;
     });
 
     setBottomData(items);
   };
-
-  // useEffect(() => {
-  //   handleBottomData();
-  // }, []);
-
-  // useEffect(() => {
-  //   handleBottomData();
-  // }, [auth?.data?.roles]);
-
   return (
     <Tab.Navigator>
       {bottomData.map(item => (
@@ -101,14 +69,14 @@ const BottomTabStack = () => {
           key={item.name}
           name={item.name}
           component={item.component}
-          // listeners={({route}) => ({
-          //   tabPress: e => {
-          //     if (route.name === 'Manicurists' && !auth.isAuth) {
-          //       e.preventDefault();
-          //       navigation.navigate('Login', {type: 'login'});
-          //     }
-          //   },
-          // })}
+          listeners={({route}) => ({
+            tabPress: e => {
+              if (!token) {
+                e.preventDefault();
+                navigation.navigate('Login', {type: 'login'});
+              }
+            },
+          })}
           options={{
             headerShown: false,
             tabBarLabelStyle: {
