@@ -3,6 +3,8 @@ import React from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {NativeBaseProvider} from 'native-base';
 import AppRouter from './src/stack/AppRouter';
+import {Provider} from 'react-redux';
+import {store} from './src/redux/store';
 
 const theme = {
   ...DefaultTheme,
@@ -17,7 +19,9 @@ const theme = {
 const App = () => {
   return (
     <NativeBaseProvider>
-      <AppRouter />
+      <Provider store={store}>
+        <AppRouter />
+      </Provider>
     </NativeBaseProvider>
   );
 };
