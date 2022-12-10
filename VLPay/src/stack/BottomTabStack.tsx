@@ -73,7 +73,7 @@ const BottomTabStack = () => {
             tabPress: e => {
               if (!token) {
                 e.preventDefault();
-                navigation.navigate('Login', {type: 'login'});
+                navigation.navigate('Login');
               }
             },
           })}

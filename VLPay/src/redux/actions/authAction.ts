@@ -1,4 +1,3 @@
-
 import {LOGIN, LOGOUT} from '../constants';
 
 export const Login = (phoneNumber: string, password: string) => {
@@ -16,4 +15,3 @@ export const Logout = () => {
     payload: null,
   };
 };
-
