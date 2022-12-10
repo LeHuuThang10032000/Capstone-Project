@@ -104,14 +104,17 @@ const Index = function () {
             <UText style={styles.textButtonInput}>{strings.login}</UText>
           </TouchableOpacity>
         </Flex>
-        <Flex flexDirection={'row'} justifyContent={'flex-end'} mt="1">
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Register');
-            }}>
-            <UText>{strings.register}</UText>
-          </TouchableOpacity>
-        </Flex>
+        <TouchableOpacity
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}
+          onPress={() => {
+            navigation.navigate('Register');
+          }}>
+          <UText>{strings.register}</UText>
+        </TouchableOpacity>
       </VStack>
     </LinearGradient>
   );

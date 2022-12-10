@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {InputProps} from '@rneui/base';
 import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
+import auth from '@react-native-firebase/auth';
 
 interface IFormInputControllerProps {
   control: Control<IRegisterInfoValue, any>;
@@ -44,9 +45,14 @@ const Index = function () {
   const [hide, setHide] = useState(true);
   const [hideConfirm, setHideConfirm] = useState(true);
 
-  const submit = data => {
-    console.log(data);
-  };
+  const submit = useCallback(async (data: {phoneNumber: string}) => {
+    const isDeviceHasUserLogedIn = auth().currentUser;
+    if (isDeviceHasUserLogedIn) {
+      await auth()
+        .signOut()
+        .catch(error => console.log(error));
+    }
+  }, []);
 
   return (
     <LinearGradient
@@ -116,7 +122,7 @@ const Index = function () {
               hide={hideConfirm}
             />
             <TouchableOpacity
-              onPress={() => handleSubmit(submit)}
+              onPress={handleSubmit(submit)}
               style={styles.buttonInput}>
               <UText style={styles.textButtonInput}>{strings.register}</UText>
             </TouchableOpacity>
