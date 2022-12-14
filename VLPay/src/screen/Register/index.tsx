@@ -18,7 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {InputProps} from '@rneui/base';
 import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
-import auth from '@react-native-firebase/auth';
+// import auth from '@react-native-firebase/auth';
 
 interface IFormInputControllerProps {
   control: Control<IRegisterInfoValue, any>;
@@ -46,11 +46,10 @@ const Index = function () {
   const [hideConfirm, setHideConfirm] = useState(true);
 
   const submit = useCallback(async (data: {phoneNumber: string}) => {
-    const isDeviceHasUserLogedIn = auth().currentUser;
+    // const isDeviceHasUserLogedIn = auth().currentUser;
     if (isDeviceHasUserLogedIn) {
-      await auth()
-        .signOut()
-        .catch(error => console.log(error));
+      // await auth().signOut();
+      // .catch(error => console.log(error));
     }
   }, []);
 

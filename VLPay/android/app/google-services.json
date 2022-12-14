@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1009045882827",
+    "project_id": "vlpay-da160",
+    "storage_bucket": "vlpay-da160.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009045882827:android:27dfbb74aa01337c1a584e",
+        "android_client_info": {
+          "package_name": "com.vlpay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009045882827-120eu3o9sqfffu054o1f1umbbvloiec1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAS-zk-GoPjShRD2X4EmIlXqOPxyneDbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009045882827-120eu3o9sqfffu054o1f1umbbvloiec1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
