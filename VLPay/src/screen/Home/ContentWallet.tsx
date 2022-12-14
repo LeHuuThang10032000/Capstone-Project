@@ -1,12 +1,76 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ViewProps,
+  ImageSourcePropType,
+} from 'react-native';
+import React, {useCallback, useMemo} from 'react';
+import {UText} from '../../components/UText';
+import {Flex} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
-type Props = {};
+const ContentWallet = () => {
+  const navigation = useNavigation<MainStackNavigation>();
+  interface IImageButtonProps extends ViewProps {
+    source: ImageSourcePropType;
+    title: string;
+    onPress: () => void;
+  }
 
-const ContentWallet = (props: Props) => {
+  const ImageButton = (props: IImageButtonProps) => {
+    return (
+      <TouchableOpacity
+        onPress={props.onPress}
+        style={{
+          width: '33%',
+          aspectRatio: 1,
+          padding: 2,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Image source={props.source} style={{width: 52, height: 52}} />
+        <UText style={{fontSize: 13, marginTop: 8}}>{props.title}</UText>
+      </TouchableOpacity>
+    );
+  };
+
+  const items: IImageButtonProps[] = useMemo(() => {
+    return [
+      {
+        source: require('../../assets/img/moneytranfer.png'),
+        title: 'Chuyển tiền',
+        onPress: () => {
+          navigation.navigate('Search');
+        },
+      },
+      {
+        source: require('../../assets/img/gift.png'),
+        title: 'Ưu đãi',
+        onPress: () => {
+          console.log('Promo');
+        },
+      },
+    ];
+  }, []);
+
+  const renderItems = useCallback(() => {
+    return items.map((v, i) => (
+      <ImageButton
+        key={i}
+        source={v.source}
+        title={v.title}
+        onPress={v.onPress}
+      />
+    ));
+  }, [items]);
+
   return (
     <View>
-      <View
+      {/* <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -34,6 +98,20 @@ const ContentWallet = (props: Props) => {
           </TouchableOpacity>
           <Text style={styles.text}>Ưu đãi</Text>
         </View>
+      </View> */}
+
+      <View
+        style={{
+          padding: 16,
+          marginTop: 24,
+        }}>
+        <Flex
+          flexDirection={'row'}
+          justifyContent="flex-start"
+          alignItems="center"
+          flexWrap="wrap">
+          {renderItems()}
+        </Flex>
       </View>
     </View>
   );
