@@ -3,7 +3,7 @@
 
 // import React in our code
 import {useNavigation} from '@react-navigation/native';
-import {HStack, Icon, Image, Input, VStack} from 'native-base';
+import {HStack, Icon, Image, Input, Skeleton, VStack} from 'native-base';
 import React, {useState, useEffect, useCallback} from 'react';
 import BackIcon from '../../assets/svg/left-arrow.svg';
 import SearchIcon from '../../assets/svg/search.svg';
@@ -18,9 +18,11 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {UserData} from '../../model/UserData';
+import Lottie from 'lottie-react-native';
 
 type Props = {
   text: string;
@@ -30,6 +32,7 @@ const App = () => {
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const onPress = useCallback(
     (
@@ -38,6 +41,7 @@ const App = () => {
       title: string,
       first: string,
       last: string,
+      phone: string,
     ) => {
       navigation.navigate('DetailUser', {
         email: email,
@@ -45,6 +49,7 @@ const App = () => {
         title: title,
         first: first,
         last: last,
+        phone: phone,
       });
     },
     [],
@@ -56,11 +61,13 @@ const App = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetch('https://randomuser.me/api/?results=50')
       .then(response => response.json())
       .then(responseJson => {
         setFilteredDataSource(responseJson.results);
         setMasterDataSource(responseJson.results);
+        setLoading(false);
       })
       .catch(error => {
         console.error(error);
@@ -99,6 +106,7 @@ const App = () => {
             item.name.title,
             item.name.first,
             item.name.last,
+            item.phone,
           );
         }}>
         <HStack alignItems="center" p="5">
@@ -129,6 +137,18 @@ const App = () => {
           backgroundColor: '#C8C8C8',
         }}
       />
+    );
+  };
+
+  const EmptyComponent = () => {
+    return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <Lottie
+          source={require('../../assets/lottie-file/loading.json')}
+          autoPlay={true}
+          style={{width: 100, height: 100}}
+        />
+      </View>
     );
   };
 
@@ -174,6 +194,7 @@ const App = () => {
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={ItemSeparatorView}
         renderItem={ItemView}
+        ListEmptyComponent={EmptyComponent}
       />
     </SafeAreaView>
   );

@@ -2,7 +2,7 @@
 // https://aboutreact.com/generation-of-qr-code-in-react-native/
 
 // import React in our code
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 // import all the components we are going to use
 import {
@@ -22,16 +22,47 @@ import ModalProvider from '../../context/ModalProvider';
 import Modal from 'react-native-modal';
 import HeaderModal from '../../components/CustomLogout/HeaderModal';
 import BodyModal from '../Settings/ChangeLngComp/BodyModal';
-import {Input} from 'native-base';
+import {Input, Button} from 'native-base';
+import {
+  escapeCurrency,
+  formatCurrency,
+} from '../../components/helpers/formatNum';
 
 const App = () => {
   const [inputText, setInputText] = useState('');
   const [qrvalue, setQrvalue] = useState('');
+  const [moneyInput, setmoneyInput] = useState('');
+  const [error, setError] = useState('');
+  const [disabledButton, setDisabledButton] = useState(true);
+  const handleChangeInput = useCallback((str: string) => {
+    const limit_money = 10000000;
+    const min_money = 500;
+    let money = 0;
+    money = parseInt(formatCurrency(escapeCurrency(str)).replace(/,/g, ''));
+
+    if (money > limit_money) {
+      setError('Vượt quá số tiền cho phép');
+      setDisabledButton(true);
+    } else if (money < min_money) {
+      setError('số tiền tối thiểu' + ' ' + '500đ');
+      setDisabledButton(true);
+    } else {
+      setError('');
+      setDisabledButton(false);
+    }
+
+    if (str.length === 0) {
+      setmoneyInput('');
+      return;
+    }
+    setmoneyInput(formatCurrency(escapeCurrency(str)));
+  }, []);
+
   const {modalVisible, setModalVisible, closeModal} = ModalProvider();
   const toggleModal = () => {
     setModalVisible(true);
   };
-  const setValueQR = () => setQrvalue(inputText);
+  const setValueQR = () => setQrvalue(moneyInput);
   const saveQR = () => {
     setValueQR();
     closeModal();
@@ -95,14 +126,51 @@ const App = () => {
             <Input
               placeholder="Enter money"
               w="90%"
-              onChangeText={inputText => setInputText(inputText)}
+              // onChangeText={inputText => setInputText(inputText)}
+              onChangeText={handleChangeInput}
               keyboardType="numeric"
-              value={inputText}
-              maxLength={8}
+              value={moneyInput}
+              InputRightElement={<Text style={{paddingRight: 10}}>VND</Text>}
             />
-            <TouchableOpacity style={styles.buttonStyle} onPress={saveQR}>
+            {error && (
+              <Text
+                allowFontScaling={false}
+                style={{marginTop: 3, color: 'red'}}>
+                {error}
+              </Text>
+            )}
+            {/* <TouchableOpacity
+              style={[
+                styles.buttonStyle,
+                disabledButton
+                  ? {
+                      backgroundColor: '#979797',
+                    }
+                  : {
+                      backgroundColor: '#B5EAD8',
+                    },
+              ]}
+              disabled={disabledButton || moneyInput.length === 0}
+              onPress={saveQR}>
               <Text style={styles.buttonTextStyle}>Generate QR Code</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <Button
+              style={[
+                disabledButton
+                  ? {
+                      backgroundColor: '#979797',
+                    }
+                  : {
+                      backgroundColor: '#B5EAD8',
+                    },
+                styles.buttonSave,
+              ]}
+              _text={{color: '#514545', fontFamily: 'Poppins-Bold'}}
+              disabled={disabledButton}
+              isDisabled={moneyInput.length === 0}
+              onPress={saveQR}>
+              Generate QR Code
+            </Button>
           </View>
         </Modal>
       </View>
@@ -147,5 +215,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
     fontFamily: 'Poppins-Bold',
+  },
+  buttonSave: {
+    alignItems: 'center',
+    borderRadius: 5,
+    marginTop: 30,
+    padding: 10,
+    width: '90%',
   },
 });

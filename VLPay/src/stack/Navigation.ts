@@ -4,6 +4,7 @@ import {
   MaterialBottomTabScreenProps,
 } from '@react-navigation/material-bottom-tabs';
 import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
+import {Title} from 'react-native-paper';
 
 // import {Job} from '../model/Job';
 // import {Social} from '../model/Social';
@@ -50,7 +51,9 @@ export type MainStackParamList = {
     title: string;
     first: string;
     last: string;
+    phone: string;
   };
+  Transfer: {picture: string; title: string; first: string; last: string};
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

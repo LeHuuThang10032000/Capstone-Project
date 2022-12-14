@@ -9,10 +9,10 @@ import {MainStackNavigation} from '../../stack/Navigation';
 
 const DetailUser = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {email, picture, title, first, last} = route.params;
+  const {email, picture, title, first, last, phone} = route.params;
   return (
     <View>
-      <HeaderBack title="Personal page" />
+      <HeaderBack title="Detail User" />
       <Center style={{paddingVertical: 40}}>
         <Image
           source={{uri: `${picture}`}}
@@ -26,32 +26,19 @@ const DetailUser = ({route}: any) => {
         <Text style={styles.titleText}>
           {title} {first} {last}
         </Text>
+        <Text style={styles.text}>{phone}</Text>
         <Text style={styles.text}>{email}</Text>
       </Center>
-      <Center pt={33}>
-        <HStack space={7}>
-          <Button
-            width={143}
-            background={'#FEB7B1'}
-            leftIcon={<AddFriendIcon width={20} />}
-            onPress={() => console.log('add friend')}>
-            <Text style={styles.button}>Add friend</Text>
-          </Button>
-          <Button
-            width={143}
-            background={'#B5EAD8'}
-            leftIcon={<TransferIcon width={30} />}
-            onPress={() => console.log('transfer')}>
-            <Text style={styles.button}>Transfer</Text>
-          </Button>
-        </HStack>
-      </Center>
       <Center pt={160}>
-        <TouchableOpacity
-          style={styles.homeButton}
-          onPress={() => navigation.navigate('Home')}>
-          <Text style={styles.textHomeButton}>Home Screen</Text>
-        </TouchableOpacity>
+        <Button
+          width={'90%'}
+          background={'#B5EAD8'}
+          leftIcon={<TransferIcon width={30} />}
+          onPress={() =>
+            navigation.navigate('Transfer', {picture, title, first, last})
+          }>
+          <Text style={styles.button}>Transfer</Text>
+        </Button>
       </Center>
     </View>
   );
@@ -69,8 +56,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
   },
   button: {
-    color: '#000000',
-    fontFamily: 'Poppins-Regular',
+    color: '#514545',
+    fontFamily: 'Poppins-Bold',
     fontSize: 16,
   },
   homeButton: {
