@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1009045882827-87rslv0mbvkg5h1k36chuku3rs5foj12.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlpay",
+            "certificate_hash": "79c49354852918a9773ff5c3a072b13468aa5e23"
+          }
+        },
+        {
           "client_id": "1009045882827-120eu3o9sqfffu054o1f1umbbvloiec1.apps.googleusercontent.com",
           "client_type": 3
         }

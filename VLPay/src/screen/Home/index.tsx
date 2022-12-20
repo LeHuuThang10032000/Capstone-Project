@@ -14,6 +14,8 @@ const Index = (props: Props) => {
   const token = useSelector(state => state.authReducer.authToken);
   const navigation = useNavigation();
   useEffect(() => {
+    console.log('token', token);
+
     if (!token) {
       navigation.setOptions({
         tabBarStyle: {display: 'none'},

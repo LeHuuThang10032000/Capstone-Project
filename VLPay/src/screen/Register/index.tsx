@@ -18,7 +18,11 @@ import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {InputProps} from '@rneui/base';
 import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
-// import auth from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
+import axios from 'axios';
+import {LOGIN} from '../../redux/constants';
+import {useDispatch} from 'react-redux';
+import {Login} from '../../redux/actions/authAction';
 
 interface IFormInputControllerProps {
   control: Control<IRegisterInfoValue, any>;
@@ -28,6 +32,8 @@ interface IFormInputControllerProps {
 
 const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
+  const dispatch = useDispatch();
+
   const {
     setValue,
     handleSubmit,
@@ -39,18 +45,48 @@ const Index = function () {
       password: '',
       phoneNumber: '',
       passwordConfirmation: '',
-      gender: 0,
     },
   });
   const [hide, setHide] = useState(true);
   const [hideConfirm, setHideConfirm] = useState(true);
 
-  const submit = useCallback(async (data: {phoneNumber: string}) => {
-    // const isDeviceHasUserLogedIn = auth().currentUser;
-    if (isDeviceHasUserLogedIn) {
-      // await auth().signOut();
-      // .catch(error => console.log(error));
+  const submit = useCallback(async (data: any) => {
+    console.log(data);
+    const {
+      email: full_name,
+      password: password,
+      passwordConfirmation: password_confirmation,
+      phoneNumber: phone,
+    } = data;
+
+    try {
+      const res = await axios.post('https://zennoshop.cf/api/user/register', {
+        full_name,
+        phone,
+        password,
+        password_confirmation,
+      });
+
+      dispatch(await Login(phone, password));
+      navigation.goBack();
+    } catch (e) {
+      console.log(e);
     }
+
+    // if (auth()?.currentUser) {
+    //   await auth()
+    //     .signOut()
+    //     .catch(e => console.log(e));
+    // }
+    // try {
+    //   const removeZeroPhone = data.phoneNumber.replace('0', '');
+    //   const confirmation = await auth().signInWithPhoneNumber(
+    //     `+84${removeZeroPhone}`,
+    //   );
+    //   console.log(confirmation);
+    // } catch (error) {
+    //   console.log('error ', error);
+    // }
   }, []);
 
   return (
@@ -64,9 +100,9 @@ const Index = function () {
               <Utitle style={styles.headerItem}>{strings.register}</Utitle>
             </View>
             <FormInputController
-              title={strings.email}
+              title={strings.name}
               LeftIcon={<Mail width={20} height={20} />}
-              placeHolder={strings.phone_placeholder}
+              placeHolder={strings.name_placeholder}
               styles={styles.textInput}
               control={control}
               name={'email'}
