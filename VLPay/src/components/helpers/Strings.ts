@@ -29,7 +29,7 @@ const strings = new Localize({
     password: 'Password',
     password_confirmation: 'Confirm password',
     password_placeholder: 'Please input your password',
-    phone_number: 'Phonenumber',
+    phone_number: 'Phone Number',
     rememberMe: 'Remember me',
     forgotPassword: 'Forgot password',
     signUp: 'Sign up',

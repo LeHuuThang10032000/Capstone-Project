@@ -33,15 +33,17 @@ interface IFormInputControllerProps {
 const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
   const dispatch = useDispatch();
+  const [btnBlock, setBtnBlock] = useState(false);
 
   const {
-    setValue,
+    getValues,
     handleSubmit,
+    watch,
     control,
     formState: {errors},
   } = useForm({
     defaultValues: {
-      email: '',
+      name: '',
       password: '',
       phoneNumber: '',
       passwordConfirmation: '',
@@ -51,26 +53,29 @@ const Index = function () {
   const [hideConfirm, setHideConfirm] = useState(true);
 
   const submit = useCallback(async (data: any) => {
-    console.log(data);
     const {
       email: full_name,
       password: password,
       passwordConfirmation: password_confirmation,
       phoneNumber: phone,
     } = data;
+    setBtnBlock(true);
+    console.log(data);
 
     try {
-      const res = await axios.post('https://zennoshop.cf/api/user/register', {
-        full_name,
-        phone,
-        password,
-        password_confirmation,
+      await axios.post('https://zennoshop.cf/api/user/register', {
+        full_name: full_name,
+        phone: phone,
+        password: password,
+        password_confirmation: password_confirmation,
       });
 
       dispatch(await Login(phone, password));
+      setBtnBlock(false);
       navigation.goBack();
     } catch (e) {
       console.log(e);
+      setBtnBlock(false);
     }
 
     // if (auth()?.currentUser) {
@@ -89,6 +94,49 @@ const Index = function () {
     // }
   }, []);
 
+  console.log(errors);
+
+  const validationPswConfirm = useCallback(
+    (psw: string) => {
+      if (!psw) {
+        return 'Password confirm is required';
+      }
+      if (getValues('password')) {
+        if (
+          watch('passwordConfirmation') !== watch('password') &&
+          getValues('passwordConfirmation')
+        ) {
+          return 'Password confirm must match with password';
+        }
+      }
+    },
+    [getValues, watch],
+  );
+
+  const validationPsw = useCallback((pws: string) => {
+    if (!pws) {
+      return 'Password is required';
+    } else if (pws.length < 10) {
+      return 'Password must have at least 10 character';
+    }
+  }, []);
+
+  const validateName = useCallback((name: string) => {
+    if (!name) {
+      return 'Name is required';
+    } else if (name.length < 4) {
+      return 'Field name must have at least 4 characters';
+    }
+  }, []);
+
+  const validatePhoneNumber = useCallback((phoneNumber: string) => {
+    if (!phoneNumber) {
+      return 'Phone number is required';
+    } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
+      return 'Format phone number is wrong';
+    }
+  }, []);
+
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
@@ -101,12 +149,13 @@ const Index = function () {
             </View>
             <FormInputController
               title={strings.name}
-              LeftIcon={<Mail width={20} height={20} />}
               placeHolder={strings.name_placeholder}
               styles={styles.textInput}
               control={control}
-              name={'email'}
-              required={false}
+              name={'name'}
+              validation={validateName}
+              required={true}
+              error={errors?.name?.message}
             />
             <FormInputController
               title={strings.phone_number}
@@ -117,6 +166,8 @@ const Index = function () {
               name={'phoneNumber'}
               keyboardType={'phone-pad'}
               required={false}
+              validation={validatePhoneNumber}
+              error={errors?.phoneNumber?.message}
             />
             <FormInputController
               title={strings.password}
@@ -126,6 +177,7 @@ const Index = function () {
               control={control}
               name={'password'}
               required={false}
+              validation={validationPsw}
               RightIcon={
                 <TouchableOpacity
                   style={styles.passwordIcon}
@@ -135,6 +187,7 @@ const Index = function () {
                   {hide ? <BlindIcon /> : <EyeIcon />}
                 </TouchableOpacity>
               }
+              error={errors?.password?.message}
               hide={hide}
             />
             <FormInputController
@@ -145,6 +198,7 @@ const Index = function () {
               control={control}
               name={'passwordConfirmation'}
               required={false}
+              validation={validationPswConfirm}
               RightIcon={
                 <TouchableOpacity
                   style={styles.passwordIcon}
@@ -154,9 +208,11 @@ const Index = function () {
                   {hideConfirm ? <BlindIcon /> : <EyeIcon />}
                 </TouchableOpacity>
               }
+              error={errors?.passwordConfirmation?.message}
               hide={hideConfirm}
             />
             <TouchableOpacity
+              disabled={btnBlock}
               onPress={handleSubmit(submit)}
               style={styles.buttonInput}>
               <UText style={styles.textButtonInput}>{strings.register}</UText>
@@ -184,28 +240,42 @@ const FormInputController = (
       LeftIcon?: any;
       hide?: boolean;
       setHide?: any;
+      validation?: any;
+      error?: any;
     },
 ) => {
-  const {control, name, title, placeHolder, required, ...rest} = props;
+  const {
+    control,
+    name,
+    title,
+    placeHolder,
+    required,
+    validation,
+    error,
+    ...rest
+  } = props;
   return (
     <>
       <Utitle style={{fontSize: 18}}>{title}</Utitle>
       <Controller
         name={name}
         control={control}
-        rules={{required: required}}
+        rules={{required: required, validate: validation}}
         render={({field: {value, onChange}}) => {
           return (
-            <Input
-              leftIcon={props.LeftIcon}
-              placeholder={placeHolder}
-              style={props.styles}
-              secureTextEntry={props.hide}
-              rightIcon={props.RightIcon}
-              onChangeText={onChange}
-              value={value}
-              {...rest}
-            />
+            <View>
+              <Input
+                leftIcon={props.LeftIcon}
+                placeholder={placeHolder}
+                style={props.styles}
+                secureTextEntry={props.hide}
+                rightIcon={props.RightIcon}
+                onChangeText={onChange}
+                value={value}
+                {...rest}
+              />
+              {error && <UText style={styles.error}>{error}</UText>}
+            </View>
           );
         }}
       />

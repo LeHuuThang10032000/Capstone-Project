@@ -16,6 +16,12 @@ export default StyleSheet.create({
     justifyContent: 'center',
     marginTop: 100,
   },
+  error: {
+    fontSize: 11,
+    color: 'red',
+    position: 'absolute',
+    bottom: 0,
+  },
   headerItem: {
     fontWeight: '700',
     fontSize: 28,

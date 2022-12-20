@@ -18,6 +18,10 @@ export const Login = async (phoneNumber: string, password: string) => {
   } catch (e) {
     console.log(e);
   }
+  return {
+    type: LOGIN,
+    payload: null,
+  };
 };
 
 export const Logout = () => {
