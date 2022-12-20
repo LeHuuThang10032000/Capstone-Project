@@ -1,12 +1,23 @@
 import {LOGIN, LOGOUT} from '../constants';
+import * as api from '../../components/apis/api';
+import axios from 'axios';
 
-export const Login = (phoneNumber: string, password: string) => {
-  const token = phoneNumber + password;
+export const Login = async (phoneNumber: string, password: string) => {
+  const phone = phoneNumber;
 
-  return {
-    type: LOGIN,
-    payload: token,
-  };
+  try {
+    const res = await axios.post('https://zennoshop.cf/api/user/login', {
+      phone,
+      password,
+    });
+
+    return {
+      type: LOGIN,
+      payload: res.data.token,
+    };
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const Logout = () => {

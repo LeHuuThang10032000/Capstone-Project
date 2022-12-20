@@ -29,8 +29,11 @@ const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
   const dispatch = useDispatch();
 
-  const submit = async (phoneNumber: string, password: string) => {
-    dispatch(Login(phoneNumber, password));
+  const submit = async (value: any) => {
+    console.log(value);
+    const {phoneNumber, password} = value;
+
+    dispatch(await Login(phoneNumber, password));
   };
 
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -100,7 +103,7 @@ const Index = function () {
           </TouchableOpacity>
         </HStack>
         <Flex style={styles.buttonInput}>
-          <TouchableOpacity onPress={() => submit('123321', '123123123')}>
+          <TouchableOpacity onPress={handleSubmit(submit)}>
             <UText style={styles.textButtonInput}>{strings.login}</UText>
           </TouchableOpacity>
         </Flex>
