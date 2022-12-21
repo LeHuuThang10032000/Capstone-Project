@@ -21,6 +21,12 @@ export default StyleSheet.create({
     fontSize: 28,
     color: '#312E49',
   },
+  error: {
+    fontSize: 11,
+    color: 'red',
+    position: 'absolute',
+    bottom: 0,
+  },
   itemLabel: {},
   itemContainer: {
     flexDirection: 'row',
@@ -40,7 +46,7 @@ export default StyleSheet.create({
     marginBottom: 12,
   },
   textInput: {
-    marginRight: 30,
+    marginRight: 0,
     fontSize: 16,
     color: '#747980',
   },

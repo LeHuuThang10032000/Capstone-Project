@@ -49,12 +49,27 @@ const Index = function () {
     },
   });
   const [hide, setHide] = useState(true);
+  const validationPsw = useCallback((pws: string) => {
+    if (!pws) {
+      return 'Password is required';
+    } else if (pws.length < 6) {
+      return 'Password must have at least 6 character';
+    }
+  }, []);
+
+  const validatePhoneNumber = useCallback((phoneNumber: string) => {
+    if (!phoneNumber) {
+      return 'Phone number is required';
+    } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
+      return 'Format phone number is wrong';
+    }
+  }, []);
 
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
-      <VStack>
+      <VStack flex={1}>
         <View style={styles.header}>
           <Utitle style={styles.headerItem}>{strings.login}</Utitle>
         </View>
@@ -67,6 +82,8 @@ const Index = function () {
           name={'phoneNumber'}
           keyboardType={'phone-pad'}
           required={true}
+          error={errors?.phoneNumber?.message}
+          validation={validatePhoneNumber}
         />
         <FormInputController
           title={strings.password}
@@ -76,6 +93,8 @@ const Index = function () {
           control={control}
           name={'password'}
           required={true}
+          validation={validationPsw}
+          error={errors?.password?.message}
           RightIcon={
             <TouchableOpacity
               style={styles.passwordIcon}
@@ -87,18 +106,10 @@ const Index = function () {
           }
           hide={hide}
         />
-        <HStack alignItems={'center'} justifyContent={'space-between'}>
-          <HStack alignItems={'center'}>
-            <CheckBox
-              disabled={false}
-              value={toggleCheckBox}
-              onValueChange={newValue => setToggleCheckBox(newValue)}
-            />
-            <UText>{strings.rememberMe}</UText>
-          </HStack>
-          <TouchableOpacity>
+        <HStack alignItems={'center'} justifyContent={'flex-end'}>
+          <TouchableOpacity style={{marginBottom: 35}}>
             <UText style={styles.textButtonOpacity}>
-              {strings.forgotPassword}
+              {strings.forgotPassword}?
             </UText>
           </TouchableOpacity>
         </HStack>
@@ -111,12 +122,22 @@ const Index = function () {
           style={{
             width: '100%',
             flexDirection: 'row',
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
+            position: 'absolute',
+            bottom: 0,
           }}
           onPress={() => {
             navigation.navigate('Register');
           }}>
-          <UText>{strings.register}</UText>
+          <UText>
+            Don't have an account?{' '}
+            <UText
+              style={{
+                color: '#2805FF',
+              }}>
+              {strings.register}
+            </UText>
+          </UText>
         </TouchableOpacity>
       </VStack>
     </LinearGradient>
@@ -133,16 +154,27 @@ const FormInputController = (
       LeftIcon?: any;
       hide?: boolean;
       setHide?: any;
+      validation?: any;
+      error?: any;
     },
 ) => {
-  const {control, name, title, placeHolder, required, ...rest} = props;
+  const {
+    control,
+    name,
+    title,
+    placeHolder,
+    required,
+    validation,
+    error,
+    ...rest
+  } = props;
   return (
-    <>
+    <View>
       <Utitle style={{fontSize: 18}}>{title}</Utitle>
       <Controller
         name={name}
         control={control}
-        rules={{required: required}}
+        rules={{required: true, validate: validation}}
         render={({field: {value, onChange}}) => (
           <Input
             leftIcon={props.LeftIcon}
@@ -156,7 +188,8 @@ const FormInputController = (
           />
         )}
       />
-    </>
+      {error && <UText style={styles.error}>{error}</UText>}
+    </View>
   );
 };
 

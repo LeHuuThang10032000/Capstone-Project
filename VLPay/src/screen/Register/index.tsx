@@ -23,6 +23,9 @@ import axios from 'axios';
 import {LOGIN} from '../../redux/constants';
 import {useDispatch} from 'react-redux';
 import {Login} from '../../redux/actions/authAction';
+import Icons from '../../components/icons';
+import YesNoModal from '../../components/YesNoModal';
+import Colors from '../../components/helpers/Colors';
 
 interface IFormInputControllerProps {
   control: Control<IRegisterInfoValue, any>;
@@ -34,6 +37,7 @@ const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
   const dispatch = useDispatch();
   const [btnBlock, setBtnBlock] = useState(false);
+  const [visibleWarning, setVisibleWarning] = useState(false);
 
   const {
     getValues,
@@ -143,7 +147,12 @@ const Index = function () {
       style={styles.linearGradient}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <KeyboardInputScrollView>
-          <VStack style={{paddingBottom: 20}}>
+          <VStack
+            style={{
+              paddingBottom: 20,
+              flex: 1,
+              paddingHorizontal: 15,
+            }}>
             <View style={styles.header}>
               <Utitle style={styles.headerItem}>{strings.register}</Utitle>
             </View>
@@ -159,7 +168,6 @@ const Index = function () {
             />
             <FormInputController
               title={strings.phone_number}
-              LeftIcon={<PhoneIcon width={20} height={20} />}
               placeHolder={strings.phone_placeholder}
               styles={styles.textInput}
               control={control}
@@ -171,7 +179,6 @@ const Index = function () {
             />
             <FormInputController
               title={strings.password}
-              LeftIcon={<LockIcon width={20} height={20} />}
               placeHolder={strings.password_placeholder}
               styles={styles.textInput}
               control={control}
@@ -191,8 +198,7 @@ const Index = function () {
               hide={hide}
             />
             <FormInputController
-              title={strings.password}
-              LeftIcon={<LockIcon width={20} height={20} />}
+              title={strings.password_confirmation}
               placeHolder={strings.password_confirmation}
               styles={styles.textInput}
               control={control}
@@ -217,15 +223,47 @@ const Index = function () {
               style={styles.buttonInput}>
               <UText style={styles.textButtonInput}>{strings.register}</UText>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Login');
-              }}>
-              <Text>Quay lại đăng nhập</Text>
-            </TouchableOpacity>
           </VStack>
         </KeyboardInputScrollView>
       </ScrollView>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+        }}>
+        <HStack justifyContent={'center'}>
+          <UText>You already have an account? </UText>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Login');
+            }}>
+            <UText style={{color: '#2805FF'}}>Login</UText>
+          </TouchableOpacity>
+        </HStack>
+      </View>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+        }}
+        message=""
+        title={'There are some thing wrong -_-'}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={strings.confirm}
+        style={{flexDirection: 'column'}}
+      />
     </LinearGradient>
   );
 };
@@ -256,7 +294,9 @@ const FormInputController = (
   } = props;
   return (
     <>
-      <Utitle style={{fontSize: 18}}>{title}</Utitle>
+      <Utitle style={{fontSize: 18, fontWeight: '700', color: '#312E49'}}>
+        {title}
+      </Utitle>
       <Controller
         name={name}
         control={control}
