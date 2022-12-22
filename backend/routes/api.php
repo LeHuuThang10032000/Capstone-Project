@@ -24,5 +24,6 @@ Route::prefix('/v1')->group(function(){
 
     //User
     Route::post('/update/{id}',[UserController::class, 'update']);
+    Route::post('/updateProfile/{id}',[UserController::class, 'profileUpdate']);
 });
 
