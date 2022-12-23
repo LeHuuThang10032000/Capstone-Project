@@ -26,7 +26,7 @@ export default StyleSheet.create({
   },
   underlineStyleBase: {
     borderWidth: 0,
-    borderBottomColor: '#FFFFFF',
+    borderBottomColor: '#D8D8D8',
     borderBottomWidth: 4,
     width: 50,
     height: 70,

@@ -25,7 +25,6 @@ const Index = ({
       onChangeText={onChangeText}
       containerStyle={{
         position: 'absolute',
-        left: -10,
         bottom: 0,
       }}
       inputContainerStyle={{

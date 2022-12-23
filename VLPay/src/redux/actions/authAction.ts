@@ -2,6 +2,7 @@ import {LOGIN, LOGOUT} from '../constants';
 import * as api from '../../components/apis/api';
 import axios from 'axios';
 import {axiosClient} from '../../components/apis/axiosClient';
+import {getToken, saveToken} from '../../utils/storeUtils';
 
 export const Login = async (phoneNumber: string, password: string) => {
   const phone = phoneNumber;
@@ -12,9 +13,7 @@ export const Login = async (phoneNumber: string, password: string) => {
       password,
     });
 
-    console.log('====================================');
-    console.log(res);
-    console.log('====================================');
+    await saveToken(res.data.token);
 
     return {
       type: LOGIN,

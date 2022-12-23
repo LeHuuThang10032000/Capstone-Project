@@ -10,6 +10,14 @@ export const getUser = async () => {
   return auth ? (JSON.parse(auth) as RegisterResponse) : undefined;
 };
 
+export const saveToken = async (token: string) => {
+  await AsyncStorage.setItem('token', token);
+};
+
+export const getToken = async () => {
+  return AsyncStorage.getItem('token') || '';
+};
+
 export const getLang = async () => {
   const lang = (await AsyncStorage.getItem('localeKey')) || '';
   return lang;

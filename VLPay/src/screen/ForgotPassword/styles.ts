@@ -7,19 +7,23 @@ export default StyleSheet.create({
   },
   linearGradient: {
     flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
     borderRadius: 5,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 150,
+    marginTop: 100,
   },
   headerItem: {
     fontWeight: '700',
     fontSize: 28,
     color: '#312E49',
+  },
+  error: {
+    fontSize: 11,
+    color: 'red',
+    position: 'absolute',
+    bottom: 0,
   },
   itemLabel: {},
   itemContainer: {
@@ -40,7 +44,7 @@ export default StyleSheet.create({
     marginBottom: 12,
   },
   textInput: {
-    marginRight: 100,
+    marginRight: 0,
     fontSize: 16,
     color: '#747980',
   },
@@ -50,6 +54,7 @@ export default StyleSheet.create({
     backgroundColor: '#B5EAD8',
     borderRadius: 6,
     paddingVertical: 20,
+    marginHorizontal: 10,
   },
   textButtonInput: {
     color: '#514545',
@@ -64,7 +69,8 @@ export default StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 30,
   },
-  content: {
-    marginTop: 38
-  }
+  passwordIcon: {
+    position: 'absolute',
+    right: 10,
+  },
 });

@@ -36,7 +36,7 @@ const NormalButton: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    backgroundColor: Colors.cornflowerBlue,
+    backgroundColor: '#B5EAD8',
     borderRadius: 15,
     paddingHorizontal: 24,
     paddingVertical: 18,
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textTransform: 'capitalize',
+    color: Colors.black,
   },
 });
 

@@ -27,6 +27,7 @@ import Icons from '../../components/icons';
 import YesNoModal from '../../components/YesNoModal';
 import Colors from '../../components/helpers/Colors';
 import {axiosClient} from '../../components/apis/axiosClient';
+import Arrow from '../../assets/svg/arrow_left.svg';
 
 interface IFormInputControllerProps {
   control: Control<IRegisterInfoValue, any>;
@@ -67,18 +68,12 @@ const Index = function () {
 
     setBtnBlock(true);
     try {
-      const result = await axiosClient.post(
-        'https://zennoshop.cf/api/user/register',
-        {
-          full_name,
-          phone,
-          password,
-          password_confirmation,
-        },
-      );
-      console.log(result.data);
-
-      dispatch(await Login(phone, password));
+      await axiosClient.post('https://zennoshop.cf/api/user/register', {
+        full_name,
+        phone,
+        password,
+        password_confirmation,
+      });
       setBtnBlock(false);
       navigation.goBack();
     } catch (e) {
@@ -143,105 +138,113 @@ const Index = function () {
       return 'Format phone number is wrong';
     }
   }, []);
-
+  const Header = () => {
+    return (
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <HStack style={{marginTop: 25}}>
+          <Arrow style={{marginLeft: 15}} />
+        </HStack>
+      </TouchableOpacity>
+    );
+  };
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
+      <Header />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <KeyboardInputScrollView>
-          <VStack
-            style={{
-              paddingBottom: 20,
-              flex: 1,
-              paddingHorizontal: 15,
-            }}>
-            <View style={styles.header}>
-              <Utitle style={styles.headerItem}>{strings.register}</Utitle>
-            </View>
-            <FormInputController
-              title={strings.name}
-              placeHolder={strings.name_placeholder}
-              styles={styles.textInput}
-              control={control}
-              name={'name'}
-              validation={validateName}
-              required={true}
-              error={errors?.name?.message}
-              errorRequired={
-                errors?.name?.type && 'Field name can not be empty'
-              }
-            />
-            <FormInputController
-              title={strings.phone_number}
-              placeHolder={strings.phone_placeholder}
-              styles={styles.textInput}
-              control={control}
-              name={'phoneNumber'}
-              keyboardType={'phone-pad'}
-              required={true}
-              validation={validatePhoneNumber}
-              error={errors?.phoneNumber?.message}
-              errorRequired={
-                errors?.phoneNumber?.type &&
-                'Field phoneNumber can not be empty'
-              }
-            />
-            <FormInputController
-              title={strings.password}
-              placeHolder={strings.password_placeholder}
-              styles={styles.textInput}
-              control={control}
-              name={'password'}
-              required={true}
-              errorRequired={
-                errors?.password?.type && 'Field password can not be empty'
-              }
-              validation={validationPsw}
-              RightIcon={
-                <TouchableOpacity
-                  style={styles.passwordIcon}
-                  onPress={() => {
-                    setHide(!hide);
-                  }}>
-                  {hide ? <BlindIcon /> : <EyeIcon />}
-                </TouchableOpacity>
-              }
-              error={errors?.password?.message}
-              hide={hide}
-            />
-            <FormInputController
-              title={strings.password_confirmation}
-              placeHolder={strings.password_confirmation}
-              styles={styles.textInput}
-              control={control}
-              name={'passwordConfirmation'}
-              required={true}
-              validation={validationPswConfirm}
-              RightIcon={
-                <TouchableOpacity
-                  style={styles.passwordIcon}
-                  onPress={() => {
-                    setHideConfirm(!hideConfirm);
-                  }}>
-                  {hideConfirm ? <BlindIcon /> : <EyeIcon />}
-                </TouchableOpacity>
-              }
-              error={errors?.passwordConfirmation?.message}
-              hide={hideConfirm}
-              errorRequired={
-                errors?.passwordConfirmation?.type &&
-                'Field confirm password can not be empty'
-              }
-            />
-            <TouchableOpacity
-              disabled={btnBlock}
-              onPress={handleSubmit(submit)}
-              style={styles.buttonInput}>
-              <UText style={styles.textButtonInput}>{strings.register}</UText>
-            </TouchableOpacity>
-          </VStack>
-        </KeyboardInputScrollView>
+        <VStack
+          style={{
+            paddingBottom: 20,
+            flex: 1,
+            paddingHorizontal: 15,
+          }}>
+          <View style={styles.header}>
+            <Utitle style={styles.headerItem}>Đăng ký</Utitle>
+          </View>
+          <FormInputController
+            title={'Họ và tên'}
+            placeHolder={'Nhập họ và tên'}
+            styles={styles.textInput}
+            control={control}
+            name={'name'}
+            validation={validateName}
+            required={true}
+            error={errors?.name?.message}
+            errorRequired={
+              errors?.name?.type && 'Trường họ tên không được bỏ trống'
+            }
+          />
+          <FormInputController
+            title={'Số điện thoại'}
+            placeHolder={'Nhập số điện thoại'}
+            điện
+            styles={styles.textInput}
+            control={control}
+            name={'phoneNumber'}
+            keyboardType={'phone-pad'}
+            required={true}
+            validation={validatePhoneNumber}
+            error={errors?.phoneNumber?.message}
+            errorRequired={
+              errors?.phoneNumber?.type &&
+              'Trường số điện thoại không được bỏ trống'
+            }
+          />
+          <FormInputController
+            title={'Mật khẩu'}
+            placeHolder={'Nhập mật khẩu'}
+            styles={styles.textInput}
+            control={control}
+            name={'password'}
+            required={true}
+            errorRequired={
+              errors?.password?.type && 'Trường mật khẩu không được bỏ trống'
+            }
+            validation={validationPsw}
+            RightIcon={
+              <TouchableOpacity
+                style={styles.passwordIcon}
+                onPress={() => {
+                  setHide(!hide);
+                }}>
+                {hide ? <BlindIcon /> : <EyeIcon />}
+              </TouchableOpacity>
+            }
+            error={errors?.password?.message}
+            hide={hide}
+          />
+          <FormInputController
+            title={'Mật khẩu xác nhận'}
+            placeHolder={'Nhập mật khẩu xác nhận'}
+            styles={styles.textInput}
+            control={control}
+            name={'passwordConfirmation'}
+            required={true}
+            validation={validationPswConfirm}
+            RightIcon={
+              <TouchableOpacity
+                style={styles.passwordIcon}
+                onPress={() => {
+                  setHideConfirm(!hideConfirm);
+                }}>
+                {hideConfirm ? <BlindIcon /> : <EyeIcon />}
+              </TouchableOpacity>
+            }
+            error={errors?.passwordConfirmation?.message}
+            hide={hideConfirm}
+            errorRequired={
+              errors?.passwordConfirmation?.type &&
+              'Trường mật khẩu không được bỏ trống'
+            }
+          />
+          <TouchableOpacity
+            disabled={btnBlock}
+            onPress={handleSubmit(submit)}
+            style={styles.buttonInput}>
+            <UText style={styles.textButtonInput}>Đăng ký</UText>
+          </TouchableOpacity>
+        </VStack>
       </ScrollView>
       <View
         style={{
@@ -250,12 +253,12 @@ const Index = function () {
           width: '100%',
         }}>
         <HStack justifyContent={'center'}>
-          <UText>You already have an account? </UText>
+          <UText>Bạn đã có tài khoản? </UText>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('Login');
             }}>
-            <UText style={{color: '#2805FF'}}>Login</UText>
+            <UText style={{color: '#2805FF'}}>Đăng nhập</UText>
           </TouchableOpacity>
         </HStack>
       </View>
@@ -314,7 +317,13 @@ const FormInputController = (
   } = props;
   return (
     <View>
-      <Utitle style={{fontSize: 18, fontWeight: '700', color: '#312E49'}}>
+      <Utitle
+        style={{
+          fontSize: 18,
+          fontWeight: '700',
+          color: '#312E49',
+          paddingHorizontal: 10,
+        }}>
         {title}
       </Utitle>
       <Controller

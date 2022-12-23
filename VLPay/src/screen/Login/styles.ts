@@ -56,6 +56,7 @@ export default StyleSheet.create({
     backgroundColor: '#B5EAD8',
     borderRadius: 6,
     paddingVertical: 20,
+    marginHorizontal: 10,
   },
   textButtonInput: {
     color: '#514545',

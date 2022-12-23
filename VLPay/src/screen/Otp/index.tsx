@@ -3,16 +3,20 @@ import {View, TouchableOpacity} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
-import {ScrollView, Text} from 'native-base';
+import {HStack, ScrollView, Text} from 'native-base';
 import Header from '../../components/Header';
 import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import NormalButton from '../../components/helpers/NormalButton';
+import Arrow from '../../assets/svg/arrow_left.svg';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 const RESEND_OTP_TIME_LIMIT = 60; // 60 secs
 let resendOtpTimerInterval: any;
 
 const Otp = (props: any) => {
+  const navigation = useNavigation<MainStackNavigation>();
   const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT,
   );
@@ -41,14 +45,23 @@ const Otp = (props: any) => {
       }
     };
   }, [resendButtonDisabledTime, startResendOtpTimer]);
+  const Header = () => {
+    return (
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <HStack style={{marginTop: 25}}>
+          <Arrow style={{marginRight: 10}} />
+        </HStack>
+      </TouchableOpacity>
+    );
+  };
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
+      <Header />
       <ScrollView>
         <KeyboardInputScrollView>
-          <Text style={styles.titleBG}>Phone validate</Text>
-          <Text style={styles.desText}>Enter Opt code</Text>
+          <Text style={styles.titleBG}>Xác thực số điện thoại</Text>
           <View style={styles.otpMain}>
             <OTPInputView
               style={styles.otpContainer}
@@ -61,15 +74,15 @@ const Otp = (props: any) => {
               onCodeChanged={() => setIsError(false)}
             />
           </View>
-          <Text style={styles.error}>{isError ? 'OtpCode is wrong' : ''}</Text>
+          <Text style={styles.error}>{isError ? 'Mã otp không đúng' : ''}</Text>
           <NormalButton
-            title={'verification'}
+            title={'Xác nhận'}
             // onPress={verifyFireBase}
             disabled={(value?.length || 0) < 6}
             containerStyle={styles.btnMain}
           />
           <View style={styles.containerOPT}>
-            <Text style={styles.optText}>Not receipt otp</Text>
+            {/* <Text style={styles.optText}>Not receipt otp</Text>
             {resendButtonDisabledTime > 0 ? (
               <View>
                 <Text style={styles.optText}>
@@ -78,9 +91,9 @@ const Otp = (props: any) => {
               </View>
             ) : (
               <TouchableOpacity style={styles.resendText}>
-                <Text style={styles.resend}> {'resend'}</Text>
+                <Text style={styles.resend}> Gửi lại</Text>
               </TouchableOpacity>
-            )}
+            )} */}
           </View>
         </KeyboardInputScrollView>
       </ScrollView>

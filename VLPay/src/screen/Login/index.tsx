@@ -59,17 +59,17 @@ const Index = function () {
   const [hide, setHide] = useState(true);
   const validationPsw = useCallback((pws: string) => {
     if (!pws) {
-      return 'Password is required';
+      return 'Trường mật khẩu không được bỏ trống';
     } else if (pws.length < 6) {
-      return 'Password must have at least 6 character';
+      return 'Mật khẩu có ít nhất 6 kí tự';
     }
   }, []);
 
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
     if (!phoneNumber) {
-      return 'Phone number is required';
+      return 'Trường số điện thoại không được bỏ trống';
     } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
-      return 'Format phone number is wrong';
+      return 'Số điện thoại phải 10 số và không có ký tự đặc biệt';
     }
   }, []);
 
@@ -79,12 +79,12 @@ const Index = function () {
       style={styles.linearGradient}>
       <VStack flex={1}>
         <View style={styles.header}>
-          <Utitle style={styles.headerItem}>{strings.login}</Utitle>
+          <Utitle style={styles.headerItem}>Đăng nhập</Utitle>
         </View>
         <FormInputController
-          title={strings.phone_number}
+          title={'Số điện thoại'}
           LeftIcon={<PhoneIcon width={20} height={20} />}
-          placeHolder={strings.phone_placeholder}
+          placeHolder={'Nhập số điện thoại'}
           styles={styles.textInput}
           control={control}
           name={'phoneNumber'}
@@ -92,14 +92,15 @@ const Index = function () {
           required={true}
           error={errors?.phoneNumber?.message}
           errorRequired={
-            errors?.phoneNumber?.type && 'Field phoneNumber can not be empty'
+            errors?.phoneNumber?.type &&
+            'Trường số điện thoại không được bỏ trống'
           }
           validation={validatePhoneNumber}
         />
         <FormInputController
-          title={strings.password}
+          title={'Mật khẩu'}
           LeftIcon={<LockIcon width={20} height={20} />}
-          placeHolder={strings.password_placeholder}
+          placeHolder={'Nhập mật khẩu của bạn'}
           styles={styles.textInput}
           control={control}
           name={'password'}
@@ -107,7 +108,7 @@ const Index = function () {
           validation={validationPsw}
           error={errors?.password?.message}
           errorRequired={
-            errors?.password?.type && 'Field password can not be empty'
+            errors?.password?.type && 'Trường mật khẩu không được bỏ trống'
           }
           RightIcon={
             <TouchableOpacity
@@ -120,16 +121,19 @@ const Index = function () {
           }
           hide={hide}
         />
-        <HStack alignItems={'center'} justifyContent={'flex-end'}>
-          <TouchableOpacity style={{marginBottom: 35}}>
-            <UText style={styles.textButtonOpacity}>
-              {strings.forgotPassword}?
-            </UText>
+        <HStack
+          alignItems={'center'}
+          style={{paddingHorizontal: 10}}
+          justifyContent={'flex-end'}>
+          <TouchableOpacity
+            style={{marginBottom: 35}}
+            onPress={() => navigation.navigate('ForgotPwd')}>
+            <UText style={styles.textButtonOpacity}>Quên mật khẩu?</UText>
           </TouchableOpacity>
         </HStack>
         <Flex style={styles.buttonInput}>
           <TouchableOpacity onPress={handleSubmit(submit)}>
-            <UText style={styles.textButtonInput}>{strings.login}</UText>
+            <UText style={styles.textButtonInput}>Đăng nhập</UText>
           </TouchableOpacity>
         </Flex>
         <HStack
@@ -140,7 +144,7 @@ const Index = function () {
             position: 'absolute',
             bottom: 0,
           }}>
-          <UText>Don't have an account? </UText>
+          <UText>Chưa có tài khoản? </UText>
           <TouchableOpacity
             style={{}}
             onPress={() => {
@@ -150,7 +154,7 @@ const Index = function () {
               style={{
                 color: '#2805FF',
               }}>
-              {strings.register}
+              Đăng ký
             </UText>
           </TouchableOpacity>
         </HStack>
@@ -211,7 +215,15 @@ const FormInputController = (
 
   return (
     <View style={{height: 100}}>
-      <Utitle style={{fontSize: 18}}>{title}</Utitle>
+      <Utitle
+        style={{
+          fontSize: 18,
+          fontWeight: '700',
+          color: '#312E49',
+          paddingHorizontal: 10,
+        }}>
+        {title}
+      </Utitle>
       <Controller
         name={name}
         control={control}
