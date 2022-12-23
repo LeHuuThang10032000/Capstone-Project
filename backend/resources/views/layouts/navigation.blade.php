@@ -1,4 +1,5 @@
-<nav x-data="{ open: false }" class="bg-nav">
+<nav x-data="{ open: false }" class="bg-nav navbar fixed p-1">
+    <div></div>
     <!-- Primary Navigation Menu -->
     <div class="px-4">
         <div class="flex justify-end h-12">
@@ -6,7 +7,7 @@
             <div class="hidden sm:flex sm:items-end sm:ml-6" style="cursor:pointer">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <img src="{{ asset('img/admin.png') }}" style="margin-left: auto; margin-right: auto; width: 100%; height: 100%">
+                        <img src="{{ asset('img/admin.png') }}" style="width: 100%; height: 100%">
                     </x-slot>
 
                     <x-slot name="content">

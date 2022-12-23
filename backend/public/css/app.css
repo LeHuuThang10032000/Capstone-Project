@@ -80,13 +80,18 @@ h6 {
   font-weight: inherit;
 }
 
+.btn-theme {
+  background-color: #B5EAD8 !important;
+  border: 2px solid #000000 !important;
+}
+
 /*
 Reset links to optimize for opt-in styling instead of opt-out.
 */
 
 a {
-  color: inherit;
-  text-decoration: inherit;
+  color: #212529 !important;
+  text-decoration: none !important;
 }
 
 /*
@@ -1303,6 +1308,10 @@ select {
 .active\:bg-gray-100:active {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+.active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 183 177 / var(--tw-bg-opacity)) !important;
 }
 .active\:bg-gray-900:active {
   --tw-bg-opacity: 1;
