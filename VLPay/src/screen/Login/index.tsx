@@ -18,6 +18,9 @@ import {MainStackNavigation} from '../../stack/Navigation';
 import {useSelector, useDispatch} from 'react-redux';
 import {Login} from '../../redux/actions/authAction';
 import {InputProps} from '@rneui/base';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/icons';
+import Colors from '../../components/helpers/Colors';
 
 interface IFormInputControllerProps {
   control: Control<ILoginInfoValue, any>;
@@ -28,12 +31,15 @@ interface IFormInputControllerProps {
 const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
   const dispatch = useDispatch();
+  const [visibleWarning, setVisibleWarning] = useState(false);
 
   const submit = async (value: any) => {
     console.log(value);
     const {phoneNumber, password} = value;
-
-    dispatch(await Login(phoneNumber, password));
+    const result = dispatch(await Login(phoneNumber, password));
+    if (!result.payload) {
+      setVisibleWarning(true);
+    }
   };
 
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -48,6 +54,8 @@ const Index = function () {
       password: '',
     },
   });
+  console.log(errors);
+
   const [hide, setHide] = useState(true);
   const validationPsw = useCallback((pws: string) => {
     if (!pws) {
@@ -83,6 +91,9 @@ const Index = function () {
           keyboardType={'phone-pad'}
           required={true}
           error={errors?.phoneNumber?.message}
+          errorRequired={
+            errors?.phoneNumber?.type && 'Field phoneNumber can not be empty'
+          }
           validation={validatePhoneNumber}
         />
         <FormInputController
@@ -95,6 +106,9 @@ const Index = function () {
           required={true}
           validation={validationPsw}
           error={errors?.password?.message}
+          errorRequired={
+            errors?.password?.type && 'Field password can not be empty'
+          }
           RightIcon={
             <TouchableOpacity
               style={styles.passwordIcon}
@@ -118,28 +132,52 @@ const Index = function () {
             <UText style={styles.textButtonInput}>{strings.login}</UText>
           </TouchableOpacity>
         </Flex>
-        <TouchableOpacity
+        <HStack
           style={{
             width: '100%',
             flexDirection: 'row',
             justifyContent: 'center',
             position: 'absolute',
             bottom: 0,
-          }}
-          onPress={() => {
-            navigation.navigate('Register');
           }}>
-          <UText>
-            Don't have an account?{' '}
+          <UText>Don't have an account? </UText>
+          <TouchableOpacity
+            style={{}}
+            onPress={() => {
+              navigation.navigate('Register');
+            }}>
             <UText
               style={{
                 color: '#2805FF',
               }}>
               {strings.register}
             </UText>
-          </UText>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </HStack>
       </VStack>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message="Some thing went wrong"
+        title={'Login Error'}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={strings.confirm}
+        style={{flexDirection: 'column'}}
+      />
     </LinearGradient>
   );
 };
@@ -156,6 +194,7 @@ const FormInputController = (
       setHide?: any;
       validation?: any;
       error?: any;
+      errorRequired?: any;
     },
 ) => {
   const {
@@ -163,13 +202,15 @@ const FormInputController = (
     name,
     title,
     placeHolder,
-    required,
+    errorRequired,
     validation,
     error,
     ...rest
   } = props;
+  console.log(error);
+
   return (
-    <View>
+    <View style={{height: 100}}>
       <Utitle style={{fontSize: 18}}>{title}</Utitle>
       <Controller
         name={name}
@@ -189,6 +230,9 @@ const FormInputController = (
         )}
       />
       {error && <UText style={styles.error}>{error}</UText>}
+      {errorRequired && !error && (
+        <UText style={styles.error}>{errorRequired}</UText>
+      )}
     </View>
   );
 };

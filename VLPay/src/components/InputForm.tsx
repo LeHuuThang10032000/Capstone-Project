@@ -23,6 +23,11 @@ const Index = ({
       {...style}
       placeholder={placeholder}
       onChangeText={onChangeText}
+      containerStyle={{
+        position: 'absolute',
+        left: -10,
+        bottom: 0,
+      }}
       inputContainerStyle={{
         borderBottomWidth: 0,
         borderWidth: 1,

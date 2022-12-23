@@ -26,6 +26,7 @@ import {Login} from '../../redux/actions/authAction';
 import Icons from '../../components/icons';
 import YesNoModal from '../../components/YesNoModal';
 import Colors from '../../components/helpers/Colors';
+import {axiosClient} from '../../components/apis/axiosClient';
 
 interface IFormInputControllerProps {
   control: Control<IRegisterInfoValue, any>;
@@ -58,27 +59,31 @@ const Index = function () {
 
   const submit = useCallback(async (data: any) => {
     const {
-      email: full_name,
+      name: full_name,
       password: password,
       passwordConfirmation: password_confirmation,
       phoneNumber: phone,
     } = data;
-    setBtnBlock(true);
-    console.log(data);
 
+    setBtnBlock(true);
     try {
-      await axios.post('https://zennoshop.cf/api/user/register', {
-        full_name: full_name,
-        phone: phone,
-        password: password,
-        password_confirmation: password_confirmation,
-      });
+      const result = await axiosClient.post(
+        'https://zennoshop.cf/api/user/register',
+        {
+          full_name,
+          phone,
+          password,
+          password_confirmation,
+        },
+      );
+      console.log(result.data);
 
       dispatch(await Login(phone, password));
       setBtnBlock(false);
       navigation.goBack();
     } catch (e) {
-      console.log(e);
+      console.log(e.message);
+      setVisibleWarning(true);
       setBtnBlock(false);
     }
 
@@ -97,8 +102,6 @@ const Index = function () {
     //   console.log('error ', error);
     // }
   }, []);
-
-  console.log(errors);
 
   const validationPswConfirm = useCallback(
     (psw: string) => {
@@ -120,8 +123,8 @@ const Index = function () {
   const validationPsw = useCallback((pws: string) => {
     if (!pws) {
       return 'Password is required';
-    } else if (pws.length < 10) {
-      return 'Password must have at least 10 character';
+    } else if (pws.length < 6) {
+      return 'Password must have at least 6 character';
     }
   }, []);
 
@@ -165,6 +168,9 @@ const Index = function () {
               validation={validateName}
               required={true}
               error={errors?.name?.message}
+              errorRequired={
+                errors?.name?.type && 'Field name can not be empty'
+              }
             />
             <FormInputController
               title={strings.phone_number}
@@ -173,9 +179,13 @@ const Index = function () {
               control={control}
               name={'phoneNumber'}
               keyboardType={'phone-pad'}
-              required={false}
+              required={true}
               validation={validatePhoneNumber}
               error={errors?.phoneNumber?.message}
+              errorRequired={
+                errors?.phoneNumber?.type &&
+                'Field phoneNumber can not be empty'
+              }
             />
             <FormInputController
               title={strings.password}
@@ -183,7 +193,10 @@ const Index = function () {
               styles={styles.textInput}
               control={control}
               name={'password'}
-              required={false}
+              required={true}
+              errorRequired={
+                errors?.password?.type && 'Field password can not be empty'
+              }
               validation={validationPsw}
               RightIcon={
                 <TouchableOpacity
@@ -203,19 +216,23 @@ const Index = function () {
               styles={styles.textInput}
               control={control}
               name={'passwordConfirmation'}
-              required={false}
+              required={true}
               validation={validationPswConfirm}
               RightIcon={
                 <TouchableOpacity
                   style={styles.passwordIcon}
                   onPress={() => {
-                    setHideConfirm(!hide);
+                    setHideConfirm(!hideConfirm);
                   }}>
                   {hideConfirm ? <BlindIcon /> : <EyeIcon />}
                 </TouchableOpacity>
               }
               error={errors?.passwordConfirmation?.message}
               hide={hideConfirm}
+              errorRequired={
+                errors?.passwordConfirmation?.type &&
+                'Field confirm password can not be empty'
+              }
             />
             <TouchableOpacity
               disabled={btnBlock}
@@ -252,9 +269,10 @@ const Index = function () {
         btnRightStyle={{
           backgroundColor: '#909192',
           width: 200,
+          display: 'none',
         }}
-        message=""
-        title={'There are some thing wrong -_-'}
+        message="Some thing went wrong"
+        title={'Register Error'}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}
@@ -278,6 +296,7 @@ const FormInputController = (
       LeftIcon?: any;
       hide?: boolean;
       setHide?: any;
+      errorRequired?: any;
       validation?: any;
       error?: any;
     },
@@ -289,11 +308,12 @@ const FormInputController = (
     placeHolder,
     required,
     validation,
+    errorRequired,
     error,
     ...rest
   } = props;
   return (
-    <>
+    <View>
       <Utitle style={{fontSize: 18, fontWeight: '700', color: '#312E49'}}>
         {title}
       </Utitle>
@@ -303,7 +323,7 @@ const FormInputController = (
         rules={{required: required, validate: validation}}
         render={({field: {value, onChange}}) => {
           return (
-            <View>
+            <View style={{height: 80}}>
               <Input
                 leftIcon={props.LeftIcon}
                 placeholder={placeHolder}
@@ -315,11 +335,14 @@ const FormInputController = (
                 {...rest}
               />
               {error && <UText style={styles.error}>{error}</UText>}
+              {errorRequired && !error && (
+                <UText style={styles.error}>{errorRequired}</UText>
+              )}
             </View>
           );
         }}
       />
-    </>
+    </View>
   );
 };
 
