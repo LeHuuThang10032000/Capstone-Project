@@ -7,14 +7,18 @@ export default StyleSheet.create({
   },
   linearGradient: {
     flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
     borderRadius: 5,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 100,
+  },
+  error: {
+    fontSize: 11,
+    color: 'red',
+    position: 'absolute',
+    bottom: 0,
   },
   headerItem: {
     fontWeight: '700',

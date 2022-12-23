@@ -16,11 +16,13 @@ const strings = new Localize({
     rememberMe: 'Lưu Đăng nhập',
     forgotPassword: 'Quên mật khẩu',
     signUp: 'Đăng ký',
+    cancel: 'Hủy',
+    confirm: 'Xác nhận',
   },
   en: {
     login: 'Login',
     loginByMicrosoft: 'Login by microsoft',
-    register: 'Register',
+    register: 'Sign up',
     createNewShop: 'Create new shop',
     alreadyHasShop: 'You have already have shop',
     name: 'Name',
@@ -29,10 +31,12 @@ const strings = new Localize({
     password: 'Password',
     password_confirmation: 'Confirm password',
     password_placeholder: 'Please input your password',
-    phone_number: 'Phonenumber',
+    phone_number: 'Phone Number',
     rememberMe: 'Remember me',
     forgotPassword: 'Forgot password',
     signUp: 'Sign up',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
   },
 });
 

@@ -1,15 +1,20 @@
 import {LOGIN, LOGOUT} from '../constants';
 import * as api from '../../components/apis/api';
 import axios from 'axios';
+import {axiosClient} from '../../components/apis/axiosClient';
 
 export const Login = async (phoneNumber: string, password: string) => {
   const phone = phoneNumber;
 
   try {
-    const res = await axios.post('https://zennoshop.cf/api/user/login', {
+    const res = await axiosClient.post(api.LOGIN, {
       phone,
       password,
     });
+
+    console.log('====================================');
+    console.log(res);
+    console.log('====================================');
 
     return {
       type: LOGIN,
@@ -18,6 +23,10 @@ export const Login = async (phoneNumber: string, password: string) => {
   } catch (e) {
     console.log(e);
   }
+  return {
+    type: LOGIN,
+    payload: null,
+  };
 };
 
 export const Logout = () => {
