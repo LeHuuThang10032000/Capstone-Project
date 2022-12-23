@@ -9,6 +9,7 @@ import Settings from '../screen/Settings';
 import DetailUser from '../screen/Search/DetailUser';
 import Otp from '../screen/Otp';
 import Transfer from '../screen/Transfer';
+import EditProfile from '../screen/EditProfileScreen';
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'MainTab',
@@ -49,5 +50,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'Transfer',
     component: Transfer,
+  },
+  {
+    name: 'EditProfile',
+    component: EditProfile,
   },
 ];

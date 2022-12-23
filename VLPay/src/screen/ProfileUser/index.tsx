@@ -13,9 +13,12 @@ import {
 } from 'native-base';
 import {TouchableOpacity} from 'react-native';
 import styles from './styles';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 const Index = () => {
   const avatar = 'https://randomuser.me/api/portraits/men/78.jpg';
+  const navigation = useNavigation<MainStackNavigation>();
   return (
     <View>
       <HeaderBack title="Your profile" />
@@ -30,24 +33,6 @@ const Index = () => {
       </Center>
       <Center>
         <VStack space={3}>
-          <FormControl isDisabled>
-            <FormControl.Label
-              _disabled={{
-                _text: {
-                  color: '#312E49',
-                  fontWeight: 'bold',
-                  fontSize: 16,
-                },
-              }}>
-              Email
-            </FormControl.Label>
-            <Input
-              w="90%"
-              value="nguyen.197pm09480@vanlanguni.vn"
-              style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
-            />
-          </FormControl>
-
           <FormControl isDisabled>
             <FormControl.Label
               _disabled={{
@@ -83,7 +68,9 @@ const Index = () => {
               style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
             />
           </FormControl>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('EditProfile')}>
             <Text style={styles.text}>Edit</Text>
           </TouchableOpacity>
         </VStack>
