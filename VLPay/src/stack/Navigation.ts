@@ -54,6 +54,7 @@ export type MainStackParamList = {
     phone: string;
   };
   Transfer: {picture: string; title: string; first: string; last: string};
+  EditProfile: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

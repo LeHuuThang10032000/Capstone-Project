@@ -37,7 +37,7 @@ export default function PromoCarousel() {
         autoPlay={true}
         data={carouselImages}
         scrollAnimationDuration={2000}
-        onSnapToItem={(index: number) => console.log('current index:', index)}
+        // onSnapToItem={(index: number) => console.log('current index:', index)}
         renderItem={({item, index}) => (
           <View
             style={{
