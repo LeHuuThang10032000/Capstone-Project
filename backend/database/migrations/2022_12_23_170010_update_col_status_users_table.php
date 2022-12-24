@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AddColToUsersTable extends Migration
+class UpdateColStatusUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +14,7 @@ class AddColToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            // $table->string('mssv')->nullable();
-            // $table->date('dob')->nullable();
-            // $table->string('status')->nullable();
-            // //$table->renameColumn('name', 'f_name');
-            // $table->string('l_name')->nullable();
-        });
+        DB::statement("ALTER TABLE users MODIFY COLUMN status ENUM('active', 'inactive')");
     }
 
     /**
@@ -30,7 +25,7 @@ class AddColToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('status');
         });
     }
 }

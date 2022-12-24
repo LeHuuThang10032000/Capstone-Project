@@ -19,9 +19,9 @@
 
             <!-- Email Address -->
             <div>
-                <x-label for="email" :value="__('Email')" />
+                <x-label for="phone" :value="__('Phone')" />
 
-                <x-input id="email" class="block mt-1 w-full" style="border-color: #FFDAC0" type="email" name="email" :value="old('email')" required autofocus />
+                <x-input id="phone" class="block mt-1 w-full" style="border-color: #FFDAC0" type="text" name="phone" :value="old('phone')" required autofocus />
             </div>
 
             <!-- Password -->

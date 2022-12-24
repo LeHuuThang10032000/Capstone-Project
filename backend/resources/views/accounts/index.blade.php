@@ -16,19 +16,22 @@
             <thead style="background-color: #C7CEEA">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">mssv</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">name</th>
+                    <th scope="col">phone</th>
+                    <th scope="col">status</th>
+                    <th scope="col">action</th>
                 </tr>
             </thead>
             <tbody>
+                @foreach($users as $key => $user)
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <th scope="row">{{$key + 1}}</th>
+                    <td>{{$user->f_name}}</td>
+                    <td>{{$user->phone}}</td>
+                    <td>{{$user->status}}</td>
+                    <td></td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
