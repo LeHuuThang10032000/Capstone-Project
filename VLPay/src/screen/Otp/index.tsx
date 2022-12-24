@@ -4,25 +4,36 @@ import React, {useCallback, useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
 import {HStack, ScrollView, Text} from 'native-base';
-import Header from '../../components/Header';
 import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import NormalButton from '../../components/helpers/NormalButton';
 import Arrow from '../../assets/svg/arrow_left.svg';
-import {useNavigation} from '@react-navigation/native';
-import {MainStackNavigation} from '../../stack/Navigation';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
+import authFireBase, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {axiosClient} from '../../components/apis/axiosClient';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/icons';
+import strings from '../../components/helpers/Strings';
+import Colors from '../../components/helpers/Colors';
 
 const RESEND_OTP_TIME_LIMIT = 60; // 60 secs
 let resendOtpTimerInterval: any;
 
 const Otp = (props: any) => {
   const navigation = useNavigation<MainStackNavigation>();
+  const {full_name, phone, password, password_confirmation, confirmation} =
+    useRoute<RouteProp<MainStackParamList, 'Otp'>>()?.params;
+  const [btnBlock, setBtnBlock] = useState(false);
+  const [visibleWarning, setVisibleWarning] = useState(false);
   const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT,
   );
   const [isError, setIsError] = useState<boolean>(false);
+  const [confirmationFirebase, setConfirmationFirebase] =
+    useState<any>(confirmation);
   const [value, setValue] = useState('');
-
+  const [userFireBase, setUserFireBase] = useState<any>();
   const startResendOtpTimer = useCallback(async () => {
     if (resendOtpTimerInterval) {
       clearInterval(resendOtpTimerInterval);
@@ -45,6 +56,55 @@ const Otp = (props: any) => {
       }
     };
   }, [resendButtonDisabledTime, startResendOtpTimer]);
+
+  useEffect(() => {
+    authFireBase().onAuthStateChanged(user => {
+      if (user) {
+        console.log('user:', user);
+        setUserFireBase(user);
+        // setValue('');
+      }
+    });
+  }, []);
+
+  const verifyFireBase = async () => {
+    let idTokenResult: string = '';
+    setBtnBlock(true);
+    if (userFireBase) {
+      idTokenResult = await (await userFireBase.getIdTokenResult()).token;
+    } else {
+      let usercredential: FirebaseAuthTypes.UserCredential;
+      try {
+        usercredential = await confirmationFirebase.confirm(value);
+        const result = await usercredential.user.getIdTokenResult();
+        idTokenResult = result?.token || '';
+      } catch (err) {
+        console.log(err);
+        setIsError(true);
+        return;
+      }
+    }
+    try {
+      await axiosClient.post('https://zennoshop.cf/api/user/register', {
+        full_name,
+        phone,
+        password,
+        password_confirmation,
+      });
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
+      setBtnBlock(false);
+    } catch (e) {
+      console.log('====================================');
+      console.log(e);
+      setVisibleWarning(true);
+      setBtnBlock(false);
+      console.log('====================================');
+    }
+  };
+
   const Header = () => {
     return (
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -77,8 +137,8 @@ const Otp = (props: any) => {
           <Text style={styles.error}>{isError ? 'Mã otp không đúng' : ''}</Text>
           <NormalButton
             title={'Xác nhận'}
-            // onPress={verifyFireBase}
-            disabled={(value?.length || 0) < 6}
+            onPress={verifyFireBase}
+            disabled={(value?.length || 0) < 6 && btnBlock}
             containerStyle={styles.btnMain}
           />
           <View style={styles.containerOPT}>
@@ -97,6 +157,29 @@ const Otp = (props: any) => {
           </View>
         </KeyboardInputScrollView>
       </ScrollView>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message="Otp code is wrong"
+        title={'Otp Error'}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={strings.confirm}
+        style={{flexDirection: 'column'}}
+      />
     </LinearGradient>
   );
 };

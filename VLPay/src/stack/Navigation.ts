@@ -29,14 +29,15 @@ export type MainStackParamList = {
   Home: HomeProps | undefined;
   Profile: undefined;
   Login: undefined;
-  // Otp: {
-  //   isHoldingLogin?: boolean;
-  //   email?: string;
-  //   phone: string;
-  //   password: string;
-  //   password_confirmation: string;
-  // };
-  Otp: undefined;
+  Otp: {
+    isHoldingLogin?: boolean;
+    full_name?: string;
+    phone: string;
+    password?: string;
+    password_confirmation?: string;
+    confirmation?: any;
+  };
+  // Otp: undefined;
   ForgotPwd: undefined;
   Register: undefined;
   TranSactionHistory: undefined;

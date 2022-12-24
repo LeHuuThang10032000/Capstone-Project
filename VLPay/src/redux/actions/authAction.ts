@@ -12,9 +12,9 @@ export const Login = async (phoneNumber: string, password: string) => {
       phone,
       password,
     });
-
-    await saveToken(res.data.token);
-
+    console.log('====================================');
+    console.log(res);
+    console.log('====================================');
     return {
       type: LOGIN,
       payload: res.data.token,

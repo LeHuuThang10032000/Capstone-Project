@@ -67,35 +67,34 @@ const Index = function () {
     } = data;
 
     setBtnBlock(true);
+    if (auth()?.currentUser) {
+      await auth()
+        .signOut()
+        .catch(e => console.log(e));
+    }
     try {
-      await axiosClient.post('https://zennoshop.cf/api/user/register', {
-        full_name,
-        phone,
-        password,
-        password_confirmation,
+      const removeZeroPhone = phone.replace('0', '');
+      const confirmation = await auth().signInWithPhoneNumber(
+        `+84${removeZeroPhone}`,
+      );
+      navigation.navigate('Otp', {
+        phone: phone,
+        full_name: full_name,
+        password: password,
+        password_confirmation: password_confirmation,
+        confirmation: confirmation,
       });
-      setBtnBlock(false);
-      navigation.goBack();
-    } catch (e) {
-      console.log(e.message);
+    } catch (error) {
+      console.log('error ', error);
       setVisibleWarning(true);
       setBtnBlock(false);
     }
-
-    // if (auth()?.currentUser) {
-    //   await auth()
-    //     .signOut()
-    //     .catch(e => console.log(e));
-    // }
-    // try {
-    //   const removeZeroPhone = data.phoneNumber.replace('0', '');
-    //   const confirmation = await auth().signInWithPhoneNumber(
-    //     `+84${removeZeroPhone}`,
-    //   );
-    //   console.log(confirmation);
-    // } catch (error) {
-    //   console.log('error ', error);
-    // }
+    // await axiosClient.post('https://zennoshop.cf/api/user/register', {
+    //   full_name,
+    //   phone,
+    //   password,
+    //   password_confirmation,
+    // });
   }, []);
 
   const validationPswConfirm = useCallback(
