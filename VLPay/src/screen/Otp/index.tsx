@@ -26,6 +26,7 @@ const Otp = (props: any) => {
     useRoute<RouteProp<MainStackParamList, 'Otp'>>()?.params;
   const [btnBlock, setBtnBlock] = useState(false);
   const [visibleWarning, setVisibleWarning] = useState(false);
+  const [visibleSuccess, setVisibleSuccess] = useState(false);
   const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT,
   );
@@ -80,6 +81,7 @@ const Otp = (props: any) => {
         idTokenResult = result?.token || '';
       } catch (err) {
         console.log(err);
+        setVisibleWarning(true);
         setIsError(true);
         return;
       }
@@ -91,6 +93,7 @@ const Otp = (props: any) => {
         password,
         password_confirmation,
       });
+      setVisibleSuccess(true);
       navigation.reset({
         index: 0,
         routes: [{name: 'Login'}],
@@ -169,13 +172,36 @@ const Otp = (props: any) => {
           width: 200,
           display: 'none',
         }}
-        message="Otp code is wrong"
-        title={'Otp Error'}
+        message="Mã otp không đúng"
+        title={'Thông báo'}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}
         onActionRight={() => {
           setVisibleWarning(false);
+        }}
+        btnTextLeft={strings.confirm}
+        style={{flexDirection: 'column'}}
+      />
+      <YesNoModal
+        icon={<Icons.SuccessIcon />}
+        visible={visibleSuccess}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message="Đăng ký thành công"
+        title={'Thông báo'}
+        onActionLeft={() => {
+          setVisibleSuccess(false);
+        }}
+        onActionRight={() => {
+          setVisibleSuccess(false);
         }}
         btnTextLeft={strings.confirm}
         style={{flexDirection: 'column'}}

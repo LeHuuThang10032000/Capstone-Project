@@ -214,8 +214,8 @@ const Index = function () {
             hide={hide}
           />
           <FormInputController
-            title={'Mật khẩu xác nhận'}
-            placeHolder={'Nhập mật khẩu xác nhận'}
+            title={'Nhập lại mật khẩu'}
+            placeHolder={'Nhập lại mật khẩu'}
             styles={styles.textInput}
             control={control}
             name={'passwordConfirmation'}
@@ -234,17 +234,29 @@ const Index = function () {
             hide={hideConfirm}
             errorRequired={
               errors?.passwordConfirmation?.type &&
-              'Trường mật khẩu không được bỏ trống'
+              'Trường nhập lại mật khẩu không được bỏ trống'
             }
           />
-          <TouchableOpacity
-            disabled={btnBlock}
-            onPress={handleSubmit(submit)}
-            style={styles.buttonInput}>
-            <UText style={styles.textButtonInput}>Đăng ký</UText>
-          </TouchableOpacity>
         </VStack>
       </ScrollView>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 60,
+          width: '100%',
+          marginRight: 10,
+          paddingHorizontal: 15,
+        }}>
+        <TouchableOpacity
+          disabled={btnBlock}
+          // onPress={handleSubmit(submit)}
+          onPress={() => {
+            navigation.navigate('Otp');
+          }}
+          style={[styles.buttonInput]}>
+          <UText style={styles.textButtonInput}>Đăng ký</UText>
+        </TouchableOpacity>
+      </View>
       <View
         style={{
           position: 'absolute',
@@ -315,13 +327,14 @@ const FormInputController = (
     ...rest
   } = props;
   return (
-    <View>
+    <View style={{marginBottom: -5}}>
       <Utitle
         style={{
           fontSize: 18,
           fontWeight: '700',
           color: '#312E49',
           paddingHorizontal: 10,
+          marginBottom: 5,
         }}>
         {title}
       </Utitle>

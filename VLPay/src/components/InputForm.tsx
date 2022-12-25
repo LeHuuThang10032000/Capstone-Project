@@ -26,9 +26,9 @@ const Index = ({
       containerStyle={{
         position: 'absolute',
         bottom: 0,
+        height: '100%',
       }}
       inputContainerStyle={{
-        borderBottomWidth: 0,
         borderWidth: 1,
         borderColor: '#A2A2A6',
         backgroundColor: '#ffffff',

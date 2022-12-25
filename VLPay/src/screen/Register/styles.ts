@@ -12,13 +12,14 @@ export default StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 100,
+    marginTop: 50,
   },
   error: {
     fontSize: 11,
     color: 'red',
     position: 'absolute',
-    bottom: 0,
+    bottom: 5,
+    left: 10,
   },
   headerItem: {
     fontWeight: '700',
