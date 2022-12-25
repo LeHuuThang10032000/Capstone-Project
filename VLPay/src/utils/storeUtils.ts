@@ -18,6 +18,10 @@ export const getToken = async () => {
   return AsyncStorage.getItem('token') || '';
 };
 
+export const clearToken = async () => {
+  return AsyncStorage.removeItem('token');
+};
+
 export const getLang = async () => {
   const lang = (await AsyncStorage.getItem('localeKey')) || '';
   return lang;

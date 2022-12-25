@@ -6,17 +6,15 @@ const initialState = {
   userData: {},
 };
 
-export default (state = initialState, action) => {
+export default (state = initialState, action: any) => {
   switch (action.type) {
     case LOGIN:
       return {
-        ...state,
+        ...state, //copy all previous state
         authToken: action.payload,
       };
 
     case LOGOUT:
-      console.log(' tui day ne');
-
       return {
         authToken: null,
       };
