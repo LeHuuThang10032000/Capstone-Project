@@ -77,6 +77,7 @@ const Index = function () {
       const confirmation = await auth().signInWithPhoneNumber(
         `+84${removeZeroPhone}`,
       );
+      setBtnBlock(false);
       navigation.navigate('Otp', {
         phone: phone,
         full_name: full_name,
@@ -89,12 +90,6 @@ const Index = function () {
       setVisibleWarning(true);
       setBtnBlock(false);
     }
-    // await axiosClient.post('https://zennoshop.cf/api/user/register', {
-    //   full_name,
-    //   phone,
-    //   password,
-    //   password_confirmation,
-    // });
   }, []);
 
   const validationPswConfirm = useCallback(
@@ -177,7 +172,6 @@ const Index = function () {
           <FormInputController
             title={'Số điện thoại'}
             placeHolder={'Nhập số điện thoại'}
-            điện
             styles={styles.textInput}
             control={control}
             name={'phoneNumber'}

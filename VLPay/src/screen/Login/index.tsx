@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {Button, Text, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {UText, Utitle} from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
 import PhoneIcon from '../../assets/svg/phone_icon.svg';
@@ -8,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import BlindIcon from '../../assets/svg/blind_icon.svg';
 import EyeIcon from '../../assets/svg/eye_icon.svg';
-import {Flex, HStack, Image, VStack} from 'native-base';
+import {Flex, HStack, VStack} from 'native-base';
 import strings from '../../components/helpers/Strings';
 import Input from '../../components/InputForm';
 import {Control, Controller, useForm} from 'react-hook-form';
