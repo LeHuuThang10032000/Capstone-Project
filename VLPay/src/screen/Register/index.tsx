@@ -249,10 +249,7 @@ const Index = function () {
         }}>
         <TouchableOpacity
           disabled={btnBlock}
-          // onPress={handleSubmit(submit)}
-          onPress={() => {
-            navigation.navigate('Otp');
-          }}
+          onPress={handleSubmit(submit)}
           style={[styles.buttonInput]}>
           <UText style={styles.textButtonInput}>Đăng ký</UText>
         </TouchableOpacity>

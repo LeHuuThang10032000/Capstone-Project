@@ -16,12 +16,15 @@ import YesNoModal from '../../components/YesNoModal';
 import Icons from '../../components/icons';
 import strings from '../../components/helpers/Strings';
 import Colors from '../../components/helpers/Colors';
+import {Login} from '../../redux/actions/authAction';
+import {useDispatch} from 'react-redux';
 
 const RESEND_OTP_TIME_LIMIT = 60; // 60 secs
 let resendOtpTimerInterval: any;
 
 const Otp = (props: any) => {
   const navigation = useNavigation<MainStackNavigation>();
+  const dispatch = useDispatch();
   const {full_name, phone, password, password_confirmation, confirmation} =
     useRoute<RouteProp<MainStackParamList, 'Otp'>>()?.params;
   const [btnBlock, setBtnBlock] = useState(false);
@@ -103,6 +106,7 @@ const Otp = (props: any) => {
       console.log('====================================');
       console.log(e);
       setVisibleWarning(true);
+      dispatch(await Login(phone, password ?? ''));
       setBtnBlock(false);
       console.log('====================================');
     }
