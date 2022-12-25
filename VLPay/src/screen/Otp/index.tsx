@@ -97,16 +97,12 @@ const Otp = (props: any) => {
         password_confirmation,
       });
       setVisibleSuccess(true);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Login'}],
-      });
+      dispatch(await Login(phone, password ?? ''));
       setBtnBlock(false);
     } catch (e) {
       console.log('====================================');
       console.log(e);
       setVisibleWarning(true);
-      dispatch(await Login(phone, password ?? ''));
       setBtnBlock(false);
       console.log('====================================');
     }
