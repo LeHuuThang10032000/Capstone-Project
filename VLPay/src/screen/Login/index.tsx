@@ -21,6 +21,7 @@ import {InputProps} from '@rneui/base';
 import YesNoModal from '../../components/YesNoModal';
 import Icons from '../../components/icons';
 import Colors from '../../components/helpers/Colors';
+import {axiosClient} from '../../components/apis/axiosClient';
 
 interface IFormInputControllerProps {
   control: Control<ILoginInfoValue, any>;
@@ -32,19 +33,36 @@ const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
   const dispatch = useDispatch();
   const [visibleWarning, setVisibleWarning] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   const submit = async (value: any) => {
-    console.log(value);
     const {phoneNumber, password} = value;
+    setDisabled(true);
+    try {
+      const result = await axiosClient.post(
+        'https://zennoshop.cf/api/user/check-phone',
+        {
+          phone: phoneNumber,
+        },
+      );
+
+      if (result.data.status_code == 200) {
+        setVisibleWarning(true);
+        setPhoneError(result.data.message);
+        setDisabled(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
     const result = dispatch(await Login(phoneNumber, password));
+    setDisabled(false);
     if (!result.payload) {
       setVisibleWarning(true);
     }
   };
 
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const {
-    setValue,
     handleSubmit,
     control,
     formState: {errors},
@@ -147,6 +165,7 @@ const Index = function () {
           <UText>Chưa có tài khoản? </UText>
           <TouchableOpacity
             style={{}}
+            disabled={disabled}
             onPress={() => {
               navigation.navigate('Register');
             }}>
@@ -171,15 +190,15 @@ const Index = function () {
           width: 200,
           display: 'none',
         }}
-        message="Some thing went wrong"
-        title={'Login Error'}
+        message={phoneError}
+        title={'Lỗi đăng nhập'}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}
         onActionRight={() => {
           setVisibleWarning(false);
         }}
-        btnTextLeft={strings.confirm}
+        btnTextLeft={'Xác nhận'}
         style={{flexDirection: 'column'}}
       />
     </LinearGradient>
