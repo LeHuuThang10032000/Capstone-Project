@@ -18,12 +18,12 @@ const BodyModal: React.FC<Props> = ({
   return (
     <View style={{paddingHorizontal: 20}}>
       <View style={{marginVertical: 20}}>
-        <UText>Are you sure want to log out?</UText>
+        <UText>Bạn có chắc chắn muốn đăng xuất?</UText>
       </View>
       <View style={styles.containerBtn}>
         {cancel && (
           <TouchableOpacity onPress={onPressCancel} style={styles.buttonCancel}>
-            <UText>Cancel</UText>
+            <UText>Thoát</UText>
           </TouchableOpacity>
         )}
         <View style={{paddingHorizontal: 5}}></View>
@@ -31,7 +31,7 @@ const BodyModal: React.FC<Props> = ({
           <TouchableOpacity
             onPress={onPressConfirm}
             style={styles.buttonConfirm}>
-            <UText>Confirm</UText>
+            <UText>Xác nhận</UText>
           </TouchableOpacity>
         )}
       </View>

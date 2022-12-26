@@ -1,27 +1,31 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
-import BlindIcon from '../../assets/svg/blind_icon.svg';
-import EyeIcon from '../../assets/svg/eye_icon.svg';
+import {View, Text, StyleSheet} from 'react-native';
+import React from 'react';
+import {HStack, VStack} from 'native-base';
 
-type Props = {};
-
-const ManageCash = (props: Props) => {
-  const [show, setShow] = useState(false);
+const ManageCash = () => {
   return (
-    <View style={styles.wrapperContainer}>
-      <View style={styles.container}>
+    <VStack
+      alignItems={'center'}
+      justifyContent={'center'}
+      style={styles.container}>
+      <HStack w={'90%'} justifyContent={'space-between'} alignItems="center">
         <View>
-          <TouchableOpacity onPress={() => setShow(!show)}>
-            {show ? <BlindIcon /> : <EyeIcon />}
-          </TouchableOpacity>
-          <Text style={styles.text}>Wallet balance</Text>
+          <Text style={styles.text}>Số dư trong ví của bạn</Text>
         </View>
+        <View>
+          <Text style={styles.price}>10.000 VND</Text>
+        </View>
+      </HStack>
 
+      <HStack w={'90%'} justifyContent={'space-between'} alignItems="center">
         <View>
-          {show ? <Text>2.000.000.000 VND</Text> : <Text>******</Text>}
+          <Text style={styles.text}>Số dư trong ví Tín dụng</Text>
         </View>
-      </View>
-    </View>
+        <View>
+          <Text style={styles.price}>10.000.000 VND</Text>
+        </View>
+      </HStack>
+    </VStack>
   );
 };
 
@@ -38,13 +42,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 3,
     elevation: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
+    // paddingVertical: 20,
   },
   text: {
     fontFamily: 'Poppins-Regular',
+  },
+  price: {
+    fontFamily: 'Poppins-Regular',
+    fontWeight: 'bold',
+    color: '#000000',
   },
 });
 

@@ -47,47 +47,19 @@ const Index = () => {
               <ExtendIcon />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('QR')}>
-            <View style={styles.info}>
-              <View style={styles.info}>
-                <QRcodeIcon height={18} width={18} style={{paddingLeft: 35}} />
-                <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                  <Text style={styles.text}>Your QR code</Text>
-                </View>
-              </View>
-            </View>
-            <View>
-              <ExtendIcon />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <View style={styles.info}>
-              <View style={styles.info}>
-                <LogoIcon />
-                <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                  <Text style={styles.text}>About us</Text>
-                </View>
-              </View>
-            </View>
-            <View>
-              <ExtendIcon />
-            </View>
-          </TouchableOpacity>
         </View>
       </View>
 
       <View style={{marginHorizontal: 20, marginVertical: 10}}>
         <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
-          My Wallet
+          Ví của tôi
         </Text>
         <View style={styles.wrapperButton}>
           <TouchableOpacity style={styles.button}>
             <View style={styles.info}>
               <WalletIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Wallet</Text>
+                <Text style={styles.text}>Ví</Text>
               </View>
             </View>
             <View>
@@ -99,14 +71,14 @@ const Index = () => {
 
       <View style={{marginHorizontal: 20, marginVertical: 10}}>
         <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
-          My Social
+          Xã hội của tôi
         </Text>
         <View style={styles.wrapperButton}>
           <TouchableOpacity style={styles.button}>
             <View style={styles.info}>
               <PersonIcon height={15} width={15} style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Friends</Text>
+                <Text style={styles.text}>Bạn bè</Text>
               </View>
             </View>
             <View>
@@ -124,7 +96,7 @@ const Index = () => {
             <View style={styles.info}>
               <SettingIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Setting app</Text>
+                <Text style={styles.text}>Cài đặt</Text>
               </View>
             </View>
             <View>
@@ -135,7 +107,7 @@ const Index = () => {
             <View style={styles.info}>
               <PrivacyIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Privacy</Text>
+                <Text style={styles.text}>Riêng tư</Text>
               </View>
             </View>
             <View>
@@ -146,7 +118,7 @@ const Index = () => {
             <View style={styles.info}>
               <SupportIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Support</Text>
+                <Text style={styles.text}>Hỗ trợ</Text>
               </View>
             </View>
             <View>
@@ -157,7 +129,7 @@ const Index = () => {
             <View style={styles.info}>
               <ShopIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Shop</Text>
+                <Text style={styles.text}>Cửa hàng</Text>
               </View>
             </View>
             <View>
@@ -173,7 +145,7 @@ const Index = () => {
             <View style={styles.info}>
               <LogoutIcon height={15} width={15} style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Log out</Text>
+                <Text style={styles.text}>Đăng xuất</Text>
               </View>
             </View>
             <View>
@@ -194,7 +166,7 @@ const Index = () => {
             backgroundColor: '#FFFFFF',
             borderRadius: 15,
           }}>
-          <HeaderModal title="Log Out" onPress={closeModal} />
+          <HeaderModal title="Đăng xuất" onPress={closeModal} />
           <BodyModal
             cancel="cancel"
             confirm="confirm"

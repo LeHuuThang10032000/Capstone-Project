@@ -41,17 +41,24 @@ const ContentWallet = () => {
   const items: IImageButtonProps[] = useMemo(() => {
     return [
       {
-        source: require('../../assets/img/moneytranfer.png'),
-        title: 'Chuyển tiền',
+        source: require('../../assets/img/withdraw.png'),
+        title: 'Rút tiền',
         onPress: () => {
-          navigation.navigate('Search');
+          console.log('nothing');
         },
       },
       {
         source: require('../../assets/img/gift.png'),
         title: 'Ưu đãi',
         onPress: () => {
-          console.log('Promo');
+          console.log('nothing');
+        },
+      },
+      {
+        source: require('../../assets/img/deposit.png'),
+        title: 'Nạp tiền',
+        onPress: () => {
+          console.log('nothing');
         },
       },
     ];
