@@ -36,6 +36,7 @@ export type MainStackParamList = {
     password?: string;
     password_confirmation?: string;
     confirmation?: any;
+    forgot_password?: boolean;
   };
   // Otp: undefined;
   ForgotPwd: undefined;
