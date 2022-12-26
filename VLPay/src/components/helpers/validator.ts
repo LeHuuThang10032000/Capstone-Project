@@ -16,4 +16,10 @@ export const validateName = (name: string): string | boolean => {
   return true;
 };
 
-//^[0-9A-Za-z]{3}[0-9A-Za-z-]\d{0,21}$
+export const validatePW = (name: string): string | boolean => {
+  const str = name.replace(/\s\s+/gu, ' ').trim();
+  if (str.length < 6) {
+    return 'Mật khẩu bắt buộc 6 số';
+  }
+  return true;
+};

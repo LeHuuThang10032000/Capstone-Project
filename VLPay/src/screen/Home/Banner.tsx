@@ -12,6 +12,7 @@ import QRcode from '../../assets/svg/qrcode.svg';
 import ScanQR from '../../assets/svg/scanqr.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
+import {Image} from 'native-base';
 
 type Props = {};
 
@@ -27,27 +28,36 @@ const Banner = (props: Props) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
+            marginHorizontal: 20,
           }}>
           <View style={styles.wrapperButton}>
-            <TouchableOpacity onPress={() => console.log('top up!')}>
-              <View style={styles.button}>
-                <TopUp />
+            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+              <View style={styles.buttonTranfer}>
+                <Image
+                  source={require('../../assets/img/moneytranfer.png')}
+                  style={{width: 52, height: 52}}
+                  alt={'just image'}
+                />
               </View>
             </TouchableOpacity>
-            <Text style={styles.text}>TOP UP</Text>
+            <Text style={styles.text}>CHUYỂN TIỀN</Text>
           </View>
 
           <View style={styles.wrapperButton}>
             <TouchableOpacity onPress={() => console.log('with draw!')}>
-              <View style={styles.button}>
-                <Withdraw />
+              <View style={styles.buttonTranfer}>
+                <Image
+                  source={require('../../assets/img/scan.png')}
+                  style={{width: 52, height: 52}}
+                  alt={'just image'}
+                />
               </View>
             </TouchableOpacity>
-            <Text style={styles.text}>WITH DRAW</Text>
+            <Text style={styles.text}>QUÉT MÃ</Text>
           </View>
 
-          <View style={styles.wrapperButton}>
+          {/* <View style={styles.wrapperButton}>
             <TouchableOpacity onPress={() => navigation.navigate('QR')}>
               <View style={styles.button}>
                 <QRcode />
@@ -63,7 +73,7 @@ const Banner = (props: Props) => {
               </View>
             </TouchableOpacity>
             <Text style={styles.text}>SCAN QR</Text>
-          </View>
+          </View> */}
         </View>
       </ImageBackground>
     </View>
@@ -73,6 +83,14 @@ const Banner = (props: Props) => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#ffffff',
+    width: 52,
+    height: 52,
+    marginHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+  },
+  buttonTranfer: {
     width: 52,
     height: 52,
     marginHorizontal: 20,

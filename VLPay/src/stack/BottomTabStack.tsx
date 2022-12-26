@@ -16,31 +16,31 @@ const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
   {
     name: 'Home',
     component: Home,
-    tabBarLabel: 'Home',
+    tabBarLabel: 'Trang chủ',
     icon: Icons.HomeIcon,
   },
   {
     name: 'TranSactionHistory',
     component: TranSactionHistory,
-    tabBarLabel: 'History',
+    tabBarLabel: 'Lịch sử GD',
     icon: Icons.History,
   },
   {
     name: 'QR',
     component: QR,
-    tabBarLabel: 'QR',
-    icon: Icons.QRcode,
+    tabBarLabel: 'Đơn hàng',
+    icon: Icons.Order,
   },
   {
     name: 'Notification',
     component: Notification,
-    tabBarLabel: 'Notification',
+    tabBarLabel: 'Thông báo',
     icon: Icons.Bell,
   },
   {
     name: 'MyWallet',
     component: MyWallet,
-    tabBarLabel: 'My wallet',
+    tabBarLabel: 'Ví của tôi',
     icon: Icons.User,
   },
 ];

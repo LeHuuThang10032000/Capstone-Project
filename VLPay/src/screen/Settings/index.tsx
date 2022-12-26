@@ -10,28 +10,31 @@ import ModalProvider from '../../context/ModalProvider';
 import Modal from 'react-native-modal';
 import HeaderModal from '../../components/CustomLogout/HeaderModal';
 import BodyModal from './ChangeLngComp/BodyModal';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 type Props = {};
 
 const Index = (props: Props) => {
+  const navigation = useNavigation<MainStackNavigation>();
   const {modalVisible, setModalVisible, closeModal} = ModalProvider();
   const toggleModal = () => {
     setModalVisible(true);
   };
   return (
     <View>
-      <HeaderBack title="Setting" />
+      <HeaderBack title="Cài đặt" />
       <View style={{marginTop: 30}}>
         <MyButton
           icon={<UnlockIcon />}
-          buttonText="Change password"
+          buttonText="Thay đổi mật khẩu"
           rightIcon={<ChevronRight />}
           rightText={undefined}
-          onPress={() => console.log('change pass')}></MyButton>
+          onPress={() => navigation.navigate('ChangePassword')}></MyButton>
 
         <MyButton
           icon={<EarthIcon />}
-          buttonText="Select language"
+          buttonText="Chọn ngôn ngữ"
           rightIcon={<ChevronDown />}
           rightText={'English'}
           onPress={toggleModal}></MyButton>

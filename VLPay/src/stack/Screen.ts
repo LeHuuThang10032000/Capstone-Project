@@ -10,6 +10,7 @@ import DetailUser from '../screen/Search/DetailUser';
 import Otp from '../screen/Otp';
 import Transfer from '../screen/Transfer';
 import EditProfile from '../screen/EditProfileScreen';
+import ChangePassword from '../screen/ChangePassword';
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'MainTab',
@@ -54,5 +55,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'EditProfile',
     component: EditProfile,
+  },
+  {
+    name: 'ChangePassword',
+    component: ChangePassword,
   },
 ];

@@ -55,6 +55,7 @@ export type MainStackParamList = {
   };
   Transfer: {picture: string; title: string; first: string; last: string};
   EditProfile: undefined;
+  ChangePassword: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
