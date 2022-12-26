@@ -40,6 +40,7 @@ const Index = function () {
   const dispatch = useDispatch();
   const [btnBlock, setBtnBlock] = useState(false);
   const [visibleWarning, setVisibleWarning] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
 
   const {
     getValues,
@@ -67,28 +68,46 @@ const Index = function () {
     } = data;
 
     setBtnBlock(true);
-    if (auth()?.currentUser) {
-      await auth()
-        .signOut()
-        .catch(e => console.log(e));
-    }
+
     try {
-      const removeZeroPhone = phone.replace('0', '');
-      const confirmation = await auth().signInWithPhoneNumber(
-        `+84${removeZeroPhone}`,
+      const result = await axiosClient.post(
+        'https://zennoshop.cf/api/user/check-phone',
+        {
+          phone,
+        },
       );
-      setBtnBlock(false);
-      navigation.navigate('Otp', {
-        phone: phone,
-        full_name: full_name,
-        password: password,
-        password_confirmation: password_confirmation,
-        confirmation: confirmation,
-      });
-    } catch (error) {
-      console.log('error ', error);
-      setVisibleWarning(true);
-      setBtnBlock(false);
+
+      if (result.data.status_code == 422) {
+        setVisibleWarning(true);
+        setPhoneError(result.data.message);
+        setBtnBlock(false);
+      } else {
+        if (auth()?.currentUser) {
+          await auth()
+            .signOut()
+            .catch(e => console.log(e));
+        }
+        try {
+          const removeZeroPhone = phone.replace('0', '');
+          const confirmation = await auth().signInWithPhoneNumber(
+            `+84${removeZeroPhone}`,
+          );
+          setBtnBlock(false);
+          navigation.navigate('Otp', {
+            phone: phone,
+            full_name: full_name,
+            password: password,
+            password_confirmation: password_confirmation,
+            confirmation: confirmation,
+          });
+        } catch (error) {
+          console.log('error ', error);
+          setVisibleWarning(true);
+          setBtnBlock(false);
+        }
+      }
+    } catch (e) {
+      console.log(e);
     }
   }, []);
 
@@ -282,8 +301,8 @@ const Index = function () {
           width: 200,
           display: 'none',
         }}
-        message="Some thing went wrong"
-        title={'Register Error'}
+        message={phoneError}
+        title={'Lỗi đăng ký'}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}

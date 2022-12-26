@@ -54,7 +54,7 @@ const Index = (props: Props) => {
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
       <Header />
-      <View style={styles.container}>
+      <View style={{paddingBottom: 20, flex: 1, paddingHorizontal: 15}}>
         <View style={styles.header}>
           <Utitle style={styles.headerItem}>Quên mật khẩu</Utitle>
         </View>
@@ -106,43 +106,49 @@ const FormInputController = (
     placeHolder,
     errorRequired,
     validation,
+    required,
     error,
     ...rest
   } = props;
   console.log(error);
 
   return (
-    <View style={{height: 100}}>
+    <View style={{marginBottom: -5}}>
       <Utitle
         style={{
           fontSize: 18,
           fontWeight: '700',
           color: '#312E49',
           paddingHorizontal: 10,
+          marginBottom: 5,
         }}>
         {title}
       </Utitle>
       <Controller
         name={name}
         control={control}
-        rules={{required: true, validate: validation}}
-        render={({field: {value, onChange}}) => (
-          <Input
-            leftIcon={props.LeftIcon}
-            placeholder={placeHolder}
-            style={props.styles}
-            secureTextEntry={props.hide}
-            rightIcon={props.RightIcon}
-            onChangeText={onChange}
-            value={value}
-            {...rest}
-          />
-        )}
+        rules={{required: required, validate: validation}}
+        render={({field: {value, onChange}}) => {
+          return (
+            <View style={{height: 80}}>
+              <Input
+                leftIcon={props.LeftIcon}
+                placeholder={placeHolder}
+                style={props.styles}
+                secureTextEntry={props.hide}
+                rightIcon={props.RightIcon}
+                onChangeText={onChange}
+                value={value}
+                {...rest}
+              />
+              {error && <UText style={styles.error}>{error}</UText>}
+              {errorRequired && !error && (
+                <UText style={styles.error}>{errorRequired}</UText>
+              )}
+            </View>
+          );
+        }}
       />
-      {error && <UText style={styles.error}>{error}</UText>}
-      {errorRequired && !error && (
-        <UText style={styles.error}>{errorRequired}</UText>
-      )}
     </View>
   );
 };
