@@ -52,7 +52,7 @@ class AuthController extends Controller
         }
         return response(
             [
-                "message" => "",
+                "message" => "Số điện thoại chưa được đăng ký",
                 "status_code" => 200
             ]
             );
