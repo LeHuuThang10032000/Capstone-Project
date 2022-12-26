@@ -11,8 +11,8 @@ export default StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 30,
-    marginBottom: 40,
+    marginTop: 50,
+    marginBottom: 30,
   },
   error: {
     fontSize: 11,

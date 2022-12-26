@@ -1,5 +1,5 @@
 import {View, Text, TextInput, TouchableOpacity} from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
 import {UText, Utitle} from '../../components/UText';
@@ -13,7 +13,11 @@ import Input from '../../components/InputForm';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {HStack} from 'native-base';
-
+import {axiosClient} from '../../components/apis/axiosClient';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/icons';
+import Colors from '../../components/helpers/Colors';
+import auth from '@react-native-firebase/auth';
 interface IFormInputControllerProps {
   control: Control<ILoginInfoValue, any>;
   name: keyof ILoginInfoValue;
@@ -22,6 +26,9 @@ interface IFormInputControllerProps {
 
 const Index = (props: Props) => {
   const navigation = useNavigation<MainStackNavigation>();
+  const [btnBlock, setBtnBlock] = useState(false);
+  const [visibleWarning, setVisibleWarning] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
   const {
     setValue,
     handleSubmit,
@@ -33,6 +40,49 @@ const Index = (props: Props) => {
       password: '',
     },
   });
+
+  const submit = async (value: any) => {
+    const {phoneNumber: phone} = value;
+    try {
+      const result = await axiosClient.post(
+        'https://zennoshop.cf/api/user/check-phone',
+        {
+          phone,
+        },
+      );
+
+      if (result.data.status_code == 422) {
+        setVisibleWarning(true);
+        setPhoneError(result.data.message);
+        setBtnBlock(false);
+      } else {
+        if (auth()?.currentUser) {
+          await auth()
+            .signOut()
+            .catch(e => console.log(e));
+        }
+        try {
+          const removeZeroPhone = phone.replace('0', '');
+          const confirmation = await auth().signInWithPhoneNumber(
+            `+84${removeZeroPhone}`,
+          );
+          setBtnBlock(false);
+          navigation.navigate('Otp', {
+            phone: phone,
+            confirmation: confirmation,
+            forgot_password: true,
+          });
+        } catch (error) {
+          console.log('error ', error);
+          setVisibleWarning(true);
+          setBtnBlock(false);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
     if (!phoneNumber) {
       return 'Trường số điện thoại không được bỏ trống';
@@ -76,10 +126,33 @@ const Index = (props: Props) => {
         />
         <TouchableOpacity
           style={styles.buttonInput}
-          onPress={() => navigation.navigate('Otp')}>
+          onPress={handleSubmit(submit)}>
           <UText style={styles.textButtonInput}>Xác nhận</UText>
         </TouchableOpacity>
       </View>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message={phoneError}
+        title={'Lỗi đăng ký'}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={'Xác nhận'}
+        style={{flexDirection: 'column'}}
+      />
     </LinearGradient>
   );
 };

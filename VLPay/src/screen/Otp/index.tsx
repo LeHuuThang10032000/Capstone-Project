@@ -25,11 +25,18 @@ let resendOtpTimerInterval: any;
 const Otp = (props: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const dispatch = useDispatch();
-  const {full_name, phone, password, password_confirmation, confirmation} =
-    useRoute<RouteProp<MainStackParamList, 'Otp'>>()?.params;
+  const {
+    full_name,
+    phone,
+    password,
+    password_confirmation,
+    confirmation,
+    forgot_password,
+  } = useRoute<RouteProp<MainStackParamList, 'Otp'>>()?.params;
   const [btnBlock, setBtnBlock] = useState(false);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [visibleSuccess, setVisibleSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT,
   );
@@ -90,15 +97,34 @@ const Otp = (props: any) => {
       }
     }
     try {
-      await axiosClient.post('https://zennoshop.cf/api/user/register', {
-        full_name,
-        phone,
-        password,
-        password_confirmation,
-      });
-      setVisibleSuccess(true);
-      dispatch(await Login(phone, password ?? ''));
-      setBtnBlock(false);
+      if (forgot_password) {
+        const result = await axiosClient.post(
+          'https://zennoshop.cf/api/user/register',
+          {
+            phone,
+            password,
+            password_confirmation,
+          },
+        );
+        setSuccessMessage(result.data.message);
+        setVisibleSuccess(true);
+        dispatch(await Login(phone, password ?? ''));
+        setBtnBlock(false);
+      } else {
+        const result = await axiosClient.post(
+          'https://zennoshop.cf/api/user/register',
+          {
+            full_name,
+            phone,
+            password,
+            password_confirmation,
+          },
+        );
+        setSuccessMessage(result.data.message);
+        setVisibleSuccess(true);
+        dispatch(await Login(phone, password ?? ''));
+        setBtnBlock(false);
+      }
     } catch (e) {
       console.log('====================================');
       console.log(e);
@@ -195,7 +221,7 @@ const Otp = (props: any) => {
           width: 200,
           display: 'none',
         }}
-        message="Đăng ký thành công"
+        message={successMessage}
         title={'Thông báo'}
         onActionLeft={() => {
           setVisibleSuccess(false);
