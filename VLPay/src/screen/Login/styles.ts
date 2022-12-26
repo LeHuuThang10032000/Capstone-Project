@@ -14,7 +14,7 @@ export default StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 150,
+    marginTop: 100,
   },
   headerItem: {
     fontWeight: '700',
