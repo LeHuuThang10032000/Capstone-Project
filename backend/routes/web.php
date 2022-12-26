@@ -22,10 +22,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/test', function(){
-    return 13;
-});
-
 require __DIR__.'/auth.php';
 
-Route::resource('user', UserController::class);
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('user', UserController::class);
+});
