@@ -25,7 +25,8 @@ export default StyleSheet.create({
     fontSize: 11,
     color: 'red',
     position: 'absolute',
-    bottom: 0,
+    bottom: 5,
+    left: 10,
   },
   itemLabel: {},
   itemContainer: {
@@ -56,6 +57,7 @@ export default StyleSheet.create({
     backgroundColor: '#B5EAD8',
     borderRadius: 6,
     paddingVertical: 20,
+    marginHorizontal: 10,
   },
   textButtonInput: {
     color: '#514545',

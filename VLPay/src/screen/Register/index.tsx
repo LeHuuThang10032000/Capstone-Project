@@ -27,6 +27,7 @@ import Icons from '../../components/icons';
 import YesNoModal from '../../components/YesNoModal';
 import Colors from '../../components/helpers/Colors';
 import {axiosClient} from '../../components/apis/axiosClient';
+import Arrow from '../../assets/svg/arrow_left.svg';
 
 interface IFormInputControllerProps {
   control: Control<IRegisterInfoValue, any>;
@@ -66,41 +67,29 @@ const Index = function () {
     } = data;
 
     setBtnBlock(true);
+    if (auth()?.currentUser) {
+      await auth()
+        .signOut()
+        .catch(e => console.log(e));
+    }
     try {
-      const result = await axiosClient.post(
-        'https://zennoshop.cf/api/user/register',
-        {
-          full_name,
-          phone,
-          password,
-          password_confirmation,
-        },
+      const removeZeroPhone = phone.replace('0', '');
+      const confirmation = await auth().signInWithPhoneNumber(
+        `+84${removeZeroPhone}`,
       );
-      console.log(result.data);
-
-      dispatch(await Login(phone, password));
       setBtnBlock(false);
-      navigation.goBack();
-    } catch (e) {
-      console.log(e.message);
+      navigation.navigate('Otp', {
+        phone: phone,
+        full_name: full_name,
+        password: password,
+        password_confirmation: password_confirmation,
+        confirmation: confirmation,
+      });
+    } catch (error) {
+      console.log('error ', error);
       setVisibleWarning(true);
       setBtnBlock(false);
     }
-
-    // if (auth()?.currentUser) {
-    //   await auth()
-    //     .signOut()
-    //     .catch(e => console.log(e));
-    // }
-    // try {
-    //   const removeZeroPhone = data.phoneNumber.replace('0', '');
-    //   const confirmation = await auth().signInWithPhoneNumber(
-    //     `+84${removeZeroPhone}`,
-    //   );
-    //   console.log(confirmation);
-    // } catch (error) {
-    //   console.log('error ', error);
-    // }
   }, []);
 
   const validationPswConfirm = useCallback(
@@ -143,106 +132,122 @@ const Index = function () {
       return 'Format phone number is wrong';
     }
   }, []);
-
+  const Header = () => {
+    return (
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <HStack style={{marginTop: 25}}>
+          <Arrow style={{marginLeft: 15}} />
+        </HStack>
+      </TouchableOpacity>
+    );
+  };
   return (
     <LinearGradient
       colors={['#FEB7B1', '#FFFFFF']}
       style={styles.linearGradient}>
+      <Header />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <KeyboardInputScrollView>
-          <VStack
-            style={{
-              paddingBottom: 20,
-              flex: 1,
-              paddingHorizontal: 15,
-            }}>
-            <View style={styles.header}>
-              <Utitle style={styles.headerItem}>{strings.register}</Utitle>
-            </View>
-            <FormInputController
-              title={strings.name}
-              placeHolder={strings.name_placeholder}
-              styles={styles.textInput}
-              control={control}
-              name={'name'}
-              validation={validateName}
-              required={true}
-              error={errors?.name?.message}
-              errorRequired={
-                errors?.name?.type && 'Field name can not be empty'
-              }
-            />
-            <FormInputController
-              title={strings.phone_number}
-              placeHolder={strings.phone_placeholder}
-              styles={styles.textInput}
-              control={control}
-              name={'phoneNumber'}
-              keyboardType={'phone-pad'}
-              required={true}
-              validation={validatePhoneNumber}
-              error={errors?.phoneNumber?.message}
-              errorRequired={
-                errors?.phoneNumber?.type &&
-                'Field phoneNumber can not be empty'
-              }
-            />
-            <FormInputController
-              title={strings.password}
-              placeHolder={strings.password_placeholder}
-              styles={styles.textInput}
-              control={control}
-              name={'password'}
-              required={true}
-              errorRequired={
-                errors?.password?.type && 'Field password can not be empty'
-              }
-              validation={validationPsw}
-              RightIcon={
-                <TouchableOpacity
-                  style={styles.passwordIcon}
-                  onPress={() => {
-                    setHide(!hide);
-                  }}>
-                  {hide ? <BlindIcon /> : <EyeIcon />}
-                </TouchableOpacity>
-              }
-              error={errors?.password?.message}
-              hide={hide}
-            />
-            <FormInputController
-              title={strings.password_confirmation}
-              placeHolder={strings.password_confirmation}
-              styles={styles.textInput}
-              control={control}
-              name={'passwordConfirmation'}
-              required={true}
-              validation={validationPswConfirm}
-              RightIcon={
-                <TouchableOpacity
-                  style={styles.passwordIcon}
-                  onPress={() => {
-                    setHideConfirm(!hideConfirm);
-                  }}>
-                  {hideConfirm ? <BlindIcon /> : <EyeIcon />}
-                </TouchableOpacity>
-              }
-              error={errors?.passwordConfirmation?.message}
-              hide={hideConfirm}
-              errorRequired={
-                errors?.passwordConfirmation?.type &&
-                'Field confirm password can not be empty'
-              }
-            />
-            <TouchableOpacity
-              disabled={btnBlock}
-              onPress={handleSubmit(submit)}
-              style={styles.buttonInput}>
-              <UText style={styles.textButtonInput}>{strings.register}</UText>
-            </TouchableOpacity>
-          </VStack>
-        </KeyboardInputScrollView>
+        <VStack
+          style={{
+            paddingBottom: 20,
+            flex: 1,
+            paddingHorizontal: 15,
+          }}>
+          <View style={styles.header}>
+            <Utitle style={styles.headerItem}>Đăng ký</Utitle>
+          </View>
+          <FormInputController
+            title={'Họ và tên'}
+            placeHolder={'Nhập họ và tên'}
+            styles={styles.textInput}
+            control={control}
+            name={'name'}
+            validation={validateName}
+            required={true}
+            error={errors?.name?.message}
+            errorRequired={
+              errors?.name?.type && 'Trường họ tên không được bỏ trống'
+            }
+          />
+          <FormInputController
+            title={'Số điện thoại'}
+            placeHolder={'Nhập số điện thoại'}
+            styles={styles.textInput}
+            control={control}
+            name={'phoneNumber'}
+            keyboardType={'phone-pad'}
+            required={true}
+            validation={validatePhoneNumber}
+            error={errors?.phoneNumber?.message}
+            errorRequired={
+              errors?.phoneNumber?.type &&
+              'Trường số điện thoại không được bỏ trống'
+            }
+          />
+          <FormInputController
+            title={'Mật khẩu'}
+            placeHolder={'Nhập mật khẩu'}
+            styles={styles.textInput}
+            control={control}
+            name={'password'}
+            required={true}
+            errorRequired={
+              errors?.password?.type && 'Trường mật khẩu không được bỏ trống'
+            }
+            validation={validationPsw}
+            RightIcon={
+              <TouchableOpacity
+                style={styles.passwordIcon}
+                onPress={() => {
+                  setHide(!hide);
+                }}>
+                {hide ? <BlindIcon /> : <EyeIcon />}
+              </TouchableOpacity>
+            }
+            error={errors?.password?.message}
+            hide={hide}
+          />
+          <FormInputController
+            title={'Nhập lại mật khẩu'}
+            placeHolder={'Nhập lại mật khẩu'}
+            styles={styles.textInput}
+            control={control}
+            name={'passwordConfirmation'}
+            required={true}
+            validation={validationPswConfirm}
+            RightIcon={
+              <TouchableOpacity
+                style={styles.passwordIcon}
+                onPress={() => {
+                  setHideConfirm(!hideConfirm);
+                }}>
+                {hideConfirm ? <BlindIcon /> : <EyeIcon />}
+              </TouchableOpacity>
+            }
+            error={errors?.passwordConfirmation?.message}
+            hide={hideConfirm}
+            errorRequired={
+              errors?.passwordConfirmation?.type &&
+              'Trường nhập lại mật khẩu không được bỏ trống'
+            }
+          />
+        </VStack>
       </ScrollView>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 60,
+          width: '100%',
+          marginRight: 10,
+          paddingHorizontal: 15,
+        }}>
+        <TouchableOpacity
+          disabled={btnBlock}
+          onPress={handleSubmit(submit)}
+          style={[styles.buttonInput]}>
+          <UText style={styles.textButtonInput}>Đăng ký</UText>
+        </TouchableOpacity>
+      </View>
       <View
         style={{
           position: 'absolute',
@@ -250,12 +255,12 @@ const Index = function () {
           width: '100%',
         }}>
         <HStack justifyContent={'center'}>
-          <UText>You already have an account? </UText>
+          <UText>Bạn đã có tài khoản? </UText>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('Login');
             }}>
-            <UText style={{color: '#2805FF'}}>Login</UText>
+            <UText style={{color: '#2805FF'}}>Đăng nhập</UText>
           </TouchableOpacity>
         </HStack>
       </View>
@@ -313,8 +318,15 @@ const FormInputController = (
     ...rest
   } = props;
   return (
-    <View>
-      <Utitle style={{fontSize: 18, fontWeight: '700', color: '#312E49'}}>
+    <View style={{marginBottom: -5}}>
+      <Utitle
+        style={{
+          fontSize: 18,
+          fontWeight: '700',
+          color: '#312E49',
+          paddingHorizontal: 10,
+          marginBottom: 5,
+        }}>
         {title}
       </Utitle>
       <Controller

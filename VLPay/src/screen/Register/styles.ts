@@ -12,13 +12,14 @@ export default StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 100,
+    marginTop: 50,
   },
   error: {
     fontSize: 11,
     color: 'red',
     position: 'absolute',
-    bottom: 0,
+    bottom: 5,
+    left: 10,
   },
   headerItem: {
     fontWeight: '700',
@@ -54,6 +55,7 @@ export default StyleSheet.create({
     backgroundColor: '#B5EAD8',
     borderRadius: 6,
     paddingVertical: 20,
+    marginHorizontal: 10,
   },
   textButtonInput: {
     color: '#514545',

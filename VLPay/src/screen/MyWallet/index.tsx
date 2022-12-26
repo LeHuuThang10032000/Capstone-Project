@@ -171,9 +171,9 @@ const Index = () => {
             cancel="cancel"
             confirm="confirm"
             onPressCancel={closeModal}
-            onPressConfirm={() => {
+            onPressConfirm={async () => {
               RNRestart.Restart();
-              dispatch(Logout());
+              dispatch(await Logout());
             }}
           />
         </View>

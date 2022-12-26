@@ -1,21 +1,30 @@
 import {LOGIN, LOGOUT} from '../constants';
 import * as api from '../../components/apis/api';
-import axios from 'axios';
 import {axiosClient} from '../../components/apis/axiosClient';
+import {clearToken, getToken, saveToken} from '../../utils/storeUtils';
+
+export const Init = async () => {
+  let token = await getToken();
+  if (token) {
+    return {
+      type: LOGIN,
+      payload: token,
+    };
+  }
+  return {
+    type: LOGIN,
+    payload: null,
+  };
+};
 
 export const Login = async (phoneNumber: string, password: string) => {
   const phone = phoneNumber;
-
   try {
     const res = await axiosClient.post(api.LOGIN, {
       phone,
       password,
     });
-
-    console.log('====================================');
-    console.log(res);
-    console.log('====================================');
-
+    await saveToken(res.data.token);
     return {
       type: LOGIN,
       payload: res.data.token,
@@ -29,7 +38,8 @@ export const Login = async (phoneNumber: string, password: string) => {
   };
 };
 
-export const Logout = () => {
+export const Logout = async () => {
+  await clearToken();
   return {
     type: LOGOUT,
     payload: null,

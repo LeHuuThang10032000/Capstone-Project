@@ -31,11 +31,13 @@ export type MainStackParamList = {
   Login: undefined;
   Otp: {
     isHoldingLogin?: boolean;
-    email?: string;
+    full_name?: string;
     phone: string;
-    password: string;
-    password_confirmation: string;
+    password?: string;
+    password_confirmation?: string;
+    confirmation?: any;
   };
+  // Otp: undefined;
   ForgotPwd: undefined;
   Register: undefined;
   TranSactionHistory: undefined;
