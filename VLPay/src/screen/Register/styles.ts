@@ -7,7 +7,6 @@ export default StyleSheet.create({
   },
   linearGradient: {
     flex: 1,
-    borderRadius: 5,
   },
   header: {
     flexDirection: 'row',
@@ -55,7 +54,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#B5EAD8',
     borderRadius: 6,
-    paddingVertical: 20,
+    paddingVertical: 15,
     marginHorizontal: 10,
   },
   textButtonInput: {

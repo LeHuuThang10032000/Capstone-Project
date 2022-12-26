@@ -77,17 +77,17 @@ const Index = function () {
   const [hide, setHide] = useState(true);
   const validationPsw = useCallback((pws: string) => {
     if (!pws) {
-      return 'Trường mật khẩu không được bỏ trống';
+      return 'Mật khẩu không được bỏ trống';
     } else if (pws.length < 6) {
-      return 'Mật khẩu có ít nhất 6 kí tự';
+      return 'Mật khẩu bắt buộc 6 số';
     }
   }, []);
 
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
     if (!phoneNumber) {
-      return 'Trường số điện thoại không được bỏ trống';
+      return 'Số điện thoại không được bỏ trống';
     } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
-      return 'Số điện thoại phải 10 số và không có ký tự đặc biệt';
+      return 'Số điện thoại chưa đúng 10 số';
     }
   }, []);
 
@@ -102,7 +102,7 @@ const Index = function () {
         <FormInputController
           title={'Số điện thoại'}
           LeftIcon={<PhoneIcon width={20} height={20} />}
-          placeHolder={'Nhập số điện thoại'}
+          placeHolder={'Nhập số điện thoại gồm 10 số'}
           styles={styles.textInput}
           control={control}
           name={'phoneNumber'}
@@ -110,12 +110,13 @@ const Index = function () {
           required={true}
           error={errors?.phoneNumber?.message}
           errorRequired={
-            errors?.phoneNumber?.type &&
-            'Trường số điện thoại không được bỏ trống'
+            errors?.phoneNumber?.type && 'Số điện thoại không được để trống'
           }
           validation={validatePhoneNumber}
         />
         <FormInputController
+          keyboardType="number-pad"
+          maxLength={6}
           title={'Mật khẩu'}
           LeftIcon={<LockIcon width={20} height={20} />}
           placeHolder={'Nhập mật khẩu của bạn'}
@@ -126,7 +127,7 @@ const Index = function () {
           validation={validationPsw}
           error={errors?.password?.message}
           errorRequired={
-            errors?.password?.type && 'Trường mật khẩu không được bỏ trống'
+            errors?.password?.type && 'Mật khẩu không được để trống'
           }
           RightIcon={
             <TouchableOpacity
@@ -149,18 +150,25 @@ const Index = function () {
             <UText style={styles.textButtonOpacity}>Quên mật khẩu?</UText>
           </TouchableOpacity>
         </HStack>
-        <Flex style={styles.buttonInput}>
-          <TouchableOpacity onPress={handleSubmit(submit)}>
+        <View
+          style={{
+            width: '100%',
+            marginRight: 10,
+            paddingHorizontal: 0,
+          }}>
+          <TouchableOpacity
+            onPress={handleSubmit(submit)}
+            style={[styles.buttonInput]}>
             <UText style={styles.textButtonInput}>Đăng nhập</UText>
           </TouchableOpacity>
-        </Flex>
+        </View>
         <HStack
           style={{
             width: '100%',
             flexDirection: 'row',
             justifyContent: 'center',
             position: 'absolute',
-            bottom: 0,
+            bottom: 10,
           }}>
           <UText>Chưa có tài khoản? </UText>
           <TouchableOpacity

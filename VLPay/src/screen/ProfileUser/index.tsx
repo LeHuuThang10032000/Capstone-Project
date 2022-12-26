@@ -21,7 +21,7 @@ const Index = () => {
   const navigation = useNavigation<MainStackNavigation>();
   return (
     <View>
-      <HeaderBack title="Your profile" />
+      <HeaderBack title="Hồ sơ của bạn" />
       <Center style={{paddingVertical: 40}}>
         <Image
           source={{uri: avatar}}

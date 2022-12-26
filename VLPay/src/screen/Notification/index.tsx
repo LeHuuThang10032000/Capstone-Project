@@ -19,7 +19,7 @@ type Props = {};
 const Index = (props: Props) => {
   return (
     <View style={styles.bgColor}>
-      <HeaderComp title="Notification" />
+      <HeaderComp title="Thông báo" />
       <HeaderDivider />
       <ScrollView>
         <VStack space={4} alignItems="center" pt={5} pb={5}>
