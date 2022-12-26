@@ -39,6 +39,25 @@ class AuthController extends Controller
         ];
     }
 
+    public function checkPhoneExist(Request $request){
+        $user = User::where('phone', $request->phone)->first();
+
+        if($user){
+            return response(
+                [
+                    "message" => "Số điện thoại đã được đăng ký",
+                    "status_code" => 422
+                ]
+                );
+        }
+        return response(
+            [
+                "message" => "",
+                "status_code" => 200
+            ]
+            );
+    }
+
     public function login(Request $request){
         $fields = $request->validate([
             'phone' => 'required|string|min:10|max:10',
