@@ -72,7 +72,7 @@ const Index = () => {
 
   return (
     <View>
-      <HeaderBack title="Your profile" />
+      <HeaderBack title="Hồ sơ của bạn" />
       <Pressable onPress={ChoosePhotoFromLibrary}>
         <Center style={{paddingVertical: 40}}>
           <Image

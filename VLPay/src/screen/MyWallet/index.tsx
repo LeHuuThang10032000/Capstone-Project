@@ -27,7 +27,7 @@ const Index = () => {
   const dispatch = useDispatch();
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <HeaderComp title="My wallet" />
+      <HeaderComp title="Ví của tôi" />
       <View style={{marginHorizontal: 20, marginVertical: 20}}>
         <View style={styles.wrapperButton}>
           <TouchableOpacity
