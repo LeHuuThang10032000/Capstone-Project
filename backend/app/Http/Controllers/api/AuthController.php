@@ -22,10 +22,11 @@ class AuthController extends Controller
             'phone' => $field['phone'],
             'password' => bcrypt($field['password'])
         ]);
-
+        $token = $user->createToken('myapptoken')->plainTextToken;
         $response = [
             'user' => $user,
-            'status_code' =>201
+            'status_code' =>201,
+            'token' => $token
         ];
 
         return response($response, 201);
@@ -56,6 +57,26 @@ class AuthController extends Controller
                 "status_code" => 200
             ]
             );
+    }
+
+    public function forgotPassword(Request $request){
+
+        $fields = $request->validate([
+            'phone' => 'required|string|min:10|max:10',
+            'password' => 'required|string|confirmed'
+        ]);
+
+        $user = User::where('phone',$fields['phone'])->first();
+        $user->password = bcrypt($fields['password']);
+        $user->save();
+        $token = $user->createToken('myapptoken')->plainTextToken;
+        return response(
+            [
+                'message' => 'Mật khẩu đổi thành công',
+                'status_code' => 200,
+                'token' => $token
+            ], 200
+        ); 
     }
 
     public function login(Request $request){
