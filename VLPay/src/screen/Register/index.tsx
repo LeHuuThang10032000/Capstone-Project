@@ -95,14 +95,15 @@ const Index = function () {
   const validationPswConfirm = useCallback(
     (psw: string) => {
       if (!psw) {
-        return 'Password confirm is required';
-      }
-      if (getValues('password')) {
+        return 'Nhập lại mật khẩu không được để trống';
+      } else if (psw.length < 6) {
+        return 'Mật khẩu nhập lại bắt buộc 6 số';
+      } else if (getValues('password')) {
         if (
           watch('passwordConfirmation') !== watch('password') &&
           getValues('passwordConfirmation')
         ) {
-          return 'Password confirm must match with password';
+          return 'Mật khẩu chưa trùng khớp';
         }
       }
     },
@@ -111,9 +112,9 @@ const Index = function () {
 
   const validationPsw = useCallback((pws: string) => {
     if (!pws) {
-      return 'Password is required';
+      return 'Mật khẩu không được để trống';
     } else if (pws.length < 6) {
-      return 'Password must have at least 6 character';
+      return 'Mật khẩu bắt buộc 6 số';
     }
   }, []);
 
@@ -121,15 +122,17 @@ const Index = function () {
     if (!name) {
       return 'Name is required';
     } else if (name.length < 4) {
-      return 'Field name must have at least 4 characters';
+      return 'Họ và tên phải có ít nhất 4 ký tự';
+    } else if (name.length > 25) {
+      return 'Họ và tên không nhiều hơn 25 ký tự';
     }
   }, []);
 
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
     if (!phoneNumber) {
-      return 'Phone number is required';
+      return 'Số điện thoại không được để trống';
     } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
-      return 'Format phone number is wrong';
+      return 'Số điện thoại chưa đúng 10 số';
     }
   }, []);
   const Header = () => {
@@ -166,7 +169,7 @@ const Index = function () {
             required={true}
             error={errors?.name?.message}
             errorRequired={
-              errors?.name?.type && 'Trường họ tên không được bỏ trống'
+              errors?.name?.type && 'Họ và tên không được để trống'
             }
           />
           <FormInputController
@@ -180,8 +183,7 @@ const Index = function () {
             validation={validatePhoneNumber}
             error={errors?.phoneNumber?.message}
             errorRequired={
-              errors?.phoneNumber?.type &&
-              'Trường số điện thoại không được bỏ trống'
+              errors?.phoneNumber?.type && 'Số điện thoại không được để trống'
             }
           />
           <FormInputController
@@ -192,7 +194,7 @@ const Index = function () {
             name={'password'}
             required={true}
             errorRequired={
-              errors?.password?.type && 'Trường mật khẩu không được bỏ trống'
+              errors?.password?.type && 'Mật khẩu không được bỏ trống'
             }
             validation={validationPsw}
             RightIcon={
@@ -204,6 +206,8 @@ const Index = function () {
                 {hide ? <BlindIcon /> : <EyeIcon />}
               </TouchableOpacity>
             }
+            keyboardType="number-pad"
+            maxLength={6}
             error={errors?.password?.message}
             hide={hide}
           />
@@ -224,11 +228,13 @@ const Index = function () {
                 {hideConfirm ? <BlindIcon /> : <EyeIcon />}
               </TouchableOpacity>
             }
+            keyboardType="number-pad"
+            maxLength={6}
             error={errors?.passwordConfirmation?.message}
             hide={hideConfirm}
             errorRequired={
               errors?.passwordConfirmation?.type &&
-              'Trường nhập lại mật khẩu không được bỏ trống'
+              'Nhập lại mật khẩu không được để trống'
             }
           />
         </VStack>
@@ -236,7 +242,7 @@ const Index = function () {
       <View
         style={{
           position: 'absolute',
-          bottom: 60,
+          bottom: 70,
           width: '100%',
           marginRight: 10,
           paddingHorizontal: 15,
@@ -251,7 +257,7 @@ const Index = function () {
       <View
         style={{
           position: 'absolute',
-          bottom: 0,
+          bottom: 10,
           width: '100%',
         }}>
         <HStack justifyContent={'center'}>

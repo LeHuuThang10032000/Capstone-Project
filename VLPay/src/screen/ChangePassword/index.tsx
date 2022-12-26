@@ -44,7 +44,7 @@ const Index = () => {
           watch('passwordConfirm') !== watch('password') &&
           getValues('passwordConfirm')
         ) {
-          return 'Mật khẩu xác nhận phải khớp với mật khẩu mới';
+          return 'Mật khẩu chưa trùng khớp';
         }
       }
     },
@@ -73,7 +73,7 @@ const Index = () => {
                   Nhập mật khẩu mới
                 </FormControl.Label>
                 <Input
-                  placeholder="Nhập mật khẩu gồm 6 ký tự"
+                  placeholder="Nhập mật khẩu gồm 6 số"
                   keyboardType="number-pad"
                   maxLength={6}
                   secureTextEntry={true}
@@ -109,7 +109,7 @@ const Index = () => {
                   Nhập lại mật khẩu mới
                 </FormControl.Label>
                 <Input
-                  placeholder="Nhập mật khẩu gồm 6 ký tự"
+                  placeholder="Nhập mật khẩu gồm 6 số"
                   keyboardType="number-pad"
                   maxLength={6}
                   secureTextEntry={true}
