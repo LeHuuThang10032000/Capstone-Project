@@ -9,12 +9,12 @@ export default StyleSheet.create({
     flex: 1,
     paddingLeft: 15,
     paddingRight: 15,
-    borderRadius: 5,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 150,
+    marginTop: 100,
+    marginBottom: 50,
   },
   headerItem: {
     fontWeight: '700',
@@ -56,7 +56,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#B5EAD8',
     borderRadius: 6,
-    paddingVertical: 20,
+    paddingVertical: 15,
     marginHorizontal: 10,
   },
   textButtonInput: {

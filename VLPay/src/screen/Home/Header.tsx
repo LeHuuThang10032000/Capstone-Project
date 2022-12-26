@@ -13,7 +13,7 @@ const Header = (props: Props) => {
       <TouchableOpacity
         style={styles.searchBtn}
         onPress={() => navigation.navigate('Search')}>
-        <Text style={styles.text}>Search...</Text>
+        <Text style={styles.text}>Tìm kiếm...</Text>
         <SearchIcon />
       </TouchableOpacity>
     </View>
