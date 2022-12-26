@@ -11,7 +11,7 @@
             <li>
                 <a href="{{ route('user.index') }}" class="flex items-center p-3 hover:bg-theme {{ Request::is('user') ? 'active' : '' }}">
                     <img src="{{ asset('img/account.png') }}" alt="#">
-                    <span class="flex-1 ml-3 whitespace-nowrap">Accounts</span>
+                    <span class="flex-1 ml-3 whitespace-nowrap">Users</span>
                 </a>
             </li>
             <li>

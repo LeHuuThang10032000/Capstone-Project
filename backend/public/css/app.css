@@ -85,6 +85,11 @@ h6 {
   border: 2px solid #000000 !important;
 }
 
+.btn-theme-warning {
+  background-color: #E76969 !important;
+  border: 2px solid #000000 !important;
+}
+
 /*
 Reset links to optimize for opt-in styling instead of opt-out.
 */

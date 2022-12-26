@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Resources\OrganiserController;
 use App\Http\Controllers\Resources\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,7 @@ require __DIR__.'/auth.php';
 
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('user', UserController::class);
+
+    Route::put('user/activate/{id}', [OrganiserController::class, 'deactivateUser'])->name('organiser.activate-user');
+    
 });
