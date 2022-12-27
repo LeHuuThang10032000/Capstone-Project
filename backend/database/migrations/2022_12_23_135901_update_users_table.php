@@ -18,7 +18,7 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('dob');
             $table->dropColumn('mssv');
             $table->dropColumn('l_name');
-            $table->string('phone');
+            // $table->string('phone');
         });
     }
 
