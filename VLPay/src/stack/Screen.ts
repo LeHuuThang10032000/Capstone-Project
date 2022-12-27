@@ -11,6 +11,7 @@ import Otp from '../screen/Otp';
 import Transfer from '../screen/Transfer';
 import EditProfile from '../screen/EditProfileScreen';
 import ChangePassword from '../screen/ChangePassword';
+import NewPassword from '../screen/NewPassword';
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'MainTab',
@@ -59,5 +60,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'ChangePassword',
     component: ChangePassword,
+  },
+  {
+    name: 'NewPassword',
+    component: NewPassword,
   },
 ];
