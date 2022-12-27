@@ -78,6 +78,10 @@ const Index = function () {
       setPhoneError(result.data.message);
       setVisibleWarning(true);
       dispatch(await Login(phone, password ?? ''));
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Home'}],
+      });
       setBtnBlock(false);
     } catch (e) {
       console.log(e);
@@ -215,7 +219,7 @@ const Index = function () {
           display: 'none',
         }}
         message={phoneError}
-        title={'Lỗi đăng ký'}
+        title={'Thông báo'}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}

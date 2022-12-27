@@ -117,6 +117,10 @@ const Otp = (props: any) => {
         setSuccessMessage(result.data.message);
         setVisibleSuccess(true);
         dispatch(await Login(phone, password ?? ''));
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        });
         setBtnBlock(false);
       }
     } catch (e) {
