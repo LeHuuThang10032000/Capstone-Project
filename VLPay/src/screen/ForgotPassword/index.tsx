@@ -42,6 +42,7 @@ const Index = (props: Props) => {
   });
 
   const submit = async (value: any) => {
+    setBtnBlock(true);
     const {phoneNumber: phone} = value;
     try {
       const result = await axiosClient.post(
@@ -126,6 +127,7 @@ const Index = (props: Props) => {
         />
         <TouchableOpacity
           style={styles.buttonInput}
+          disabled={btnBlock}
           onPress={handleSubmit(submit)}>
           <UText style={styles.textButtonInput}>Xác nhận</UText>
         </TouchableOpacity>
