@@ -38,6 +38,9 @@ export type MainStackParamList = {
     confirmation?: any;
     forgot_password?: boolean;
   };
+  NewPassword: {
+    phone: string;
+  };
   // Otp: undefined;
   ForgotPwd: undefined;
   Register: undefined;
@@ -58,7 +61,9 @@ export type MainStackParamList = {
   };
   Transfer: {picture: string; title: string; first: string; last: string};
   EditProfile: undefined;
-  ChangePassword: undefined;
+  ChangePassword: {
+    phone: string;
+  };
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

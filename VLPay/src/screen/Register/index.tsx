@@ -309,7 +309,7 @@ const Index = function () {
         onActionRight={() => {
           setVisibleWarning(false);
         }}
-        btnTextLeft={strings.confirm}
+        btnTextLeft={'Xác nhận'}
         style={{flexDirection: 'column'}}
       />
     </LinearGradient>

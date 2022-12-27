@@ -14,15 +14,14 @@ import strings from '../../components/helpers/Strings';
 import Input from '../../components/InputForm';
 import {Control, Controller, useForm} from 'react-hook-form';
 import {IRegisterInfoValue} from './useHook';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 import {InputProps} from '@rneui/base';
 import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import {LOGIN} from '../../redux/constants';
 import {useDispatch} from 'react-redux';
-import {Login} from '../../redux/actions/authAction';
 import Icons from '../../components/icons';
 import YesNoModal from '../../components/YesNoModal';
 import Colors from '../../components/helpers/Colors';
@@ -37,9 +36,6 @@ interface IFormInputControllerProps {
 
 const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
-  const {phone} =
-    useRoute<RouteProp<MainStackParamList, 'ChangePassword'>>()?.params;
-
   const dispatch = useDispatch();
   const [btnBlock, setBtnBlock] = useState(false);
   const [visibleWarning, setVisibleWarning] = useState(false);
@@ -53,7 +49,9 @@ const Index = function () {
     formState: {errors},
   } = useForm({
     defaultValues: {
+      name: '',
       password: '',
+      phoneNumber: '',
       passwordConfirmation: '',
     },
   });
@@ -61,27 +59,54 @@ const Index = function () {
   const [hideConfirm, setHideConfirm] = useState(true);
 
   const submit = useCallback(async (data: any) => {
-    const {password: password, passwordConfirmation: password_confirmation} =
-      data;
+    const {
+      name: full_name,
+      password: password,
+      passwordConfirmation: password_confirmation,
+      phoneNumber: phone,
+    } = data;
 
     setBtnBlock(true);
 
     try {
       const result = await axiosClient.post(
-        'http://zennoshop.cf/api/user/forgot-password',
+        'https://zennoshop.cf/api/user/check-phone',
         {
           phone,
-          password,
-          password_confirmation,
         },
       );
-      setPhoneError(result.data.message);
-      setVisibleWarning(true);
-      dispatch(await Login(phone, password ?? ''));
-      setBtnBlock(false);
+
+      if (result.data.status_code == 422) {
+        setVisibleWarning(true);
+        setPhoneError(result.data.message);
+        setBtnBlock(false);
+      } else {
+        if (auth()?.currentUser) {
+          await auth()
+            .signOut()
+            .catch(e => console.log(e));
+        }
+        try {
+          const removeZeroPhone = phone.replace('0', '');
+          const confirmation = await auth().signInWithPhoneNumber(
+            `+84${removeZeroPhone}`,
+          );
+          setBtnBlock(false);
+          navigation.navigate('Otp', {
+            phone: phone,
+            full_name: full_name,
+            password: password,
+            password_confirmation: password_confirmation,
+            confirmation: confirmation,
+          });
+        } catch (error) {
+          console.log('error ', error);
+          setVisibleWarning(true);
+          setBtnBlock(false);
+        }
+      }
     } catch (e) {
       console.log(e);
-      setBtnBlock(false);
     }
   }, []);
 
@@ -133,10 +158,10 @@ const Index = function () {
             paddingHorizontal: 15,
           }}>
           <View style={styles.header}>
-            <Utitle style={styles.headerItem}>Nhập mật khẩu mới</Utitle>
+            <Utitle style={styles.headerItem}>Thay đổi mật khẩu</Utitle>
           </View>
           <FormInputController
-            title={'Mật khẩu mới'}
+            title={'Mật khẩu'}
             placeHolder={'Nhập mật khẩu'}
             styles={styles.textInput}
             control={control}
@@ -187,23 +212,24 @@ const Index = function () {
             }
           />
         </VStack>
-        <View
-          style={{
-            width: '100%',
-            marginRight: 10,
-            paddingHorizontal: 15,
-          }}>
-          <TouchableOpacity
-            disabled={btnBlock}
-            onPress={handleSubmit(submit)}
-            style={[styles.buttonInput]}>
-            <UText style={styles.textButtonInput}>Gửi</UText>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
-
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 70,
+          width: '100%',
+          marginRight: 10,
+          paddingHorizontal: 15,
+        }}>
+        <TouchableOpacity
+          disabled={btnBlock}
+          onPress={handleSubmit(submit)}
+          style={[styles.buttonInput]}>
+          <UText style={styles.textButtonInput}>Xác nhận</UText>
+        </TouchableOpacity>
+      </View>
       <YesNoModal
-        icon={<Icons.SuccessIcon />}
+        icon={<Icons.WarningIcon />}
         visible={visibleWarning}
         btnLeftStyle={{
           backgroundColor: Colors.primary,

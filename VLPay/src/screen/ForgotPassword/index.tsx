@@ -51,7 +51,7 @@ const Index = (props: Props) => {
         },
       );
 
-      if (result.data.status_code == 422) {
+      if (result.data.status_code == 200) {
         setVisibleWarning(true);
         setPhoneError(result.data.message);
         setBtnBlock(false);
@@ -143,7 +143,7 @@ const Index = (props: Props) => {
           display: 'none',
         }}
         message={phoneError}
-        title={'Lỗi đăng ký'}
+        title={'Lỗi'}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}

@@ -98,17 +98,11 @@ const Otp = (props: any) => {
     }
     try {
       if (forgot_password) {
-        const result = await axiosClient.post(
-          'https://zennoshop.cf/api/user/register',
-          {
-            phone,
-            password,
-            password_confirmation,
-          },
-        );
-        setSuccessMessage(result.data.message);
+        setSuccessMessage('Xác nhận otp thành công');
         setVisibleSuccess(true);
-        dispatch(await Login(phone, password ?? ''));
+        navigation.navigate('ChangePassword', {
+          phone: phone,
+        });
         setBtnBlock(false);
       } else {
         const result = await axiosClient.post(
