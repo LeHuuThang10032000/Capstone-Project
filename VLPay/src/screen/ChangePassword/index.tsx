@@ -68,7 +68,7 @@ const Index = function () {
 
     try {
       const result = await axiosClient.post(
-        'http://zennoshop.cf/api/user/forgot-password',
+        'https://zennoshop.cf/api/user/forgot-password',
         {
           phone,
           password,
