@@ -18,7 +18,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
-            'full_name' => $field['full_name'],
+            'f_name' => $field['full_name'],
             'phone' => $field['phone'],
             'password' => bcrypt($field['password'])
         ]);
@@ -26,7 +26,8 @@ class AuthController extends Controller
         $response = [
             'user' => $user,
             'status_code' =>201,
-            'token' => $token
+            'token' => $token,
+            'message' => 'Đăng ký thành công'
         ];
 
         return response($response, 201);
@@ -90,8 +91,8 @@ class AuthController extends Controller
         if(!$user||!Hash::check($fields['password'],$user->password)){
             return response(
                 [
-                    'message' => 'Bad request',
-                    'status_code' => 401
+                    'message' => 'Số điện thoại hoặc mật khẩu không đúng',
+                    'status_code' => 401,
                 ], 401
             );
         }
@@ -99,7 +100,8 @@ class AuthController extends Controller
         $response = [
             'user' => $user,
             'status_code' =>201,
-            'token'=>$token
+            'token'=>$token,
+            'message' => 'Đăng nhập thành công'
         ];
 
         return response($response, 201);

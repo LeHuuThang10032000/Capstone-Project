@@ -37,8 +37,8 @@ class UserController extends Controller
             'full_name'=>'required|min:3'
         ]);
         $user = User::find($request->id);
-        $user->full_name = Auth::user();
-        $user->full_name = $request['full_name'];
+        $user->f_name = Auth::user();
+        $user->f_name = $request['full_name'];
         $user->save();
         return response($user);
     }
