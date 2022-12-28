@@ -87,8 +87,8 @@ const Index = function () {
         navigation.navigate('Home');
         setBtnBlock(false);
       }, 2000);
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       setBtnBlock(false);
     }
   }, []);

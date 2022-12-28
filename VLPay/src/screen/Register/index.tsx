@@ -329,6 +329,7 @@ const FormInputController = (
       errorRequired?: any;
       validation?: any;
       error?: any;
+      any?: any;
     },
 ) => {
   const {
