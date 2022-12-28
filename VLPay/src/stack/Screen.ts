@@ -13,7 +13,7 @@ import EditProfile from '../screen/EditProfileScreen';
 import ChangePassword from '../screen/ChangePassword';
 import NewPassword from '../screen/NewPassword';
 
-export const AUTH_STACK_SCREEN: Screen[] = [
+export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'Login',
     component: Login,
@@ -26,9 +26,6 @@ export const AUTH_STACK_SCREEN: Screen[] = [
     name: 'Register',
     component: Register,
   },
-];
-
-export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'MainTab',
     component: BottomTabStack,

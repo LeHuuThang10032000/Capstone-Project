@@ -67,12 +67,14 @@ const Index = (props: Props) => {
           const confirmation = await auth().signInWithPhoneNumber(
             `+84${removeZeroPhone}`,
           );
-          setBtnBlock(false);
           navigation.navigate('Otp', {
             phone: phone,
             confirmation: confirmation,
             forgot_password: true,
           });
+          setTimeout(() => {
+            setBtnBlock(false);
+          }, 2000);
         } catch (error) {
           console.log('error ', error);
           setVisibleWarning(true);
