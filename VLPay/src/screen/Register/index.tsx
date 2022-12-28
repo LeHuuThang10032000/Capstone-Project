@@ -193,7 +193,7 @@ const Index = function () {
           />
           <FormInputController
             title={'Số điện thoại'}
-            placeHolder={'Nhập số điện thoại'}
+            placeHolder={'Nhập số điện thoại gồm 10 số'}
             styles={styles.textInput}
             control={control}
             name={'phoneNumber'}
@@ -207,13 +207,13 @@ const Index = function () {
           />
           <FormInputController
             title={'Mật khẩu'}
-            placeHolder={'Nhập mật khẩu'}
+            placeHolder={'Nhập mật khẩu gồm 6 số'}
             styles={styles.textInput}
             control={control}
             name={'password'}
             required={true}
             errorRequired={
-              errors?.password?.type && 'Mật khẩu không được bỏ trống'
+              errors?.password?.type && 'Mật khẩu không được để trống'
             }
             validation={validationPsw}
             RightIcon={
@@ -232,7 +232,7 @@ const Index = function () {
           />
           <FormInputController
             title={'Nhập lại mật khẩu'}
-            placeHolder={'Nhập lại mật khẩu'}
+            placeHolder={'Nhập lại mật khẩu gồm 6 số'}
             styles={styles.textInput}
             control={control}
             name={'passwordConfirmation'}

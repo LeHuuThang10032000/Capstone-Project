@@ -25,6 +25,7 @@ export default StyleSheet.create({
     color: 'red',
     position: 'absolute',
     bottom: 0,
+    paddingLeft: 10,
   },
   itemLabel: {},
   itemContainer: {
@@ -56,6 +57,7 @@ export default StyleSheet.create({
     borderRadius: 6,
     paddingVertical: 20,
     marginHorizontal: 10,
+    marginTop: 10,
   },
   textButtonInput: {
     color: '#514545',
