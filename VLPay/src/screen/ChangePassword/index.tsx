@@ -80,7 +80,11 @@ const Index = function () {
       setTimeout(async () => {
         setVisibleWarning(false);
         dispatch(await Login(phone, password ?? ''));
-        navigation.replace('Home');
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        });
+        navigation.navigate('Home');
         setBtnBlock(false);
       }, 2000);
     } catch (e) {

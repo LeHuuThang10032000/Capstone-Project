@@ -83,7 +83,11 @@ const BottomTabStack = () => {
               fontWeight: 'bold',
               fontFamily: 'Poppins-Regular',
             },
-
+            tabBarStyle: token
+              ? {}
+              : {
+                  display: 'none',
+                },
             tabBarInactiveTintColor: 'black',
             // tabBarActiveTintColor: color_base,
             tabBarLabel: item.tabBarLabel ? item.tabBarLabel : 'home',
