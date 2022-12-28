@@ -42,7 +42,7 @@ const Index = () => {
                   fontSize: 16,
                 },
               }}>
-              Full name
+              Họ và tên
             </FormControl.Label>
             <Input
               w="90%"
@@ -60,7 +60,7 @@ const Index = () => {
                   fontSize: 16,
                 },
               }}>
-              Phone number
+              Số điện thoại
             </FormControl.Label>
             <Input
               w="90%"
@@ -71,7 +71,7 @@ const Index = () => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate('EditProfile')}>
-            <Text style={styles.text}>Edit</Text>
+            <Text style={styles.text}>Chỉnh sửa</Text>
           </TouchableOpacity>
         </VStack>
       </Center>

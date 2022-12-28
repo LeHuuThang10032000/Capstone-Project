@@ -119,7 +119,7 @@ const Index = function () {
           maxLength={6}
           title={'Mật khẩu'}
           LeftIcon={<LockIcon width={20} height={20} />}
-          placeHolder={'Nhập mật khẩu của bạn'}
+          placeHolder={'Nhập mật khẩu gồm 6 số'}
           styles={styles.textInput}
           control={control}
           name={'password'}

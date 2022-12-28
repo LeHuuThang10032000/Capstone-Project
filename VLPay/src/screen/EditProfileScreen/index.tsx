@@ -105,10 +105,12 @@ const Index = () => {
               <FormControl isInvalid={errors.name !== undefined}>
                 <FormControl.Label
                   _text={{color: '#312E49', fontWeight: 'bold', fontSize: 16}}>
-                  Full name
+                  Họ và tên
                 </FormControl.Label>
                 <Input
                   w="90%"
+                  placeholder="Nhập họ và tên của bạn"
+                  autoFocus
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
@@ -131,7 +133,7 @@ const Index = () => {
                   fontSize: 16,
                 },
               }}>
-              Phone number
+              Số điện thoại
             </FormControl.Label>
             <Input
               w="90%"

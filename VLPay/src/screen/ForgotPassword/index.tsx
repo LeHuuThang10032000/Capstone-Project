@@ -88,7 +88,7 @@ const Index = (props: Props) => {
     if (!phoneNumber) {
       return 'Trường số điện thoại không được bỏ trống';
     } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
-      return 'Số điện thoại phải 10 số và không có ký tự đặc biệt';
+      return 'Số điện thoại chưa đúng 10 số';
     }
   }, []);
   const Header = () => {
@@ -112,7 +112,7 @@ const Index = (props: Props) => {
         <FormInputController
           title={'Số điện thoại'}
           LeftIcon={<PhoneIcon width={20} height={20} />}
-          placeHolder={'Nhập số điện thoại'}
+          placeHolder={'Nhập số điện thoại gồm 10 số'}
           styles={styles.textInput}
           control={control}
           name={'phoneNumber'}
@@ -120,8 +120,7 @@ const Index = (props: Props) => {
           required={true}
           error={errors?.phoneNumber?.message}
           errorRequired={
-            errors?.phoneNumber?.type &&
-            'Trường số điện thoại không được bỏ trống'
+            errors?.phoneNumber?.type && 'Số điện thoại không được để trống'
           }
           validation={validatePhoneNumber}
         />
