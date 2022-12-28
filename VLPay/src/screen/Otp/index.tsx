@@ -116,12 +116,12 @@ const Otp = (props: any) => {
         );
         setSuccessMessage(result.data.message);
         setVisibleSuccess(true);
-        dispatch(await Login(phone, password ?? ''));
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'Home'}],
-        });
-        setBtnBlock(false);
+        setTimeout(async () => {
+          setVisibleSuccess(false);
+          dispatch(await Login(phone, password ?? ''));
+          navigation.replace('Home');
+          setBtnBlock(false);
+        }, 1000);
       }
     } catch (e) {
       console.log('====================================');
@@ -161,7 +161,16 @@ const Otp = (props: any) => {
               onCodeChanged={() => setIsError(false)}
             />
           </View>
-          <Text style={styles.error}>{isError ? 'Mã otp không đúng' : ''}</Text>
+          {isError && (
+            <HStack>
+              <Text style={[styles.error, {fontSize: 18}]}>
+                {isError ? 'Mã xác thực không chính xác ' : ''}
+              </Text>
+              <TouchableOpacity>
+                <UText>Gửi lại</UText>
+              </TouchableOpacity>
+            </HStack>
+          )}
           <NormalButton
             title={'Xác nhận'}
             onPress={verifyFireBase}
@@ -184,52 +193,6 @@ const Otp = (props: any) => {
           </View>
         </KeyboardInputScrollView>
       </ScrollView>
-      <YesNoModal
-        icon={<Icons.WarningIcon />}
-        visible={visibleWarning}
-        btnLeftStyle={{
-          backgroundColor: Colors.primary,
-          width: 200,
-        }}
-        btnRightStyle={{
-          backgroundColor: '#909192',
-          width: 200,
-          display: 'none',
-        }}
-        message="Mã otp không đúng"
-        title={'Thông báo'}
-        onActionLeft={() => {
-          setVisibleWarning(false);
-        }}
-        onActionRight={() => {
-          setVisibleWarning(false);
-        }}
-        btnTextLeft={strings.confirm}
-        style={{flexDirection: 'column'}}
-      />
-      <YesNoModal
-        icon={<Icons.SuccessIcon />}
-        visible={visibleSuccess}
-        btnLeftStyle={{
-          backgroundColor: Colors.primary,
-          width: 200,
-        }}
-        btnRightStyle={{
-          backgroundColor: '#909192',
-          width: 200,
-          display: 'none',
-        }}
-        message={successMessage}
-        title={'Thông báo'}
-        onActionLeft={() => {
-          setVisibleSuccess(false);
-        }}
-        onActionRight={() => {
-          setVisibleSuccess(false);
-        }}
-        btnTextLeft={strings.confirm}
-        style={{flexDirection: 'column'}}
-      />
     </LinearGradient>
   );
 };

@@ -77,12 +77,12 @@ const Index = function () {
       );
       setPhoneError(result.data.message);
       setVisibleWarning(true);
-      dispatch(await Login(phone, password ?? ''));
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Home'}],
-      });
-      setBtnBlock(false);
+      setTimeout(async () => {
+        setVisibleWarning(false);
+        dispatch(await Login(phone, password ?? ''));
+        navigation.replace('Home');
+        setBtnBlock(false);
+      }, 2000);
     } catch (e) {
       console.log(e);
       setBtnBlock(false);
@@ -213,13 +213,14 @@ const Index = function () {
           backgroundColor: Colors.primary,
           width: 200,
         }}
+        hideRight={true}
+        hideLeft={true}
         btnRightStyle={{
           backgroundColor: '#909192',
           width: 200,
           display: 'none',
         }}
         message={phoneError}
-        title={'Thông báo'}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}

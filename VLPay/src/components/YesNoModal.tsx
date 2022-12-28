@@ -20,6 +20,7 @@ type Props = {
   onActionLeft: () => void;
   onActionRight: () => void;
   hideLeft?: boolean;
+  hideRight?: boolean;
 };
 
 /**
@@ -40,6 +41,7 @@ const YesNoModal: React.FC<Props> = ({
   onActionRight,
   btnLeftTextStyle,
   hideLeft = false,
+  hideRight = false,
 }) => {
   return (
     <Modal animationType="fade" transparent visible={visible}>
@@ -64,12 +66,14 @@ const YesNoModal: React.FC<Props> = ({
                 onPress={onActionLeft}
               />
             )}
-            <NormalButton
-              title={btnTextRight}
-              buttonStyle={[styles.buttonContainer, btnRightStyle]}
-              titleStyle={styles.titleStyle}
-              onPress={onActionRight}
-            />
+            {!hideRight && (
+              <NormalButton
+                title={btnTextRight}
+                buttonStyle={[styles.buttonContainer, btnRightStyle]}
+                titleStyle={styles.titleStyle}
+                onPress={onActionRight}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -134,11 +138,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   messageTxt: {
-    marginVertical: 8,
     textAlign: 'center',
     paddingHorizontal: 16,
-    fontSize: moderateScale(12),
+    fontSize: moderateScale(16),
     fontFamily: 'Lora',
+    fontWeight: '700',
+    marginTop: 30,
+    marginBottom: 10,
   },
   iconClose: {
     position: 'absolute',
