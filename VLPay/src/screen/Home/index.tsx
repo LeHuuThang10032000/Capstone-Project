@@ -17,8 +17,6 @@ const Index = () => {
   };
   useEffect(() => {
     init();
-    if (token) {
-    }
   });
   return (
     <>
