@@ -29,6 +29,7 @@ export type MainStackParamList = {
   Home: HomeProps | undefined;
   Profile: undefined;
   Login: undefined;
+  Payment: undefined;
   Otp: {
     isHoldingLogin?: boolean;
     full_name?: string;

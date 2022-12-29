@@ -12,6 +12,7 @@ import Transfer from '../screen/Transfer';
 import EditProfile from '../screen/EditProfileScreen';
 import ChangePassword from '../screen/ChangePassword';
 import NewPassword from '../screen/NewPassword';
+import Payment from '../screen/payment';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -65,5 +66,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'NewPassword',
     component: NewPassword,
+  },
+  {
+    name: 'Payment',
+    component: Payment,
   },
 ];
