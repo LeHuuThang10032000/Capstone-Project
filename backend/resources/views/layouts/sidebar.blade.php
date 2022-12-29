@@ -15,31 +15,32 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center p-3 hover:bg-theme {{ Request::is('role') ? 'active' : '' }}">
-                    <img src="{{ asset('img/role.png') }}" alt="#">
-                    <span class="flex-1 ml-3 whitespace-nowrap">Roles</span>
+                <a id="drop-down" class="flex items-center p-3 hover:bg-theme" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <img src="{{ asset('img/request.png') }}" alt="#">
+                    <span class="flex-1 ml-3 whitespace-nowrap">Requests</span>
                 </a>
+                <div class="collapse" id="collapseExample">
+                    <ul class="p-0">
+                        <li><a class="flex items-center py-3 hover:bg-theme {{ Request::is('store-request') ? 'active' : '' }}" href="{{ route('organiser.store-request') }}" style="padding-left: 2rem;">Store Requests</a></li>
+                        <li><a class="flex items-center py-3 hover:bg-theme {{ Request::is('request') ? 'active' : '' }}" href="" style="padding-left: 2rem;">Credit Requests</a></li>
+                        <li><a class="flex items-center py-3 hover:bg-theme {{ Request::is('request') ? 'active' : '' }}" href="" style="padding-left: 2rem;">Withdraw Requests</a></li>
+                    </ul>
+                </div>
             </li>
             <li>
-                <a href="#" class="flex items-center p-3 hover:bg-theme {{ Request::is('wallet') ? 'active' : '' }}">
+                <a href="" class="flex items-center p-3 hover:bg-theme {{ Request::is('wallet') ? 'active' : '' }}">
                     <img src="{{ asset('img/wallet.png') }}" alt="#">
                     <span class="flex-1 ml-3 whitespace-nowrap">Wallets</span>
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center p-3 hover:bg-theme {{ Request::is('transaction') ? 'active' : '' }}">
+                <a href="" class="flex items-center p-3 hover:bg-theme {{ Request::is('transaction') ? 'active' : '' }}">
                     <img src="{{ asset('img/transaction.png') }}" alt="#">
                     <span class="flex-1 ml-3 whitespace-nowrap">Transactions</span>
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center p-3 hover:bg-theme {{ Request::is('service') ? 'active' : '' }}">
-                    <img src="{{ asset('img/service.png') }}" alt="#">
-                    <span class="flex-1 ml-3 whitespace-nowrap">Services</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center p-3 hover:bg-theme {{ Request::is('setting') ? 'active' : '' }}">
+                <a href="" class="flex items-center p-3 hover:bg-theme {{ Request::is('setting') ? 'active' : '' }}">
                     <img src="{{ asset('img/setting.png') }}" alt="#">
                     <span class="flex-1 ml-3 whitespace-nowrap">Settings</span>
                 </a>
@@ -48,12 +49,6 @@
                 <a href="#" class="flex items-center p-3 hover:bg-theme {{ Request::is('offer') ? 'active' : '' }}">
                     <img src="{{ asset('img/offer.png') }}" alt="#">
                     <span class="flex-1 ml-3 whitespace-nowrap">Offers</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center p-3 hover:bg-theme {{ Request::is('notification') ? 'active' : '' }}">
-                    <img src="{{ asset('img/notification.png') }}" alt="#">
-                    <span class="flex-1 ml-3 whitespace-nowrap">Notifications</span>
                 </a>
             </li>
             <div class="absolute w-full" style="bottom: 0;">
