@@ -27,7 +27,7 @@ export default function PromoCarousel() {
           fontFamily: 'Poppins-Bold',
           color: '#000000',
         }}>
-        Promotions
+        Khuyến mãi
       </Text>
       <Carousel
         loop

@@ -29,7 +29,7 @@ const DetailUser = ({route}: any) => {
         <Text style={styles.text}>{phone}</Text>
         <Text style={styles.text}>{email}</Text>
       </Center>
-      <Center pt={160}>
+      {/* <Center pt={160}>
         <Button
           width={'90%'}
           background={'#B5EAD8'}
@@ -39,7 +39,7 @@ const DetailUser = ({route}: any) => {
           }>
           <Text style={styles.button}>Transfer</Text>
         </Button>
-      </Center>
+      </Center> */}
     </View>
   );
 };
