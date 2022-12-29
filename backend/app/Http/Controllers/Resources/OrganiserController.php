@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Resources;
 
 use App\Http\Controllers\Controller;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -21,5 +22,11 @@ class OrganiserController extends Controller
         }
 
         return back();
+    }
+
+    public function getStoreRequests()
+    {
+        $stores = Store::all()->groupBy('status');
+        return view('store-requests.index', compact('stores'));
     }
 }

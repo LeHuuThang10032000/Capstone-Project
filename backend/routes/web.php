@@ -25,9 +25,10 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => ['auth', 'role:organiser']], function() {
     Route::resource('user', UserController::class);
 
     Route::put('user/activate/{id}', [OrganiserController::class, 'deactivateUser'])->name('organiser.activate-user');
     
+    Route::get('store-request', [OrganiserController::class, 'getStoreRequests'])->name('organiser.store-request');
 });
