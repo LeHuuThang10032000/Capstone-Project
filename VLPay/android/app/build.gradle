@@ -259,6 +259,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(':react-native-splash-screen')
      implementation 'com.google.firebase:firebase-appcheck-safetynet:16.1.0'
 implementation project(':react-native-restart')
     //noinspection GradleDynamicVersion
