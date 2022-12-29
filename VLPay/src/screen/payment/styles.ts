@@ -19,14 +19,12 @@ export default StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   otpContainer: {
-    height: 70,
-    alignSelf: 'center',
+    height: 100,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   underlineStyleBase: {
     width: 40,
-    height: 50,
+    height: 60,
     color: Colors.cloudBurst,
     fontSize: moderateScale(28),
     borderWidth: 0,
@@ -54,6 +52,11 @@ export default StyleSheet.create({
   contentContainer: {
     justifyContent: 'space-between',
     paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  contentContainerH: {
+    width: '100%',
+    justifyContent: 'space-between',
     paddingVertical: 5,
   },
   content: {

@@ -15,7 +15,6 @@ import styles from './styles';
 import {UText} from '../../components/UText';
 import {Image} from '@rneui/base';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-
 const Payment = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
@@ -54,21 +53,50 @@ const Payment = () => {
             backgroundColor: 'white',
             zIndex: 100000,
           }}>
-          <VStack>
+          <View
+            style={{
+              position: 'absolute',
+              right: 10,
+              top: 30,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Home');
+              }}>
+              <Image
+                source={require('../../assets/img/close.png')}
+                style={{width: 20, height: 20}}
+              />
+            </TouchableOpacity>
+          </View>
+          <VStack alignItems={'center'} width={'100%'}>
             <View
               style={{
                 borderRadius: 1,
                 borderColor: '#BDBDBD',
                 flexDirection: 'column',
+                borderWidth: 1,
+                marginTop: 150,
+                alignItems: 'center',
+                width: '90%',
+                paddingHorizontal: 10,
+                paddingVertical: 30,
               }}>
+              <View style={{position: 'absolute', top: -15}}>
+                <Image
+                  source={require('../../assets/img/success.png')}
+                  style={{width: 30, height: 30}}
+                />
+              </View>
               <UText>Giao dịch thành công</UText>
-              <UText>+3000đ</UText>
+              <UText style={{fontWeight: '700'}}>+3000đ</UText>
               <View
                 style={{
                   width: '100%',
                   height: 1,
                   backgroundColor: 'black',
                   opacity: 0.15,
+                  marginVertical: 20,
                 }}
               />
               <View
@@ -76,22 +104,43 @@ const Payment = () => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  padding: 10,
+                  height: 70,
+                  width: '100%',
+                  backgroundColor: '#EEFAF6',
                 }}>
-                <View
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    backgroundColor: '#B5EAD8',
-                    opacity: 0.15,
-                  }}
-                />
                 <Image
                   source={require('../../assets/img/warning_blue.png')}
-                  style={{width: 20, height: 20}}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    marginRight: 10,
+                    paddingHorizontal: 5,
+                    paddingVertical: 10,
+                  }}
                 />
-                <UText>Quét mã thanh toán thành công</UText>
+                <UText style={{fontSize: 14}}>
+                  Quét mã thanh toán thành công
+                </UText>
               </View>
+              <HStack style={styles.contentContainerH}>
+                <UText style={{fontSize: 14}}>Thời gian thanh toán</UText>
+                <UText
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '700',
+                    color: 'black',
+                    opacity: 0.61,
+                  }}>
+                  09:50 - 25/20/2022
+                </UText>
+              </HStack>
+              <HStack style={styles.contentContainerH}>
+                <UText style={{fontSize: 14}}>Chi tiết giao dịch</UText>
+                <UText style={{fontWeight: '700', color: 'red', fontSize: 14}}>
+                  3039498474646 {'>'}
+                </UText>
+              </HStack>
             </View>
           </VStack>
         </View>
@@ -121,8 +170,13 @@ const Payment = () => {
         <View>
           {parkingPrice && (
             <VStack alignItems={'center'}>
-              <UText>Tiền gửi xe</UText>
-              <UText>3.000 đ</UText>
+              <UText
+                style={{fontWeight: '700', marginTop: 30, marginBottom: 20}}>
+                Tiền gửi xe
+              </UText>
+              <UText style={{fontWeight: '700', marginBottom: 20}}>
+                3.000 đ
+              </UText>
               <View
                 style={{
                   width: '90%',
@@ -139,7 +193,7 @@ const Payment = () => {
                     left: 15,
                     backgroundColor: 'white',
                   }}>
-                  Tin nhắn
+                  Nhập tin nhắn
                 </UText>
                 <View style={{position: 'absolute', right: 10, top: 10}}>
                   <Image
@@ -172,7 +226,10 @@ const Payment = () => {
                   justifyContent: 'flex-start',
                   width: '90%',
                 }}>
-                <UText>Chi tiết giao dịch</UText>
+                <UText
+                  style={{fontWeight: '700', marginTop: 20, marginBottom: 20}}>
+                  Chi tiết giao dịch
+                </UText>
               </View>
               <VStack style={{borderWidth: 1, borderRadius: 8, width: '90%'}}>
                 <HStack style={styles.contentContainer}>
@@ -236,7 +293,7 @@ const Payment = () => {
                 display: 'none',
               }
         }>
-        <View>
+        <View style={{backgroundColor: 'white'}}>
           <VStack alignItems={'center'}>
             <UText style={{marginBottom: 5}}>Nhập mật khẩu</UText>
             <View
