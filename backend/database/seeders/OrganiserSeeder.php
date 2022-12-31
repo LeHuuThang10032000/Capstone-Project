@@ -17,6 +17,16 @@ class OrganiserSeeder extends Seeder
     {
         $organiser = Role::where('name', 'organiser')->first();
         $user = User::where('phone', '0353909400')->first();
-        if($user) $user->assignRole($organiser->id);
+        if($user) {
+            $user->assignRole($organiser->id);
+        } else {
+            $newUser = User::create([
+                'f_name' => 'Organiser',
+                'phone' => '0353909400',
+                'password' => bcrypt('123456'),
+                'status' => 'active'
+            ]);
+            $newUser->assignRole($organiser->id);
+        }
     }
 }

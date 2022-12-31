@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-nav navbar fixed p-1">
+<nav x-data="{ open: false }" class="bg-nav position-fixed navbar p-1 w-full">
     <div></div>
     <!-- Primary Navigation Menu -->
     <div class="px-4">
