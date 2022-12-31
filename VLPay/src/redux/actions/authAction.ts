@@ -24,10 +24,10 @@ export const Login = async (phoneNumber: string, password: string) => {
       phone,
       password,
     });
-    await saveToken(res.data.token);
+    await saveToken(res.data.data);
     return {
       type: LOGIN,
-      payload: res.data.token,
+      payload: res.data.data,
     };
   } catch (e) {
     console.log(e);
