@@ -171,10 +171,16 @@ const Payment = () => {
           {parkingPrice && (
             <VStack alignItems={'center'}>
               <UText
-                style={{fontWeight: '700', marginTop: 30, marginBottom: 20}}>
+                style={{
+                  fontWeight: '700',
+                  marginTop: 30,
+                  marginBottom: 20,
+                  fontSize: 20,
+                }}>
                 Tiền gửi xe
               </UText>
-              <UText style={{fontWeight: '700', marginBottom: 20}}>
+              <UText
+                style={{fontWeight: '700', marginBottom: 20, fontSize: 24}}>
                 3.000 đ
               </UText>
               <View
@@ -285,7 +291,7 @@ const Payment = () => {
             ? {
                 width: '100%',
                 position: 'absolute',
-                bottom: 256,
+                bottom: 286,
               }
             : {
                 width: 0,
@@ -295,7 +301,9 @@ const Payment = () => {
         }>
         <View style={{backgroundColor: 'white'}}>
           <VStack alignItems={'center'}>
-            <UText style={{marginBottom: 5}}>Nhập mật khẩu</UText>
+            <UText style={{marginBottom: 5, marginTop: 15}}>
+              Nhập mật khẩu
+            </UText>
             <View
               style={{
                 paddingHorizontal: 8,
@@ -306,7 +314,6 @@ const Payment = () => {
                 height: 40,
                 flexDirection: 'row',
                 alignItems: 'center',
-                paddingTop: 10,
               }}>
               <OTPInputView
                 style={styles.otpContainer}
