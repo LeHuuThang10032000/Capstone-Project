@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Response\ApiResponse;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    use HasApiTokens;
-    public function update(Request $request):Response{
+    public function update(Request $request):Response
+    {
         $user = User::find($request->id);
 
         if($user == null){
@@ -29,10 +32,11 @@ class UserController extends Controller
             );
         }
 
-        return response($user);
+        return ApiResponse::successResponse($user);
     }
 
-    public function profileUpdate(Request $request){
+    public function profileUpdate(Request $request)
+    {
         $request->validate([
             'full_name'=>'required|min:3'
         ]);
@@ -40,6 +44,51 @@ class UserController extends Controller
         $user->f_name = Auth::user();
         $user->f_name = $request['full_name'];
         $user->save();
-        return response($user);
+        return ApiResponse::successResponse($user);
+    }
+
+    public function createStoreRequest(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
+            'name' => 'required',
+            'phone' => 'required|phone',
+            'email' => 'email',
+            'selling_products' => 'required',
+            'location' => 'required',
+            'image' => ''
+        ], [
+            'name.required' => 'Vui lòng nhập tên cửa hàng',
+            'phone.required' => 'Vui lòng nhập số điện thoại cửa hàng',
+            'phone.phone' => 'Số điện thoại không đúng định dạng',
+            'email.email' => 'Vui lòng nhập đúng định dạng email',
+            'selling_products.required' => 'Vui lòng nhập sản phẩm kinh doanh của cửa hàng',
+            'location.required' => 'Vui lòng nhập vị trí của cửa hàng',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json($validate->messages()->first());
+        }
+
+        try{
+            DB::beginTransaction();
+
+            Store::create([
+                'user_id' => $request->id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'selling_products' => $request->selling_products,
+                'location' => $request->location,
+                'image' => $request->image,
+                'status' => 'pending',
+            ]);
+
+            DB::commit();
+            return ApiResponse::successResponse(null);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
     }
 }

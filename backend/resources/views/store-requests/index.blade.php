@@ -32,3 +32,11 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    $(window).on('load', function() {
+        $('#messageModal').modal('show');
+    });
+</script>
+@endpush

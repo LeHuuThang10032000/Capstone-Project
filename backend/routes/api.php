@@ -21,11 +21,17 @@ Route::post('/login',[AuthController::class,'login']);
 Route::post('/check-phone',[AuthController::class, 'checkPhoneExist']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 
-Route::prefix('/v1')->group(function(){
+Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
 
     //User
     Route::post('/update/{id}',[UserController::class, 'update']);
     Route::post('/updateProfile/{id}',[UserController::class, 'profileUpdate']);
+
+    Route::post('/create-store', [UserController::class, 'createStoreRequest']);
+
+    Route::get('/test', function() {
+        return 'test';
+    });
 });
 

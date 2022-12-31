@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('auth.login');
-});
+})->name('login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -30,5 +30,9 @@ Route::group(['middleware' => ['auth', 'role:organiser']], function() {
 
     Route::put('user/activate/{id}', [OrganiserController::class, 'deactivateUser'])->name('organiser.activate-user');
     
-    Route::get('store-request', [OrganiserController::class, 'getStoreRequests'])->name('organiser.store-request');
+    Route::group(['prefix' => 'store-request'], function() {
+        Route::get('', [OrganiserController::class, 'getStoreRequests'])->name('organiser.store-request');
+        Route::post('approve', [OrganiserController::class, 'approveStore'])->name('organiser.store-request.approve');
+        Route::post('deny', [OrganiserController::class, 'denyStore'])->name('organiser.store-request.deny');
+    });
 });

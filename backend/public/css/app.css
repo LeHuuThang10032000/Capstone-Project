@@ -1492,3 +1492,15 @@ select {
 .tab-pane.active {
   background-color: rgba(255, 255, 255, 1) !important;
 }
+
+.btn-theme-cancel {
+  background-color: #D7D7D7 !important;
+  border: 2px solid #000000 !important;
+}
+
+.success-alert {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
