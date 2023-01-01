@@ -35,13 +35,21 @@ class UserController extends Controller
         return ApiResponse::successResponse($user);
     }
 
+    public function getProfile(){
+        if(auth::check()){
+            $user = auth()->user();
+            return response([
+                "user" => $user
+            ]);
+        }
+    }
+
     public function profileUpdate(Request $request)
     {
         $request->validate([
             'full_name'=>'required|min:3'
         ]);
-        $user = User::find($request->id);
-        $user->f_name = Auth::user();
+        $user = User::find(auth()->user()->id);
         $user->f_name = $request['full_name'];
         $user->save();
         return ApiResponse::successResponse($user);

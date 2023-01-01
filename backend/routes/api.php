@@ -26,8 +26,8 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     //User
     Route::post('/update/{id}',[UserController::class, 'update']);
-    Route::post('/updateProfile/{id}',[UserController::class, 'profileUpdate']);
-
+    Route::post('/updateProfile',[UserController::class, 'profileUpdate']);
+    Route::get('/get-profile',[UserController::class, 'getProfile']);
     Route::post('/create-store', [UserController::class, 'createStoreRequest']);
 
     Route::get('/test', function() {
