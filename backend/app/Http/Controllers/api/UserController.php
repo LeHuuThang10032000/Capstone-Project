@@ -47,10 +47,14 @@ class UserController extends Controller
     public function profileUpdate(Request $request)
     {
         $request->validate([
-            'full_name'=>'required|min:3'
+            'full_name'=>'required|min:3',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $user = User::find(auth()->user()->id);
         $user->f_name = $request['full_name'];
+        if($request->hasFile('image') && $request->file('image')->isValid()){
+            $user->addMediaFromRequest('image')->toMediaCollection('images');
+        }
         $user->save();
         return ApiResponse::successResponse($user);
     }
