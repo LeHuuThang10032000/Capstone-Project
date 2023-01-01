@@ -60,11 +60,12 @@ export type MainStackParamList = {
     last: string;
     phone: string;
   };
-  Transfer: {picture: string; title: string; first: string; last: string};
+  Transfer: undefined;
   EditProfile: undefined;
   ChangePassword: {
     phone: string;
   };
+  ConfirmPM: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
