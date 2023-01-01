@@ -32,7 +32,7 @@ const Banner = (props: Props) => {
             marginHorizontal: 20,
           }}>
           <View style={styles.wrapperButton}>
-            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Transfer')}>
               <View style={styles.buttonTranfer}>
                 <Image
                   source={require('../../assets/img/moneytranfer.png')}

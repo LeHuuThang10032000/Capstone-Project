@@ -9,6 +9,7 @@ import Settings from '../screen/Settings';
 import DetailUser from '../screen/Search/DetailUser';
 import Otp from '../screen/Otp';
 import Transfer from '../screen/Transfer';
+import ConfirmPM from '../screen/Transfer/ConfirmTransfer';
 import EditProfile from '../screen/EditProfileScreen';
 import ChangePassword from '../screen/ChangePassword';
 import NewPassword from '../screen/NewPassword';
@@ -70,5 +71,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'Payment',
     component: Payment,
+  },
+  {
+    name: 'ConfirmPM',
+    component: ConfirmPM,
   },
 ];

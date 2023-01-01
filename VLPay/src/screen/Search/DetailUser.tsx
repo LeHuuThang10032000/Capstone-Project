@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import HeaderBack from '../../components/HeaderBack';
-import {Button, Center, HStack, Image} from 'native-base';
+import {Button, Center, HStack, Image, Input} from 'native-base';
 import AddFriendIcon from '../../assets/svg/add-friend.svg';
 import TransferIcon from '../../assets/svg/transfer.svg';
 import {useNavigation} from '@react-navigation/native';
@@ -10,6 +10,8 @@ import {MainStackNavigation} from '../../stack/Navigation';
 const DetailUser = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const {email, picture, title, first, last, phone} = route.params;
+  console.log(phone);
+
   return (
     <View>
       <HeaderBack title="Detail User" />
@@ -28,15 +30,23 @@ const DetailUser = ({route}: any) => {
         </Text>
         <Text style={styles.text}>{phone}</Text>
         <Text style={styles.text}>{email}</Text>
+        <Input value={phone} />
       </Center>
       <Center pt={160}>
         <Button
           width={'90%'}
           background={'#B5EAD8'}
           leftIcon={<TransferIcon width={30} />}
-          onPress={() =>
-            navigation.navigate('Transfer', {picture, title, first, last})
-          }>
+          // onPress={() =>
+          //   navigation.navigate('Transfer', {
+          //     picture,
+          //     title,
+          //     first,
+          //     last,
+          //     phone,
+          //   })
+          // }
+        >
           <Text style={styles.button}>Transfer</Text>
         </Button>
       </Center>

@@ -7651,6 +7651,11 @@ react-native-codegen@^0.70.6:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-contacts@^7.0.5:
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-7.0.5.tgz#648b6500ac1f67b79acb2b73b111d31a01f6037f"
+  integrity sha512-RsWf5udhL/wpnBVu/oKVoIzogKcd7IwnxvNK48M4abICGtHxxv+te7hi4q04QjClytIsa5SylpJC2VsnpFDS2A==
+
 react-native-currency-input@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/react-native-currency-input/-/react-native-currency-input-1.1.0.tgz"
@@ -7731,7 +7736,7 @@ react-native-permissions@^2.0.2:
 
 react-native-qrcode-scanner@^1.5.5:
   version "1.5.5"
-  resolved "https://registry.npmjs.org/react-native-qrcode-scanner/-/react-native-qrcode-scanner-1.5.5.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-qrcode-scanner/-/react-native-qrcode-scanner-1.5.5.tgz#0d20101712715da108742a2bbbd0397569031b01"
   integrity sha512-il79uStkFqUvofqXJQfOL30qgQyU17MUKxj7IGHv6oT2OxIY/vutTwuPPDbsivtv0yTMHP4dGx/79oys4eAuNw==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.13.4"
