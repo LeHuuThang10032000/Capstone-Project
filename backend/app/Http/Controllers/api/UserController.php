@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class UserController extends Controller
 {
@@ -53,10 +52,12 @@ class UserController extends Controller
         $user = User::find(auth()->user()->id);
         $user->f_name = $request['full_name'];
         if($request->hasFile('image') && $request->file('image')->isValid()){
-            $file_path = Storage::path($user->media->all()[0]->id);
-            $image_path = str_replace('storage/app','public/storage',$file_path);
-            \File::deleteDirectory($image_path);
-            $user->media()->delete();
+            if($user->media->all()[0]->id){
+                $file_path = Storage::path($user->media->all()[0]->id);
+                $image_path = str_replace('storage/app','public/storage',$file_path);
+                \File::deleteDirectory($image_path);
+                $user->media()->delete();
+            }
             $user->addMediaFromRequest('image')->toMediaCollection('images');
         }
         $user->save();
