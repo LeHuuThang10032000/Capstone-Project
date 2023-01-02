@@ -53,10 +53,17 @@ const Index = () => {
             style={styles.button}
             onPress={() => navigation.navigate('ProfileUser')}>
             <View style={styles.info}>
-              <Image
-                source={require('../../assets/img/user_default.jpg')}
-                style={styles.image}
-              />
+              {profile?.data?.data?.media[0]?.original_url ? (
+                <Image
+                  source={{uri: profile.data.data.media[0].original_url}}
+                  style={styles.image}
+                />
+              ) : (
+                <Image
+                  source={require('../../assets/img/user_default.jpg')}
+                  style={styles.image}
+                />
+              )}
               <View style={{paddingLeft: 10}}>
                 <Text style={styles.text}>{profile?.data?.data?.f_name}</Text>
                 <Text style={styles.text}>{profile.data?.data?.phone}</Text>

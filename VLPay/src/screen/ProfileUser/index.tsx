@@ -42,7 +42,11 @@ const Index = () => {
       <HeaderBack title="Hồ sơ của bạn" />
       <Center style={{paddingVertical: 40}}>
         <Image
-          source={{uri: avatar}}
+          source={{
+            uri: profile?.data?.data?.media[0]?.original_url
+              ? profile.data.data.media[0].original_url
+              : avatar,
+          }}
           alt="img"
           borderRadius={100}
           width={150}

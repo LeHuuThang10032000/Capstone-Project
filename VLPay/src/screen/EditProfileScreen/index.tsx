@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
 import ImagePicker from 'react-native-image-crop-picker';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -17,8 +17,10 @@ import styles from './styles';
 import {useForm, Controller} from 'react-hook-form';
 import {validateName, validatePhone} from '../../components/helpers/validator';
 import {axiosClient} from '../../components/apis/axiosClient';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
+import TText from '../Transfer/TText';
+import {default_image} from '../../components/apis/api';
 
 interface Profile {
   name: string;
@@ -36,11 +38,23 @@ const options: any = {
 };
 
 const Index = () => {
-  const [name, setName] = useState('Lâm Thái Bảo Nguyên');
-  const [phone, setPhone] = useState('0123456789');
-  const [image, setImage] = useState(
-    'https://randomuser.me/api/portraits/men/62.jpg',
-  );
+  const [image, setImage] = useState({});
+  const [profile, setProfile] = useState({});
+  const isFocused = useIsFocused();
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result);
+  }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      fetchData();
+    }
+  }, [fetchData, isFocused]);
   const navigation = useNavigation<MainStackNavigation>();
 
   const {
@@ -51,6 +65,17 @@ const Index = () => {
   const onSubmit = async (data: any) => {
     const formData = new FormData();
     formData.append('full_name', data.name);
+    if (image?.path) {
+      let fileName = image?.path.split('/');
+      fileName = fileName[fileName.length - 1];
+      const filename = `${new Date().getTime()}-${fileName}`;
+      const file = {
+        uri: image.path,
+        name: filename,
+        type: 'image/png',
+      };
+      formData.append('image', file);
+    }
     try {
       await axiosClient.post(
         'https://zennoshop.cf/api/user/updateProfile',
@@ -65,15 +90,13 @@ const Index = () => {
     }
   };
 
-  const ChoosePhotoFromLibrary = () => {
-    ImagePicker.openPicker({
+  const ChoosePhotoFromLibrary = async () => {
+    const image = await ImagePicker.openPicker({
       width: 300,
       height: 400,
       cropping: true,
-    }).then(image => {
-      console.log(image);
-      setImage(image.path);
     });
+    setImage(image);
   };
 
   // const openGallery = async () => {
@@ -88,6 +111,11 @@ const Index = () => {
   //     }
   //   });
   // };
+  console.log(
+    profile?.data?.data?.media[0]?.original_url
+      ? profile.data.data.media[0].original_url
+      : '../../assets/img/user_default.jpg',
+  );
 
   return (
     <View>
@@ -95,7 +123,11 @@ const Index = () => {
       <Pressable onPress={ChoosePhotoFromLibrary}>
         <Center style={{paddingVertical: 40}}>
           <Image
-            source={{uri: image}}
+            source={{
+              uri: profile?.data?.data?.media[0]?.original_url
+                ? profile.data.data.media[0].original_url
+                : default_image,
+            }}
             alt="img"
             borderRadius={100}
             width={150}
