@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
             $table->string('mssv')->nullable();
             $table->date('dob')->nullable();
             $table->string('status')->nullable();
-            $table->string('image')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
