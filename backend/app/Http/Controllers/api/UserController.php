@@ -52,7 +52,7 @@ class UserController extends Controller
         $user = User::find(auth()->user()->id);
         $user->f_name = $request['full_name'];
         if($request->hasFile('image') && $request->file('image')->isValid()){
-            if($user->media->all()[0]->id){
+            if($user->media->all()){
                 $file_path = Storage::path($user->media->all()[0]->id);
                 $image_path = str_replace('storage/app','public/storage',$file_path);
                 \File::deleteDirectory($image_path);
