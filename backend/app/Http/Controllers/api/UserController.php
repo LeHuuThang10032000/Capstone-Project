@@ -39,6 +39,7 @@ class UserController extends Controller
     public function getProfile(){
         if(auth::check()){
             $user = auth()->user();
+            auth()->user()->media->all();
             return ApiResponse::successResponse($user);
         }
     }
