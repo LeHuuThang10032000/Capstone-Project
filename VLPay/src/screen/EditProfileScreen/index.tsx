@@ -111,11 +111,6 @@ const Index = () => {
   //     }
   //   });
   // };
-  console.log(
-    profile?.data?.data?.media[0]?.original_url
-      ? profile.data.data.media[0].original_url
-      : '../../assets/img/user_default.jpg',
-  );
 
   return (
     <View>
@@ -123,11 +118,15 @@ const Index = () => {
       <Pressable onPress={ChoosePhotoFromLibrary}>
         <Center style={{paddingVertical: 40}}>
           <Image
-            source={{
-              uri: profile?.data?.data?.media[0]?.original_url
-                ? profile.data.data.media[0].original_url
-                : default_image,
-            }}
+            source={
+              image?.path
+                ? {uri: image?.path}
+                : profile?.data?.data?.media[0]?.original_url
+                ? {
+                    uri: profile.data.data.media[0].original_url,
+                  }
+                : require('../../assets/img/user_default.png')
+            }
             alt="img"
             borderRadius={100}
             width={150}

@@ -60,7 +60,7 @@ const Index = () => {
                 />
               ) : (
                 <Image
-                  source={require('../../assets/img/user_default.jpg')}
+                  source={require('../../assets/img/user_default.png')}
                   style={styles.image}
                 />
               )}
