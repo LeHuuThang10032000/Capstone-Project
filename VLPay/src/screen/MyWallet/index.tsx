@@ -1,7 +1,7 @@
 import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {MainStackNavigation} from '../../stack/Navigation';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import HeaderComp from '../../components/HeaderComp';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import ExtendIcon from '../../assets/svg/extend.svg';
@@ -21,10 +21,29 @@ import BodyModal from '../../components/CustomLogout/BodyModal';
 import {useDispatch} from 'react-redux';
 import {Logout} from '../../redux/actions/authAction';
 import RNRestart from 'react-native-restart';
+import {axiosClient} from '../../components/apis/axiosClient';
 const Index = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {modalVisible, toggleModal, closeModal} = ModalProvider();
   const dispatch = useDispatch();
+
+  const [profile, setProfile] = useState({});
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result);
+  }, []);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      fetchData();
+    }
+  }, [fetchData, isFocused]);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <HeaderComp title="Ví của tôi" />
@@ -39,8 +58,8 @@ const Index = () => {
                 style={styles.image}
               />
               <View style={{paddingLeft: 10}}>
-                <Text style={styles.text}>LÂM THÁI BẢO NGUYÊN</Text>
-                <Text style={styles.text}>0902876778</Text>
+                <Text style={styles.text}>{profile?.data?.data?.f_name}</Text>
+                <Text style={styles.text}>{profile.data?.data?.phone}</Text>
               </View>
             </View>
             <View>

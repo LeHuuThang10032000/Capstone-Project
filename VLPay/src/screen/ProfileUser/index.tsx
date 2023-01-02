@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
 import {
   Button,
@@ -13,12 +13,30 @@ import {
 } from 'native-base';
 import {TouchableOpacity} from 'react-native';
 import styles from './styles';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
+import {axiosClient} from '../../components/apis/axiosClient';
 
 const Index = () => {
   const avatar = 'https://randomuser.me/api/portraits/men/78.jpg';
+  const isFocused = useIsFocused();
   const navigation = useNavigation<MainStackNavigation>();
+
+  const [profile, setProfile] = useState({});
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result);
+  }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      fetchData();
+    }
+  }, [fetchData, isFocused]);
   return (
     <View>
       <HeaderBack title="Hồ sơ của bạn" />
@@ -46,7 +64,7 @@ const Index = () => {
             </FormControl.Label>
             <Input
               w="90%"
-              value="Lâm Thái Bảo Nguyên"
+              value={profile?.data?.data?.f_name}
               style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
             />
           </FormControl>
@@ -64,7 +82,7 @@ const Index = () => {
             </FormControl.Label>
             <Input
               w="90%"
-              value="0123456789"
+              value={profile?.data?.data?.phone}
               style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
             />
           </FormControl>

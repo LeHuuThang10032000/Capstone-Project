@@ -16,6 +16,9 @@ import CameraIcon from '../../assets/svg/camera.svg';
 import styles from './styles';
 import {useForm, Controller} from 'react-hook-form';
 import {validateName, validatePhone} from '../../components/helpers/validator';
+import {axiosClient} from '../../components/apis/axiosClient';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 interface Profile {
   name: string;
@@ -38,13 +41,29 @@ const Index = () => {
   const [image, setImage] = useState(
     'https://randomuser.me/api/portraits/men/62.jpg',
   );
+  const navigation = useNavigation<MainStackNavigation>();
 
   const {
     control,
     handleSubmit,
     formState: {errors},
   } = useForm<Profile>();
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = async (data: any) => {
+    const formData = new FormData();
+    formData.append('full_name', data.name);
+    try {
+      await axiosClient.post(
+        'https://zennoshop.cf/api/user/updateProfile',
+        formData,
+        {
+          headers: {'content-type': 'multipart/form-data'},
+        },
+      );
+      navigation.goBack();
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const ChoosePhotoFromLibrary = () => {
     ImagePicker.openPicker({

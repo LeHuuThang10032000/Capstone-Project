@@ -17,7 +17,7 @@ export const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   async config => {
-    const token = await AsyncStorage.getItem(AUTHORIZATION_KEY);
+    const token = await AsyncStorage.getItem('token');
     if (config.headers == undefined) {
       config.headers = {};
     }
