@@ -45,7 +45,7 @@ const Banner = (props: Props) => {
           </View>
 
           <View style={styles.wrapperButton}>
-            <TouchableOpacity onPress={() => navigation.navigate('Payment')}>
+            <TouchableOpacity onPress={() => navigation.navigate('ScanQR')}>
               <View style={styles.buttonTranfer}>
                 <Image
                   source={require('../../assets/img/scan.png')}

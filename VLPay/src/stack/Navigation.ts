@@ -66,6 +66,7 @@ export type MainStackParamList = {
     phone: string;
   };
   ConfirmPM: undefined;
+  ScanQR: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

@@ -14,6 +14,7 @@ import EditProfile from '../screen/EditProfileScreen';
 import ChangePassword from '../screen/ChangePassword';
 import NewPassword from '../screen/NewPassword';
 import Payment from '../screen/payment';
+import ScanQR from '../screen/ScanQR';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -75,5 +76,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'ConfirmPM',
     component: ConfirmPM,
+  },
+  {
+    name: 'ScanQR',
+    component: ScanQR,
   },
 ];
