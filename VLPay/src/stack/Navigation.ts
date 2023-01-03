@@ -67,6 +67,8 @@ export type MainStackParamList = {
   };
   ConfirmPM: undefined;
   ScanQR: undefined;
+  ApproveMerc: undefined;
+  WaitApprove: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
