@@ -91,15 +91,19 @@ class AuthController extends Controller
         $validate = Validator::make($request->all(), [
             'phone' => 'required|phone',
             'password' => 'required|min:6',
+        ], [
+            'phone.required' => 'Vui lòng nhập số điện thoại',
+            'password.required' => 'Vui lòng nhập mật khẩu',
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự'
         ]);
 
         if ($validate->fails()) {
-            return response()->json($validate->messages()->first());
+            return ApiResponse::failureResponse($validate->messages()->first());
         }
 
         $credentials = ['phone' => $request->phone, 'password' => $request->password];
         if (!Auth::attempt($credentials)) {
-            return response()->json('Số điện thoại hoặc mật khẩu không đúng', 401);
+            return ApiResponse::failureResponse('Số điện thoại hoặc mật khẩu không đúng');
         }
 
         $user = $request->user();

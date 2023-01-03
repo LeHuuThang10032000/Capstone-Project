@@ -29,8 +29,17 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone' => ['required', 'string'],
-            'password' => ['required', 'string'],
+            'phone' => ['bail', 'required', 'phone'],
+            'password' => ['bail', 'required', 'min:6'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'phone.required' => 'Vui lòng nhập số điện thoại',
+            'password.required' => "Vui lòng nhập mật khẩu",
+            'password.min' => "Mật khẩu phải có ít nhất 6 ký tự",
         ];
     }
 

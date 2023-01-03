@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Accounts')
+@section('title', 'Người dùng')
 
 @section('content')
 
 <div class="p-3">
     <div class="container-xxl bg-white rounded p-3">
         <div class="d-flex justify-content-between">
-            <h3 class="mb-0">List Users</h3>
+            <h3 class="mb-0">Danh sách người dùng</h3>
         </div>
 
         <hr>
@@ -15,10 +15,10 @@
             <thead style="background-color: #C7CEEA">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">name</th>
-                    <th scope="col">phone</th>
-                    <th scope="col">status</th>
-                    <th scope="col">action</th>
+                    <th scope="col">tên</th>
+                    <th scope="col">số điện thoại</th>
+                    <th scope="col">tráng thái</th>
+                    <th scope="col">thao tác</th>
                 </tr>
             </thead>
             <tbody>
