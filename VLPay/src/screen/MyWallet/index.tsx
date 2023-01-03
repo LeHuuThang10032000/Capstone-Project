@@ -151,7 +151,9 @@ const Index = () => {
               <ExtendIcon />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ApproveMerc')}
+            style={styles.button}>
             <View style={styles.info}>
               <ShopIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>

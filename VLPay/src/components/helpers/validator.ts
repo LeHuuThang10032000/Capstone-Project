@@ -23,3 +23,6 @@ export const validatePW = (name: string): string | boolean => {
   }
   return true;
 };
+
+export const isValidEmail = (email: string) =>
+  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/.test(email);

@@ -15,6 +15,8 @@ import ChangePassword from '../screen/ChangePassword';
 import NewPassword from '../screen/NewPassword';
 import Payment from '../screen/payment';
 import ScanQR from '../screen/ScanQR';
+import ApproveMerc from '../screen/Merchant/ApproveMerchant';
+import WaitApprove from '../screen/Merchant/ApproveMerchant/Waiting';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -80,5 +82,13 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'ScanQR',
     component: ScanQR,
+  },
+  {
+    name: 'ApproveMerc',
+    component: ApproveMerc,
+  },
+  {
+    name: 'WaitApprove',
+    component: WaitApprove,
   },
 ];
