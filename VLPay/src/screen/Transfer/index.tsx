@@ -55,7 +55,14 @@ const Index = ({route}: any) => {
     handleSubmit,
     setValue,
     formState: {errors},
-  } = useForm<Transfer>();
+  } = useForm<Transfer>({
+    defaultValues: {
+      name: '',
+      phone: '',
+      money: '',
+      mess: '',
+    },
+  });
   // useEffect(() => {
   //   getPermission();
   // }, []);

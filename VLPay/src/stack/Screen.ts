@@ -6,7 +6,7 @@ import BottomTabStack from './BottomTabStack';
 import Search from '../screen/Search';
 import ProfileUser from '../screen/ProfileUser';
 import Settings from '../screen/Settings';
-import DetailUser from '../screen/Search/DetailUser';
+import DetailUser from '../screen/Friends/DetailFriend';
 import Otp from '../screen/Otp';
 import Transfer from '../screen/Transfer';
 import ConfirmPM from '../screen/Transfer/ConfirmTransfer';
@@ -19,6 +19,9 @@ import ApproveMerc from '../screen/Merchant/ApproveMerchant';
 import WaitApprove from '../screen/Merchant/ApproveMerchant/Waiting';
 import WithDraw from '../screen/WithDraw';
 import WithDrawInfo from '../screen/WithDrawInfo';
+import SupportStudent from '../screen/Support';
+import Friends from '../screen/Friends';
+import DetailFriend from '../screen/Friends/DetailFriend';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -95,4 +98,16 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   },
   {name: 'WithDraw', component: WithDraw},
   {name: 'WithDrawInfo', component: WithDrawInfo},
+  {
+    name: 'Support',
+    component: SupportStudent,
+  },
+  {
+    name: 'Friends',
+    component: Friends,
+  },
+  {
+    name: 'DetailFriend',
+    component: DetailFriend,
+  },
 ];
