@@ -69,7 +69,12 @@ export type MainStackParamList = {
   ScanQR: undefined;
   ApproveMerc: undefined;
   WaitApprove: undefined;
-  WithDraw: undefined;
+  WithDraw: {
+    isWithdraw: boolean;
+  };
+  WithDrawInfo: {
+    isWithdraw: boolean;
+  };
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

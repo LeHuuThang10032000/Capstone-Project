@@ -18,6 +18,7 @@ import ScanQR from '../screen/ScanQR';
 import ApproveMerc from '../screen/Merchant/ApproveMerchant';
 import WaitApprove from '../screen/Merchant/ApproveMerchant/Waiting';
 import WithDraw from '../screen/WithDraw';
+import WithDrawInfo from '../screen/WithDrawInfo';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -93,4 +94,5 @@ export const MAIN_STACK_SCREEN: Screen[] = [
     component: WaitApprove,
   },
   {name: 'WithDraw', component: WithDraw},
+  {name: 'WithDrawInfo', component: WithDrawInfo},
 ];

@@ -160,7 +160,7 @@ const Otp = (props: any) => {
               autoFocusOnLoad
               codeInputFieldStyle={styles.underlineStyleBase}
               keyboardType="number-pad"
-              secureTextEntry={true}
+              secureTextEntry={false}
               onCodeFilled={setValue}
               onCodeChanged={() => setIsError(false)}
             />

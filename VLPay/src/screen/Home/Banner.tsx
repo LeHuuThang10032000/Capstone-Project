@@ -6,10 +6,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import React from 'react';
-import TopUp from '../../assets/svg/topup.svg';
-import Withdraw from '../../assets/svg/withdraw.svg';
-import QRcode from '../../assets/svg/qrcode.svg';
-import ScanQR from '../../assets/svg/scanqr.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {Image} from 'native-base';
