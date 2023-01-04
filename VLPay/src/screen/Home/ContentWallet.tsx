@@ -44,7 +44,7 @@ const ContentWallet = () => {
         source: require('../../assets/img/withdraw.png'),
         title: 'Rút tiền',
         onPress: () => {
-          console.log('nothing');
+          navigation.navigate('WithDraw');
         },
       },
       {

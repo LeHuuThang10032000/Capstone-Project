@@ -114,7 +114,7 @@ const Otp = (props: any) => {
             password_confirmation,
           },
         );
-        setSuccessMessage(result.data.message);
+        setSuccessMessage('Đăng ký thành công');
         setVisibleSuccess(true);
         setTimeout(async () => {
           setVisibleSuccess(false);
