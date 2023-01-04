@@ -15,7 +15,9 @@ class CreateUserWalletsTable extends Migration
     {
         Schema::create('user_wallets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('user_id')->nullable()->index();
             $table->float('balance');
+            $table->enum('status', ['active', 'banned']);
             $table->float('credit_limit');
             $table->timestamps();
         });

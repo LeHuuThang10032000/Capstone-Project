@@ -74,7 +74,7 @@ class UserController extends Controller
             'email' => 'email',
             'selling_products' => 'required',
             'location' => 'required',
-            'image' => ''
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ], [
             'name.required' => 'Vui lòng nhập tên cửa hàng',
             'phone.required' => 'Vui lòng nhập số điện thoại cửa hàng',
@@ -91,7 +91,9 @@ class UserController extends Controller
         try{
             DB::beginTransaction();
 
-            Store::create([
+            
+
+            $store = Store::create([
                 'user_id' => $request->id,
                 'name' => $request->name,
                 'phone' => $request->phone,
@@ -101,6 +103,10 @@ class UserController extends Controller
                 'image' => $request->image,
                 'status' => 'pending',
             ]);
+
+            if($request->hasFile('image') && $request->file('image')->isValid()) {
+                $store->addMediaFromRequest('image')->toMediaCollection('images');
+            }
 
             DB::commit();
             return ApiResponse::successResponse(null);
