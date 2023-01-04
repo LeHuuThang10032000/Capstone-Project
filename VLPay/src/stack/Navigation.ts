@@ -60,6 +60,14 @@ export type MainStackParamList = {
     last: string;
     phone: string;
   };
+  DetailFriend: {
+    email: string;
+    picture: string;
+    title: string;
+    first: string;
+    last: string;
+    phone: string;
+  };
   Transfer: undefined;
   EditProfile: undefined;
   ChangePassword: {
@@ -69,6 +77,8 @@ export type MainStackParamList = {
   ScanQR: undefined;
   ApproveMerc: undefined;
   WaitApprove: undefined;
+  Support: undefined;
+  Friends: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

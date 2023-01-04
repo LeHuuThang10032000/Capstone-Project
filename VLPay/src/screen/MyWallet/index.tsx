@@ -100,7 +100,9 @@ const Index = () => {
           Xã hội của tôi
         </Text>
         <View style={styles.wrapperButton}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Friends')}>
             <View style={styles.info}>
               <PersonIcon height={15} width={15} style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
@@ -140,11 +142,13 @@ const Index = () => {
               <ExtendIcon />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Support')}>
             <View style={styles.info}>
               <SupportIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Hỗ trợ</Text>
+                <Text style={styles.text}>Hỗ trợ sinh viên</Text>
               </View>
             </View>
             <View>
