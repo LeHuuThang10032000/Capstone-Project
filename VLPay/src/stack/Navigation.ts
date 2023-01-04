@@ -77,6 +77,12 @@ export type MainStackParamList = {
   ScanQR: undefined;
   ApproveMerc: undefined;
   WaitApprove: undefined;
+  WithDraw: {
+    isWithdraw: boolean;
+  };
+  WithDrawInfo: {
+    isWithdraw: boolean;
+  };
   Support: undefined;
   Friends: undefined;
 };

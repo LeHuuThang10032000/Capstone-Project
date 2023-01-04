@@ -75,7 +75,7 @@ const Index = function () {
           password_confirmation,
         },
       );
-      setPhoneError(result.data.message);
+      setPhoneError('Thay đổi mật khẩu thành công');
       setVisibleWarning(true);
       setTimeout(async () => {
         setVisibleWarning(false);

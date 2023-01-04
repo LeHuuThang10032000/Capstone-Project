@@ -44,7 +44,9 @@ const ContentWallet = () => {
         source: require('../../assets/img/withdraw.png'),
         title: 'Rút tiền',
         onPress: () => {
-          console.log('nothing');
+          navigation.navigate('WithDraw', {
+            isWithdraw: true,
+          });
         },
       },
       {
@@ -54,13 +56,15 @@ const ContentWallet = () => {
           console.log('nothing');
         },
       },
-      {
-        source: require('../../assets/img/deposit.png'),
-        title: 'Nạp tiền',
-        onPress: () => {
-          console.log('nothing');
-        },
-      },
+      // {
+      //   source: require('../../assets/img/deposit.png'),
+      //   title: 'Nạp tiền',
+      //   onPress: () => {
+      //     navigation.navigate('WithDraw', {
+      //       isWithdraw: false,
+      //     });
+      //   },
+      // },
     ];
   }, []);
 
