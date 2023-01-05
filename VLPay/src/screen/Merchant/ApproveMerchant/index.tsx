@@ -11,6 +11,7 @@ import {
   Text,
   VStack,
   View,
+  Image,
 } from 'native-base';
 import {Controller, useForm} from 'react-hook-form';
 import {axiosClient} from '../../../components/apis/axiosClient';
@@ -18,6 +19,8 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {isValidEmail} from '../../../components/helpers/validator';
 import {MainStackNavigation} from '../../../stack/Navigation';
 import WarningIcon from '../../../assets/svg/warning-red.svg';
+import ImagePicker from 'react-native-image-crop-picker';
+import {UText} from '../../../components/UText';
 
 interface CreateShop {
   email: string;
@@ -41,16 +44,56 @@ const Index = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const ChoosePhotoFromLibrary = async () => {
+    const image = await ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    });
+    setImage(image);
+  };
+  console.log(profile);
+  const onSubmit = async (data: any) => {
     console.log(data);
-    // navigation.navigate('WaitApprove');
-    setApprove(approve == false);
+    const {email, location, name, products} = data;
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('location', location);
+    formData.append('name', name);
+    formData.append('user_id', profile?.data?.id);
+    formData.append('phone', profile?.data?.phone);
+    let fileName = image?.path.split('/');
+    fileName = fileName[fileName.length - 1];
+    const filename = `${new Date().getTime()}-${fileName}`;
+    const file = {
+      uri: image.path,
+      name: filename,
+      type: 'image/png',
+    };
+    formData.append('image', file);
+    try {
+      await axiosClient.post(
+        'https://zennoshop.cf/api/user/create-store',
+        formData,
+        {
+          headers: {'content-type': 'multipart/form-data'},
+        },
+      );
+      setApprove(false);
+    } catch (e) {
+      console.log('====================================');
+      console.log(e);
+      console.log('====================================');
+    }
   };
 
   const navigation = useNavigation<MainStackNavigation>();
   const [profile, setProfile] = useState({});
   const [approve, setApprove] = useState(true);
   const isFocused = useIsFocused();
+  const [image, setImage] = useState({});
+
+  console.log(profile);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient
@@ -305,6 +348,22 @@ const Index = () => {
                 )}
                 name="products"
               />
+              <View style={{width: '100%', marginBottom: 10}}>
+                <UText style={{fontWeight: '700'}}>Hình ảnh shop: </UText>
+              </View>
+              <TouchableOpacity onPress={ChoosePhotoFromLibrary}>
+                <Image
+                  source={
+                    image?.path
+                      ? {uri: image?.path}
+                      : require('../../../assets/img/user_default.png')
+                  }
+                  alt="img"
+                  width={150}
+                  height={150}
+                  marginBottom={10}
+                />
+              </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.button}
