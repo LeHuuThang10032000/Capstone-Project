@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\User;
+use App\Models\Wallet;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,12 @@ class AuthController extends Controller
                 'token' => $userToken->accessToken,
                 'message' => 'Đăng ký thành công'
             ];
+            Wallet::create([
+                'user_id' => $user->id,
+                'balance' => 0,
+                'credit_limit' => 0,
+                'status' => 'active'
+            ]);
             DB::commit();
             return ApiResponse::successResponse($response);
         } catch(Exception $e) {

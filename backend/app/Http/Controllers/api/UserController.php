@@ -90,9 +90,7 @@ class UserController extends Controller
 
         try{
             DB::beginTransaction();
-
             
-
             $store = Store::create([
                 'user_id' => $request->id,
                 'name' => $request->name,
