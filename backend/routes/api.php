@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\TransactionController;
 use App\Http\Controllers\api\UserController;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +31,9 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/updateProfile',[UserController::class, 'profileUpdate']);
     Route::get('/get-profile',[UserController::class, 'getProfile']);
     Route::post('/create-store', [UserController::class, 'createStoreRequest']);
+
+    //Transaction
+    Route::post('/create-transaction', [TransactionController::class, "transfer"]);
 
     Route::get('/test', function() {
         return 'test';
