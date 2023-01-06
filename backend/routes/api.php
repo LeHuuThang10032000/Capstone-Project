@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\ScanQrCodeController;
 use App\Http\Controllers\api\TransactionController;
 use App\Http\Controllers\api\UserController;
 use App\Models\Transaction;
@@ -34,6 +35,9 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     //Transaction
     Route::post('/create-transaction', [TransactionController::class, "transfer"]);
+
+    //Scan qr code
+    Route::post('/getInfoUser', [ScanQrCodeController::class, "getInfoUser"]);
 
     Route::get('/test', function() {
         return 'test';
