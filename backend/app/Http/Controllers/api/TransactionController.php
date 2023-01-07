@@ -8,16 +8,33 @@ use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class TransactionController extends Controller
 {
+
+    //check password during process transaction
+    public function checkPwd(Request $request){
+        $request->validate([
+            "password"=>"required"
+        ]);
+        $user = Auth::user();
+        if(Hash::check($user->password,$request->password)){
+            return response([
+                "message" => "Mật khẩu xác thực thành công"
+            ]);
+        }
+        return response([
+            "message" => "Sai mật khẩu"
+        ],422);
+    }
 
     //method post
     public function transfer(Request $request){
         $request->validate([
             "phone" => "min:10|max:10",
             "f_name" => "min:3",
-            "cash" => "numeric|min:50|max:1000",
+            "cash" => "numeric|min:50000|max:1000000",
             "message" => "max:255"
         ]);
 

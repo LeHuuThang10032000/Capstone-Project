@@ -4,6 +4,7 @@ use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\ScanQrCodeController;
 use App\Http\Controllers\api\TransactionController;
 use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\WalletController;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,9 +36,13 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     //Transaction
     Route::post('/create-transaction', [TransactionController::class, "transfer"]);
+    Route::post('/check-password-authentication', [TransactionController::class, "checkPwd"]);
 
     //Scan qr code
     Route::post('/getInfoUser', [ScanQrCodeController::class, "getInfoUser"]);
+
+    //wallet
+    Route::get("/user-wallet",[WalletController::class, "showUserWallet"]);
 
     Route::get('/test', function() {
         return 'test';
