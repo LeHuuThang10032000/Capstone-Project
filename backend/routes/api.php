@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     //Transaction
     Route::post('/create-transaction', [TransactionController::class, "transfer"]);
+    Route::post('/check-password-authentication', [TransactionController::class, "checkPwd"]);
 
     //Scan qr code
     Route::post('/getInfoUser', [ScanQrCodeController::class, "getInfoUser"]);
