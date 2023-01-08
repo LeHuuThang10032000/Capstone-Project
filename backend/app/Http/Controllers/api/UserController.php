@@ -114,9 +114,9 @@ class UserController extends Controller
         }
     }
 
-    public function findUserById($id){
+    public function findUserById($phone){
         if(Auth::check()){
-            $user = User::where("id", $id)->first();
+            $user = User::where("phone", $phone)->first();
             return response([
                 'user' => $user
             ],200);
