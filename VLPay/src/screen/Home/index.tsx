@@ -17,7 +17,7 @@ const Index = () => {
     setInterval(async () => {
       const result = await axiosClient.get('user-wallet');
       setUserWallet(result?.data?.user_wallet?.balance);
-    }, 5000);
+    }, 2000);
   };
   useEffect(() => {
     fetchData();
