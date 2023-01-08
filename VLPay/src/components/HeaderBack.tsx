@@ -7,15 +7,27 @@ import {MainStackNavigation} from '../stack/Navigation';
 
 type Props = {
   title: string;
+  isReset?: boolean;
+  style?: any;
+  onPressLeft?: any;
 };
 
-const HeaderBack: React.FC<Props> = ({title}) => {
+const HeaderBack: React.FC<Props> = ({
+  title,
+  isReset = false,
+  style,
+  onPressLeft,
+}) => {
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
-    navigation.goBack();
+    if (!isReset) {
+      navigation.goBack();
+    } else {
+      navigation.navigate('Home');
+    }
   };
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, style]}>
       <View>
         <TouchableOpacity onPress={handleBack}>
           <BackIcon />

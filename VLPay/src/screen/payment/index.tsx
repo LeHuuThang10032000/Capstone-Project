@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {HStack, VStack} from 'native-base';
 import React, {createRef, useEffect, useRef, useState} from 'react';
 import {
@@ -9,14 +9,16 @@ import {
   ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {MainStackNavigation} from '../../stack/Navigation';
+import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import BackIcon from '../../assets/svg/left-arrow.svg';
 import styles from './styles';
 import {UText} from '../../components/UText';
 import {Image} from '@rneui/base';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import {axiosClient} from '../../components/apis/axiosClient';
 const Payment = () => {
   const navigation = useNavigation<MainStackNavigation>();
+  const {data} = useRoute<RouteProp<MainStackParamList, 'Payment'>>()?.params;
   const handleBack = () => {
     navigation.goBack();
   };
@@ -25,8 +27,12 @@ const Payment = () => {
   const [input, setInput] = useState(false);
   const [value, setValue] = useState('');
   const [result, setResult] = useState(false);
-
+  const [profile, setProfile] = useState({});
+  const [message, setMessage] = useState('');
+  const [resultTransaction, setResultTransaction] = useState({});
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  console.log('resultTransaction', resultTransaction?.data?.code);
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -41,6 +47,25 @@ const Payment = () => {
       keyboardDidHideListener.remove();
     };
   }, [input]);
+
+  const fetchData = async () => {
+    try {
+      const _result = await axiosClient.get(
+        `https://zennoshop.cf/api/user/find-user/0987654322`,
+      );
+      const _profile = await axiosClient.get(
+        'https://zennoshop.cf/api/user/get-profile',
+      );
+
+      setProfile([_result?.data?.user, _profile?.data?.data]);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -132,13 +157,18 @@ const Payment = () => {
                     color: 'black',
                     opacity: 0.61,
                   }}>
-                  09:50 - 25/20/2022
+                  {new Date().toLocaleTimeString()} -
+                  {new Date().toLocaleDateString('en-us', {
+                    year: 'numeric',
+                    day: 'numeric',
+                    month: 'numeric',
+                  })}
                 </UText>
               </HStack>
               <HStack style={styles.contentContainerH}>
                 <UText style={{fontSize: 14}}>Chi tiết giao dịch</UText>
                 <UText style={{fontWeight: '700', color: 'red', fontSize: 14}}>
-                  3039498474646 {'>'}
+                  {resultTransaction?.data?.code} {'>'}
                 </UText>
               </HStack>
             </View>
@@ -152,8 +182,8 @@ const Payment = () => {
           </TouchableOpacity>
           {parkingPrice ? (
             <VStack style={{marginLeft: 30}}>
-              <UText>Nguyễn Văn Tèo</UText>
-              <UText>0987665534</UText>
+              <UText>{profile[0]?.f_name ?? ''}</UText>
+              <UText>{profile[0]?.phone ?? ''}</UText>
             </VStack>
           ) : (
             <UText style={{marginLeft: 50, marginTop: 3}}>
@@ -211,6 +241,7 @@ const Payment = () => {
                   />
                 </View>
                 <TextInput
+                  onChangeText={text => setMessage(text)}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -244,13 +275,13 @@ const Payment = () => {
                 </HStack>
                 <HStack style={styles.contentContainer}>
                   <UText>Người gửi</UText>
-                  <UText style={styles.content}>Lê Hữu THắng</UText>
+                  <UText style={styles.content}>{profile[1]?.f_name}</UText>
                 </HStack>
                 <HStack style={styles.contentContainer}>
                   <UText>Người nhận</UText>
                   <VStack alignItems={'flex-end'}>
-                    <UText style={styles.content}>Nguyễn Văn Tèo</UText>
-                    <UText style={styles.content}>0987654477</UText>
+                    <UText style={styles.content}>{profile[0]?.f_name}</UText>
+                    <UText style={styles.content}>{profile[0]?.phone}</UText>
                   </VStack>
                 </HStack>
                 <HStack style={styles.contentContainer}>
@@ -259,7 +290,13 @@ const Payment = () => {
                 </HStack>
                 <HStack style={styles.contentContainer}>
                   <UText>Ngày chuyển tiền </UText>
-                  <UText style={styles.content}>7/11/2022</UText>
+                  <UText style={styles.content}>
+                    {new Date().toLocaleDateString('en-us', {
+                      year: 'numeric',
+                      day: 'numeric',
+                      month: 'numeric',
+                    })}
+                  </UText>
                 </HStack>
                 <View
                   style={{
@@ -299,6 +336,7 @@ const Payment = () => {
                 display: 'none',
               }
         }>
+        {console.log(profile)}
         <View style={{backgroundColor: 'white'}}>
           <VStack alignItems={'center'}>
             <UText style={{marginBottom: 5, marginTop: 15}}>
@@ -321,10 +359,24 @@ const Payment = () => {
                 autoFocusOnLoad
                 codeInputFieldStyle={styles.underlineStyleBase}
                 keyboardType="number-pad"
-                onCodeChanged={value => {
-                  console.log(value);
-                  if (value.length === 6) {
+                onCodeChanged={async value => {
+                  try {
+                    const formData = new FormData();
+                    formData.append('f_name', profile[0]?.f_name);
+                    formData.append('cash', 3000);
+                    formData.append('phone', profile[0]?.phone);
+                    formData.append('message', message);
+                    const _result = await axiosClient.post(
+                      '/create-transaction',
+                      formData,
+                      {
+                        headers: {'content-type': 'multipart/form-data'},
+                      },
+                    );
+                    setResultTransaction(_result);
                     setResult(true);
+                  } catch (e) {
+                    console.log(e);
                   }
                 }}
                 secureTextEntry={true}

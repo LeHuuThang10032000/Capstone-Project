@@ -29,7 +29,10 @@ export type MainStackParamList = {
   Home: HomeProps | undefined;
   Profile: undefined;
   Login: undefined;
-  Payment: undefined;
+  Payment: {
+    data: any;
+  };
+  PaymentDetails: {data: any};
   Otp: {
     isHoldingLogin?: boolean;
     full_name?: string;
@@ -68,12 +71,16 @@ export type MainStackParamList = {
     last: string;
     phone: string;
   };
-  Transfer: undefined;
+  Transfer: {
+    userWallet: number;
+  };
   EditProfile: undefined;
   ChangePassword: {
     phone: string;
   };
-  ConfirmPM: undefined;
+  ConfirmPM: {
+    data: any;
+  };
   ScanQR: undefined;
   ApproveMerc: undefined;
   WaitApprove: undefined;

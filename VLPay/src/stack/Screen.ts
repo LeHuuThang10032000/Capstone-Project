@@ -22,6 +22,7 @@ import WithDrawInfo from '../screen/WithDrawInfo';
 import SupportStudent from '../screen/Support';
 import Friends from '../screen/Friends';
 import DetailFriend from '../screen/Friends/DetailFriend';
+import PaymentDetails from '../screen/PaymentDetails';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -109,5 +110,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'DetailFriend',
     component: DetailFriend,
+  },
+  {
+    name: 'PaymentDetails',
+    component: PaymentDetails,
   },
 ];

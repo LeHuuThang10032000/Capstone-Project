@@ -5,6 +5,10 @@ export default StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  blockContent: {
+    justifyContent: 'space-between',
+    width: '90%',
+  },
   linearGradient: {
     flex: 1,
     paddingLeft: 15,
@@ -20,6 +24,15 @@ export default StyleSheet.create({
     fontWeight: '700',
     fontSize: 28,
     color: '#312E49',
+  },
+  separate: {
+    height: 1,
+    width: '90%',
+    backgroundColor: 'black',
+    marginBottom: 10,
+  },
+  leftContent: {
+    fontWeight: '700',
   },
   error: {
     fontSize: 11,
