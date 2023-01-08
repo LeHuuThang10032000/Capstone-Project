@@ -34,7 +34,7 @@ class TransactionController extends Controller
         $request->validate([
             "phone" => "min:10|max:10",
             "f_name" => "min:3",
-            "cash" => "numeric|min:50000|max:1000000",
+            "cash" => "numeric|min:3000|max:1000000",
             "message" => "max:255"
         ]);
 
