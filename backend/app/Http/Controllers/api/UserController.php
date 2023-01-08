@@ -113,4 +113,13 @@ class UserController extends Controller
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
+
+    public function findUserById($id){
+        if(Auth::check()){
+            $user = User::where("id", $id)->first();
+            return response([
+                'user' => $user
+            ],200);
+        }
+    }
 }

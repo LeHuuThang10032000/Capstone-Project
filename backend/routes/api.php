@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/updateProfile',[UserController::class, 'profileUpdate']);
     Route::get('/get-profile',[UserController::class, 'getProfile']);
     Route::post('/create-store', [UserController::class, 'createStoreRequest']);
+    Route::post('/find-user/{id}',[UserController::class, 'findUserById']);
 
     //Transaction
     Route::post('/create-transaction', [TransactionController::class, "transfer"]);
