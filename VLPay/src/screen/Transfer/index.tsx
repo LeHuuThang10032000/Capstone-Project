@@ -1,8 +1,8 @@
 import {StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
-import {MainStackNavigation} from '../../stack/Navigation';
-import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {
   Center,
   Image,
@@ -28,6 +28,10 @@ import {
   formatCurrency,
 } from '../../components/helpers/formatNum';
 import TText from './TText';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/icons';
+import Colors from '../../components/helpers/Colors';
+import {axiosClient} from '../../components/apis/axiosClient';
 interface Transfer {
   name: string;
   phone: string;
@@ -35,9 +39,13 @@ interface Transfer {
   mess: string;
 }
 
-const Index = ({route}: any) => {
+const Index = props => {
+  const {userWallet} =
+    useRoute<RouteProp<MainStackParamList, 'Transfer'>>()?.params;
   const navigation = useNavigation<MainStackNavigation>();
   const balances = useMemo(() => ['50000', '100000', '200000'], []);
+  const [errorDisplay, setErrorDisplay] = useState(false);
+  const [errorWarning, setErroWarning] = useState('');
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
     if (!phoneNumber) {
       return 'Số điện thoại không được bỏ trống';
@@ -45,9 +53,29 @@ const Index = ({route}: any) => {
       return 'Số điện thoại chưa chính xác';
     }
   }, []);
-  const onSubmit = (data: any) => {
-    console.log(data);
-    navigation.navigate('ConfirmPM');
+
+  const onSubmit = async (data: any) => {
+    if (!(data.money > userWallet)) {
+      try {
+        const phone = data.phone;
+        console.log(123);
+
+        const result = await axiosClient.post('/check-phone', {
+          phone,
+        });
+        if (result?.data?.status_code == 422) {
+          navigation.navigate('ConfirmPM', {data});
+        } else {
+          setErroWarning('Số  điện thoại không tồn tại');
+          setErrorDisplay(true);
+        }
+      } catch (e: any) {
+        setErroWarning(e?.data?.message);
+      }
+    } else {
+      setErroWarning('Số dư trong ví không đủ. Vui lòng nạp!');
+      setErrorDisplay(true);
+    }
   };
 
   const {
@@ -256,6 +284,28 @@ const Index = ({route}: any) => {
           </VStack>
         </Center>
       </ScrollView>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={errorDisplay}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        hideRight={true}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+        }}
+        message={errorWarning}
+        onActionLeft={() => {
+          setErrorDisplay(false);
+        }}
+        onActionRight={() => {
+          setErrorDisplay(false);
+        }}
+        btnTextLeft={'Xác nhận'}
+        style={{flexDirection: 'column'}}
+      />
     </View>
   );
 };

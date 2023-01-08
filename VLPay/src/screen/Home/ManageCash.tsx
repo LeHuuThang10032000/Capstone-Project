@@ -1,8 +1,11 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {HStack, VStack} from 'native-base';
+import {axiosClient} from '../../components/apis/axiosClient';
 
-const ManageCash = () => {
+const ManageCash = props => {
+  console.log(props);
+
   return (
     <VStack
       alignItems={'center'}
@@ -13,7 +16,7 @@ const ManageCash = () => {
           <Text style={styles.text}>Số dư trong ví của bạn</Text>
         </View>
         <View>
-          <Text style={styles.price}>10.000 VND</Text>
+          <Text style={styles.price}>{props.wallet ?? 0} VND</Text>
         </View>
       </HStack>
 

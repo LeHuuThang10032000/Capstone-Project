@@ -10,7 +10,9 @@ import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {Image} from 'native-base';
 
-type Props = {};
+type Props = {
+  wallet: any;
+};
 
 const Banner = (props: Props) => {
   const navigation = useNavigation<MainStackNavigation>();
@@ -28,7 +30,8 @@ const Banner = (props: Props) => {
             marginHorizontal: 20,
           }}>
           <View style={styles.wrapperButton}>
-            <TouchableOpacity onPress={() => navigation.navigate('Transfer')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Transfer', props.wallet)}>
               <View style={styles.buttonTranfer}>
                 <Image
                   source={require('../../assets/img/moneytranfer.png')}
@@ -41,7 +44,8 @@ const Banner = (props: Props) => {
           </View>
 
           <View style={styles.wrapperButton}>
-            <TouchableOpacity onPress={() => navigation.navigate('ScanQR')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ScanQR', props.wallet)}>
               <View style={styles.buttonTranfer}>
                 <Image
                   source={require('../../assets/img/scan.png')}
