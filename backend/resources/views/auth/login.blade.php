@@ -19,14 +19,14 @@
 
             <!-- Email Address -->
             <div>
-                <x-label for="phone" :value="Số điện thoại" />
+                <x-label for="phone" :value="__('Số điện thoại')" />
 
                 <x-input id="phone" class="block mt-1 w-full" style="border-color: #FFDAC0" type="text" name="phone" :value="old('phone')" required autofocus />
             </div>
 
             <!-- Password -->
             <div class="mt-4">
-                <x-label for="password" :value="Mật khẩu" />
+                <x-label for="password" :value="__('Mật khẩu')" />
 
                 <x-input id="password" class="block mt-1 w-full" style="border-color: #FFDAC0"
                                 type="password"
