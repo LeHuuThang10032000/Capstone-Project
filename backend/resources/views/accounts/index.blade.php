@@ -15,10 +15,9 @@
             <thead style="background-color: #C7CEEA">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">tên</th>
-                    <th scope="col">số điện thoại</th>
-                    <th scope="col">tráng thái</th>
-                    <th scope="col">thao tác</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Số điện thoại</th>
+                    <th scope="col">Trạng thái</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,19 +27,17 @@
                     <td>{{$user->f_name}}</td>
                     <td>{{$user->phone}}</td>
                     <td>
-                        <p class="m-0" style="color: {{ ($user->status == 'active') ? '#189F7F' : '#E76969' }}">{{ $user->status }}</p>
-                    </td>
-                    <td>
                         <form action="{{ route('organiser.activate-user', $user->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button class="px-1 rounded {{ ($user->status == 'active') ? 'btn-theme-warning' : 'btn-theme' }}">{{ ($user->status == 'active') ? 'deactivate' : 'activate' }}</button>
+                            <button class="px-1 rounded {{ ($user->status == 'active') ? 'btn-theme-warning' : 'btn-theme' }}">{{ ($user->status == 'active') ? 'Vô hiệu hóa' : 'Hoạt động' }}</button>
                         </form>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
+        {{ $users->links() }}
     </div>
 </div>
 

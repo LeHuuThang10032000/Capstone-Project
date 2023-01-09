@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Resources\OrganiserController;
 use App\Http\Controllers\Resources\UserController;
+use App\Http\Controllers\Resources\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,5 +35,9 @@ Route::group(['middleware' => ['auth', 'role:organiser']], function() {
         Route::get('', [OrganiserController::class, 'getStoreRequests'])->name('organiser.store-request');
         Route::post('approve', [OrganiserController::class, 'approveStore'])->name('organiser.store-request.approve');
         Route::post('deny', [OrganiserController::class, 'denyStore'])->name('organiser.store-request.deny');
+    });
+
+    Route::group(['prefix' => 'wallet'], function() {
+        Route::get('', [WalletController::class, 'index'])->name('organiser.user-wallet');
     });
 });

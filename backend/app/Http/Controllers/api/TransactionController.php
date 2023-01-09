@@ -19,7 +19,7 @@ class TransactionController extends Controller
             "password"=>"required"
         ]);
         $user = Auth::user();
-        if(Hash::check($user->password,$request->password)){
+        if(Hash::check($user->password, $request->password)){
             return response([
                 "message" => "Mật khẩu xác thực thành công"
             ]);
@@ -38,7 +38,7 @@ class TransactionController extends Controller
             "message" => "max:255"
         ]);
 
-        if(Auth::check()){
+        if(Auth::check()) {
             $currentUser = Auth::user();
             //sender
             $userWallet = Wallet::where("user_id", $currentUser->id)->first();
