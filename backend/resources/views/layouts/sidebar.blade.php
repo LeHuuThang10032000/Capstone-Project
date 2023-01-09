@@ -28,7 +28,7 @@
                 </div>
             </li>
             <li>
-                <a href="" class="flex items-center p-3 hover:bg-theme {{ Request::is('wallet') ? 'active' : '' }}">
+                <a href="{{ route('organiser.user-wallet') }}" class="flex items-center p-3 hover:bg-theme {{ Request::is('wallet') ? 'active' : '' }}">
                     <img src="{{ asset('img/wallet.png') }}" alt="#">
                     <span class="flex-1 ml-3 whitespace-nowrap">Ví</span>
                 </a>

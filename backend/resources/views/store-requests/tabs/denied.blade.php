@@ -8,12 +8,12 @@
     <div class="{{ ($index == 0) ? 'py-2' : 'pb-2' }} px-3 ">
         <div class="d-flex justify-content-between rounded border">
             <div class="p-3">
-                <p class="m-0">tên: {{$store->name}}</p>
-                <p class="m-0">sản phẩm kinh doanh: {{$store->selling_products}}</p>
-                <p class="m-0">vị trí: {{$store->location}}</p>
-                <p class="m-0">số điện thoại: {{$store->phone}}</p>
-                <p class="m-0">email: {{ ($store->email) ?? 'null' }}</p>
-                <p class="m-0">thời gian gửi yêu cầu: {{$store->created_at}}</p>
+                <p class="m-0">Tên: {{$store->name}}</p>
+                <p class="m-0">Sản phẩm kinh doanh: {{$store->selling_products}}</p>
+                <p class="m-0">Vị trí: {{$store->location}}</p>
+                <p class="m-0">Số điện thoại: {{$store->phone}}</p>
+                <p class="m-0">Email: {{ ($store->email) ?? 'null' }}</p>
+                <p class="m-0">Thời gian gửi yêu cầu: {{$store->created_at}}</p>
                 <p class="m-0" style="color: #E76969">{{$store->status}}</p>
             </div>
         </div>
