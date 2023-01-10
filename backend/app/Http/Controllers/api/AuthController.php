@@ -67,7 +67,8 @@ class AuthController extends Controller
             return response(
                 [
                     "message" => "Số điện thoại đã được đăng ký",
-                    "status_code" => 422
+                    "status_code" => 422,
+                    "user" => $user
                 ]
                 );
         }
