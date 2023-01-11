@@ -1,5 +1,5 @@
 import {UText} from '../../components/UText';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
@@ -45,6 +45,7 @@ const Otp = (props: any) => {
     useState<any>(confirmation);
   const [value, setValue] = useState('');
   const [userFireBase, setUserFireBase] = useState<any>();
+  const [isLoading, setLoading] = useState(false);
   const startResendOtpTimer = useCallback(async () => {
     if (resendOtpTimerInterval) {
       clearInterval(resendOtpTimerInterval);
@@ -80,6 +81,7 @@ const Otp = (props: any) => {
 
   const verifyFireBase = async () => {
     if (value.length == 6) {
+      setLoading(true);
       setTimeout(async () => {
         let idTokenResult: string = '';
         if (userFireBase) {
@@ -130,6 +132,7 @@ const Otp = (props: any) => {
           setVisibleWarning(true);
         }
       }, 2000);
+      setLoading(false);
     }
     setBtnBlock(false);
   };
@@ -180,11 +183,12 @@ const Otp = (props: any) => {
             </HStack>
           )}
           <NormalButton
-            title={'Xác nhận'}
+            title={isLoading ? <ActivityIndicator /> : <UText>Xác nhận</UText>}
             disabled={btnBlock}
             onPress={verifyFireBase}
             containerStyle={styles.btnMain}
           />
+
           <View style={styles.containerOPT}>
             {/* <Text style={styles.optText}>Not receipt otp</Text>
             {resendButtonDisabledTime > 0 ? (

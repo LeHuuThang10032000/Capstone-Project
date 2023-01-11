@@ -1,4 +1,6 @@
 import {
+  ActivityIndicator,
+  BackHandler,
   Keyboard,
   StyleSheet,
   Text,
@@ -18,17 +20,22 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Colors from '../../../components/helpers/Colors';
 import {moderateScale} from '../ScaleUtils';
 import {axiosClient} from '../../../components/apis/axiosClient';
+import YesNoModal from '../../../components/YesNoModal';
+import Icons from '../../../components/icons';
+import axios from 'axios';
 
 type Props = {};
 
 const Index = (props: Props) => {
   const {data} = useRoute<RouteProp<MainStackParamList, 'Transfer'>>()?.params;
-  console.log(data);
   const [input, setInput] = useState(false);
   const [value, setValue] = useState('');
-  const [result, setResult] = useState(false);
+  const [visibleWarning, setVisibleWarning] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
   const navigation = useNavigation<MainStackNavigation>();
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -93,11 +100,16 @@ const Index = (props: Props) => {
         <View style={{marginHorizontal: 20}}>
           <TouchableOpacity
             style={styles.button}
+            disabled={isLoading}
             onPress={() => {
               setInput(!input);
               setTimeout(() => otpRef?.current?.focusField(0), 250);
             }}>
-            <Text style={styles.textBtn}>Xác nhận</Text>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={styles.textBtn}>Xác nhận</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -142,6 +154,7 @@ const Index = (props: Props) => {
                 ref={otpRef}
                 onCodeChanged={async value => {
                   if (value.length === 6) {
+                    setLoading(true);
                     try {
                       const formData = new FormData();
                       formData.append('f_name', data.name);
@@ -149,19 +162,32 @@ const Index = (props: Props) => {
                       formData.append('phone', data.phone);
                       formData.append('message', data.message);
 
-                      const result = await axiosClient.post(
+                      await axios.post(
                         'https://zennoshop.cf/api/user/checkPassword',
                         {phone: data.current_user, password: value},
+                        {
+                          headers: {'content-type': 'multipart/form-data'},
+                        },
                       );
-                      console.log(result);
-                      // const _data = [{..._result?.data}, {money: data.money}];
-                      // navigation.navigate('PaymentDetails', {
-                      //   data: _data,
-                      // });
-                    } catch (e) {
-                      console.log('Bi5 loi rui');
 
-                      // console.log(e);
+                      const _result = await axiosClient.post(
+                        '/create-transaction',
+                        formData,
+                        {
+                          headers: {'content-type': 'multipart/form-data'},
+                        },
+                      );
+                      data.code = _result?.data?.code;
+                      data.from_user = _result?.data?.from_user;
+                      navigation.replace('PaymentDetails', {
+                        data: data,
+                      });
+                      setLoading(false);
+                    } catch (e) {
+                      setPhoneError('Mật khẩu không chính xác');
+                      setVisibleWarning(true);
+                      console.log(e);
+                      setLoading(false);
                     }
                   }
                 }}
@@ -170,14 +196,37 @@ const Index = (props: Props) => {
                 //   onCodeChanged={() => setIsError(false)}
               />
             </View>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <UText style={{color: '#3495CB', fontSize: 14, marginTop: 5}}>
                 Quên mật khẩu
               </UText>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </VStack>
         </View>
       </View>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message={phoneError}
+        title={'Thông báo'}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={'Xác nhận'}
+        style={{flexDirection: 'column'}}
+      />
     </View>
   );
 };

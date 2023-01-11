@@ -1,5 +1,11 @@
 import React, {useCallback, useState} from 'react';
-import {Button, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {UText, Utitle} from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
 import Mail from '../../assets/svg/mail.svg';
@@ -44,6 +50,7 @@ const Index = function () {
   const [btnBlock, setBtnBlock] = useState(false);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [phoneError, setPhoneError] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   const {
     getValues,
@@ -65,6 +72,7 @@ const Index = function () {
       data;
 
     setBtnBlock(true);
+    setLoading(true);
 
     try {
       const result = await axiosClient.post(
@@ -91,6 +99,7 @@ const Index = function () {
       console.log(e);
       setBtnBlock(false);
     }
+    setLoading(false);
   }, []);
 
   const validationPswConfirm = useCallback(
@@ -205,7 +214,11 @@ const Index = function () {
             disabled={btnBlock}
             onPress={handleSubmit(submit)}
             style={[styles.buttonInput]}>
-            <UText style={styles.textButtonInput}>Gửi</UText>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <UText style={styles.textButtonInput}>Gửi</UText>
+            )}
           </TouchableOpacity>
         </View>
       </ScrollView>

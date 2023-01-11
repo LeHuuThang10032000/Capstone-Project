@@ -1,12 +1,19 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {HStack, VStack} from 'native-base';
-import React, {createRef, useEffect, useRef, useState} from 'react';
+import React, {
+  createRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   TouchableOpacity,
   View,
   TextInput,
   Keyboard,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
@@ -16,6 +23,10 @@ import {UText} from '../../components/UText';
 import {Image} from '@rneui/base';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {axiosClient} from '../../components/apis/axiosClient';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/icons';
+import Colors from '../../components/helpers/Colors';
+import axios from 'axios';
 const Payment = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {data} = useRoute<RouteProp<MainStackParamList, 'Payment'>>()?.params;
@@ -26,11 +37,15 @@ const Payment = () => {
   const [confirmPayment, setConfirmPayment] = useState(false);
   const [input, setInput] = useState(false);
   const [value, setValue] = useState('');
+  const [visibleWarning, setVisibleWarning] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
   const [result, setResult] = useState(false);
   const [profile, setProfile] = useState({});
   const [message, setMessage] = useState('');
   const [resultTransaction, setResultTransaction] = useState({});
+  const [isLoading, setLoading] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [userProfile, setUserProfile] = useState('');
 
   console.log('resultTransaction', resultTransaction?.data?.code);
 
@@ -47,6 +62,18 @@ const Payment = () => {
       keyboardDidHideListener.remove();
     };
   }, [input]);
+
+  const _fetchData = useCallback(async () => {
+    const _result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setUserProfile(_result?.data?.data?.phone);
+  }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    _fetchData();
+  }, [_fetchData]);
 
   const fetchData = async () => {
     try {
@@ -336,7 +363,6 @@ const Payment = () => {
                 display: 'none',
               }
         }>
-        {console.log(profile)}
         <View style={{backgroundColor: 'white'}}>
           <VStack alignItems={'center'}>
             <UText style={{marginBottom: 5, marginTop: 15}}>
@@ -360,23 +386,37 @@ const Payment = () => {
                 codeInputFieldStyle={styles.underlineStyleBase}
                 keyboardType="number-pad"
                 onCodeChanged={async value => {
-                  try {
-                    const formData = new FormData();
-                    formData.append('f_name', profile[0]?.f_name);
-                    formData.append('cash', 3000);
-                    formData.append('phone', profile[0]?.phone);
-                    formData.append('message', message);
-                    const _result = await axiosClient.post(
-                      '/create-transaction',
-                      formData,
-                      {
-                        headers: {'content-type': 'multipart/form-data'},
-                      },
-                    );
-                    setResultTransaction(_result);
-                    setResult(true);
-                  } catch (e) {
-                    console.log(e);
+                  if (value.length === 6) {
+                    setLoading(true);
+                    try {
+                      const formData = new FormData();
+                      formData.append('f_name', profile[0]?.f_name);
+                      formData.append('cash', 3000);
+                      formData.append('phone', profile[0]?.phone);
+                      formData.append('message', message);
+                      await axios.post(
+                        'https://zennoshop.cf/api/user/checkPassword',
+                        {phone: userProfile, password: value},
+                        {
+                          headers: {'content-type': 'multipart/form-data'},
+                        },
+                      );
+                      const _result = await axiosClient.post(
+                        '/create-transaction',
+                        formData,
+                        {
+                          headers: {'content-type': 'multipart/form-data'},
+                        },
+                      );
+                      setResultTransaction(_result);
+                      setResult(true);
+                      setLoading(false);
+                    } catch (e) {
+                      console.log(e);
+                      setLoading(false);
+                      setPhoneError('Mật khẩu không chính xác');
+                      setVisibleWarning(true);
+                    }
                   }
                 }}
                 secureTextEntry={true}
@@ -384,11 +424,6 @@ const Payment = () => {
                 //   onCodeChanged={() => setIsError(false)}
               />
             </View>
-            <TouchableOpacity>
-              <UText style={{color: '#3495CB', fontSize: 14, marginTop: 5}}>
-                Quên mật khẩu
-              </UText>
-            </TouchableOpacity>
           </VStack>
         </View>
 
@@ -423,12 +458,47 @@ const Payment = () => {
           }}
           style={[styles.buttonInput]}>
           {parkingPrice ? (
-            <UText style={styles.textButtonInput}>Xác nhận</UText>
+            <>
+              {isLoading ? (
+                <ActivityIndicator />
+              ) : (
+                <UText style={styles.textButtonInput}>Xác nhận</UText>
+              )}
+            </>
           ) : (
-            <UText style={styles.textButtonInput}>Chuyển tiền</UText>
+            <>
+              {isLoading ? (
+                <ActivityIndicator />
+              ) : (
+                <UText style={styles.textButtonInput}>Chuyển tiền</UText>
+              )}
+            </>
           )}
         </TouchableOpacity>
       </View>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message={phoneError}
+        title={'Thông báo lỗi'}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={'Xác nhận'}
+        style={{flexDirection: 'column'}}
+      />
     </SafeAreaView>
   );
 };

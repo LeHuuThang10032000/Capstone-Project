@@ -1,4 +1,9 @@
-import {StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
@@ -48,6 +53,7 @@ const Index = props => {
   const [profile, setProfile] = useState('');
   const [errorPhone, setErrorPhone] = useState('');
   const [userProfile, setUserProfile] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
     if (!phoneNumber) {
@@ -71,6 +77,7 @@ const Index = props => {
 
   const onSubmit = async (data: any) => {
     if (!(data.money > parseInt(props.route.params))) {
+      setLoading(true);
       try {
         const phone = data.phone;
         data.name = profile;
@@ -92,6 +99,7 @@ const Index = props => {
       setErroWarning('Số dư trong ví không đủ. Vui lòng nạp!');
       setErrorDisplay(true);
     }
+    setLoading(false);
   };
 
   const {
@@ -326,7 +334,11 @@ const Index = props => {
             <TouchableOpacity
               style={styles.button}
               onPress={handleSubmit(onSubmit)}>
-              <Text style={styles.text}>Chuyển tiền</Text>
+              {isLoading ? (
+                <ActivityIndicator />
+              ) : (
+                <Text style={styles.text}>Chuyển tiền</Text>
+              )}
             </TouchableOpacity>
           </VStack>
         </Center>

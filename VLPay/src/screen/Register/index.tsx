@@ -1,5 +1,11 @@
 import React, {useCallback, useState} from 'react';
-import {Button, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {UText, Utitle} from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
 import Mail from '../../assets/svg/mail.svg';
@@ -58,6 +64,7 @@ const Index = function () {
   });
   const [hide, setHide] = useState(true);
   const [hideConfirm, setHideConfirm] = useState(true);
+  const [isLoading, setLoading] = useState(false);
 
   const submit = useCallback(async (data: any) => {
     const {
@@ -68,6 +75,7 @@ const Index = function () {
     } = data;
 
     setBtnBlock(true);
+    setLoading(true);
 
     try {
       const result = await axiosClient.post(
@@ -109,6 +117,7 @@ const Index = function () {
     } catch (e) {
       console.log(e);
     }
+    setLoading(false);
   }, []);
 
   const validationPswConfirm = useCallback(
@@ -267,10 +276,14 @@ const Index = function () {
           paddingHorizontal: 15,
         }}>
         <TouchableOpacity
-          disabled={btnBlock}
+          disabled={isLoading}
           onPress={handleSubmit(submit)}
           style={[styles.buttonInput]}>
-          <UText style={styles.textButtonInput}>Đăng ký</UText>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <UText style={styles.textButtonInput}>Đăng ký</UText>
+          )}
         </TouchableOpacity>
       </View>
       <View

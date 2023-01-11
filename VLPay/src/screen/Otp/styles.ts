@@ -8,6 +8,19 @@ export default StyleSheet.create({
     paddingRight: 15,
     borderRadius: 5,
   },
+  buttonInput: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: '#B5EAD8',
+    borderRadius: 6,
+    paddingVertical: 15,
+    marginHorizontal: 10,
+  },
+  textButtonInput: {
+    color: '#514545',
+    fontWeight: '700',
+    fontSize: 18,
+  },
   titleBG: {
     fontSize: moderateScale(30),
     paddingTop: moderateScale(30 / 2),

@@ -1,22 +1,28 @@
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {HStack, VStack} from 'native-base';
-import React from 'react';
-import {ScrollView, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {BackHandler, ScrollView, View} from 'react-native';
 import HeaderBack from '../../components/HeaderBack';
+import {formatCurrency} from '../../components/helper';
 import Icons from '../../components/icons';
 import {UText} from '../../components/UText';
-import {MainStackParamList} from '../../stack/Navigation';
+import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import styles from '../Login/styles';
 
 const PaymentDetails = () => {
   const {data} =
     useRoute<RouteProp<MainStackParamList, 'PaymentDetails'>>()?.params;
-  const {from_user, to_user, phone, current_wallet, mess, code} = data[0];
-  console.log(data);
+  const navigation = useNavigation<MainStackNavigation>();
+  const {name, phone, current_wallet, mess, code, money} = data;
+  console.log(data, '---');
   console.log('====================================');
-  const {money} = data[1];
   console.log(data);
-
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.navigate('Home');
+      return true;
+    });
+  }, []);
   return (
     <>
       <HeaderBack title="Xác nhận giao dịch" isReset={true} />
@@ -36,7 +42,7 @@ const PaymentDetails = () => {
             <VStack my={3}>
               <UText>Chuyển tiền qua VLPAY</UText>
               <UText style={{fontsize: 18, fontWeight: '700'}}>
-                -{money ?? 0}đ
+                -{formatCurrency(money ?? 0)}đ
               </UText>
               <UText style={{fontSize: 15}}>
                 Mã giao dịch:
@@ -98,7 +104,12 @@ const PaymentDetails = () => {
               justifyContent={'center'}>
               <HStack width={'90%'} justifyContent={'space-between'}>
                 <UText>Số dư ví</UText>
-                <UText>{data?.amount ?? 0}</UText>
+                <UText>
+                  {formatCurrency(
+                    (data?.current_wallet - data?.money ?? 0).toString(),
+                  )}
+                  đ
+                </UText>
               </HStack>
             </HStack>
           </VStack>
@@ -122,13 +133,13 @@ const PaymentDetails = () => {
             borderRadius={8}>
             <HStack style={styles.blockContent}>
               <UText>Tên ví VLPAY</UText>
-              <UText style={styles.leftContent}>{to_user ?? ''}</UText>
+              <UText style={styles.leftContent}>{name ?? ''}</UText>
             </HStack>
             <View style={styles.separate} />
 
             <HStack style={styles.blockContent}>
               <UText>Tên danh bạ</UText>
-              <UText style={styles.leftContent}>{to_user ?? ''}</UText>
+              <UText style={styles.leftContent}>{name ?? ''}</UText>
             </HStack>
             <View style={styles.separate} />
 

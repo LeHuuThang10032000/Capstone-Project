@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -41,6 +48,7 @@ const Index = () => {
   const [image, setImage] = useState({});
   const [profile, setProfile] = useState({});
   const isFocused = useIsFocused();
+  const [isLoading, setLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
@@ -64,7 +72,11 @@ const Index = () => {
   } = useForm<Profile>();
   const onSubmit = async (data: any) => {
     const formData = new FormData();
-    formData.append('full_name', data.name);
+    setLoading(true);
+    formData.append(
+      'full_name',
+      data.name ? data.name : profile?.data?.data.f_name,
+    );
     if (image?.path) {
       let fileName = image?.path.split('/');
       fileName = fileName[fileName.length - 1];
@@ -88,6 +100,7 @@ const Index = () => {
     } catch (e) {
       console.log(e);
     }
+    setLoading(false);
   };
 
   const ChoosePhotoFromLibrary = async () => {
@@ -150,7 +163,7 @@ const Index = () => {
         <VStack space={3}>
           <Controller
             control={control}
-            rules={{required: 'không được để trống', validate: validateName}}
+            // rules={{required: 'Không được để trống', validate: validateName}}
             render={({field: {onChange, onBlur, value}}) => (
               <FormControl isInvalid={errors.name !== undefined}>
                 <FormControl.Label
@@ -165,6 +178,7 @@ const Index = () => {
                   onBlur={onBlur}
                   value={value}
                   style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
+                  maxLength={50}
                 />
                 <FormControl.ErrorMessage>
                   {errors.name?.message}
@@ -194,8 +208,13 @@ const Index = () => {
 
           <TouchableOpacity
             style={styles.button}
+            disabled={isLoading}
             onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.text}>Save edit</Text>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={styles.text}>Save edit</Text>
+            )}
           </TouchableOpacity>
         </VStack>
       </Center>

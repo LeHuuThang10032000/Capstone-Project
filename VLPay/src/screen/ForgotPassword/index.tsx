@@ -1,4 +1,10 @@
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
@@ -40,9 +46,11 @@ const Index = (props: Props) => {
       password: '',
     },
   });
+  const [isLoading, setLoading] = useState(false);
 
   const submit = async (value: any) => {
     setBtnBlock(true);
+    setLoading(true);
     const {phoneNumber: phone} = value;
     try {
       const result = await axiosClient.post(
@@ -84,6 +92,7 @@ const Index = (props: Props) => {
     } catch (e) {
       console.log(e);
     }
+    setLoading(false);
   };
 
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
@@ -130,7 +139,11 @@ const Index = (props: Props) => {
           style={styles.buttonInput}
           disabled={btnBlock}
           onPress={handleSubmit(submit)}>
-          <UText style={styles.textButtonInput}>Xác nhận</UText>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <UText style={styles.textButtonInput}>Xác nhận</UText>
+          )}
         </TouchableOpacity>
       </View>
       <YesNoModal
