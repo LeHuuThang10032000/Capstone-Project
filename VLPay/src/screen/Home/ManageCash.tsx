@@ -2,6 +2,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {HStack, VStack} from 'native-base';
 import {axiosClient} from '../../components/apis/axiosClient';
+import {formatCurrency} from '../../components/helper';
 
 const ManageCash = props => {
   console.log(props);
@@ -16,7 +17,9 @@ const ManageCash = props => {
           <Text style={styles.text}>Số dư trong ví của bạn</Text>
         </View>
         <View>
-          <Text style={styles.price}>{props.wallet ?? 0} VND</Text>
+          <Text style={styles.price}>
+            {formatCurrency((props.wallet ?? 0).toString())} VND
+          </Text>
         </View>
       </HStack>
 

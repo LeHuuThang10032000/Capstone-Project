@@ -9,19 +9,22 @@ import {Init} from '../../redux/actions/authAction';
 import Login from '../Login';
 import {useDispatch, useSelector} from 'react-redux';
 import {axiosClient} from '../../components/apis/axiosClient';
+import {formatCurrency} from '../../components/helper';
 
 const Index = () => {
   const token = useSelector((state: any) => state.authReducer.authToken);
   const [userWallet, setUserWallet] = useState(0);
   const fetchData = async () => {
-    setInterval(async () => {
-      const result = await axiosClient.get('user-wallet');
-      setUserWallet(result?.data?.user_wallet?.balance);
-    }, 2000);
+    if (token) {
+      setInterval(async () => {
+        const result = await axiosClient.get('/user-wallet');
+        setUserWallet(result?.data?.data?.balance);
+      }, 2000);
+    }
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [token]);
   const dispatch = useDispatch();
   const init = async () => {
     dispatch(await Init());

@@ -141,7 +141,6 @@ const Index = (props: Props) => {
                 keyboardType="number-pad"
                 ref={otpRef}
                 onCodeChanged={async value => {
-                  console.log(value);
                   if (value.length === 6) {
                     try {
                       const formData = new FormData();
@@ -150,20 +149,19 @@ const Index = (props: Props) => {
                       formData.append('phone', data.phone);
                       formData.append('message', data.message);
 
-                      const _result = await axiosClient.post(
-                        '/create-transaction',
-                        formData,
-                        {
-                          headers: {'content-type': 'multipart/form-data'},
-                        },
+                      const result = await axiosClient.post(
+                        'https://zennoshop.cf/api/user/checkPassword',
+                        {phone: data.current_user, password: value},
                       );
-
-                      const _data = [{..._result?.data}, {money: data.money}];
-                      navigation.navigate('PaymentDetails', {
-                        data: _data,
-                      });
+                      console.log(result);
+                      // const _data = [{..._result?.data}, {money: data.money}];
+                      // navigation.navigate('PaymentDetails', {
+                      //   data: _data,
+                      // });
                     } catch (e) {
-                      console.log(e);
+                      console.log('Bi5 loi rui');
+
+                      // console.log(e);
                     }
                   }
                 }}

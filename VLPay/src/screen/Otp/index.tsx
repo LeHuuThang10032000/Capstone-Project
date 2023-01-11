@@ -79,61 +79,59 @@ const Otp = (props: any) => {
   }, []);
 
   const verifyFireBase = async () => {
-    let idTokenResult: string = '';
-    setBtnBlock(true);
-    if (userFireBase) {
-      idTokenResult = await (await userFireBase.getIdTokenResult()).token;
-    } else {
-      let usercredential: FirebaseAuthTypes.UserCredential;
-      try {
-        usercredential = await confirmationFirebase.confirm(value);
-        const result = await usercredential.user.getIdTokenResult();
-        idTokenResult = result?.token || '';
-      } catch (err) {
-        console.log(err);
-        setVisibleWarning(true);
-        setIsError(true);
-        return;
-      }
+    if (value.length == 6) {
+      setTimeout(async () => {
+        let idTokenResult: string = '';
+        if (userFireBase) {
+          idTokenResult = await (await userFireBase.getIdTokenResult()).token;
+        } else {
+          let usercredential: FirebaseAuthTypes.UserCredential;
+          try {
+            usercredential = await confirmationFirebase.confirm(value);
+            const result = await usercredential.user.getIdTokenResult();
+            idTokenResult = result?.token || '';
+          } catch (err) {
+            console.log(err);
+            setVisibleWarning(true);
+            setIsError(true);
+            return;
+          }
+        }
+        try {
+          if (forgot_password) {
+            setSuccessMessage('Xác nhận otp thành công');
+            setVisibleSuccess(true);
+            navigation.navigate('ChangePassword', {
+              phone: phone,
+            });
+          } else {
+            const result = await axiosClient.post(
+              'https://zennoshop.cf/api/user/register',
+              {
+                full_name,
+                phone,
+                password,
+                password_confirmation,
+              },
+            );
+            setSuccessMessage('Đăng ký thành công');
+            setVisibleSuccess(true);
+            setTimeout(async () => {
+              setVisibleSuccess(false);
+              dispatch(await Login(phone, password ?? ''));
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Home'}],
+              });
+              navigation.navigate('Home');
+            }, 1000);
+          }
+        } catch (e) {
+          setVisibleWarning(true);
+        }
+      }, 2000);
     }
-    try {
-      if (forgot_password) {
-        setSuccessMessage('Xác nhận otp thành công');
-        setVisibleSuccess(true);
-        navigation.navigate('ChangePassword', {
-          phone: phone,
-        });
-        setBtnBlock(false);
-      } else {
-        const result = await axiosClient.post(
-          'https://zennoshop.cf/api/user/register',
-          {
-            full_name,
-            phone,
-            password,
-            password_confirmation,
-          },
-        );
-        setSuccessMessage('Đăng ký thành công');
-        setVisibleSuccess(true);
-        setTimeout(async () => {
-          setVisibleSuccess(false);
-          dispatch(await Login(phone, password ?? ''));
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Home'}],
-          });
-          navigation.navigate('Home');
-          setBtnBlock(false);
-        }, 1000);
-      }
-    } catch (e) {
-      console.log('====================================');
-      console.log(e);
-      setVisibleWarning(true);
-      setBtnBlock(false);
-      console.log('====================================');
-    }
+    setBtnBlock(false);
   };
 
   const Header = () => {
@@ -162,7 +160,13 @@ const Otp = (props: any) => {
               keyboardType="number-pad"
               secureTextEntry={false}
               onCodeFilled={setValue}
-              onCodeChanged={() => setIsError(false)}
+              onCodeChanged={value => {
+                if (value.length == 6) {
+                  setBtnBlock(false);
+                } else {
+                  setBtnBlock(true);
+                }
+              }}
             />
           </View>
           {isError && (
@@ -177,8 +181,8 @@ const Otp = (props: any) => {
           )}
           <NormalButton
             title={'Xác nhận'}
+            disabled={btnBlock}
             onPress={verifyFireBase}
-            disabled={(value?.length || 0) < 6 && btnBlock}
             containerStyle={styles.btnMain}
           />
           <View style={styles.containerOPT}>

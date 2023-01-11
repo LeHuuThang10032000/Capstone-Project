@@ -32,6 +32,7 @@ import YesNoModal from '../../components/YesNoModal';
 import Icons from '../../components/icons';
 import Colors from '../../components/helpers/Colors';
 import {axiosClient} from '../../components/apis/axiosClient';
+import {UText} from '../../components/UText';
 interface Transfer {
   name: string;
   phone: string;
@@ -40,12 +41,14 @@ interface Transfer {
 }
 
 const Index = props => {
-  const {userWallet} =
-    useRoute<RouteProp<MainStackParamList, 'Transfer'>>()?.params;
   const navigation = useNavigation<MainStackNavigation>();
   const balances = useMemo(() => ['50000', '100000', '200000'], []);
   const [errorDisplay, setErrorDisplay] = useState(false);
   const [errorWarning, setErroWarning] = useState('');
+  const [profile, setProfile] = useState('');
+  const [errorPhone, setErrorPhone] = useState('');
+  const [userProfile, setUserProfile] = useState('');
+
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
     if (!phoneNumber) {
       return 'Số điện thoại không được bỏ trống';
@@ -54,19 +57,32 @@ const Index = props => {
     }
   }, []);
 
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setUserProfile(result?.data?.data?.phone);
+  }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    fetchData();
+  }, [fetchData]);
+
   const onSubmit = async (data: any) => {
-    if (!(data.money > userWallet)) {
+    if (!(data.money > parseInt(props.route.params))) {
       try {
         const phone = data.phone;
-        console.log(123);
-
+        data.name = profile;
+        data.current_user = userProfile;
+        data.current_wallet = props.route.params;
         const result = await axiosClient.post('/check-phone', {
           phone,
         });
         if (result?.data?.status_code == 422) {
           navigation.navigate('ConfirmPM', {data});
         } else {
-          setErroWarning('Số  điện thoại không tồn tại');
+          setErroWarning('Số điện thoại không tồn tại');
           setErrorDisplay(true);
         }
       } catch (e: any) {
@@ -136,44 +152,73 @@ const Index = props => {
                 required: 'Số điện thoại không được để trống',
                 validate: validatePhoneNumber,
               }}
-              render={({field: {onChange, onBlur, value}}) => (
-                <FormControl isInvalid={errors.phone !== undefined}>
-                  <FormControl.Label
-                    _text={{
-                      color: '#312E49',
-                      fontWeight: 'bold',
-                      fontSize: 16,
-                    }}>
-                    Số điện thoại
-                  </FormControl.Label>
-                  <Input
-                    w="90%"
-                    placeholder="Nhập số điện thoại gồm 10 số"
-                    onChangeText={onChange}
-                    keyboardType="phone-pad"
-                    onBlur={onBlur}
-                    value={value}
-                    backgroundColor="white"
-                    style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
-                    rightElement={
-                      <TouchableOpacity style={{paddingRight: 10}}>
-                        <ContactIcon />
-                      </TouchableOpacity>
+              render={({field: {onChange, onBlur, value}}) => {
+                const fetchData = async () => {
+                  try {
+                    const result = await axiosClient.post(
+                      'https://zennoshop.cf/api/user/check-phone',
+                      {
+                        phone: value,
+                      },
+                    );
+
+                    if (result.data.status_code == 200) {
+                      setErrorPhone('Số điện thoại chưa được đăng ký');
+                      return;
                     }
-                  />
-                  <FormControl.ErrorMessage>
-                    {errors.phone?.message}
-                  </FormControl.ErrorMessage>
-                </FormControl>
-              )}
+                    setErrorPhone('');
+                    setProfile(result?.data?.user?.f_name);
+                  } catch (e) {
+                    console.log(e);
+                  }
+                };
+
+                if (/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(value)) {
+                  fetchData();
+                  console.log(123);
+                }
+                return (
+                  <FormControl isInvalid={errors.phone !== undefined}>
+                    <FormControl.Label
+                      _text={{
+                        color: '#312E49',
+                        fontWeight: 'bold',
+                        fontSize: 16,
+                      }}>
+                      Số điện thoại
+                    </FormControl.Label>
+                    <Input
+                      w="90%"
+                      placeholder="Nhập số điện thoại gồm 10 số"
+                      onChangeText={onChange}
+                      keyboardType="phone-pad"
+                      onBlur={onBlur}
+                      value={value}
+                      backgroundColor="white"
+                      style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
+                      rightElement={
+                        <TouchableOpacity style={{paddingRight: 10}}>
+                          <ContactIcon />
+                        </TouchableOpacity>
+                      }
+                    />
+                    {errorPhone && (
+                      <UText style={{color: 'red'}}>{errorPhone}</UText>
+                    )}
+                    <FormControl.ErrorMessage>
+                      {errors.phone?.message}
+                    </FormControl.ErrorMessage>
+                  </FormControl>
+                );
+              }}
               name="phone"
             />
 
             <Controller
               control={control}
-              rules={{required: 'Họ và tên không được để trống'}}
               render={({field: {onChange, onBlur, value}}) => (
                 <FormControl isInvalid={errors.name !== undefined}>
+                  {console.log(value)}
                   <FormControl.Label
                     _text={{
                       color: '#312E49',
@@ -185,10 +230,9 @@ const Index = props => {
                   <Input
                     w="90%"
                     placeholder="Nhập Họ và tên"
-                    onChangeText={onChange}
                     backgroundColor="white"
-                    onBlur={onBlur}
-                    value={value}
+                    value={profile}
+                    isDisabled={true}
                     style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                   />
                   <FormControl.ErrorMessage>
@@ -216,13 +260,16 @@ const Index = props => {
                     w="90%"
                     placeholder="Nhập số tiền muốn chuyển"
                     onChangeText={onChange}
-                    onChange={() => console.log(value)}
                     keyboardType="number-pad"
                     backgroundColor="white"
+                    maxLength={7}
                     onBlur={onBlur}
                     value={value}
                     style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                   />
+                  {parseInt(props.route.params) - parseInt(value) < 0 && (
+                    <UText style={{color: 'red'}}>Số dư ví không đủ</UText>
+                  )}
 
                   <FormControl.ErrorMessage>
                     {errors.money?.message}

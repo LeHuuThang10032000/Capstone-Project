@@ -11,7 +11,9 @@ import styles from '../Login/styles';
 const PaymentDetails = () => {
   const {data} =
     useRoute<RouteProp<MainStackParamList, 'PaymentDetails'>>()?.params;
-  const {from_user, to_user, phone, wallet, message, code} = data[0];
+  const {from_user, to_user, phone, current_wallet, mess, code} = data[0];
+  console.log(data);
+  console.log('====================================');
   const {money} = data[1];
   console.log(data);
 
@@ -147,9 +149,7 @@ const PaymentDetails = () => {
             height={150}
             borderRadius={8}>
             <Icons.NoteIcon />
-            <UText>
-              {message !== 'undefined' ? message : 'Không có ghi chú'}
-            </UText>
+            <UText>{mess !== 'undefined' ? mess : 'Không có ghi chú'}</UText>
           </HStack>
         </VStack>
       </ScrollView>

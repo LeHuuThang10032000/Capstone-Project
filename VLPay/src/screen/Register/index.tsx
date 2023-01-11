@@ -93,7 +93,7 @@ const Index = function () {
             `+84${removeZeroPhone}`,
           );
           setBtnBlock(false);
-          navigation.navigate('Otp', {
+          navigation.replace('Otp', {
             phone: phone,
             full_name: full_name,
             password: password,

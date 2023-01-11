@@ -114,7 +114,7 @@ const Payment = () => {
                 />
               </View>
               <UText>Giao dịch thành công</UText>
-              <UText style={{fontWeight: '700'}}>+3000đ</UText>
+              <UText style={{fontWeight: '700'}}>-3000đ</UText>
               <View
                 style={{
                   width: '100%',
