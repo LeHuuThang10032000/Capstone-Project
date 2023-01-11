@@ -24,6 +24,7 @@ Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/check-phone',[AuthController::class, 'checkPhoneExist']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/checkPassword', [AuthController::class, 'checkPassword']);
 
 Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -37,7 +38,6 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     //Transaction
     Route::post('/create-transaction', [TransactionController::class, "transfer"]);
-    Route::post('/check-password-authentication', [TransactionController::class, "checkPwd"]);
 
     //Scan qr code
     Route::post('/getInfoUser', [ScanQrCodeController::class, "getInfoUser"]);

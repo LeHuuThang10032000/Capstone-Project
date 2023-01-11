@@ -120,4 +120,16 @@ class AuthController extends Controller
 
         return ApiResponse::successResponse($token);
     }
+
+    public function checkPassword(Request $request){
+
+        $credentials = ['phone' => $request->phone, 'password' => $request->password];
+        if (!Auth::attempt($credentials)) {
+            return ApiResponse::failureResponse('Số điện thoại hoặc mật khẩu không đúng');
+        }
+
+        return response([
+            "status"=>"success"
+        ],200);
+    }
 }
