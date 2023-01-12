@@ -60,6 +60,8 @@ const Index = props => {
       return 'Số điện thoại không được bỏ trống';
     } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
       return 'Số điện thoại chưa chính xác';
+    } else if (userProfile == phoneNumber) {
+      return 'Số điện thoại này bạn đang sử dụng';
     }
   }, []);
 
@@ -173,6 +175,9 @@ const Index = props => {
                     if (result.data.status_code == 200) {
                       setErrorPhone('Số điện thoại chưa được đăng ký');
                       return;
+                    } else if (result?.data?.user?.phone == profile) {
+                      setErrorPhone('Số điện thoại này bạn đang sử dụng');
+                      return;
                     }
                     setErrorPhone('');
                     setProfile(result?.data?.user?.f_name);
@@ -213,7 +218,8 @@ const Index = props => {
                     {errorPhone && (
                       <UText style={{color: 'red'}}>{errorPhone}</UText>
                     )}
-                    <FormControl.ErrorMessage>
+                    <FormControl.ErrorMessage
+                      style={{position: 'absolute', bottom: 0}}>
                       {errors.phone?.message}
                     </FormControl.ErrorMessage>
                   </FormControl>
@@ -275,10 +281,16 @@ const Index = props => {
                     value={value}
                     style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                   />
-                  {parseInt(props.route.params) - parseInt(value) < 0 && (
-                    <UText style={{color: 'red'}}>Số dư ví không đủ</UText>
-                  )}
 
+                  {parseInt(props.route.params) - parseInt(value) < 0 && (
+                    <UText
+                      style={{
+                        color: 'red',
+                        fontSize: 12,
+                      }}>
+                      Số dư ví không đủ
+                    </UText>
+                  )}
                   <FormControl.ErrorMessage>
                     {errors.money?.message}
                   </FormControl.ErrorMessage>

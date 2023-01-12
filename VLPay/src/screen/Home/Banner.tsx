@@ -5,10 +5,13 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {Image} from 'native-base';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/icons';
+import Colors from '../../components/helpers/Colors';
 
 type Props = {
   wallet: any;
@@ -16,6 +19,7 @@ type Props = {
 
 const Banner = (props: Props) => {
   const navigation = useNavigation<MainStackNavigation>();
+  const [visibleWarning, setVisibleWarning] = useState(false);
   return (
     <View>
       <ImageBackground
@@ -45,7 +49,13 @@ const Banner = (props: Props) => {
 
           <View style={styles.wrapperButton}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('ScanQR', props.wallet)}>
+              onPress={() => {
+                if (props.wallet > 3000) {
+                  navigation.navigate('ScanQR', props.wallet);
+                } else {
+                  setVisibleWarning(true);
+                }
+              }}>
               <View style={styles.buttonTranfer}>
                 <Image
                   source={require('../../assets/img/scan.png')}
@@ -74,6 +84,29 @@ const Banner = (props: Props) => {
             </TouchableOpacity>
             <Text style={styles.text}>SCAN QR</Text>
           </View> */}
+          <YesNoModal
+            icon={<Icons.WarningIcon />}
+            visible={visibleWarning}
+            btnLeftStyle={{
+              backgroundColor: Colors.primary,
+              width: 200,
+            }}
+            btnRightStyle={{
+              backgroundColor: '#909192',
+              width: 200,
+              display: 'none',
+            }}
+            message={'Số dư trong ví không đủ để thực hiện'}
+            title={'Thông báo lỗi'}
+            onActionLeft={() => {
+              setVisibleWarning(false);
+            }}
+            onActionRight={() => {
+              setVisibleWarning(false);
+            }}
+            btnTextLeft={'Xác nhận'}
+            style={{flexDirection: 'column'}}
+          />
         </View>
       </ImageBackground>
     </View>

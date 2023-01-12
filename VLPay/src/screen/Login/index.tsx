@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
 import {UText, Utitle} from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
 import PhoneIcon from '../../assets/svg/phone_icon.svg';
@@ -35,10 +35,12 @@ const Index = function () {
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [phoneError, setPhoneError] = useState('');
   const [disabled, setDisabled] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const submit = async (value: any) => {
     const {phoneNumber, password} = value;
     setDisabled(true);
+    setLoading(true);
     try {
       const result = await axiosClient.post(
         'https://zennoshop.cf/api/user/check-phone',
@@ -60,6 +62,7 @@ const Index = function () {
     if (!result.payload) {
       setVisibleWarning(true);
     }
+    setLoading(false);
   };
 
   const {
@@ -158,6 +161,7 @@ const Index = function () {
           }}>
           <TouchableOpacity
             onPress={handleSubmit(submit)}
+            disabled={isLoading}
             style={[styles.buttonInput]}>
             <UText style={styles.textButtonInput}>Đăng nhập</UText>
           </TouchableOpacity>
@@ -177,12 +181,16 @@ const Index = function () {
             onPress={() => {
               navigation.navigate('Register');
             }}>
-            <UText
-              style={{
-                color: '#2805FF',
-              }}>
-              Đăng ký
-            </UText>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <UText
+                style={{
+                  color: '#2805FF',
+                }}>
+                Đăng ký
+              </UText>
+            )}
           </TouchableOpacity>
         </HStack>
       </VStack>
