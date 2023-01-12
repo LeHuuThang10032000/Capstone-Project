@@ -171,11 +171,16 @@ const Index = props => {
                         phone: value,
                       },
                     );
-
+                    console.log(
+                      'result?.data?.user?.phone == profile',
+                      result?.data?.user?.phone === profile,
+                    );
                     if (result.data.status_code == 200) {
                       setErrorPhone('Số điện thoại chưa được đăng ký');
                       return;
-                    } else if (result?.data?.user?.phone == profile) {
+                    } else if (result?.data?.user?.phone == userProfile) {
+                      console.log(123456);
+
                       setErrorPhone('Số điện thoại này bạn đang sử dụng');
                       return;
                     }
@@ -216,7 +221,9 @@ const Index = props => {
                       }
                     />
                     {errorPhone && (
-                      <UText style={{color: 'red'}}>{errorPhone}</UText>
+                      <UText style={{color: 'red', fontSize: 12}}>
+                        {errorPhone}
+                      </UText>
                     )}
                     <FormControl.ErrorMessage
                       style={{position: 'absolute', bottom: 0}}>
