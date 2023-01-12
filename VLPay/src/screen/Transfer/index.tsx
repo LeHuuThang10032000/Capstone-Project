@@ -79,23 +79,28 @@ const Index = props => {
 
   const onSubmit = async (data: any) => {
     if (!(data.money > parseInt(props.route.params))) {
-      setLoading(true);
-      try {
-        const phone = data.phone;
-        data.name = profile;
-        data.current_user = userProfile;
-        data.current_wallet = props.route.params;
-        const result = await axiosClient.post('/check-phone', {
-          phone,
-        });
-        if (result?.data?.status_code == 422) {
-          navigation.navigate('ConfirmPM', {data});
-        } else {
-          setErroWarning('Số điện thoại không tồn tại');
-          setErrorDisplay(true);
+      if (data.money >= 3000) {
+        setLoading(true);
+        try {
+          const phone = data.phone;
+          data.name = profile;
+          data.current_user = userProfile;
+          data.current_wallet = props.route.params;
+          const result = await axiosClient.post('/check-phone', {
+            phone,
+          });
+          if (result?.data?.status_code == 422) {
+            navigation.navigate('ConfirmPM', {data});
+          } else {
+            setErroWarning('Số điện thoại không tồn tại');
+            setErrorDisplay(true);
+          }
+        } catch (e: any) {
+          setErroWarning(e?.data?.message);
         }
-      } catch (e: any) {
-        setErroWarning(e?.data?.message);
+      } else {
+        setErroWarning('Số tiền cần chuyển không hợp lệ!');
+        setErrorDisplay(true);
       }
     } else {
       setErroWarning('Số dư trong ví không đủ. Vui lòng nạp!');
@@ -296,6 +301,15 @@ const Index = props => {
                         fontSize: 12,
                       }}>
                       Số dư ví không đủ
+                    </UText>
+                  )}
+                  {parseInt(value) < 3000 && (
+                    <UText
+                      style={{
+                        color: 'red',
+                        fontSize: 12,
+                      }}>
+                      Số tiền cần chuyển tối thiểu 3.000đ
                     </UText>
                   )}
                   <FormControl.ErrorMessage>
