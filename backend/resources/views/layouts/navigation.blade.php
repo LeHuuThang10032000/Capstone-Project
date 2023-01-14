@@ -1,5 +1,7 @@
-<nav x-data="{ open: false }" class="bg-nav position-fixed navbar p-1 w-full">
-    <div></div>
+<nav x-data="{ open: false }" class="bg-nav position-fixed navbar p-0 w-full">
+    <div style="width: 208px; background-color: white">
+        <img src="{{ asset('img/navi-logo.png') }}" alt="" style="width: 60px; height: 50px; display: block; margin-left: auto; margin-right: auto">
+    </div>
     <!-- Primary Navigation Menu -->
     <div class="px-4">
         <div class="flex justify-end h-12">

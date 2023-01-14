@@ -45,6 +45,8 @@ Route::group(['middleware' => ['auth:api']], function(){
     //wallet
     Route::get("/user-wallet",[WalletController::class, "showUserWallet"]);
 
+    Route::post('/create-credit-request', [UserController::class, "createCreditRequest"]);
+
     Route::get('/test', function() {
         return 'test';
     });
