@@ -37,7 +37,15 @@ Route::group(['middleware' => ['auth', 'role:organiser']], function() {
         Route::post('deny', [OrganiserController::class, 'denyStore'])->name('organiser.store-request.deny');
     });
 
-    Route::group(['prefix' => 'wallet'], function() {
-        Route::get('', [WalletController::class, 'index'])->name('organiser.user-wallet');
+    Route::group(['prefix' => 'wallet', 'as' => 'organiser.wallet.'], function() {
+        Route::get('', [WalletController::class, 'index'])->name('index');
+        Route::put('/activate/{id}', [WalletController::class, 'updateStatus'])->name('activate');
+        Route::put('/deposit/{id}', [WalletController::class, 'deposit'])->name('deposit');
+    });
+
+    Route::group(['prefix' => 'credit-request', 'as' => 'organiser.credit-request.'], function() {
+        Route::get('', [OrganiserController::class, 'getCreditRequests'])->name('index');
+        Route::post('approve', [OrganiserController::class, 'approveCredit'])->name('approve');
+        Route::post('deny', [OrganiserController::class, 'denyCredit'])->name('deny');
     });
 });

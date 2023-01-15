@@ -11,12 +11,14 @@ class Transaction extends Model
 
     protected $table = 'transactions';
 
-    protected $fillable = 
-    ["from_id" ,
-    "to_id",
-    "amount",
-    "message",
-    "code"];
+    protected $fillable = [
+        "from_id" ,
+        "to_id",
+        "amount",
+        "message",
+        "code",
+        "title",
+    ];
 
     protected $hidden = [
         'created_at',

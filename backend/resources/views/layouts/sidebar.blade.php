@@ -1,4 +1,4 @@
-<div class="fixed" style="top: 0; bottom: 0; left: 0; padding-top: 56px; width: 13rem; overflow: hidden;">
+<div class="fixed" style="top: 0; bottom: 0; left: 0; padding-top: 50px; width: 13rem; overflow: hidden;">
 
     <div class="overflow-y-auto bg-nav min-h-screen">
         <ul class="p-0">
@@ -22,13 +22,13 @@
                 <div class="collapse" id="collapseExample">
                     <ul class="p-0">
                         <li><a class="flex items-center py-3 hover:bg-theme {{ Request::is('store-request') ? 'active' : '' }}" href="{{ route('organiser.store-request') }}" style="padding-left: 2rem;">Mở cửa hàng</a></li>
-                        <li><a class="flex items-center py-3 hover:bg-theme {{ Request::is('request') ? 'active' : '' }}" href="" style="padding-left: 2rem;">Mở tín dụng</a></li>
+                        <li><a class="flex items-center py-3 hover:bg-theme {{ Request::is('credit-request') ? 'active' : '' }}" href="{{ route('organiser.credit-request.index') }}" style="padding-left: 2rem;">Mở tín dụng</a></li>
                         <li><a class="flex items-center py-3 hover:bg-theme {{ Request::is('request') ? 'active' : '' }}" href="" style="padding-left: 2rem;">Rút tiền</a></li>
                     </ul>
                 </div>
             </li>
             <li>
-                <a href="{{ route('organiser.user-wallet') }}" class="flex items-center p-3 hover:bg-theme {{ Request::is('wallet') ? 'active' : '' }}">
+                <a href="{{ route('organiser.wallet.index') }}" class="flex items-center p-3 hover:bg-theme {{ Request::is('wallet') ? 'active' : '' }}">
                     <img src="{{ asset('img/wallet.png') }}" alt="#">
                     <span class="flex-1 ml-3 whitespace-nowrap">Ví</span>
                 </a>

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Models\CreditRequest;
 use App\Models\Store;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -68,7 +70,6 @@ class UserController extends Controller
     public function createStoreRequest(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'user_id' => 'required|integer',
             'name' => 'required',
             'phone' => 'required|phone',
             'email' => 'email',
@@ -85,14 +86,14 @@ class UserController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return response()->json($validate->messages()->first());
+            return ApiResponse::failureResponse($validate->messages()->first());
         }
 
         try{
             DB::beginTransaction();
             
             $store = Store::create([
-                'user_id' => $request->id,
+                'user_id' => Auth::user()->id,
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'email' => $request->email,
@@ -120,6 +121,48 @@ class UserController extends Controller
             return response([
                 'user' => $user
             ],200);
+        }
+    }
+
+    public function createCreditRequest(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'name' => 'required',
+            'phone' => 'required|phone',
+            'email' => 'email',
+            'reason' => 'required',
+            'mssv' => 'required',
+        ], [
+            'name.required' => 'Vui lòng nhập tên sinh viên',
+            'phone.required' => 'Vui lòng nhập số điện thoại',
+            'phone.phone' => 'Số điện thoại không đúng định dạng',
+            'email.email' => 'Vui lòng nhập đúng định dạng email',
+            'reason.required' => 'Vui lòng nhập lý do',
+            'mssv.required' => 'Vui lòng nhập mã số sinh viên',
+        ]);
+
+        if ($validate->fails()) {
+            return ApiResponse::failureResponse($validate->messages()->first());
+        }
+
+        try{
+            DB::beginTransaction();
+            
+            $req = CreditRequest::create([
+                'user_id' => Auth::user()->id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'reason' => $request->reason,
+                'mssv' => $request->mssv,
+                'status' => 'pending',
+            ]);
+
+            DB::commit();
+            return ApiResponse::successResponse(null);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
         }
     }
 }
