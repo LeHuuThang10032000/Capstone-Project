@@ -22,9 +22,9 @@
                 <button type="submit" class="btn btn-theme w-full px-4">Chấp thuận</button>
             </form>
 
-            <button type="button" class="btn btn-theme-warning w-full px-4 mb-auto" data-bs-toggle="modal" data-bs-target="#exampleModal">Từ chối</button>
+            <button type="button" class="btn btn-theme-warning w-full px-4 mb-auto" data-bs-toggle="modal" data-bs-target="#denyModal{{$store->id}}">Từ chối</button>
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="denyModal{{$store->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
                 <form action="{{route('organiser.store-request.deny')}}" method="POST">
                     @csrf

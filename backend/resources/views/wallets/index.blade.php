@@ -37,9 +37,9 @@
                         </form>
                     </td>
                     <td>
-                        <button type="button" class="px-2 rounded btn-theme" data-bs-toggle="modal" data-bs-target="#exampleModal">Nạp tiền</button>
+                        <button type="button" class="px-2 rounded btn-theme" data-bs-toggle="modal" data-bs-target="#modal{{$wallet->id}}">Nạp tiền</button>
 
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="modal{{$wallet->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
                             <form action="{{route('organiser.wallet.deposit', $wallet->id)}}" method="POST">
                                 @csrf

@@ -17,9 +17,9 @@
         </div>
         <div class="d-flex flex-column py-3 px-4">
 
-            <button type="button" class="btn btn-theme w-full px-4 my-auto" data-bs-toggle="modal" data-bs-target="#approveModal">Chấp thuận</button>
+            <button type="button" class="btn btn-theme w-full px-4 my-auto" data-bs-toggle="modal" data-bs-target="#approveModal{{$request->id}}">Chấp thuận</button>
 
-            <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+            <div class="modal fade" id="approveModal{{$request->id}}" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
 
                 <form action="{{route('organiser.credit-request.approve')}}" method="POST">
                     @csrf
@@ -39,9 +39,9 @@
                 </form>
             </div>
 
-            <button type="button" class="btn btn-theme-warning w-full px-4 mb-auto" data-bs-toggle="modal" data-bs-target="#denyModal">Từ chối</button>
+            <button type="button" class="btn btn-theme-warning w-full px-4 mb-auto" data-bs-toggle="modal" data-bs-target="#denyModal{{$request->id}}">Từ chối</button>
 
-            <div class="modal fade" id="denyModal" tabindex="-1" aria-labelledby="denyModalLabel" aria-hidden="true">
+            <div class="modal fade" id="denyModal{{$request->id}}" tabindex="-1" aria-labelledby="denyModalLabel" aria-hidden="true">
 
                 <form action="{{route('organiser.credit-request.deny')}}" method="POST">
                     @csrf
