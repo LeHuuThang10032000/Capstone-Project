@@ -80,6 +80,7 @@ class OrganiserController extends Controller
 
         $data = CreditRequest::all()->groupBy('status');
 
+
         $requests = [
             'pending' => $data['pending'] ?? [],
             'approved' => $data['approved'] ?? [],
