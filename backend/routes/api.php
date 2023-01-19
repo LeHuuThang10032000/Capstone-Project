@@ -5,6 +5,7 @@ use App\Http\Controllers\api\ScanQrCodeController;
 use App\Http\Controllers\api\TransactionController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\WalletController;
+use App\Http\Controllers\api\CreditController;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,8 +48,7 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     Route::post('/create-credit-request', [UserController::class, "createCreditRequest"]);
 
-    Route::get('/test', function() {
-        return 'test';
-    });
+    //credit
+    Route::post('create-credit-request', [CreditController::class, 'create']);
 });
 
