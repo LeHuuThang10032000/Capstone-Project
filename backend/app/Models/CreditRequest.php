@@ -17,6 +17,7 @@ class CreditRequest extends Model
         'status',
         'mssv',
         'reason',
+        'transaction_id'
     ];
 
     public function user()
