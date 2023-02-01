@@ -31,7 +31,6 @@ import {default_image} from '../../components/apis/api';
 
 interface Profile {
   name: string;
-  phone: string;
 }
 
 const options: any = {
@@ -44,11 +43,12 @@ const options: any = {
   },
 };
 
-const Index = () => {
+const Index = ({route}: any) => {
   const [image, setImage] = useState({});
   const [profile, setProfile] = useState({});
   const isFocused = useIsFocused();
   const [isLoading, setLoading] = useState(false);
+  const {name, phone} = route.params;
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
@@ -69,7 +69,11 @@ const Index = () => {
     control,
     handleSubmit,
     formState: {errors},
-  } = useForm<Profile>();
+  } = useForm<Profile>({
+    defaultValues: {
+      name: name,
+    },
+  });
   const onSubmit = async (data: any) => {
     const formData = new FormData();
     setLoading(true);
@@ -163,7 +167,10 @@ const Index = () => {
         <VStack space={3}>
           <Controller
             control={control}
-            // rules={{required: 'Không được để trống', validate: validateName}}
+            rules={{
+              required: 'Không được để trống Họ và tên',
+              validate: validateName,
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <FormControl isInvalid={errors.name !== undefined}>
                 <FormControl.Label
@@ -175,7 +182,6 @@ const Index = () => {
                   placeholder="Nhập họ và tên của bạn"
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  defaultValue={profile?.data?.data?.f_name}
                   value={value}
                   style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                   maxLength={50}
@@ -201,7 +207,7 @@ const Index = () => {
             </FormControl.Label>
             <Input
               w="90%"
-              value={profile?.data?.data?.phone}
+              value={phone}
               style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
             />
           </FormControl>
