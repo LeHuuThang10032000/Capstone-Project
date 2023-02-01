@@ -74,7 +74,7 @@ export type MainStackParamList = {
   Transfer: {
     userWallet: number;
   };
-  EditProfile: undefined;
+  EditProfile: {name: string; phone: string};
   ChangePassword: {
     phone: string;
   };

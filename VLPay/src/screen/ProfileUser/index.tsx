@@ -94,7 +94,12 @@ const Index = () => {
           </FormControl>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('EditProfile')}>
+            onPress={() =>
+              navigation.navigate('EditProfile', {
+                name: profile?.data?.data?.f_name,
+                phone: profile?.data?.data?.phone,
+              })
+            }>
             <Text style={styles.text}>Chỉnh sửa</Text>
           </TouchableOpacity>
         </VStack>
