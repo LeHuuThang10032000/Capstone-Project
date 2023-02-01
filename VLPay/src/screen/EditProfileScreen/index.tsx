@@ -173,9 +173,9 @@ const Index = () => {
                 <Input
                   w="90%"
                   placeholder="Nhập họ và tên của bạn"
-                  autoFocus
                   onChangeText={onChange}
                   onBlur={onBlur}
+                  defaultValue={profile?.data?.data?.f_name}
                   value={value}
                   style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                   maxLength={50}
@@ -201,7 +201,7 @@ const Index = () => {
             </FormControl.Label>
             <Input
               w="90%"
-              value="0123456789"
+              value={profile?.data?.data?.phone}
               style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
             />
           </FormControl>
@@ -213,7 +213,7 @@ const Index = () => {
             {isLoading ? (
               <ActivityIndicator />
             ) : (
-              <Text style={styles.text}>Save edit</Text>
+              <Text style={styles.text}>Lưu chỉnh sửa</Text>
             )}
           </TouchableOpacity>
         </VStack>
