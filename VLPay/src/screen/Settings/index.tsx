@@ -10,12 +10,16 @@ import ModalProvider from '../../context/ModalProvider';
 import Modal from 'react-native-modal';
 import HeaderModal from '../../components/CustomLogout/HeaderModal';
 import BodyModal from './ChangeLngComp/BodyModal';
-import {useNavigation} from '@react-navigation/native';
-import {MainStackNavigation} from '../../stack/Navigation';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 
 type Props = {};
 
 const Index = (props: Props) => {
+  const {phone} =
+    useRoute<RouteProp<MainStackParamList, 'ChangePassword'>>()?.params;
+  console.log(phone);
+
   const navigation = useNavigation<MainStackNavigation>();
   const {modalVisible, setModalVisible, closeModal} = ModalProvider();
   const toggleModal = () => {
@@ -30,7 +34,11 @@ const Index = (props: Props) => {
           buttonText="Thay đổi mật khẩu"
           rightIcon={<ChevronRight />}
           rightText={undefined}
-          onPress={() => navigation.navigate('ChangePassword')}></MyButton>
+          onPress={() => {
+            navigation.navigate('ChangePassword', {
+              phone: phone,
+            });
+          }}></MyButton>
 
         <MyButton
           icon={<EarthIcon />}

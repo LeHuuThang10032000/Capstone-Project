@@ -120,7 +120,11 @@ const Index = () => {
         <View style={styles.wrapperButton}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('Settings')}>
+            onPress={() =>
+              navigation.navigate('Settings', {
+                phone: profile?.data?.data?.phone,
+              })
+            }>
             <View style={styles.info}>
               <SettingIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
