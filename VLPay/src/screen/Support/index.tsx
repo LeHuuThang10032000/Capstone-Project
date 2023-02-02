@@ -42,13 +42,17 @@ const Index = () => {
 
   const onSubmit = async (data: any) => {
     console.log(data);
-    const {email, msssv, reason} = data;
+    const {email, mssv, reason} = data;
     const formData = new FormData();
     formData.append('email', email);
-    formData.append('msssv', msssv);
+    formData.append('mssv', mssv);
     formData.append('reason', reason);
     formData.append('name', profile?.data?.f_name);
     formData.append('phone', profile?.data?.phone);
+    formData.append('amount', 300000);
+    console.log(formData);
+    console.log(123);
+
     try {
       await axiosClient.post(
         'https://zennoshop.cf/api/user/create-credit-request',
@@ -73,6 +77,7 @@ const Index = () => {
       .get('https://zennoshop.cf/api/user/get-profile')
       .then(response => {
         setProfile(response.data);
+        console.log(result);
       })
       .catch(err => console.log(err));
   }, []);
