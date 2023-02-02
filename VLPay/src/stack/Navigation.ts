@@ -54,7 +54,9 @@ export type MainStackParamList = {
   MyWallet: undefined;
   Search: undefined;
   ProfileUser: undefined;
-  Settings: undefined;
+  Settings: {
+    phone: string;
+  };
   DetailUser: {
     email: string;
     picture: string;
