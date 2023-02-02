@@ -39,7 +39,7 @@ class CreditController extends Controller
         $transactionId = rand(1000000, 10000000);
         try {
             while (!$unique) {
-                $isExisted = DB::table('credit_request')->where('transaction_id', $transactionId)->first();
+                $isExisted = DB::table('credit_requests')->where('transaction_id', $transactionId)->first();
                 if (!$isExisted) {
                     $unique = true;
                     break;
