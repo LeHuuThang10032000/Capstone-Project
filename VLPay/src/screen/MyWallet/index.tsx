@@ -148,7 +148,7 @@ const Index = () => {
             <View style={styles.info}>
               <SupportIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Hỗ trợ sinh viên</Text>
+                <Text style={styles.text}>Đăng ký tài khoản tín dụng</Text>
               </View>
             </View>
             <View>

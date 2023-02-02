@@ -24,6 +24,7 @@ interface CreateShop {
   email: string;
   mssv: string;
   reason: string;
+  name: string;
 }
 
 const Index = () => {
@@ -39,10 +40,27 @@ const Index = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log(data);
-    // navigation.navigate('WaitApprove');
-    setApprove(approve == false);
+    const {email, msssv, reason} = data;
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('msssv', msssv);
+    formData.append('reason', reason);
+    formData.append('name', profile?.data?.f_name);
+    formData.append('phone', profile?.data?.phone);
+    try {
+      await axiosClient.post(
+        'https://zennoshop.cf/api/user/create-credit-request',
+        formData,
+        {
+          headers: {'content-type': 'multipart/form-data'},
+        },
+      );
+      setApprove(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const navigation = useNavigation<MainStackNavigation>();
@@ -70,12 +88,12 @@ const Index = () => {
 
   return (
     <View flex={1} backgroundColor={'white'}>
-      <HeaderBack title="Đăng ký xin hỗ trợ" />
+      <HeaderBack title="Đăng ký tài khoản tín dụng" />
       {approve ? (
         <ScrollView>
           <VStack mx={3}>
             <Center mt={10}>
-              <Heading size={'md'}>Đăng kí xin hỗ trợ qua ví tín dụng</Heading>
+              <Heading size={'md'}>Đăng ký ví tín dụng</Heading>
               <HStack my={10}>
                 <FormControl.Label
                   _text={{
@@ -231,7 +249,7 @@ const Index = () => {
                         fontWeight: 'bold',
                         fontSize: 16,
                       }}>
-                      Vị trí:
+                      Lí do:
                     </FormControl.Label>
                     {/* <TextInput
                       value={value}
