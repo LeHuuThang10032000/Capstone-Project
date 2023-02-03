@@ -6,6 +6,7 @@ import AppRouter from './src/stack/AppRouter';
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store';
 import SplashScreen from 'react-native-splash-screen';
+import Toast from 'react-native-toast-message';
 
 const theme = {
   ...DefaultTheme,
@@ -27,6 +28,7 @@ const App = () => {
       <Provider store={store}>
         <AppRouter />
       </Provider>
+      <Toast position="bottom" bottomOffset={20} />
     </NativeBaseProvider>
   );
 };

@@ -45,7 +45,7 @@ interface Transfer {
   mess: string;
 }
 
-const Index = props => {
+const Index = (props: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const balances = useMemo(() => ['50000', '100000', '200000'], []);
   const [errorDisplay, setErrorDisplay] = useState(false);
@@ -303,7 +303,7 @@ const Index = props => {
                       Số dư ví không đủ
                     </UText>
                   )}
-                  {parseInt(value) < 3000 && (
+                  {/* {parseInt(value) < 3000 && (
                     <UText
                       style={{
                         color: 'red',
@@ -311,7 +311,7 @@ const Index = props => {
                       }}>
                       Số tiền cần chuyển tối thiểu 3.000đ
                     </UText>
-                  )}
+                  )} */}
                   <FormControl.ErrorMessage>
                     {errors.money?.message}
                   </FormControl.ErrorMessage>

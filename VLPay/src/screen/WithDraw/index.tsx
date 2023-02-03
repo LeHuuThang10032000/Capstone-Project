@@ -45,6 +45,7 @@ const WithDraw = () => {
               source={require('../../assets/img/next_icon.png')}
               width={5}
               height={5}
+              alt="withdraw"
             />
           </TouchableOpacity>
         </View>
@@ -66,6 +67,7 @@ const WithDraw = () => {
               source={require('../../assets/img/next_icon.png')}
               width={5}
               height={5}
+              alt="withdraw"
             />
           </TouchableOpacity>
         </View>

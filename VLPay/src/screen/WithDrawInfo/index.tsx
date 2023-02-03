@@ -1,21 +1,104 @@
-import {HStack, VStack} from 'native-base';
-import React, {useState} from 'react';
+import {Center, FormControl, HStack, Pressable, VStack} from 'native-base';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {TextInput, TouchableOpacity, View} from 'react-native';
 import HeaderBack from '../../components/HeaderBack';
 import TText from '../Transfer/TText';
 import YesNoModal from '../../components/YesNoModal';
 import Icons from '../../components/icons';
 import Colors from '../../components/helpers/Colors';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
+import {Controller, useForm} from 'react-hook-form';
+import {formatCurrency} from '../../components/helpers/formatNum';
+import {UText} from '../../components/UText';
+import {axiosClient} from '../../components/apis/axiosClient';
+import Toast from 'react-native-toast-message';
 
-const WithDrawInfo = () => {
+interface WithDraw {
+  amount: string;
+}
+
+const WithDrawInfo = (props: any) => {
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [infoWithdraw, setInfoWithdraw] = useState(false);
+  const [profile, setProfile] = useState({});
+  const isFocused = useIsFocused();
+  const balances = useMemo(() => ['50000', '100000', '200000'], []);
+
   const {isWithdraw} =
     useRoute<RouteProp<MainStackParamList, 'WithDrawInfo'>>()?.params;
 
   const navigation = useNavigation<MainStackNavigation>();
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient
+      .get('https://zennoshop.cf/api/user/get-profile')
+      .then(response => {
+        setProfile(response.data);
+        console.log(result);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      fetchData();
+    }
+  }, [fetchData, isFocused]);
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: {errors},
+  } = useForm<WithDraw>({
+    defaultValues: {
+      amount: '',
+    },
+  });
+
+  const onSubmit = async (data: any) => {
+    console.log(data);
+    const {amount} = data;
+    const formData = new FormData();
+    formData.append('amount', amount);
+    formData.append('name', profile?.data?.f_name);
+    formData.append('phone', profile?.data?.phone);
+    formData.append('email', 'test@gmail.com');
+    formData.append('mssv', '197pm09474');
+    formData.append('reason', 'I need money to shoping.');
+    console.log(formData);
+
+    try {
+      await axiosClient.post(
+        'https://zennoshop.cf/api/user/create-withdraw-request',
+        formData,
+        {
+          headers: {'content-type': 'multipart/form-data'},
+        },
+      );
+      console.log('Successfully!');
+      setVisibleWarning(true);
+      setInterval(() => {
+        setVisibleWarning(false);
+        setInfoWithdraw(true);
+      }, 2000);
+    } catch (e) {
+      console.log('Error is:', e);
+      Toast.show({
+        type: 'error',
+        text1: 'Lỗi nạp tiền',
+        text2: 'Có lỗi xảy ra vui lòng thử lại sau!',
+      });
+    }
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <HeaderBack title={isWithdraw ? 'Rút tiền' : 'Nạp tiền'} />
@@ -33,7 +116,9 @@ const WithDrawInfo = () => {
             marginTop={5}
             marginBottom={5}>
             <TText style={{fontSize: 18}}>Họ tên:</TText>
-            <TText style={{fontSize: 18, opacity: 0.31}}>Hàng Hữu Lộc</TText>
+            <TText style={{fontSize: 18, opacity: 0.31}}>
+              {profile?.data?.f_name}
+            </TText>
           </HStack>
           <HStack
             justifyContent={'space-between'}
@@ -109,29 +194,53 @@ const WithDrawInfo = () => {
           <VStack
             justifyContent={'center'}
             alignItems={'center'}
-            borderWidth={1}
-            borderColor={'#ABABAB'}
             marginY={10}
             space={5}
             marginX={1}
-            paddingY={3}>
+            paddingY={3}
+            style={{elevation: 2}}>
             <TText style={{fontSize: 24, fontWeight: '700'}}>Ví của bạn</TText>
-            <TText
-              style={{fontWeight: 18, fontWeight: '700', color: '#8C8C8C'}}>
+            <TText style={{fontWeight: '700', color: '#8C8C8C'}}>
               Số tiền: 10.000.000đ
             </TText>
           </VStack>
 
-          <TextInput
-            placeholder="Nhập số tiền cần rút"
-            style={{
-              borderWidth: 1,
-              borderRadius: 8,
-              marginHorizontal: 20,
-              backgroundColor: '#FAFAFA',
-            }}
-            keyboardType={'phone-pad'}
+          <Controller
+            control={control}
+            rules={{required: 'Vui lòng nhập số tiền'}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <FormControl isInvalid={errors.amount !== undefined}>
+                <TextInput
+                  placeholder="Nhập số tiền cần rút"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    marginHorizontal: 20,
+                    backgroundColor: '#FAFAFA',
+                    paddingLeft: 15,
+                  }}
+                  keyboardType={'phone-pad'}
+                />
+                {/* {parseInt(props.route.params) - parseInt(value) < 0 && (
+                  <UText
+                    style={{
+                      color: 'red',
+                      fontSize: 12,
+                    }}>
+                    Số dư ví không đủ
+                  </UText>
+                )} */}
+                <FormControl.ErrorMessage pl={5}>
+                  {errors.amount?.message}
+                </FormControl.ErrorMessage>
+              </FormControl>
+            )}
+            name="amount"
           />
+
           <TText
             style={{
               opacity: 0.26,
@@ -141,44 +250,24 @@ const WithDrawInfo = () => {
             }}>
             Rút tối thiểu 50.000đ. Rút tối đa 10.000.000đ
           </TText>
-          <HStack justifyContent={'center'} space={5}>
-            <TouchableOpacity>
-              <TText
-                style={{
-                  padding: 5,
-                  borderRadius: 8,
-                  borderWidth: 1,
-                  borderColor: '#ABABAB',
-                  fontSize: 18,
-                }}>
-                50.000đ
-              </TText>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <TText
-                style={{
-                  padding: 5,
-                  borderRadius: 8,
-                  borderWidth: 1,
-                  borderColor: '#ABABAB',
-                  fontSize: 18,
-                }}>
-                100.000đ
-              </TText>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <TText
-                style={{
-                  padding: 5,
-                  borderRadius: 8,
-                  borderWidth: 1,
-                  borderColor: '#ABABAB',
-                  fontSize: 18,
-                }}>
-                200.000đ
-              </TText>
-            </TouchableOpacity>
-          </HStack>
+          <Center>
+            <HStack space={5} justifyContent="center" width={'80%'}>
+              {balances.map(value => (
+                <Pressable
+                  padding={1}
+                  flex={1}
+                  borderRadius={8}
+                  key={value}
+                  borderWidth={1}
+                  borderColor={'#ABABAB'}
+                  onPress={() => setValue('amount', value)}>
+                  <TText style={{textAlign: 'center', fontSize: 18}}>
+                    {formatCurrency(value.toString())}đ
+                  </TText>
+                </Pressable>
+              ))}
+            </HStack>
+          </Center>
           <View
             style={{
               width: '100%',
@@ -187,13 +276,7 @@ const WithDrawInfo = () => {
               bottom: 30,
             }}>
             <TouchableOpacity
-              onPress={async () => {
-                setVisibleWarning(true);
-                setInterval(() => {
-                  setVisibleWarning(false);
-                  setInfoWithdraw(true);
-                }, 2000);
-              }}
+              onPress={handleSubmit(onSubmit)}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
