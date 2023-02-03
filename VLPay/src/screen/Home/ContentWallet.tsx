@@ -56,15 +56,15 @@ const ContentWallet = () => {
           console.log('nothing');
         },
       },
-      // {
-      //   source: require('../../assets/img/deposit.png'),
-      //   title: 'Nạp tiền',
-      //   onPress: () => {
-      //     navigation.navigate('WithDraw', {
-      //       isWithdraw: false,
-      //     });
-      //   },
-      // },
+      {
+        source: require('../../assets/img/deposit.png'),
+        title: 'Nạp tiền',
+        onPress: () => {
+          navigation.navigate('WithDraw', {
+            isWithdraw: false,
+          });
+        },
+      },
     ];
   }, []);
 
