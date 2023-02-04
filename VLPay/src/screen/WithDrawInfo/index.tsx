@@ -28,7 +28,7 @@ const WithDrawInfo = (props: any) => {
   const [infoWithdraw, setInfoWithdraw] = useState(false);
   const [profile, setProfile] = useState({});
   const isFocused = useIsFocused();
-  const balances = useMemo(() => ['50000', '100000', '200000'], []);
+  const balances = useMemo(() => ['200000', '500000', '1000000'], []);
 
   const {isWithdraw} =
     useRoute<RouteProp<MainStackParamList, 'WithDrawInfo'>>()?.params;
