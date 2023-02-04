@@ -94,7 +94,7 @@ const WithDrawInfo = (props: any) => {
       Toast.show({
         type: 'error',
         text1: 'Lỗi nạp tiền',
-        text2: 'Có lỗi xảy ra vui lòng thử lại sau!',
+        text2: 'Không nhập số tiền ít hơn 200.000đ!',
       });
     }
   };
@@ -251,7 +251,7 @@ const WithDrawInfo = (props: any) => {
             Rút tối thiểu 50.000đ. Rút tối đa 10.000.000đ
           </TText>
           <Center>
-            <HStack space={5} justifyContent="center" width={'80%'}>
+            <HStack space={5} justifyContent="center" width={'90%'}>
               {balances.map(value => (
                 <Pressable
                   padding={1}
