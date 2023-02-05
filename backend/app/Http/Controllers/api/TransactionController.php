@@ -9,28 +9,31 @@ use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use function Ramsey\Collection\Map\replace;
 
 class TransactionController extends Controller
 {
 
     //check password during process transaction
-    public function checkPwd(Request $request){
+    public function checkPwd(Request $request)
+    {
         $request->validate([
-            "password"=>"required"
+            "password" => "required"
         ]);
         $user = Auth::user();
-        if(Hash::check($user->password, $request->password)){
+        if (Hash::check($user->password, $request->password)) {
             return response([
                 "message" => "Mật khẩu xác thực thành công"
             ]);
         }
         return response([
             "message" => "Sai mật khẩu"
-        ],422);
+        ], 422);
     }
 
     //method post
-    public function transfer(Request $request){
+    public function transfer(Request $request)
+    {
         $request->validate([
             "phone" => "min:10|max:10",
             "f_name" => "min:3",
@@ -38,11 +41,11 @@ class TransactionController extends Controller
             "message" => "max:255"
         ]);
 
-        if(Auth::check()) {
+        if (Auth::check()) {
             $currentUser = Auth::user();
             //sender
             $userWallet = Wallet::where("user_id", $currentUser->id)->first();
-            if($userWallet->balance > $request->cash){
+            if ($userWallet->balance > $request->cash) {
                 $userWallet->update([
                     "balance" => $userWallet->balance - $request->cash
                 ]);
@@ -53,16 +56,15 @@ class TransactionController extends Controller
                 $recipientWallet->update([
                     "balance" => $recipientWallet->balance + $request->cash
                 ]);
-
                 //save transaction infor
                 Transaction::create(
-                   [ 
-                    "from_id" => $currentUser->id,
-                    "to_id" => $recipient->id,
-                    "amount" => $request->cash,
-                    "message" => $request->message ?? "",
-                    "code" => mt_rand(10000000,99999999)
-                   ]
+                    [
+                        "from_id" => $currentUser->id,
+                        "to_id" => $recipient->id,
+                        "amount" => $request->cash,
+                        "message" => $request->message ?? "",
+                        "code" => mt_rand(10000000, 99999999)
+                    ]
                 );
 
                 return response([
@@ -71,7 +73,7 @@ class TransactionController extends Controller
                     "phone" => $request->phone,
                     "wallet" => $userWallet->balance,
                     "message" => $request->message ?? "",
-                    "code" => mt_rand(10000000,99999999)
+                    "code" => mt_rand(10000000, 99999999)
                 ], 200);
 
             } else {
@@ -81,5 +83,21 @@ class TransactionController extends Controller
             }
         }
         return $request->cash;
+    }
+
+    public function history(Request $request)
+    {
+        $history = [];
+        $userId = Auth::user()->id;
+        $historyGets = Transaction::where('from_id', $userId)->orderBy('created_at', 'desc')->get();
+        $historySends = Transaction::where('to_id', $userId)->orderBy('created_at', 'desc')->get();
+        foreach ($historyGets as $key => $item) {
+            $historyGets[$key]['type'] = 'get';
+        }
+        foreach ($historySends as $key => $item) {
+            $historySends[$key]['type'] = 'send';
+        }
+        array_push($history, ['get' => $historyGets], ['send' => $historySends]);
+        return $history;
     }
 }

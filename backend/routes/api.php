@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     //Transaction
     Route::post('/create-transaction', [TransactionController::class, "transfer"]);
+    Route::get('/history-transaction', [TransactionController::class, "history"]);
 
     //Scan qr code
     Route::post('/getInfoUser', [ScanQrCodeController::class, "getInfoUser"]);
