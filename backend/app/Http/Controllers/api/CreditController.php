@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\CreditRequest;
+use Exception;
+use Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,24 +36,15 @@ class CreditController extends Controller
         if ($credit->fails()) {
             return ApiResponse::failureResponse($credit->messages());
         }
-        $request['user_id'] = Auth::user()->id;
-        $unique = false;
-        $transactionId = rand(1000000, 10000000);
+
         try {
-            while (!$unique) {
-                $isExisted = DB::table('credit_requests')->where('transaction_id', $transactionId)->first();
-                if (!$isExisted) {
-                    $unique = true;
-                    break;
-                }
-                $transactionId = rand(1000000, 10000000);
-            }
-        } catch (ModelNotFoundException $e) {
-        }
-        $request['transaction_id'] = $transactionId;
-        $result = CreditRequest::create($request->all());
-        if ($result) {
+            $request['user_id'] = Auth::user()->id;
+            $request['transaction_id'] = Helper::generateNumber();
+            $result = CreditRequest::create($request->all());
             return ApiResponse::successResponse($result);
+        } catch(\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
         }
+        
     }
 }

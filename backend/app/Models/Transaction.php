@@ -24,4 +24,14 @@ class Transaction extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function fromUser()
+    {
+        return $this->belongsTo(User::class, 'from_id', 'id');
+    }
+
+    public function toUser()
+    {
+        return $this->belongsTo(User::class, 'to_id', 'id');
+    }
 }
