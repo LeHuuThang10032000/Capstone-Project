@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Resources;
 use App\Http\Controllers\Controller;
 use App\Models\CreditRequest;
 use App\Models\Store;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\WithdrawRequest;
@@ -196,5 +197,11 @@ class OrganiserController extends Controller
         $req->save();
 
         return back()->with('success', 'Từ chối yêu cầu cấp hạn mức tín dụng thành công');
+    }
+
+    public function getListTransactions()
+    {
+        $transactions = Transaction::simplePaginate(10);
+        return view('transactions.index', compact('transactions'));
     }
 }

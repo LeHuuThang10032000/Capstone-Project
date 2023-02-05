@@ -47,7 +47,7 @@
                 </a>
             </li>
             <li>
-                <a href=""
+                <a href="{{ route('organiser.transaction.index') }}"
                    class="flex items-center p-3 hover:bg-theme {{ Request::is('transaction') ? 'active' : '' }}">
                     <img src="{{ asset('img/transaction.png') }}" alt="#">
                     <span class="flex-1 ml-3 whitespace-nowrap">Giao dịch</span>

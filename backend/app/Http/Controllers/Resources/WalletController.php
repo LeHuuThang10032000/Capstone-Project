@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use Carbon\Carbon;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -56,7 +57,7 @@ class WalletController extends Controller
 
         if($wallet) {
             Transaction::create([
-                'code' => self::generateNumber(),
+                'code' => Helper::generateNumber(),
                 'amount' => $request->amount,
                 'from_id' => Auth::user()->id,
                 'to_id' => $wallet->user->id,
@@ -66,12 +67,5 @@ class WalletController extends Controller
         }
 
         return back()->with('success', 'Nạp tiền vào ví thành công');
-    }
-
-    private static function generateNumber()
-    {
-        $number = mt_rand(10000000,99999999);
-        if (Transaction::where('code', $number)->count() > 0) self::generateNumber();
-        return $number;
     }
 }

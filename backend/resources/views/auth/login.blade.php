@@ -36,7 +36,7 @@
 
             <div class="flex items-center justify-end mt-4">
                 <x-button style="width: 100%; background-color: #B5EAD8; border-color: #000000">
-                    {{ __('Log in') }}
+                    Đăng nhập
                 </x-button>
             </div>
         </form>
