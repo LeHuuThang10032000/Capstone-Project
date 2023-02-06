@@ -2,7 +2,7 @@
 // https://aboutreact.com/generation-of-qr-code-in-react-native/
 
 // import React in our code
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 // import all the components we are going to use
 import {
@@ -27,6 +27,9 @@ import {
   escapeCurrency,
   formatCurrency,
 } from '../../components/helpers/formatNum';
+import HeaderBack from '../../components/HeaderBack';
+import {axiosClient} from '../../components/apis/axiosClient';
+import {useIsFocused} from '@react-navigation/native';
 
 const App = () => {
   const [inputText, setInputText] = useState('');
@@ -35,25 +38,17 @@ const App = () => {
   const [error, setError] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
   const handleChangeInput = useCallback((str: string) => {
-    const limit_money = 10000000;
-    const min_money = 500;
     let money = 0;
     money = parseInt(formatCurrency(escapeCurrency(str)).replace(/,/g, ''));
 
-    if (money > limit_money) {
-      setError('Vượt quá số tiền cho phép');
+    if (str.length == 0) {
+      setError('Vui lòng nhập số tiền để tạo mã QR!');
       setDisabledButton(true);
-    } else if (money < min_money) {
-      setError('số tiền tối thiểu' + ' ' + '500đ');
+    } else if (str == '0') {
       setDisabledButton(true);
     } else {
       setError('');
       setDisabledButton(false);
-    }
-
-    if (str.length === 0) {
-      setmoneyInput('');
-      return;
     }
     setmoneyInput(formatCurrency(escapeCurrency(str)));
   }, []);
@@ -68,9 +63,26 @@ const App = () => {
     closeModal();
   };
 
+  const [profile, setProfile] = useState({});
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result.data);
+  }, []);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      fetchData();
+    }
+  }, [fetchData, isFocused]);
+
   return (
     <SafeAreaView style={{flex: 1}}>
-      <HeaderComp title="QR code" />
+      <HeaderBack title="Mã QR của bạn" />
       <View style={styles.container}>
         {/* <Text style={styles.titleStyle}>
           Generation of QR Code in React Native
@@ -86,7 +98,7 @@ const App = () => {
           //Background Color of the QR Code (Optional)
           backgroundColor="white"
           //Logo of in the center of QR Code (Optional)
-          logo={{uri: 'https://randomuser.me/api/portraits/men/78.jpg'}}
+          logo={{uri: profile?.data?.media[0].original_url}}
           //Center Logo size  (Optional)
           logoSize={30}
           //Center Logo margin (Optional)
@@ -97,7 +109,7 @@ const App = () => {
           logoBackgroundColor="#B5EAD8"
         />
         <Text style={styles.textStyle}>
-          Please scan the QR code to pay the transaction
+          Vui lòng quét mã QR này để thực hiện giao dịch.
         </Text>
 
         <TouchableOpacity style={styles.buttonStyle} onPress={toggleModal}>
@@ -124,7 +136,7 @@ const App = () => {
             }}>
             <HeaderModal title="Tùy chỉnh số tiền" onPress={closeModal} />
             <Input
-              placeholder="Enter money"
+              placeholder="Vui lòng nhập số tiền"
               w="90%"
               // onChangeText={inputText => setInputText(inputText)}
               onChangeText={handleChangeInput}
@@ -135,7 +147,7 @@ const App = () => {
             {error && (
               <Text
                 allowFontScaling={false}
-                style={{marginTop: 3, color: 'red'}}>
+                style={{marginTop: 5, color: 'red'}}>
                 {error}
               </Text>
             )}
@@ -167,9 +179,9 @@ const App = () => {
               ]}
               _text={{color: '#514545', fontFamily: 'Poppins-Bold'}}
               disabled={disabledButton}
-              isDisabled={moneyInput.length === 0}
+              isDisabled={moneyInput.length === null}
               onPress={saveQR}>
-              Generate QR Code
+              Tạo mã QR
             </Button>
           </View>
         </Modal>

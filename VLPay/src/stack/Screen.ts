@@ -23,6 +23,8 @@ import SupportStudent from '../screen/Support';
 import Friends from '../screen/Friends';
 import DetailFriend from '../screen/Friends/DetailFriend';
 import PaymentDetails from '../screen/PaymentDetails';
+import MyOrder from '../screen/MyOrder';
+import QR from '../screen/QR';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -114,5 +116,13 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'PaymentDetails',
     component: PaymentDetails,
+  },
+  {
+    name: 'MyOrder',
+    component: MyOrder,
+  },
+  {
+    name: 'QR',
+    component: QR,
   },
 ];
