@@ -150,7 +150,7 @@ const Index = ({route}: any) => {
               width={150}
               height={150}
               opacity={0.5}
-              resizeMode="contain"
+              resizeMode="cover"
             />
             <Box
               width={6}
