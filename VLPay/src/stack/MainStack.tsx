@@ -3,8 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {MAIN_STACK_SCREEN} from './Screen';
 import {ScreenParams} from './type';
-import {useDispatch, useSelector} from 'react-redux';
-import {Init} from '../redux/actions/authAction';
 
 const Stack = createStackNavigator<ScreenParams>();
 const screenOptions = {headerShown: false};

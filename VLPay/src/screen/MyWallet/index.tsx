@@ -6,7 +6,6 @@ import HeaderComp from '../../components/HeaderComp';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import ExtendIcon from '../../assets/svg/extend.svg';
 import QRcodeIcon from '../../assets/svg/qrcode.svg';
-import LogoIcon from '../../assets/svg/logoIcon.svg';
 import WalletIcon from '../../assets/svg/wallet.svg';
 import PersonIcon from '../../assets/svg/person_icon.svg';
 import SettingIcon from '../../assets/svg/settings.svg';
@@ -67,6 +66,19 @@ const Index = () => {
               <View style={{paddingLeft: 10}}>
                 <Text style={styles.text}>{profile?.data?.data?.f_name}</Text>
                 <Text style={styles.text}>{profile.data?.data?.phone}</Text>
+              </View>
+            </View>
+            <View>
+              <ExtendIcon />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('QR')}
+            style={styles.button}>
+            <View style={styles.info}>
+              <QRcodeIcon style={{paddingLeft: 30}} />
+              <View style={{paddingLeft: 10, justifyContent: 'center'}}>
+                <Text style={styles.text}>Mã QR của bạn</Text>
               </View>
             </View>
             <View>

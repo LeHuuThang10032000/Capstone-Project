@@ -7,10 +7,10 @@ import Icons from '../assets/icons/icons';
 import {ScreenParams, BottomTabScreen} from './type';
 import Home from '../screen/Home';
 import TranSactionHistory from '../screen/TransactionHistory';
-import QR from '../screen/QR';
 import Notification from '../screen/Notification';
 import MyWallet from '../screen/MyWallet';
 import {useSelector} from 'react-redux';
+import MyOrder from '../screen/MyOrder';
 
 const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
   {
@@ -26,8 +26,8 @@ const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
     icon: Icons.History,
   },
   {
-    name: 'QR',
-    component: QR,
+    name: 'MyOrder',
+    component: MyOrder,
     tabBarLabel: 'Đơn hàng',
     icon: Icons.Order,
   },

@@ -132,38 +132,39 @@ const Index = ({route}: any) => {
   return (
     <View>
       <HeaderBack title="Hồ sơ của bạn" />
-      <Pressable onPress={ChoosePhotoFromLibrary}>
-        <Center style={{paddingVertical: 40}}>
-          <Image
-            source={
-              image?.path
-                ? {uri: image?.path}
-                : profile?.data?.data?.media[0]?.original_url
-                ? {
-                    uri: profile.data.data.media[0].original_url,
-                  }
-                : require('../../assets/img/user_default.png')
-            }
-            alt="img"
-            borderRadius={100}
-            width={150}
-            height={150}
-            opacity={0.5}
-          />
-          <Box
-            width={6}
-            height={6}
-            position="absolute"
-            alignItems="center"
-            justifyContent="center"
-            borderRadius={20}
-            padding={1}
-            shadow={9}>
-            <CameraIcon />
-          </Box>
-        </Center>
-      </Pressable>
-      <Center>
+      <Center mt={10}>
+        <TouchableOpacity onPress={ChoosePhotoFromLibrary}>
+          <Center>
+            <Image
+              source={
+                image?.path
+                  ? {uri: image?.path}
+                  : profile?.data?.data?.media[0]?.original_url
+                  ? {
+                      uri: profile.data.data.media[0].original_url,
+                    }
+                  : require('../../assets/img/user_default.png')
+              }
+              alt="img"
+              borderRadius={100}
+              width={150}
+              height={150}
+              opacity={0.5}
+              resizeMode="contain"
+            />
+            <Box
+              width={6}
+              height={6}
+              position="absolute"
+              alignItems="center"
+              justifyContent="center"
+              borderRadius={20}
+              padding={1}
+              shadow={9}>
+              <CameraIcon />
+            </Box>
+          </Center>
+        </TouchableOpacity>
         <VStack space={3}>
           <Controller
             control={control}

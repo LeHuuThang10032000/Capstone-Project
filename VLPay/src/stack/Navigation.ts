@@ -4,7 +4,6 @@ import {
   MaterialBottomTabScreenProps,
 } from '@react-navigation/material-bottom-tabs';
 import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
-import {Title} from 'react-native-paper';
 
 // import {Job} from '../model/Job';
 // import {Social} from '../model/Social';
@@ -94,6 +93,7 @@ export type MainStackParamList = {
   };
   Support: undefined;
   Friends: undefined;
+  MyOrder: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

@@ -53,6 +53,7 @@ const Index = () => {
           borderRadius={100}
           width={150}
           height={150}
+          resizeMode="contain"
         />
       </Center>
       <Center>
