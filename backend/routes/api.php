@@ -7,6 +7,7 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\WalletController;
 use App\Http\Controllers\api\CreditController;
 use App\Http\Controllers\api\WithdrawController;
+use App\Http\Controllers\api\FriendsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,5 +54,8 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     //withdraw
     Route::post('create-withdraw-request', [WithdrawController::class, 'create']);
+
+    //friends
+    Route::apiResource('friends', FriendsController::class);
 });
 
