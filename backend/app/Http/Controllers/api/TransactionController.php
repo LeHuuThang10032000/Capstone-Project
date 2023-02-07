@@ -87,17 +87,32 @@ class TransactionController extends Controller
 
     public function history(Request $request)
     {
-        $history = [];
         $userId = Auth::user()->id;
-        $historyGets = Transaction::where('from_id', $userId)->orderBy('created_at', 'desc')->get();
-        $historySends = Transaction::where('to_id', $userId)->orderBy('created_at', 'desc')->get();
+        $historyGets = Transaction::where('from_id', $userId)->orWhere('to_id', $userId)->orderBy('created_at', 'desc')->get();
+        $times = [];
+        $prevTime = '';
+        $index = 0;
         foreach ($historyGets as $key => $item) {
-            $historyGets[$key]['type'] = 'get';
+            if($item['from_id'] == $userId) $item['type'] = 'SEND';
+            else $item['type'] = 'GET';
+            if($key == 0){
+                $time = explode(' ', $item['created_at']);
+                $time = $time[0].' '.$time[1].' '.$time[2].' '.$time[3];
+                $prevTime = $time[$index];
+                array_push($times, [$time => [$item]]);
+                $times = $times[0];
+            }else{
+                $time = explode(' ', $item['created_at']);
+                $time = $time[0].' '.$time[1].' '.$time[2].' '.$time[3];
+                if(strcmp($prevTime, $time) == 0){
+                    array_push($times[$time], $item);
+                } else {
+                    $index++;
+                    $prevTime = $time;
+                    $times[$prevTime] = [$item];
+                }
+            }
         }
-        foreach ($historySends as $key => $item) {
-            $historySends[$key]['type'] = 'send';
-        }
-        array_push($history, ['get' => $historyGets], ['send' => $historySends]);
-        return $history;
+        return $times;
     }
 }
