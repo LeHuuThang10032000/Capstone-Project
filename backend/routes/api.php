@@ -48,9 +48,6 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     Route::post('/create-credit-request', [UserController::class, "createCreditRequest"]);
 
-    //credit
-    Route::post('create-credit-request', [CreditController::class, 'create']);
-
     //withdraw
     Route::post('create-withdraw-request', [WithdrawController::class, 'create']);
 });
