@@ -1,11 +1,4 @@
 export interface UserData {
-    name: {
-        title: string; 
-        first: string; 
-        last: string
-    };
-    email: string;
-    picture: {
-        large: string;
-    }
+  f_name: string;
+  phone: string;
 }

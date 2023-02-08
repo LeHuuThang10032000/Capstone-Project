@@ -6,7 +6,7 @@ import BottomTabStack from './BottomTabStack';
 import Search from '../screen/Search';
 import ProfileUser from '../screen/ProfileUser';
 import Settings from '../screen/Settings';
-import DetailUser from '../screen/Friends/DetailFriend';
+import DetailUser from '../screen/Search/DetailUser';
 import Otp from '../screen/Otp';
 import Transfer from '../screen/Transfer';
 import ConfirmPM from '../screen/Transfer/ConfirmTransfer';
@@ -25,6 +25,7 @@ import DetailFriend from '../screen/Friends/DetailFriend';
 import PaymentDetails from '../screen/PaymentDetails';
 import MyOrder from '../screen/MyOrder';
 import QR from '../screen/QR';
+import Demo from '../screen/Friends/Demo';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -124,5 +125,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'QR',
     component: QR,
+  },
+  {
+    name: 'Demo',
+    component: Demo,
   },
 ];

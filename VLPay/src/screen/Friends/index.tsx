@@ -3,7 +3,16 @@
 
 // import React in our code
 import {useNavigation} from '@react-navigation/native';
-import {HStack, Icon, Image, Input, Skeleton, VStack} from 'native-base';
+import {
+  Center,
+  Heading,
+  HStack,
+  Icon,
+  Image,
+  Input,
+  Skeleton,
+  VStack,
+} from 'native-base';
 import React, {useState, useEffect, useCallback} from 'react';
 import BackIcon from '../../assets/svg/left-arrow.svg';
 import SearchIcon from '../../assets/svg/search.svg';
@@ -23,6 +32,8 @@ import {
 import {MainStackNavigation} from '../../stack/Navigation';
 import {UserData} from '../../model/UserData';
 import Lottie from 'lottie-react-native';
+import {axiosClient} from '../../components/apis/axiosClient';
+import HeaderBack from '../../components/HeaderBack';
 
 type Props = {
   text: string;
@@ -34,26 +45,12 @@ const Index = () => {
   const [masterDataSource, setMasterDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const onPress = useCallback(
-    (
-      email: string,
-      picture: string,
-      title: string,
-      first: string,
-      last: string,
-      phone: string,
-    ) => {
-      navigation.navigate('DetailFriend', {
-        email: email,
-        picture: picture,
-        title: title,
-        first: first,
-        last: last,
-        phone: phone,
-      });
-    },
-    [],
-  );
+  const onPress = useCallback((f_name: string, phone: string) => {
+    navigation.navigate('DetailFriend', {
+      f_name: f_name,
+      phone: phone,
+    });
+  }, []);
 
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
@@ -62,16 +59,14 @@ const Index = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('https://randomuser.me/api/?results=50')
-      .then(response => response.json())
-      .then(responseJson => {
-        setFilteredDataSource(responseJson.results);
-        setMasterDataSource(responseJson.results);
+    axiosClient
+      .get('https://zennoshop.cf/api/user/friends')
+      .then(res => {
+        setMasterDataSource(res.data?.data);
+        setFilteredDataSource(res.data?.data);
         setLoading(false);
       })
-      .catch(error => {
-        console.error(error);
-      });
+      .catch(e => console.log(e));
   }, []);
 
   const searchFilterFunction = (text: string) => {
@@ -81,7 +76,7 @@ const Index = () => {
       // Filter the masterDataSource and update FilteredDataSource
       const newData = masterDataSource.filter(function (item: UserData) {
         // Applying filter for the inserted text in search bar
-        const itemData = item.name.last ? item.name.last : '';
+        const itemData = item.f_name ? item.f_name : '';
         const textData = text;
         return itemData.indexOf(textData) > -1;
       });
@@ -98,29 +93,21 @@ const Index = () => {
   const ItemView = ({item}: any) => {
     return (
       // Flat List Item
+
       <TouchableOpacity
         onPress={() => {
-          onPress(
-            item.email,
-            item.picture.large,
-            item.name.title,
-            item.name.first,
-            item.name.last,
-            item.phone,
-          );
+          onPress(item.f_name, item.phone);
         }}>
         <HStack alignItems="center" p="5">
           <Image
-            source={{uri: `${item.picture.large}`}}
+            source={{uri: 'https://picsum.photos/200/150'}}
             alt="rduser"
             size="sm"
             borderRadius="50"
           />
           <VStack>
-            <Text style={styles.itemStyle}>
-              {item.name.title} {item.name.first} {item.name.last}
-            </Text>
-            <Text style={styles.itemStyle}>{item.email}</Text>
+            <Text style={styles.itemStyle}>{item.f_name}</Text>
+            <Text style={styles.itemStyle}>{item.phone}</Text>
           </VStack>
         </HStack>
       </TouchableOpacity>
@@ -144,57 +131,64 @@ const Index = () => {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Lottie
-          source={require('../../assets/lottie-file/loading.json')}
+          source={require('../../assets/lottie-file/not-found.json')}
           autoPlay={true}
-          style={{width: 100, height: 100}}
+          style={{width: 200, height: 200}}
         />
+        <Heading size={'md'}>Không tìm thấy bạn bè nào.</Heading>
       </View>
     );
   };
 
   const getItem = (item: UserData) => {
     // Function for click on an item
-    Alert.alert(item.name.title + ' ' + item.name.first + ' ' + item.name.last);
+    Alert.alert(item.f_name);
   };
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View style={styles.wrapperButton}>
-        <HStack alignItems="center" px="5">
-          <TouchableOpacity onPress={handleBack}>
-            <BackIcon />
-          </TouchableOpacity>
-          <Input
-            placeholder="Search..."
-            width="90%"
-            borderRadius="50"
-            py="3"
-            px="1"
-            pl="5"
-            fontSize="14"
-            bgColor={'white'}
-            onChangeText={text => searchFilterFunction(text)}
-            value={search}
-            InputRightElement={
-              <Icon
-                m="2"
-                ml="2"
-                mr="5"
-                size="6"
-                color="gray.400"
-                as={<SearchIcon />}
-              />
-            }
+      <HeaderBack title="Bạn bè trên VLPay" />
+      <Center marginY={5}>
+        <Input
+          placeholder="Search..."
+          width="90%"
+          borderRadius="50"
+          py="3"
+          px="1"
+          pl="5"
+          fontSize="14"
+          bgColor={'white'}
+          onChangeText={text => searchFilterFunction(text)}
+          value={search}
+          InputRightElement={
+            <Icon
+              m="2"
+              ml="2"
+              mr="5"
+              size="6"
+              color="gray.400"
+              as={<SearchIcon />}
+            />
+          }
+        />
+      </Center>
+      {loading ? (
+        <Center>
+          <Lottie
+            source={require('../../assets/lottie-file/loading.json')}
+            autoPlay={true}
+            style={{width: 100, height: 100}}
           />
-        </HStack>
-      </View>
-      <FlatList
-        data={filteredDataSource}
-        keyExtractor={(item, index) => index.toString()}
-        ItemSeparatorComponent={ItemSeparatorView}
-        renderItem={ItemView}
-        ListEmptyComponent={EmptyComponent}
-      />
+        </Center>
+      ) : (
+        <FlatList
+          data={filteredDataSource}
+          keyExtractor={(item, index) => index.toString()}
+          ItemSeparatorComponent={ItemSeparatorView}
+          renderItem={ItemView}
+          ListEmptyComponent={EmptyComponent}
+        />
+      )}
     </SafeAreaView>
   );
 };
