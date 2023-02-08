@@ -15,36 +15,36 @@ use Illuminate\Support\Facades\Validator;
 
 class CreditController extends Controller
 {
-    public function create(Request $request)
-    {
-        $credit = Validator::make($request->all(), [
-            'name' => 'required|max:60',
-            'phone' => 'required|phone|digits:10',
-            'email' => 'required|email',
-            'mssv' => 'required|max:30',
-            'amount' => 'required|numeric|between:200000,1000000'
-        ], [
-            'name.required' => 'Vui lòng nhập họ tên',
-            'phone.required' => 'Vui lòng nhập số điện thoại',
-            'email.required' => 'Vui lòng nhập email',
-            'mssv.required' => 'Vui lòng nhập mssv',
-            'amount.required' => 'Vui lòng nhập hạn mức',
-            'amount.min' => 'Hạn mức tối thiểu là 200.000đ',
-            'amount.max' => 'Hạn mức tối đa là 1.000.000đ',
-        ]);
+    // public function create(Request $request)
+    // {
+    //     $credit = Validator::make($request->all(), [
+    //         'name' => 'required|max:60',
+    //         'phone' => 'required|phone|digits:10',
+    //         'email' => 'required|email',
+    //         'mssv' => 'required|max:30',
+    //         'amount' => 'required|numeric|between:200000,1000000'
+    //     ], [
+    //         'name.required' => 'Vui lòng nhập họ tên',
+    //         'phone.required' => 'Vui lòng nhập số điện thoại',
+    //         'email.required' => 'Vui lòng nhập email',
+    //         'mssv.required' => 'Vui lòng nhập mssv',
+    //         'amount.required' => 'Vui lòng nhập hạn mức',
+    //         'amount.min' => 'Hạn mức tối thiểu là 200.000đ',
+    //         'amount.max' => 'Hạn mức tối đa là 1.000.000đ',
+    //     ]);
 
-        if ($credit->fails()) {
-            return ApiResponse::failureResponse($credit->messages());
-        }
+    //     if ($credit->fails()) {
+    //         return ApiResponse::failureResponse($credit->messages());
+    //     }
 
-        try {
-            $request['user_id'] = Auth::user()->id;
-            $request['transaction_id'] = Helper::generateNumber();
-            $result = CreditRequest::create($request->all());
-            return ApiResponse::successResponse($result);
-        } catch(\Exception $e) {
-            return ApiResponse::failureResponse($e->getMessage());
-        }
+    //     try {
+    //         $request['user_id'] = Auth::user()->id;
+    //         $request['transaction_id'] = Helper::generateNumber();
+    //         $result = CreditRequest::create($request->all());
+    //         return ApiResponse::successResponse($result);
+    //     } catch(\Exception $e) {
+    //         return ApiResponse::failureResponse($e->getMessage());
+    //     }
         
-    }
+    // }
 }
