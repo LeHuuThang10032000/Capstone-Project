@@ -145,8 +145,9 @@ class UserController extends Controller
             'mssv.required' => 'Vui lòng nhập mã số sinh viên',
         ]);
 
-        if ($validate->fails()) {
-            return ApiResponse::failureResponse($validate->messages()->first());
+        if ($validate->fails())
+        {
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try{
