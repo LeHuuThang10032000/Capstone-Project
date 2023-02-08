@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    public function index(){
+        return User::all();
+    }
+
     public function update(Request $request):Response
     {
         $user = User::find($request->id);
@@ -91,7 +95,7 @@ class UserController extends Controller
 
         try{
             DB::beginTransaction();
-            
+
             $store = Store::create([
                 'user_id' => Auth::user()->id,
                 'name' => $request->name,
@@ -147,7 +151,7 @@ class UserController extends Controller
 
         try{
             DB::beginTransaction();
-            
+
             $req = CreditRequest::create([
                 'user_id' => Auth::user()->id,
                 'name' => $request->name,
@@ -164,5 +168,9 @@ class UserController extends Controller
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
+    }
+
+    public function searchUser(Request $request){
+
     }
 }
