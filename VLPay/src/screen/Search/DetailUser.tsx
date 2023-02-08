@@ -1,23 +1,64 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
 import {Button, Center, HStack, Image, Input} from 'native-base';
 import AddFriendIcon from '../../assets/svg/add-friend.svg';
-import TransferIcon from '../../assets/svg/transfer.svg';
+import AddFriend from '../../assets/svg/add-friend.svg';
+import DeleteFriend from '../../assets/svg/delete-friend.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
+import {axiosClient} from '../../components/apis/axiosClient';
+import Toast from 'react-native-toast-message';
 
 const DetailUser = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {email, picture, title, first, last, phone} = route.params;
-  console.log(phone);
+  const {f_name, phone, id} = route.params;
+  const [myId, setMyId] = useState([]);
+
+  console.log(myId);
+
+  useEffect(() => {
+    axiosClient
+      .get('https://zennoshop.cf/api/user/get-profile')
+      .then(res => {
+        setMyId(res.data?.data);
+      })
+      .catch(e => console.log(e));
+  }, []);
+
+  const handAddFr = async () => {
+    const formData = new FormData();
+    formData.append('user_id', myId.id);
+    formData.append('friend_id', id);
+    try {
+      await axiosClient.post(
+        'https://zennoshop.cf/api/user/friends',
+        formData,
+        {
+          headers: {'content-type': 'multipart/form-data'},
+        },
+      );
+      Toast.show({
+        type: 'success',
+        text1: 'Thành công',
+        text2: 'kết bạn thành công!',
+      });
+    } catch (e) {
+      console.log(e);
+      Toast.show({
+        type: 'error',
+        text1: 'Kết bạn thất bại',
+        text2: 'Đã là bạn bè của nhau!',
+      });
+    }
+  };
 
   return (
     <View>
-      <HeaderBack title="Detail User" />
+      <HeaderBack title="Hồ sơ người dùng" />
       <Center style={{paddingVertical: 40}}>
         <Image
-          source={{uri: `${picture}`}}
+          source={{uri: 'https://picsum.photos/200/150'}}
           alt="img"
           borderRadius={100}
           width={150}
@@ -25,28 +66,17 @@ const DetailUser = ({route}: any) => {
         />
       </Center>
       <Center>
-        <Text style={styles.titleText}>
-          {title} {first} {last}
-        </Text>
+        <Text style={styles.titleText}>{id}</Text>
+        <Text style={styles.titleText}>{f_name}</Text>
         <Text style={styles.text}>{phone}</Text>
-        <Text style={styles.text}>{email}</Text>
       </Center>
       <Center pt={160}>
         <Button
           width={'90%'}
           background={'#B5EAD8'}
-          leftIcon={<TransferIcon width={30} />}
-          // onPress={() =>
-          //   navigation.navigate('Transfer', {
-          //     picture,
-          //     title,
-          //     first,
-          //     last,
-          //     phone,
-          //   })
-          // }
-        >
-          <Text style={styles.button}>Transfer</Text>
+          onPress={handAddFr}
+          leftIcon={<AddFriend color="#514545" width={30} height={30} />}>
+          <Text style={styles.button}>Kết bạn</Text>
         </Button>
       </Center>
     </View>

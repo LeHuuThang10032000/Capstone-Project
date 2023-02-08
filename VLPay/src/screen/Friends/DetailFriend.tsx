@@ -10,16 +10,16 @@ import {MainStackNavigation} from '../../stack/Navigation';
 
 const DetailFriend = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {email, picture, title, first, last, phone} = route.params;
+  const {f_name, phone} = route.params;
   const [friend, setFriend] = useState(true);
   console.log(phone);
 
   return (
     <View>
-      <HeaderBack title="Detail Friend" />
+      <HeaderBack title="Hồ sơ bạn bè" />
       <Center style={{paddingVertical: 40}}>
         <Image
-          source={{uri: `${picture}`}}
+          source={{uri: 'https://picsum.photos/200/150'}}
           alt="img"
           borderRadius={100}
           width={150}
@@ -27,11 +27,8 @@ const DetailFriend = ({route}: any) => {
         />
       </Center>
       <Center>
-        <Text style={styles.titleText}>
-          {title} {first} {last}
-        </Text>
+        <Text style={styles.titleText}>{f_name}</Text>
         <Text style={styles.text}>{phone}</Text>
-        <Text style={styles.text}>{email}</Text>
       </Center>
       <Center pt={160}>
         <Button

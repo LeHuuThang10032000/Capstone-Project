@@ -19,6 +19,7 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {isValidEmail} from '../../components/helpers/validator';
 import {MainStackNavigation} from '../../stack/Navigation';
 import WarningIcon from '../../assets/svg/warning-red.svg';
+import Toast from 'react-native-toast-message';
 
 interface CreateShop {
   email: string;
@@ -64,6 +65,11 @@ const Index = () => {
       setApprove(false);
     } catch (e) {
       console.log(e);
+      Toast.show({
+        type: 'error',
+        text1: 'Lỗi hệ thống',
+        text2: 'Có lỗi xảy ra vui lòng thử lại sau!',
+      });
     }
   };
 

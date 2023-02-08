@@ -28,7 +28,7 @@ const ManageCash = props => {
           <Text style={styles.text}>Số dư trong ví Tín dụng</Text>
         </View>
         <View>
-          <Text style={styles.price}>10.000.000 VND</Text>
+          <Text style={styles.price}>0 VND</Text>
         </View>
       </HStack>
     </VStack>

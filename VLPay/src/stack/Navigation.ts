@@ -57,19 +57,12 @@ export type MainStackParamList = {
     phone: string;
   };
   DetailUser: {
-    email: string;
-    picture: string;
-    title: string;
-    first: string;
-    last: string;
+    id?: string;
+    f_name: string;
     phone: string;
   };
   DetailFriend: {
-    email: string;
-    picture: string;
-    title: string;
-    first: string;
-    last: string;
+    f_name: string;
     phone: string;
   };
   Transfer: {
@@ -94,6 +87,7 @@ export type MainStackParamList = {
   Support: undefined;
   Friends: undefined;
   MyOrder: undefined;
+  Demo: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
