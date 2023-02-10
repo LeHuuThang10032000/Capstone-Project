@@ -14,11 +14,67 @@
       },
       "oauth_client": [
         {
+          "client_id": "1009045882827-3506rq5u94h8089fslrnipbn8d03bhb4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlpay",
+            "certificate_hash": "0dcc34e83f7118570df5ce7e07abf07609f63bf9"
+          }
+        },
+        {
+          "client_id": "1009045882827-8vopi3a7pe5ad99u226a3lfssan6h9lp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlpay",
+            "certificate_hash": "c3f644a5ff15639e45dd669085e369b186c1f591"
+          }
+        },
+        {
+          "client_id": "1009045882827-bu0jdf3862crrjg5bge68fpktg3gqmlu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlpay",
+            "certificate_hash": "ac74e477d4e8904d6a542ba35cd45afd7e8ddda1"
+          }
+        },
+        {
           "client_id": "1009045882827-c04sqa42fag9jt4g0d7ao04avgqteqi3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.vlpay",
             "certificate_hash": "d6f595317121c269bc9f7ab6659e38083145946f"
+          }
+        },
+        {
+          "client_id": "1009045882827-oeovh0hvjhk70fumqgcrrn41cap62n27.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlpay",
+            "certificate_hash": "85ac5ee5fc7157380ca53a4495116e24370a9b90"
+          }
+        },
+        {
+          "client_id": "1009045882827-p1mjpvdopke2ck41nihpolba5l5te16r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlpay",
+            "certificate_hash": "a7afcfc2bb8ad87df53e6dbbf6eb0dd4980c2212"
+          }
+        },
+        {
+          "client_id": "1009045882827-qcn1pd19e9nv1cp8t5a6oq9r6l0bkpm9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlpay",
+            "certificate_hash": "0b8756efd7df99ae31f1f9bffc2044d2b6b3d6be"
+          }
+        },
+        {
+          "client_id": "1009045882827-tiu0ljpe4m0jgp7up62ttgv60aifl4ch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlpay",
+            "certificate_hash": "79c49354852918a9773ff5c3a072b13468aa5e23"
           }
         },
         {

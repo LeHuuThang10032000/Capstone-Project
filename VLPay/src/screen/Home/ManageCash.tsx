@@ -1,10 +1,14 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {HStack, VStack} from 'native-base';
+import {HStack, Skeleton, VStack} from 'native-base';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {formatCurrency} from '../../components/helper';
 
-const ManageCash = (props: {wallet: number; credit: number}) => {
+const ManageCash = (props: {
+  wallet: number;
+  credit: number;
+  loading: boolean;
+}) => {
   console.log(props);
 
   return (
@@ -16,22 +20,34 @@ const ManageCash = (props: {wallet: number; credit: number}) => {
         <View>
           <Text style={styles.text}>Số dư trong ví của bạn</Text>
         </View>
-        <View>
-          <Text style={styles.price}>
-            {formatCurrency((props.wallet ?? 0).toString())} VND
-          </Text>
-        </View>
+        {props.loading ? (
+          <View>
+            <Text style={styles.price}>
+              {formatCurrency((props.wallet ?? 0).toString())} VND
+            </Text>
+          </View>
+        ) : (
+          <View>
+            <Skeleton h="4" w="24" borderRadius={5} />
+          </View>
+        )}
       </HStack>
 
       <HStack w={'90%'} justifyContent={'space-between'} alignItems="center">
         <View>
           <Text style={styles.text}>Số dư trong ví Tín dụng</Text>
         </View>
-        <View>
-          <Text style={styles.price}>
-            {formatCurrency((props.credit ?? 0).toString())} VND
-          </Text>
-        </View>
+        {props.loading ? (
+          <View>
+            <Text style={styles.price}>
+              {formatCurrency((props.credit ?? 0).toString())} VND
+            </Text>
+          </View>
+        ) : (
+          <View>
+            <Skeleton h="4" w="32" borderRadius={5} />
+          </View>
+        )}
       </HStack>
     </VStack>
   );

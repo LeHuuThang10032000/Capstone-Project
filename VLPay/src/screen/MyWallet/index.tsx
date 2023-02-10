@@ -21,11 +21,13 @@ import {useDispatch} from 'react-redux';
 import {Logout} from '../../redux/actions/authAction';
 import RNRestart from 'react-native-restart';
 import {axiosClient} from '../../components/apis/axiosClient';
+import {Skeleton} from 'native-base';
 const Index = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {modalVisible, toggleModal, closeModal} = ModalProvider();
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState({});
 
   const fetchData = useCallback(async () => {
@@ -33,6 +35,7 @@ const Index = () => {
       'https://zennoshop.cf/api/user/get-profile',
     );
     setProfile(result);
+    setIsLoading(true);
   }, []);
   const isFocused = useIsFocused();
 
@@ -64,8 +67,19 @@ const Index = () => {
                 />
               )}
               <View style={{paddingLeft: 10}}>
-                <Text style={styles.text}>{profile?.data?.data?.f_name}</Text>
-                <Text style={styles.text}>{profile.data?.data?.phone}</Text>
+                {isLoading ? (
+                  <>
+                    <Text style={styles.text}>
+                      {profile?.data?.data?.f_name}
+                    </Text>
+                    <Text style={styles.text}>{profile.data?.data?.phone}</Text>
+                  </>
+                ) : (
+                  <>
+                    <Skeleton h="4" w="32" borderRadius={5} mb={1} />
+                    <Skeleton h="4" w="32" borderRadius={5} />
+                  </>
+                )}
               </View>
             </View>
             <View>
@@ -141,17 +155,6 @@ const Index = () => {
               <SettingIcon style={{paddingLeft: 30}} />
               <View style={{paddingLeft: 10, justifyContent: 'center'}}>
                 <Text style={styles.text}>Cài đặt</Text>
-              </View>
-            </View>
-            <View>
-              <ExtendIcon />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <View style={styles.info}>
-              <PrivacyIcon style={{paddingLeft: 30}} />
-              <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Riêng tư</Text>
               </View>
             </View>
             <View>

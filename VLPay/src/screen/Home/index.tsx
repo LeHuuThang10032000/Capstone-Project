@@ -15,12 +15,14 @@ const Index = () => {
   const token = useSelector((state: any) => state.authReducer.authToken);
   const [userWallet, setUserWallet] = useState(0);
   const [credit, setCredit] = useState(0);
+  const [isloading, setIsloading] = useState(false);
   const fetchData = async () => {
     if (token) {
       setInterval(async () => {
         const result = await axiosClient.get('/user-wallet');
         setUserWallet(result?.data?.data?.balance);
         setCredit(result?.data?.data?.credit_limit);
+        setIsloading(true);
       }, 2000);
     }
   };
@@ -40,7 +42,7 @@ const Index = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <Header />
           <Banner wallet={userWallet} />
-          <ManageCash wallet={userWallet} credit={credit} />
+          <ManageCash wallet={userWallet} credit={credit} loading={isloading} />
           <ContentWallet />
           <PromoCarousel />
         </ScrollView>

@@ -52,7 +52,6 @@ const Index = () => {
     });
     setImage(image);
   };
-  console.log(profile);
   const onSubmit = async (data: any) => {
     console.log(data);
     const {email, location, name, products} = data;
@@ -60,6 +59,7 @@ const Index = () => {
     formData.append('email', email);
     formData.append('location', location);
     formData.append('name', name);
+    formData.append('selling_products', products);
     formData.append('user_id', profile?.data?.id);
     formData.append('phone', profile?.data?.phone);
     let fileName = image?.path.split('/');
