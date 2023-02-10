@@ -212,6 +212,7 @@ const WithDrawInfo = (props: any) => {
               <FormControl isInvalid={errors.amount !== undefined}>
                 <TextInput
                   placeholder="Nhập số tiền cần rút"
+                  placeholderTextColor={'#000'}
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
@@ -243,12 +244,13 @@ const WithDrawInfo = (props: any) => {
 
           <TText
             style={{
-              opacity: 0.26,
               alignSelf: 'center',
               marginBottom: 20,
               marginTop: 10,
+              color: '#8C8C8C',
+              fontWeight: '700',
             }}>
-            Rút tối thiểu 50.000đ. Rút tối đa 10.000.000đ
+            Rút tối thiểu 200.000đ. Rút tối đa 10.000.000đ
           </TText>
           <Center>
             <HStack space={5} justifyContent="center" width={'90%'}>
@@ -304,8 +306,8 @@ const WithDrawInfo = (props: any) => {
           display: 'none',
         }}
         message={`Gửi yêu cầu ${
-          isWithdraw ? ' rút tiền ' : ' nạp tiền '
-        }thành công`}
+          isWithdraw ? 'rút tiền' : 'nạp tiền'
+        } thành công`}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}
