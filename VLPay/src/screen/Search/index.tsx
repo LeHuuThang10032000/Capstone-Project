@@ -99,7 +99,7 @@ const Index = () => {
         onPress={() => {
           onPress(item.f_name, item.phone, item.id);
         }}>
-        <HStack alignItems="center" p="5">
+        <HStack alignItems="center" p="5" backgroundColor={'white'} marginY={1}>
           <Image
             source={{uri: 'https://picsum.photos/200/150'}}
             alt="rduser"
@@ -107,7 +107,10 @@ const Index = () => {
             borderRadius="50"
           />
           <VStack>
-            <Text style={styles.itemStyle}>{item.f_name}</Text>
+            <Text
+              style={[styles.itemStyle, {fontWeight: 'bold', fontSize: 16}]}>
+              {item.f_name}
+            </Text>
             <Text style={styles.itemStyle}>{item.phone}</Text>
           </VStack>
         </HStack>
@@ -185,7 +188,7 @@ const Index = () => {
         <FlatList
           data={filteredDataSource}
           keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorView}
+          // ItemSeparatorComponent={ItemSeparatorView}
           renderItem={ItemView}
           ListEmptyComponent={EmptyComponent}
         />

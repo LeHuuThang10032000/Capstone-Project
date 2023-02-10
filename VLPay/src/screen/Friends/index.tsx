@@ -98,7 +98,7 @@ const Index = () => {
         onPress={() => {
           onPress(item.f_name, item.phone);
         }}>
-        <HStack alignItems="center" p="5">
+        <HStack alignItems="center" p="5" backgroundColor={'white'} marginY={1}>
           <Image
             source={{uri: 'https://picsum.photos/200/150'}}
             alt="rduser"
@@ -184,7 +184,7 @@ const Index = () => {
         <FlatList
           data={filteredDataSource}
           keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorView}
+          // ItemSeparatorComponent={ItemSeparatorView}
           renderItem={ItemView}
           ListEmptyComponent={EmptyComponent}
         />
