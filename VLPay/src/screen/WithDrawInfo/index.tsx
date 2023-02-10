@@ -93,8 +93,8 @@ const WithDrawInfo = (props: any) => {
       console.log('Error is:', e);
       Toast.show({
         type: 'error',
-        text1: 'Lỗi nạp tiền',
-        text2: 'Không nhập số tiền ít hơn 200.000đ!',
+        text1: 'Lỗi giao dịch',
+        text2: 'Nhập số tiền từ 200.000đ trở lên!',
       });
     }
   };

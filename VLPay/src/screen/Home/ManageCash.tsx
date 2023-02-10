@@ -4,7 +4,7 @@ import {HStack, VStack} from 'native-base';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {formatCurrency} from '../../components/helper';
 
-const ManageCash = props => {
+const ManageCash = (props: {wallet: number; credit: number}) => {
   console.log(props);
 
   return (
@@ -28,7 +28,9 @@ const ManageCash = props => {
           <Text style={styles.text}>Số dư trong ví Tín dụng</Text>
         </View>
         <View>
-          <Text style={styles.price}>0 VND</Text>
+          <Text style={styles.price}>
+            {formatCurrency((props.credit ?? 0).toString())} VND
+          </Text>
         </View>
       </HStack>
     </VStack>

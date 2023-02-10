@@ -66,7 +66,6 @@ const DetailUser = ({route}: any) => {
         />
       </Center>
       <Center>
-        <Text style={styles.titleText}>{id}</Text>
         <Text style={styles.titleText}>{f_name}</Text>
         <Text style={styles.text}>{phone}</Text>
       </Center>
