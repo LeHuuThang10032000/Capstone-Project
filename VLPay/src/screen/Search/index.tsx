@@ -154,7 +154,7 @@ const Index = () => {
       <HeaderBack title="Người dùng trên VLPay" />
       <Center marginY={5}>
         <Input
-          placeholder="Search..."
+          placeholder="Nhập số điện thoại để tìm kiếm..."
           width="90%"
           borderRadius="50"
           py="3"

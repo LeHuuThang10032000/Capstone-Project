@@ -28,7 +28,7 @@ const App = () => {
       <Provider store={store}>
         <AppRouter />
       </Provider>
-      <Toast position="bottom" bottomOffset={20} />
+      <Toast position="top" bottomOffset={20} />
     </NativeBaseProvider>
   );
 };
