@@ -40,12 +40,12 @@ const Index = (props: Props) => {
             });
           }}></MyButton>
 
-        <MyButton
+        {/* <MyButton
           icon={<EarthIcon />}
           buttonText="Chọn ngôn ngữ"
           rightIcon={<ChevronDown />}
           rightText={'English'}
-          onPress={toggleModal}></MyButton>
+          onPress={toggleModal}></MyButton> */}
 
         <Modal
           isVisible={modalVisible}

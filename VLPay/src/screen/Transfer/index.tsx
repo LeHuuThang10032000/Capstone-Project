@@ -38,6 +38,7 @@ import Icons from '../../components/icons';
 import Colors from '../../components/helpers/Colors';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {UText} from '../../components/UText';
+import Toast from 'react-native-toast-message';
 interface Transfer {
   name: string;
   phone: string;
@@ -60,8 +61,6 @@ const Index = (props: any) => {
       return 'Số điện thoại không được bỏ trống';
     } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
       return 'Số điện thoại chưa chính xác';
-    } else if (userProfile == phoneNumber) {
-      return 'Số điện thoại này bạn đang sử dụng';
     }
   }, []);
 
@@ -91,6 +90,9 @@ const Index = (props: any) => {
           });
           if (result?.data?.status_code == 422) {
             navigation.navigate('ConfirmPM', {data});
+          } else if (result?.data?.user?.phone == userProfile) {
+            setErroWarning('Số điện thoại này bạn đang sử dụng');
+            setErrorDisplay(true);
           } else {
             setErroWarning('Số điện thoại không tồn tại');
             setErrorDisplay(true);
@@ -181,13 +183,17 @@ const Index = (props: any) => {
                       result?.data?.user?.phone === profile,
                     );
                     if (result.data.status_code == 200) {
-                      setErrorPhone('Số điện thoại chưa được đăng ký');
-                      return;
+                      Toast.show({
+                        type: 'error',
+                        text1: 'Lỗi',
+                        text2: 'Số điện thoại chưa được đăng ký',
+                      });
                     } else if (result?.data?.user?.phone == userProfile) {
-                      console.log(123456);
-
-                      setErrorPhone('Số điện thoại này bạn đang sử dụng');
-                      return;
+                      Toast.show({
+                        type: 'error',
+                        text1: 'Lỗi',
+                        text2: 'Số điện thoại này bạn đang sử dụng',
+                      });
                     }
                     setErrorPhone('');
                     setProfile(result?.data?.user?.f_name);
