@@ -52,7 +52,8 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/create-credit-request', [UserController::class, "createCreditRequest"]);
 
     //withdraw
-    Route::post('create-withdraw-request', [WithdrawController::class, 'create']);
+    Route::post('/create-withdraw-request', [WithdrawController::class, 'create']);
+    Route::get('/withdraw-history', [WithdrawController::class, 'histories']);
 
     //friends
     Route::apiResource('friends', FriendsController::class);

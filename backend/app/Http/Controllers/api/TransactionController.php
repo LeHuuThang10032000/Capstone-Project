@@ -3,12 +3,19 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Response\ApiResponse;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
+use Carbon\Carbon;
+use Exception;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 use function Ramsey\Collection\Map\replace;
 
 class TransactionController extends Controller
@@ -34,85 +41,106 @@ class TransactionController extends Controller
     //method post
     public function transfer(Request $request)
     {
-        $request->validate([
-            "phone" => "min:10|max:10",
-            "f_name" => "min:3",
-            "cash" => "numeric|min:3000|max:1000000",
-            "message" => "max:255"
+        $validate = Validator::make($request->all(), [
+            'phone' => 'required|phone',
+            'cash' => 'required|integer|min:100',
+            'message' => 'max:255'
+        ], [
+            'phone.phone' => 'Số điện thoại không đúng định dạng'
         ]);
 
-        if (Auth::check()) {
-            $currentUser = Auth::user();
-            //sender
-            $userWallet = Wallet::where("user_id", $currentUser->id)->first();
-            if ($userWallet->balance > $request->cash) {
-                $userWallet->update([
-                    "balance" => $userWallet->balance - $request->cash
-                ]);
-                //receiver
-                $recipient = User::where('phone', $request->phone)->first();
-                //plus and minus each user wallet
-                $recipientWallet = Wallet::where("user_id", $recipient->id)->first();
-                $recipientWallet->update([
-                    "balance" => $recipientWallet->balance + $request->cash
-                ]);
-                //save transaction infor
-                Transaction::create(
-                    [
-                        "from_id" => $currentUser->id,
-                        "to_id" => $recipient->id,
-                        "amount" => $request->cash,
-                        "message" => $request->message ?? "",
-                        "code" => mt_rand(10000000, 99999999)
-                    ]
-                );
-
-                return response([
-                    "from_user" => $currentUser->f_name,
-                    "to_user" => $recipient->f_name,
-                    "phone" => $request->phone,
-                    "wallet" => $userWallet->balance,
-                    "message" => $request->message ?? "",
-                    "code" => mt_rand(10000000, 99999999)
-                ], 200);
-
-            } else {
-                return response([
-                    "message" => "Số tiền cần chuyển lớn hơn số dư trong ví"
-                ], 422);
-            }
+        if ($validate->fails()) {
+            return ApiResponse::failureResponse($validate->messages()->first());
         }
-        return $request->cash;
+
+        try {
+            DB::beginTransaction();
+
+            $user = Auth::user();
+            $userWallet = $user->wallet;
+
+            if($userWallet->balance < $request->cash) {
+                return ApiResponse::failureResponse('Vượt quá số dư trong ví');
+            }
+
+            $recipient = User::where('phone', $request->phone)->first();
+            $recipientWallet = $recipient->wallet;
+            
+            $recipientWallet->update([
+                "balance" => $recipientWallet->balance + $request->cash
+            ]);
+            $userWallet->update([
+                "balance" => $userWallet->balance - $request->cash
+            ]);
+
+            $transaction = Transaction::create(
+                [
+                    'from_id' => $user->id,
+                    'to_id' => $recipient->id,
+                    'amount' => $request->cash,
+                    'code' => Helper::generateNumber(),
+                ]
+            );
+
+            DB::commit();
+            return ApiResponse::successResponse($transaction);
+        } catch(Exception $e) {
+            DB::rollBack();
+            ApiResponse::failureResponse('Đã có lỗi xảy ra');
+        }
     }
 
     public function history(Request $request)
     {
-        $userId = Auth::user()->id;
-        $historyGets = Transaction::where('from_id', $userId)->orWhere('to_id', $userId)->orderBy('created_at', 'desc')->get();
-        $times = [];
-        $prevTime = '';
-        $index = 0;
-        foreach ($historyGets as $key => $item) {
-            if($item['from_id'] == $userId) $item['type'] = 'SEND';
-            else $item['type'] = 'GET';
-            if($key == 0){
-                $time = explode(' ', $item['created_at']);
-                $time = $time[0].' '.$time[1].' '.$time[2].' '.$time[3];
-                $prevTime = $time[$index];
-                array_push($times, [$time => [$item]]);
-                $times = $times[0];
-            }else{
-                $time = explode(' ', $item['created_at']);
-                $time = $time[0].' '.$time[1].' '.$time[2].' '.$time[3];
-                if(strcmp($prevTime, $time) == 0){
-                    array_push($times[$time], $item);
-                } else {
-                    $index++;
-                    $prevTime = $time;
-                    $times[$prevTime] = [$item];
-                }
-            }
+        $validate = Validator::make($request->all(), [
+            'page' => 'integer',
+            'limit' => 'integer',
+            'filter_key' => 'in:days,months,years',
+        ]);
+
+        if ($validate->fails()) {
+            return ApiResponse::failureResponse('Đã có lỗi xảy ra');
         }
-        return $times;
+
+        $userId = Auth::user()->id;
+        $historyGets = Transaction::where('from_id', $userId)
+            ->orWhere('to_id', $userId)
+            ->orderBy('created_at', 'desc');
+
+        $limit = $request->limit ?? 10;
+        $page = $request->page ?? 1;
+        if($request->filter_key == 'days') {
+            foreach($historyGets->get() as $item) {
+                $date = Carbon::parse($item->created_at)->format('Y-m-d');
+                $data[$date]['data'][] = $item;
+                $data[$date]['date'] = $date;
+            }
+            $data = array_values($data);
+            $data = $limit ? array_slice($data, $limit*($page-1), $limit) : $data;
+        } else if($request->filter_key == 'months') {
+            foreach($historyGets->get() as $item) {
+                $date = Carbon::parse($item->created_at)->format('Y-m');
+                $data[$date]['data'][] = $item;
+                $data[$date]['date'] = $date;
+            }
+            $data = array_values($data);
+            $data = $limit ? array_slice($data, $limit*($page-1), $limit) : $data;
+        } else if($request->filter_key == 'years') {
+            foreach($historyGets->get() as $item) {
+                $date = Carbon::parse($item->created_at)->format('Y');
+                $data[$date]['data'][] = $item;
+                $data[$date]['date'] = $date;
+            }
+            $data = array_values($data);
+            $data = $limit ? array_slice($data, $limit*($page-1), $limit) : $data;
+        }
+        
+        $response = [
+            'data' => $data,
+            'limit' => $limit,
+            'page' => $page,
+            'total' => count($data),
+        ];
+        return ApiResponse::successResponse($response);
     }
 }

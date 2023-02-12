@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use DateTimeInterface;
 
 class Transaction extends Model
 {
@@ -36,8 +37,8 @@ class Transaction extends Model
         return $this->belongsTo(User::class, 'to_id', 'id');
     }
     
-    public function getCreatedAtAttribute($value)
+    protected function serializeDate(DateTimeInterface $date)
     {
-        return Carbon::parse($value)->toDayDateTimeString();
+        return $date->format('Y-m-d H:i:s');
     }
 }

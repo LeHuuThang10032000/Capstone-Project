@@ -14,7 +14,7 @@
             <div class="{{ ($index == 0) ? 'py-2' : 'pb-2' }} px-3">
                 <div class="rounded border">
                     <div class="p-3">
-                        <p class="m-0">Mã giao dịch: {{$transaction->code}}</p>
+                        <b class="m-0">Mã giao dịch: {{$transaction->code}}</b>
                         <div class="rounded border p-2 my-1">
                             <p class="m-0">Thông tin người gửi</p>
                             <p class="m-0">Số diện thoại: {{$transaction->fromUser->phone}}</p>

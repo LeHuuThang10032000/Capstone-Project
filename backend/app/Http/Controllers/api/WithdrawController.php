@@ -17,33 +17,64 @@ class WithdrawController extends Controller
 {
     public function create(Request $request)
     {
-        $credit = Validator::make($request->all(), [
-            'name' => 'required|max:60',
-            'phone' => 'required|phone|digits:10',
-            'email' => 'required|email',
-            'mssv' => 'required|max:30',
-            'amount' => 'required|numeric|between:200000,1000000'
+        $user = Auth::user();
+        $validate = Validator::make($request->all(), [
+            'amount' => 'required|numeric|min:1000|max:' . $user->wallet->balance
         ], [
-            'name.required' => 'Vui lòng nhập họ tên',
-            'phone.required' => 'Vui lòng nhập số điện thoại',
-            'email.required' => 'Vui lòng nhập email',
-            'mssv.required' => 'Vui lòng nhập mssv',
-            'amount.required' => 'Vui lòng nhập hạn mức',
-            'amount.min' => 'Hạn mức tối thiểu là 200.000đ',
-            'amount.max' => 'Hạn mức tối đa là 1.000.000đ',
+            'amount.required' => 'Nhập số tiền cần rút',
+            'amount.min' => 'Số tiền rút tối thiểu là 1.000đ',
+            'amount.max' => 'Số tiền trong ví không đủ',
         ]);
 
-        if ($credit->fails()) {
-            return ApiResponse::failureResponse($credit->messages());
+        if ($validate->fails()) {
+            return ApiResponse::failureResponse($validate->messages()->first());
         }
         
         try {
-            $request['user_id'] = Auth::user()->id;
-            $request['transaction_id'] = Helper::generateNumber();
-            $result = WithdrawRequest::create($request->all());
+            $result = WithdrawRequest::create([
+                'user_id' => $user->id,
+                'transaction_id' => Helper::generateNumber(),
+                'status' => 'pending',
+                'amount' => $request->amount,
+            ]);
             return ApiResponse::successResponse($result);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
+    }
+
+    public function histories(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'page' => 'integer',
+            'limit' => 'integer',
+        ]);
+
+        if ($validate->fails()) {
+            return ApiResponse::failureResponse('Đã có lỗi xảy ra');
+        }
+
+        try {
+            $data = WithdrawRequest::where('user_id', Auth::user()->id)
+                ->select('id', 'created_at');
+
+            if($request->page) {
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page-1) * $limit;
+                $data = $data->offset($offset)->limit($limit);
+            }
+
+            $data = $data->get();
+
+            return ApiResponse::successResponse($data);
+        } catch (\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function detail($id)
+    {
+
     }
 }
