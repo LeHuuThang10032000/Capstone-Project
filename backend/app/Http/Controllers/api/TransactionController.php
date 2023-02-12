@@ -105,12 +105,13 @@ class TransactionController extends Controller
         $userId = Auth::user()->id;
         $historyGets = Transaction::where('from_id', $userId)
             ->orWhere('to_id', $userId)
-            ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $limit = $request->limit ?? 10;
         $page = $request->page ?? 1;
         if($request->filter_key == 'days') {
-            foreach($historyGets->get() as $item) {
+            foreach($historyGets as $item) {
                 $date = Carbon::parse($item->created_at)->format('Y-m-d');
                 $data[$date]['data'][] = $item;
                 $data[$date]['date'] = $date;
@@ -118,7 +119,7 @@ class TransactionController extends Controller
             $data = array_values($data);
             $data = $limit ? array_slice($data, $limit*($page-1), $limit) : $data;
         } else if($request->filter_key == 'months') {
-            foreach($historyGets->get() as $item) {
+            foreach($historyGets as $item) {
                 $date = Carbon::parse($item->created_at)->format('Y-m');
                 $data[$date]['data'][] = $item;
                 $data[$date]['date'] = $date;
@@ -126,7 +127,7 @@ class TransactionController extends Controller
             $data = array_values($data);
             $data = $limit ? array_slice($data, $limit*($page-1), $limit) : $data;
         } else if($request->filter_key == 'years') {
-            foreach($historyGets->get() as $item) {
+            foreach($historyGets as $item) {
                 $date = Carbon::parse($item->created_at)->format('Y');
                 $data[$date]['data'][] = $item;
                 $data[$date]['date'] = $date;
