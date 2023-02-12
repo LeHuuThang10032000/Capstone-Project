@@ -7,12 +7,10 @@
 <div class="{{ ($index == 0) ? 'py-2' : 'pb-2' }} px-3">
     <div class="d-flex justify-content-between rounded border">
         <div class="p-3">
+            <b class="m-0">Mã giao dịch: {{$request->transaction_id}}</b>
             <p class="m-0">id tài khoản: {{$request->user->id}}</p>
-            <p class="m-0"> mã giao dịch: {{$request->transaction_id}}</p>
-            <p class="m-0">Tên: {{$request->name}} - {{$request->mssv}}</p>
-            <p class="m-0">Số điện thoại: {{$request->phone}}</p>
-            <p class="m-0">Email: {{ ($request->email) ?? 'null' }}</p>
-            <p class="m-0">Lý do: {{ ($request->reason)}}</p>
+            <p class="m-0">Tên: {{$request->user->f_name}} - {{$request->user->mssv}}</p>
+            <p class="m-0">Số điện thoại: {{$request->user->phone}}</p>
             <p class="m-0">Thời gian gửi yêu cầu: {{$request->created_at}}</p>
             <p class="m-0" style="color: #FF9900">{{$request->status}}</p>
         </div>
