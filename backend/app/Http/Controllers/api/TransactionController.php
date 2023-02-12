@@ -107,7 +107,7 @@ class TransactionController extends Controller
             ->orWhere('to_id', $userId)
             ->orderBy('created_at', 'desc');
 
-        $limit = $request->limit;
+        $limit = $request->limit ?? 10;
         $page = $request->page ?? 1;
         if($request->filter_key == 'days') {
             foreach($historyGets->get() as $item) {
