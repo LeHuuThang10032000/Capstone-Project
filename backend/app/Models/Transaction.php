@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Support\Facades\Auth;
 
 class Transaction extends Model
 {
@@ -40,5 +41,18 @@ class Transaction extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function getTitleAttribute($value) {
+        if($this->type == 'T') {
+            if($this->from_id == Auth::user()->id) {
+                $recipient = $this->fromUser()->selectRaw('f_name')->first();
+                $value = 'Chuyển tiền tới ' . $recipient->f_name;
+            } else {
+                $sender = $this->fromUser()->select('f_name')->first();
+                $value = 'Nhận tiền từ ' . $sender->f_name;
+            }
+        }
+        return $value;
     }
 }
