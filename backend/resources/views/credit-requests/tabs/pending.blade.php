@@ -13,7 +13,7 @@
             <p class="m-0">Email: {{ ($request->email) ?? 'null' }}</p>
             <p class="m-0">Lý do: {{ ($request->reason)}}</p>
             <p class="m-0">Thời gian gửi yêu cầu: {{$request->created_at}}</p>
-            <p class="m-0" style="color: #FF9900">{{$request->status}}</p>
+            <p class="m-0" style="color: #FF9900">Chờ phê duyệt</p>
         </div>
         <div class="d-flex flex-column py-3 px-4">
 
@@ -60,11 +60,12 @@
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
-
 </div>
 @endforeach
+<div class="py-2 px-3">
+    {{ $requests['pending']->links() }}
+</div>
 @endif
 </div>

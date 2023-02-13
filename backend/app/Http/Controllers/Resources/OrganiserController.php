@@ -32,13 +32,14 @@ class OrganiserController extends Controller
 
     public function getStoreRequests()
     {
-
-        $data = Store::all()->groupBy('status');
+        $pending = Store::where('status', 'pending')->paginate(5);
+        $approved = Store::where('status', 'approved')->paginate(5);
+        $denied = Store::where('status', 'denied')->paginate(5);
 
         $stores = [
-            'pending' => $data['pending'] ?? [],
-            'approved' => $data['approved'] ?? [],
-            'denied' => $data['denied'] ?? [],
+            'pending' => $pending ?? [],
+            'approved' => $approved ?? [],
+            'denied' => $denied ?? [],
         ];
         return view('store-requests.index', compact('stores'));
     }
@@ -79,14 +80,14 @@ class OrganiserController extends Controller
 
     public function getCreditRequests()
     {
-
-        $data = CreditRequest::all()->groupBy('status');
-
+        $pending = CreditRequest::where('status', 'pending')->paginate(5);
+        $approved = CreditRequest::where('status', 'approved')->paginate(5);
+        $denied = CreditRequest::where('status', 'denied')->paginate(5);
 
         $requests = [
-            'pending' => $data['pending'] ?? [],
-            'approved' => $data['approved'] ?? [],
-            'denied' => $data['denied'] ?? [],
+            'pending' => $pending ?? [],
+            'approved' => $approved ?? [],
+            'denied' => $denied ?? [],
         ];
         return view('credit-requests.index', compact('requests'));
     }
@@ -129,10 +130,13 @@ class OrganiserController extends Controller
             'deny_reason' => 'required',
         ]);
 
+        dd($request->deny_reason);
+
         $req = CreditRequest::where('id', $request->request_id)->first();
         if (!$req) {
             return back()->with('error', 'Không tìm thấy yêu cầu');
         }
+        dd($req->deny_reason);
         $req->status = 'denied';
         $req->deny_reason = $request->deny_reason;
         $req->save();
@@ -140,12 +144,16 @@ class OrganiserController extends Controller
         return back()->with('success', 'Từ chối yêu cầu cấp hạn mức tín dụng thành công');
     }
 
-    public function getWithdrawRequest(){
-        $data = WithdrawRequest::all()->groupBy('status');
+    public function getWithdrawRequest()
+    {
+        $pending = WithdrawRequest::where('status', 'pending')->paginate(5);
+        $approved = WithdrawRequest::where('status', 'approved')->paginate(5);
+        $denied = WithdrawRequest::where('status', 'denied')->paginate(5);
+
         $requests = [
-            'pending' => $data['pending'] ?? [],
-            'approved' => $data['approved'] ?? [],
-            'denied' => $data['denied'] ?? [],
+            'pending' => $pending ?? [],
+            'approved' => $approved ?? [],
+            'denied' => $denied ?? [],
         ];
         return view('withdraw-request.index',compact('requests'));
     }
@@ -201,7 +209,7 @@ class OrganiserController extends Controller
 
     public function getListTransactions()
     {
-        $transactions = Transaction::simplePaginate(10);
+        $transactions = Transaction::paginate(5);
         return view('transactions.index', compact('transactions'));
     }
 }

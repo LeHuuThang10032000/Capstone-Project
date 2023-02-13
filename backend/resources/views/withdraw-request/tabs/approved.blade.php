@@ -8,7 +8,7 @@
     <div class="d-flex justify-content-between rounded border">
         <div class="p-3">
             <p class="m-0">id tài khoản: {{$request->user->id}}</p>
-            <p class="m-0"> mã giao dịch: {{$request->transaction_id}}</p>
+            <p class="m-0">Mã giao dịch: {{$request->transaction_id}}</p>
             <p class="m-0">Tên: {{$request->name}} - {{$request->mssv}}</p>
             <p class="m-0">Số điện thoại: {{$request->phone}}</p>
             <p class="m-0">Email: {{ ($request->email) ?? 'null' }}</p>
@@ -19,5 +19,8 @@
     </div>
 </div>
 @endforeach
+<div class="py-2 px-3">
+    {{ $requests['approved']->links() }}
+</div>
 @endif
 </div>

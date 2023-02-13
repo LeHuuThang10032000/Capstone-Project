@@ -12,7 +12,7 @@
             <p class="m-0">Tên: {{$request->user->f_name}} - {{$request->user->mssv}}</p>
             <p class="m-0">Số điện thoại: {{$request->user->phone}}</p>
             <p class="m-0">Thời gian gửi yêu cầu: {{$request->created_at}}</p>
-            <p class="m-0" style="color: #FF9900">{{$request->status}}</p>
+            <p class="m-0" style="color: #FF9900">Đang chờ phê duyệt</p>
         </div>
         <div class="d-flex flex-column py-3 px-4">
 
@@ -62,8 +62,10 @@
 
         </div>
     </div>
-
 </div>
 @endforeach
+<div class="py-2 px-3">
+    {{ $requests['pending']->links() }}
+</div>
 @endif
 </div>

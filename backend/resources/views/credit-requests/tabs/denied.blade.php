@@ -13,10 +13,14 @@
             <p class="m-0">Email: {{ ($request->email) ?? 'null' }}</p>
             <p class="m-0">Lý do: {{ ($request->reason)}}</p>
             <p class="m-0">Thời gian gửi yêu cầu: {{$request->created_at}}</p>
-            <p class="m-0" style="color: #E76969">{{$request->status}}</p>
+            <p class="m-0" style="color: #E76969">Từ chối</p>
+            <p class="m-0">Lý do từ chối: {{$request->deny_reason}}</p>
         </div>
     </div>
 </div>
 @endforeach
+<div class="py-2 px-3">
+    {{ $requests['denied']->links() }}
+</div>
 @endif
 </div>

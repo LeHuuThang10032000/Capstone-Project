@@ -18,5 +18,8 @@
     </div>
 </div>
 @endforeach
+<div class="py-2 px-3">
+    {{ $requests['approved']->links() }}
+</div>
 @endif
 </div>
