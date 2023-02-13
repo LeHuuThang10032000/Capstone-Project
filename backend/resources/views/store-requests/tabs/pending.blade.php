@@ -24,7 +24,7 @@
 
             <button type="button" class="btn btn-theme-warning w-full px-4 mb-auto" data-bs-toggle="modal" data-bs-target="#denyModal{{$store->id}}">Từ chối</button>
 
-            <div class="modal fade" id="denyModal{{$store->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="denyModal{{$store->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top: 5%;">
 
                 <form action="{{route('organiser.store-request.deny')}}" method="POST">
                     @csrf
@@ -33,7 +33,7 @@
                         <div class="modal-content">
                             <div class="modal-body">
                                 <p>Lí do từ chối:</p>
-                                <textarea class="form-control" name="deny_reason" id="floatingTextarea"></textarea>
+                                <textarea class="form-control" name="deny_reason" id="floatingTextarea" style="height: 10rem;"></textarea>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-theme-warning px-4">Từ chối</button>
