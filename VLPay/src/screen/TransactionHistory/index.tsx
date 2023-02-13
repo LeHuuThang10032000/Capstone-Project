@@ -1,6 +1,5 @@
 import {
-  ActivityIndicator,
-  FlatList,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -31,6 +30,15 @@ const FirstRoute = () => {
   const [history, setHistory] = useState([]);
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getDays();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   // console.log('===>', history);
   console.log('MyID:', profile);
@@ -42,16 +50,18 @@ const FirstRoute = () => {
     setProfile(result.data?.data?.id);
   }, []);
 
+  const getDays = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/history-transaction?filter_key=days',
+    );
+    setHistory(result.data?.data?.data);
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     fetchData();
-    axiosClient
-      .get('https://zennoshop.cf/api/user/history-transaction?filter_key=days')
-      .then(res => {
-        setHistory(res.data?.data?.data);
-        setLoading(false);
-      })
-      .catch(e => console.log(e));
+    getDays();
   }, []);
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
@@ -64,7 +74,11 @@ const FirstRoute = () => {
           />
         </Center>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           {history.map((item: any, index: any) => {
             return (
               <View key={index}>
@@ -107,6 +121,15 @@ const SecondRoute = () => {
   const [history, setHistory] = useState([]);
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getMonths();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   // console.log('===>', history);
   console.log('MyID:', profile);
@@ -118,18 +141,18 @@ const SecondRoute = () => {
     setProfile(result.data?.data?.id);
   }, []);
 
+  const getMonths = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/history-transaction?filter_key=months',
+    );
+    setHistory(result.data?.data?.data);
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     fetchData();
-    axiosClient
-      .get(
-        'https://zennoshop.cf/api/user/history-transaction?filter_key=months',
-      )
-      .then(res => {
-        setHistory(res.data?.data?.data);
-        setLoading(false);
-      })
-      .catch(e => console.log(e));
+    getMonths();
   }, []);
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
@@ -142,7 +165,11 @@ const SecondRoute = () => {
           />
         </Center>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           {history.map((item: any, index: any) => {
             return (
               <View key={index}>
@@ -185,6 +212,15 @@ const ThirdRoute = () => {
   const [history, setHistory] = useState([]);
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getYears();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   // console.log('===>', history);
   console.log('MyID:', profile);
@@ -196,16 +232,18 @@ const ThirdRoute = () => {
     setProfile(result.data?.data?.id);
   }, []);
 
+  const getYears = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/history-transaction?filter_key=years',
+    );
+    setHistory(result.data?.data?.data);
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     fetchData();
-    axiosClient
-      .get('https://zennoshop.cf/api/user/history-transaction?filter_key=years')
-      .then(res => {
-        setHistory(res.data?.data?.data);
-        setLoading(false);
-      })
-      .catch(e => console.log(e));
+    getYears();
   }, []);
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
@@ -218,7 +256,11 @@ const ThirdRoute = () => {
           />
         </Center>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           {history.map((item: any, index: any) => {
             return (
               <View key={index}>
