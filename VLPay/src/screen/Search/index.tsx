@@ -77,7 +77,7 @@ const Index = () => {
       // Filter the masterDataSource and update FilteredDataSource
       const newData = masterDataSource.filter(function (item: UserData) {
         // Applying filter for the inserted text in search bar
-        const itemData = item.f_name ? item.f_name : '';
+        const itemData = item.phone ? item.phone : '';
         const textData = text;
         return itemData.indexOf(textData) > -1;
       });

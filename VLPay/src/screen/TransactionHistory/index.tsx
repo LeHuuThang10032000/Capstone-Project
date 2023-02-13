@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   SafeAreaView,
   ScrollView,
@@ -20,98 +21,238 @@ import {
   Pressable,
   Row,
 } from 'native-base';
-import SearchIcon from '../../assets/svg/search.svg';
-import HeaderDivider from '../Notification/HeaderDivider';
-import {HISTORY_TRANSACTION_SAMPLE} from './mock';
+import Lottie from 'lottie-react-native';
 import {TabView, SceneMap, NavigationState} from 'react-native-tab-view';
 import TText from '../Transfer/TText';
+import {axiosClient} from '../../components/apis/axiosClient';
+import {formatCurrency} from '../../components/helper';
 
 const FirstRoute = () => {
+  const [history, setHistory] = useState([]);
+  const [profile, setProfile] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // console.log('===>', history);
+  console.log('MyID:', profile);
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result.data?.data?.id);
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
+    axiosClient
+      .get('https://zennoshop.cf/api/user/history-transaction?filter_key=days')
+      .then(res => {
+        setHistory(res.data?.data?.data);
+        setLoading(false);
+      })
+      .catch(e => console.log(e));
+  }, []);
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {HISTORY_TRANSACTION_SAMPLE.map(item => {
-          return (
-            <View key={item.id}>
-              <View style={styles.containerMonth}>
-                <Text style={styles.titleText}>{item.month}</Text>
-              </View>
-              {item.list_transaction.map(item => {
-                return (
-                  <VStack py={5} key={item.id}>
-                    <HStack justifyContent={'space-between'}>
-                      <Text style={styles.text}>{item.description}</Text>
-                      <Text style={styles.text}>{item.money}đ</Text>
+      {loading ? (
+        <Center>
+          <Lottie
+            source={require('../../assets/lottie-file/loading.json')}
+            autoPlay={true}
+            style={{width: 100, height: 100}}
+          />
+        </Center>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {history.map((item: any, index: any) => {
+            return (
+              <View key={index}>
+                <View style={styles.containerMonth}>
+                  <Text style={styles.titleText}>{item.date}</Text>
+                </View>
+                {item.data.map((item: any) => {
+                  return (
+                    <HStack p={3} key={item.id} justifyContent="space-between">
+                      <VStack>
+                        {item.from_id === profile ? (
+                          <Text style={styles.text}>Chuyển tiền đến ...</Text>
+                        ) : (
+                          <Text style={styles.text}>Nhận tiền từ ...</Text>
+                        )}
+                        <Text style={styles.textDate}>{item.created_at}</Text>
+                      </VStack>
+                      {item.from_id !== profile ? (
+                        <Text style={styles.text}>
+                          +{formatCurrency(`${item.amount}`)}đ
+                        </Text>
+                      ) : (
+                        <Text style={styles.text}>
+                          -{formatCurrency(`${item.amount}`)}đ
+                        </Text>
+                      )}
                     </HStack>
-                    <Text style={styles.textDate}>{item.date}</Text>
-                  </VStack>
-                );
-              })}
-              <Divider my={5} bgColor={'black'} />
-            </View>
-          );
-        })}
-      </ScrollView>
+                  );
+                })}
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
     </View>
   );
 };
 
 const SecondRoute = () => {
+  const [history, setHistory] = useState([]);
+  const [profile, setProfile] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // console.log('===>', history);
+  console.log('MyID:', profile);
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result.data?.data?.id);
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
+    axiosClient
+      .get(
+        'https://zennoshop.cf/api/user/history-transaction?filter_key=months',
+      )
+      .then(res => {
+        setHistory(res.data?.data?.data);
+        setLoading(false);
+      })
+      .catch(e => console.log(e));
+  }, []);
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {HISTORY_TRANSACTION_SAMPLE.map(item => {
-          return (
-            <View key={item.id}>
-              <View style={styles.containerMonth}>
-                <Text style={styles.titleText}>{item.month}</Text>
-              </View>
-              {item.list_transaction.map(item => {
-                return (
-                  <VStack py={5} key={item.id}>
-                    <HStack justifyContent={'space-between'}>
-                      <Text style={styles.text}>{item.description}</Text>
-                      <Text style={styles.text}>{item.money}đ</Text>
+      {loading ? (
+        <Center>
+          <Lottie
+            source={require('../../assets/lottie-file/loading.json')}
+            autoPlay={true}
+            style={{width: 100, height: 100}}
+          />
+        </Center>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {history.map((item: any, index: any) => {
+            return (
+              <View key={index}>
+                <View style={styles.containerMonth}>
+                  <Text style={styles.titleText}>{item.date}</Text>
+                </View>
+                {item.data.map((item: any) => {
+                  return (
+                    <HStack p={3} key={item.id} justifyContent="space-between">
+                      <VStack>
+                        {item.from_id === profile ? (
+                          <Text style={styles.text}>Chuyển tiền đến ...</Text>
+                        ) : (
+                          <Text style={styles.text}>Nhận tiền từ ...</Text>
+                        )}
+                        <Text style={styles.textDate}>{item.created_at}</Text>
+                      </VStack>
+                      {item.from_id !== profile ? (
+                        <Text style={styles.text}>
+                          +{formatCurrency(`${item.amount}`)}đ
+                        </Text>
+                      ) : (
+                        <Text style={styles.text}>
+                          -{formatCurrency(`${item.amount}`)}đ
+                        </Text>
+                      )}
                     </HStack>
-                    <Text style={styles.textDate}>{item.date}</Text>
-                  </VStack>
-                );
-              })}
-              <Divider my={5} bgColor={'black'} />
-            </View>
-          );
-        })}
-      </ScrollView>
+                  );
+                })}
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
     </View>
   );
 };
 
 const ThirdRoute = () => {
+  const [history, setHistory] = useState([]);
+  const [profile, setProfile] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // console.log('===>', history);
+  console.log('MyID:', profile);
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result.data?.data?.id);
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
+    axiosClient
+      .get('https://zennoshop.cf/api/user/history-transaction?filter_key=years')
+      .then(res => {
+        setHistory(res.data?.data?.data);
+        setLoading(false);
+      })
+      .catch(e => console.log(e));
+  }, []);
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {HISTORY_TRANSACTION_SAMPLE.map(item => {
-          return (
-            <View key={item.id}>
-              <View style={styles.containerMonth}>
-                <Text style={styles.titleText}>{item.month}</Text>
-              </View>
-              {item.list_transaction.map(item => {
-                return (
-                  <VStack py={5} key={item.id}>
-                    <HStack justifyContent={'space-between'}>
-                      <Text style={styles.text}>{item.description}</Text>
-                      <Text style={styles.text}>{item.money}đ</Text>
+      {loading ? (
+        <Center>
+          <Lottie
+            source={require('../../assets/lottie-file/loading.json')}
+            autoPlay={true}
+            style={{width: 100, height: 100}}
+          />
+        </Center>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {history.map((item: any, index: any) => {
+            return (
+              <View key={index}>
+                <View style={styles.containerMonth}>
+                  <Text style={styles.titleText}>{item.date}</Text>
+                </View>
+                {item.data.map((item: any) => {
+                  return (
+                    <HStack p={3} key={item.id} justifyContent="space-between">
+                      <VStack>
+                        {item.from_id === profile ? (
+                          <Text style={styles.text}>Chuyển tiền đến ...</Text>
+                        ) : (
+                          <Text style={styles.text}>Nhận tiền từ ...</Text>
+                        )}
+                        <Text style={styles.textDate}>{item.created_at}</Text>
+                      </VStack>
+                      {item.from_id !== profile ? (
+                        <Text style={styles.text}>
+                          +{formatCurrency(`${item.amount}`)}đ
+                        </Text>
+                      ) : (
+                        <Text style={styles.text}>
+                          -{formatCurrency(`${item.amount}`)}đ
+                        </Text>
+                      )}
                     </HStack>
-                    <Text style={styles.textDate}>{item.date}</Text>
-                  </VStack>
-                );
-              })}
-              <Divider my={5} bgColor={'black'} />
-            </View>
-          );
-        })}
-      </ScrollView>
+                  );
+                })}
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -156,8 +297,8 @@ const Index = () => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'first', title: 'Ngày'},
-    {key: 'second', title: 'Tuần'},
-    {key: 'third', title: 'Tháng'},
+    {key: 'second', title: 'Tháng'},
+    {key: 'third', title: 'Năm'},
   ]);
 
   useEffect(() => {
