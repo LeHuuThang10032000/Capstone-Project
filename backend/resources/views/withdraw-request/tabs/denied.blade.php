@@ -8,16 +8,20 @@
     <div class="d-flex justify-content-between rounded border">
         <div class="p-3">
             <p class="m-0">id tài khoản: {{$request->user->id}}</p>
-            <p class="m-0"> mã giao dịch: {{$request->transaction_id}}</p>
+            <p class="m-0">Mã giao dịch: {{$request->transaction_id}}</p>
             <p class="m-0">Tên: {{$request->name}} - {{$request->mssv}}</p>
             <p class="m-0">Số điện thoại: {{$request->phone}}</p>
             <p class="m-0">Email: {{ ($request->email) ?? 'null' }}</p>
             <p class="m-0">Lý do: {{ ($request->reason)}}</p>
             <p class="m-0">Thời gian gửi yêu cầu: {{$request->created_at}}</p>
-            <p class="m-0" style="color: #E76969">{{$request->status}}</p>
+            <p class="m-0" style="color: #E76969">Từ chối</p>
+            <p class="m-0">Lý do: {{ ($request->reason)}}</p>
         </div>
     </div>
 </div>
 @endforeach
+<div class="py-2 px-3">
+    {{ $requests['denied']->links() }}
+</div>
 @endif
 </div>

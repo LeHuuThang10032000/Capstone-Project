@@ -17,7 +17,7 @@
                         <b class="m-0">Mã giao dịch: {{$transaction->code}}</b>
                         <div class="rounded border p-2 my-1">
                             <p class="m-0">Thông tin người gửi</p>
-                            <p class="m-0">Số diện thoại: {{$transaction->fromUser->phone}}</p>
+                            <p class="m-0">Số diện thoại: {{$transaction->fromUser->phone ?? null}}</p>
                             <p class="m-0">Tên: {{$transaction->fromUser->f_name}}</p>
                             <p class="m-0">Trạng thái: <span style="{{ ($transaction->fromUser->status == 'active') ? 'color: #189F7F' : 'color: #E76969' }}">{{$transaction->fromUser->status}}</span></p>
                         </div>

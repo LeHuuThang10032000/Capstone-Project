@@ -13,7 +13,7 @@
             <p class="m-0">Số điện thoại: {{$store->phone}}</p>
             <p class="m-0">Email: {{ ($store->email) ?? 'null' }}</p>
             <p class="m-0">Thời gian gửi yêu cầu: {{$store->created_at}}</p>
-            <p class="m-0" style="color: #FF9900">{{$store->status}}</p>
+            <p class="m-0" style="color: #FF9900">Đang chờ phê duyệt</p>
         </div>
         <div class="d-flex flex-column py-3 px-4">
             <form class="mt-auto mb-3" action="{{route('organiser.store-request.approve')}}" method="POST">
@@ -49,5 +49,8 @@
 
 </div>
 @endforeach
+<div class="py-2 px-3">
+    {{ $stores['pending']->links() }}
+</div>
 @endif
 </div>
