@@ -43,7 +43,7 @@ class AuthController extends Controller
             ]);
             DB::commit();
             return ApiResponse::successResponse($response);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -54,23 +54,34 @@ class AuthController extends Controller
         try {
             Auth::user()->tokens()->delete();
             return ApiResponse::successResponse(null);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
 
     public function checkPhoneExist(Request $request)
     {
+        if ($request->has('own_phone')) {
+            if($request->own_phone == $request->phone){
+                return response (
+                    [
+                        "message" => "Số điện thoại bị trùng với số điện thoại đang sử dụng",
+                        "status_code" => 430,
+                    ]
+                );
+            }
+        }
+
         $user = User::where('phone', $request->phone)->first();
 
-        if($user){
+        if ($user) {
             return response(
                 [
                     "message" => "Số điện thoại đã được đăng ký",
                     "status_code" => 422,
                     "user" => $user
                 ]
-                );
+            );
         }
         return response(
             [
@@ -80,14 +91,15 @@ class AuthController extends Controller
         );
     }
 
-    public function forgotPassword(Request $request){
+    public function forgotPassword(Request $request)
+    {
 
         $fields = $request->validate([
             'phone' => 'required|string|min:10|max:10',
             'password' => 'required|string|confirmed'
         ]);
 
-        $user = User::where('phone',$fields['phone'])->first();
+        $user = User::where('phone', $fields['phone'])->first();
         $user->password = bcrypt($fields['password']);
         $user->save();
         $token = $user->createToken('myapptoken');
@@ -95,7 +107,8 @@ class AuthController extends Controller
         return ApiResponse::successResponse($token);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $validate = Validator::make($request->all(), [
             'phone' => 'required|phone',
             'password' => 'required|min:6',
@@ -121,7 +134,8 @@ class AuthController extends Controller
         return ApiResponse::successResponse($token);
     }
 
-    public function checkPassword(Request $request){
+    public function checkPassword(Request $request)
+    {
 
         $credentials = ['phone' => $request->phone, 'password' => $request->password];
         if (!Auth::attempt($credentials)) {
@@ -129,7 +143,7 @@ class AuthController extends Controller
         }
 
         return response([
-            "status"=>"success"
-        ],200);
+            "status" => "success"
+        ], 200);
     }
 }
