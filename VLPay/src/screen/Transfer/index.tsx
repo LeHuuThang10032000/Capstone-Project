@@ -60,7 +60,7 @@ const Index = (props: any) => {
     if (!phoneNumber) {
       return 'Số điện thoại không được bỏ trống';
     } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(phoneNumber)) {
-      return 'Số điện thoại chưa chính xác';
+      return 'Vui lòng nhập đúng 10 số';
     }
   }, []);
 
@@ -82,19 +82,25 @@ const Index = (props: any) => {
         setLoading(true);
         try {
           const phone = data.phone;
+          const own_phone = userProfile;
+          console.log('Phone: ', phone);
+          console.log('own_phone: ', own_phone);
+
           data.name = profile;
           data.current_user = userProfile;
           data.current_wallet = props.route.params;
           const result = await axiosClient.post('/check-phone', {
             phone,
+            own_phone,
           });
+          console.log('Status code: ', result?.data?.status_code);
           if (result?.data?.status_code == 422) {
             navigation.navigate('ConfirmPM', {data});
-          } else if (result?.data?.user?.phone == userProfile) {
-            setErroWarning('Số điện thoại này bạn đang sử dụng');
-            setErrorDisplay(true);
-          } else {
+          } else if (result?.data?.status_code == 200) {
             setErroWarning('Số điện thoại không tồn tại');
+            setErrorDisplay(true);
+          } else if (result?.data?.status_code == 430) {
+            setErroWarning('Số điện thoại này bạn đang sử dụng');
             setErrorDisplay(true);
           }
         } catch (e: any) {
