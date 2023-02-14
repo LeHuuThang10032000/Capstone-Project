@@ -76,7 +76,7 @@ const Index = () => {
       // Filter the masterDataSource and update FilteredDataSource
       const newData = masterDataSource.filter(function (item: UserData) {
         // Applying filter for the inserted text in search bar
-        const itemData = item.f_name ? item.f_name : '';
+        const itemData = item.phone ? item.phone : '';
         const textData = text;
         return itemData.indexOf(textData) > -1;
       });
@@ -150,7 +150,7 @@ const Index = () => {
       <HeaderBack title="Bạn bè trên VLPay" />
       <Center marginY={5}>
         <Input
-          placeholder="Search..."
+          placeholder="Nhập số điện thoại để tìm bạn bè"
           width="90%"
           borderRadius="50"
           py="3"
