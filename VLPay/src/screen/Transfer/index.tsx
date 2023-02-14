@@ -271,7 +271,12 @@ const Index = (props: any) => {
                     backgroundColor="white"
                     value={profile}
                     isDisabled={true}
-                    style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      color: '#FF0000',
+                    }}
                   />
                   <FormControl.ErrorMessage>
                     {errors.name?.message}
