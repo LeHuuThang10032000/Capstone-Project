@@ -64,6 +64,9 @@ class TransactionController extends Controller
             }
 
             $recipient = User::where('phone', $request->phone)->first();
+            if(!$recipient) {
+                return ApiResponse::failureResponse('Số điện thoại không tồn tại');
+            }
             $recipientWallet = $recipient->wallet;
             
             $recipientWallet->update([
@@ -83,7 +86,7 @@ class TransactionController extends Controller
             );
 
             DB::commit();
-            return ApiResponse::successResponse($transaction);
+            return ApiResponse::successResponse($transaction->id);
         } catch(Exception $e) {
             DB::rollBack();
             ApiResponse::failureResponse('Đã có lỗi xảy ra');
