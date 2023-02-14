@@ -89,16 +89,17 @@ const FirstRoute = () => {
                   return (
                     <HStack p={3} key={item.id} justifyContent="space-between">
                       <VStack>
-                        {item.from_id === profile ? (
-                          <Text style={styles.text}>Chuyển tiền đến ...</Text>
-                        ) : (
-                          <Text style={styles.text}>Nhận tiền từ ...</Text>
-                        )}
+                        <Text
+                          style={styles.title}
+                          ellipsizeMode="tail"
+                          numberOfLines={1}>
+                          {item.title}
+                        </Text>
                         <Text style={styles.textDate}>{item.created_at}</Text>
                       </VStack>
                       {item.from_id !== profile ? (
                         <Text style={styles.text}>
-                          +{formatCurrency(`${item.amount}`)}đ
+                          {formatCurrency(`${item.amount}`)}đ
                         </Text>
                       ) : (
                         <Text style={styles.text}>
@@ -180,16 +181,17 @@ const SecondRoute = () => {
                   return (
                     <HStack p={3} key={item.id} justifyContent="space-between">
                       <VStack>
-                        {item.from_id === profile ? (
-                          <Text style={styles.text}>Chuyển tiền đến ...</Text>
-                        ) : (
-                          <Text style={styles.text}>Nhận tiền từ ...</Text>
-                        )}
+                        <Text
+                          ellipsizeMode="tail"
+                          numberOfLines={1}
+                          style={styles.title}>
+                          {item.title}
+                        </Text>
                         <Text style={styles.textDate}>{item.created_at}</Text>
                       </VStack>
                       {item.from_id !== profile ? (
                         <Text style={styles.text}>
-                          +{formatCurrency(`${item.amount}`)}đ
+                          {formatCurrency(`${item.amount}`)}đ
                         </Text>
                       ) : (
                         <Text style={styles.text}>
@@ -271,16 +273,17 @@ const ThirdRoute = () => {
                   return (
                     <HStack p={3} key={item.id} justifyContent="space-between">
                       <VStack>
-                        {item.from_id === profile ? (
-                          <Text style={styles.text}>Chuyển tiền đến ...</Text>
-                        ) : (
-                          <Text style={styles.text}>Nhận tiền từ ...</Text>
-                        )}
+                        <Text
+                          ellipsizeMode="tail"
+                          numberOfLines={1}
+                          style={styles.title}>
+                          {item.title}
+                        </Text>
                         <Text style={styles.textDate}>{item.created_at}</Text>
                       </VStack>
                       {item.from_id !== profile ? (
                         <Text style={styles.text}>
-                          +{formatCurrency(`${item.amount}`)}đ
+                          {formatCurrency(`${item.amount}`)}đ
                         </Text>
                       ) : (
                         <Text style={styles.text}>
@@ -449,6 +452,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     // paddingHorizontal: 15,
+  },
+  title: {
+    width: 250,
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 16,
+    color: '#312E49',
   },
   text: {
     fontFamily: 'Poppins-SemiBold',
