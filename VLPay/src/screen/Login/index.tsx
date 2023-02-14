@@ -163,7 +163,11 @@ const Index = function () {
             onPress={handleSubmit(submit)}
             disabled={isLoading}
             style={[styles.buttonInput]}>
-            <UText style={styles.textButtonInput}>Đăng nhập</UText>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <UText style={styles.textButtonInput}>Đăng nhập</UText>
+            )}
           </TouchableOpacity>
         </View>
         <HStack
@@ -181,16 +185,12 @@ const Index = function () {
             onPress={() => {
               navigation.navigate('Register');
             }}>
-            {isLoading ? (
-              <ActivityIndicator />
-            ) : (
-              <UText
-                style={{
-                  color: '#2805FF',
-                }}>
-                Đăng ký
-              </UText>
-            )}
+            <UText
+              style={{
+                color: '#2805FF',
+              }}>
+              Đăng ký
+            </UText>
           </TouchableOpacity>
         </HStack>
       </VStack>

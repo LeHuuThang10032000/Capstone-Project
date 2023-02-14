@@ -70,9 +70,6 @@ const WithDrawInfo = (props: any) => {
     formData.append('amount', amount);
     formData.append('name', profile?.data?.f_name);
     formData.append('phone', profile?.data?.phone);
-    formData.append('email', 'test@gmail.com');
-    formData.append('mssv', '197pm09474');
-    formData.append('reason', 'I need money to shoping.');
     console.log(formData);
 
     try {
@@ -94,7 +91,7 @@ const WithDrawInfo = (props: any) => {
       Toast.show({
         type: 'error',
         text1: 'Lỗi giao dịch',
-        text2: 'Nhập số tiền từ 200.000đ trở lên!',
+        text2: 'Số dư ví không đủ.',
       });
     }
   };
