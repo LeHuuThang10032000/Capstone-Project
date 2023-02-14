@@ -46,10 +46,10 @@ class Transaction extends Model
     public function getTitleAttribute($value) {
         if($this->type == 'T') {
             if($this->from_id == Auth::user()->id) {
-                $recipient = $this->fromUser()->selectRaw('f_name')->first();
+                $recipient = $this->toUser()->selectRaw('f_name')->first();
                 $value = 'Chuyển tiền tới ' . $recipient->f_name;
             } else {
-                $sender = $this->fromUser()->select('f_name')->first();
+                $sender = $this->fromUser()->selectRaw('f_name')->first();
                 $value = 'Nhận tiền từ ' . $sender->f_name;
             }
         }

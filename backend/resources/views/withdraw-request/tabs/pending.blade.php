@@ -18,7 +18,7 @@
 
             <button type="button" class="btn btn-theme w-full px-4 my-auto" data-bs-toggle="modal" data-bs-target="#approveModal">Chấp thuận</button>
 
-            <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+            <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true" style="margin-top: 5%;">
 
                 <form action="{{route('organiser.credit-request.approve')}}" method="POST">
                     @csrf
@@ -40,7 +40,7 @@
 
             <button type="button" class="btn btn-theme-warning w-full px-4 mb-auto" data-bs-toggle="modal" data-bs-target="#denyModal">Từ chối</button>
 
-            <div class="modal fade" id="denyModal" tabindex="-1" aria-labelledby="denyModalLabel" aria-hidden="true">
+            <div class="modal fade" id="denyModal" tabindex="-1" aria-labelledby="denyModalLabel" aria-hidden="true" style="margin-top: 5%;">
 
                 <form action="{{route('organiser.credit-request.deny')}}" method="POST">
                     @csrf
@@ -49,7 +49,7 @@
                         <div class="modal-content">
                             <div class="modal-body">
                                 <p>Lí do từ chối:</p>
-                                <textarea class="form-control" name="deny_reason" id="floatingTextarea"></textarea>
+                                <textarea class="form-control" name="deny_reason" id="floatingTextarea" style="height: 10rem;"></textarea>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-theme-warning px-4">Từ chối</button>
