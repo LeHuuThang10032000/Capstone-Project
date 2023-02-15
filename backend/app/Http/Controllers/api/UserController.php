@@ -76,7 +76,8 @@ class UserController extends Controller
         $acceptOrNot = Store::where('user_id',$user)->select('status')->first();
         if($acceptOrNot){
             return ApiResponse::successResponse([
-                'status' => 1
+                'status' => 1,
+                'status_request' => $acceptOrNot
             ]);
         }
 
