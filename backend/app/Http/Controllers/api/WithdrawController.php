@@ -32,10 +32,11 @@ class WithdrawController extends Controller
         
         try {
             $result = WithdrawRequest::create([
-                'user_id' => $user->id,
+                'user_name' => $user->f_name,
                 'transaction_id' => Helper::generateNumber(),
                 'status' => 'pending',
                 'amount' => $request->amount,
+                'created_at' => now(),
             ]);
             return ApiResponse::successResponse($result);
         } catch (\Exception $e) {
