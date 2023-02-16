@@ -32,11 +32,13 @@ class WithdrawController extends Controller
         
         try {
             $result = WithdrawRequest::create([
-                'user_id' => $user->id,
+                'user_name' => $user->f_name,
                 'transaction_id' => Helper::generateNumber(),
                 'status' => 'pending',
                 'amount' => $request->amount,
+                'created_at' => now(),
             ]);
+
             return ApiResponse::successResponse($result);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
@@ -56,7 +58,7 @@ class WithdrawController extends Controller
 
         try {
             $data = WithdrawRequest::where('user_id', Auth::user()->id)
-                ->select('id', 'created_at');
+                ->select('id', 'created_at', 'status');
 
             if($request->page) {
                 $limit = $request->limit;
@@ -75,6 +77,13 @@ class WithdrawController extends Controller
 
     public function detail($id)
     {
+        $user = Auth::user();
+        $data = WithdrawRequest::where('id', $id)
+            ->where('user_id', $user->id)
+            ->select('id', 'transaction_id', 'amount', 'created_at')
+            ->first();
 
+        $data['user_name'] = $user->f_name;
+        return ApiResponse::successResponse($data);
     }
 }

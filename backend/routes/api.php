@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     //withdraw
     Route::post('/create-withdraw-request', [WithdrawController::class, 'create']);
     Route::get('/withdraw-history', [WithdrawController::class, 'histories']);
+    Route::get('/withdraw-history/{id}', [WithdrawController::class, 'detail']);
 
     //friends
     Route::apiResource('friends', FriendsController::class);

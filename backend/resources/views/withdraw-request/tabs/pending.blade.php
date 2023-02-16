@@ -8,41 +8,25 @@
     <div class="d-flex justify-content-between rounded border">
         <div class="p-3">
             <b class="m-0">Mã giao dịch: {{$request->transaction_id}}</b>
-            <p class="m-0">id tài khoản: {{$request->user->id}}</p>
-            <p class="m-0">Tên: {{$request->user->f_name}} - {{$request->user->mssv}}</p>
+            <p class="m-0">id tài khoản: {{$request->user_id}}</p>
             <p class="m-0">Số điện thoại: {{$request->user->phone}}</p>
+            <p class="m-0">Số tiền cần rút: {{number_format($request->amount)}} VND</p>
+            <p class="m-0">Số dư khả dụng: {{number_format($request->user->wallet->balance)}} VND</p>
             <p class="m-0">Thời gian gửi yêu cầu: {{$request->created_at}}</p>
             <p class="m-0" style="color: #FF9900">Đang chờ phê duyệt</p>
         </div>
         <div class="d-flex flex-column py-3 px-4">
-
-            <button type="button" class="btn btn-theme w-full px-4 my-auto" data-bs-toggle="modal" data-bs-target="#approveModal">Chấp thuận</button>
-
-            <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true" style="margin-top: 5%;">
-
-                <form action="{{route('organiser.credit-request.approve')}}" method="POST">
-                    @csrf
-                    <input type="hidden" name="request_id" value="{{ $request->id }}" required>
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <p>Hạn mức tín dụng:</p>
-                                <input type="number" class="form-control" name="amount" required max="10000000" min="500000" oninvalid="alert('Số tiền nhập vào không được vượt quá 10.000.000 VND');">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-theme px-4">Xác nhận</button>
-                                <button type="button" class="btn btn-theme-cancel px-4" data-bs-dismiss="modal">Hủy</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <form class="mt-auto mb-3" action="{{route('organiser.withdraw-request.approve')}}" method="POST">
+                @csrf
+                <input type="hidden" name="request_id" value="{{ $request->id }}" required>
+                <button type="submit" class="btn btn-theme w-full px-4">Chấp thuận</button>
+            </form>
 
             <button type="button" class="btn btn-theme-warning w-full px-4 mb-auto" data-bs-toggle="modal" data-bs-target="#denyModal">Từ chối</button>
 
             <div class="modal fade" id="denyModal" tabindex="-1" aria-labelledby="denyModalLabel" aria-hidden="true" style="margin-top: 5%;">
 
-                <form action="{{route('organiser.credit-request.deny')}}" method="POST">
+                <form action="{{route('organiser.withdraw-request.deny')}}" method="POST">
                     @csrf
                     <input type="hidden" name="request_id" value="{{ $request->id }}" required>
                     <div class="modal-dialog">
