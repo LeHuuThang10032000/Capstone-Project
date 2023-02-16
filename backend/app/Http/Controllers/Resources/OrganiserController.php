@@ -146,9 +146,9 @@ class OrganiserController extends Controller
 
     public function getWithdrawRequest()
     {
-        $pending = WithdrawRequest::where('status', 'pending')->paginate(5);
-        $approved = WithdrawRequest::where('status', 'approved')->paginate(5);
-        $denied = WithdrawRequest::where('status', 'denied')->paginate(5);
+        $pending = WithdrawRequest::where('status', 'pending')->with('user.wallet')->paginate(5);
+        $approved = WithdrawRequest::where('status', 'approved')->with('user.wallet')->paginate(5);
+        $denied = WithdrawRequest::where('status', 'denied')->with('user.wallet')->paginate(5);
 
         $requests = [
             'pending' => $pending ?? [],
@@ -162,12 +162,6 @@ class OrganiserController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'request_id' => 'required|integer',
-            'amount' => 'required|integer|min:500000|max:10000000',
-        ], [
-            'amount.required' => 'Vui lòng nhập hạn mức tín dụng',
-            'amount.integer' => 'Hạn mức tín dụng chưa đúng định dạng số',
-            'amount.min' => 'Hạn mức thấp nhất là 500000',
-            'amount.max' => 'Hạn mức thấp nhất là 10000000'
         ]);
 
         if ($validate->fails()) {
@@ -179,14 +173,13 @@ class OrganiserController extends Controller
             return back()->with('error', 'Không tìm thấy yêu cầu');
         }
         $req->status = 'approved';
-        $req->amount = $request->amount;
         $req->save();
 
         $wallet = Wallet::where('user_id', $req->user_id)->first();
-        $wallet->credit_limit = $req->amount;
+        $wallet->balance = $wallet->balance - $req->amount;
         $wallet->save();
 
-        return back()->with('success', 'Chấp nhận yêu cầu cấp hạn mức tín dụng thành công');
+        return back()->with('success', 'Chấp nhận yêu cầu rút tiền thành công');
     }
 
     public function denyWithdraw(Request $request)
@@ -204,12 +197,12 @@ class OrganiserController extends Controller
         $req->deny_reason = $request->deny_reason;
         $req->save();
 
-        return back()->with('success', 'Từ chối yêu cầu cấp hạn mức tín dụng thành công');
+        return back()->with('success', 'Từ chối yêu cầu rút tiền thành công');
     }
 
     public function getListTransactions()
     {
-        $transactions = Transaction::paginate(5);
+        $transactions = Transaction::paginate(10);
         return view('transactions.index', compact('transactions'));
     }
 }
