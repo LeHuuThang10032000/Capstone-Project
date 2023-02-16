@@ -175,7 +175,7 @@ const Index = () => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate('ApproveMerc')}
+            onPress={() => navigation.navigate('RegisterMerchant')}
             style={styles.button}>
             <View style={styles.info}>
               <ShopIcon style={{paddingLeft: 30}} />

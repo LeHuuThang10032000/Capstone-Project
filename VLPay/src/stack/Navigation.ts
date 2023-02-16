@@ -76,7 +76,7 @@ export type MainStackParamList = {
     data: any;
   };
   ScanQR: undefined;
-  ApproveMerc: undefined;
+  RegisterMerchant: undefined;
   WaitApprove: undefined;
   WithDraw: {
     isWithdraw: boolean;
@@ -88,6 +88,8 @@ export type MainStackParamList = {
   Friends: undefined;
   MyOrder: undefined;
   Demo: undefined;
+  ApproveMerchant: undefined;
+  NotiScreen: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

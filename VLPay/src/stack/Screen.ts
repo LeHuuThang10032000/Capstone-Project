@@ -15,8 +15,6 @@ import ChangePassword from '../screen/ChangePassword';
 import NewPassword from '../screen/NewPassword';
 import Payment from '../screen/payment';
 import ScanQR from '../screen/ScanQR';
-import ApproveMerc from '../screen/Merchant/ApproveMerchant';
-import WaitApprove from '../screen/Merchant/ApproveMerchant/Waiting';
 import WithDraw from '../screen/WithDraw';
 import WithDrawInfo from '../screen/WithDrawInfo';
 import SupportStudent from '../screen/Support';
@@ -26,6 +24,8 @@ import PaymentDetails from '../screen/PaymentDetails';
 import MyOrder from '../screen/MyOrder';
 import QR from '../screen/QR';
 import Demo from '../screen/Friends/Demo';
+import RegisterMerchant from '../screen/Merchant/RegisterMerchant';
+import NotiScreen from '../screen/Merchant/RegisterMerchant/NotiScreen';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -93,12 +93,8 @@ export const MAIN_STACK_SCREEN: Screen[] = [
     component: ScanQR,
   },
   {
-    name: 'ApproveMerc',
-    component: ApproveMerc,
-  },
-  {
-    name: 'WaitApprove',
-    component: WaitApprove,
+    name: 'RegisterMerchant',
+    component: RegisterMerchant,
   },
   {name: 'WithDraw', component: WithDraw},
   {name: 'WithDrawInfo', component: WithDrawInfo},
@@ -129,5 +125,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'Demo',
     component: Demo,
+  },
+  {
+    name: 'NotiScreen',
+    component: NotiScreen,
   },
 ];
