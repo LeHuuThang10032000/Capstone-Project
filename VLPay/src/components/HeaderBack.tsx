@@ -1,7 +1,7 @@
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import BackIcon from '../assets/svg/left-arrow.svg';
-import {HStack, Text, View} from 'native-base';
+import {HStack, Switch, Text, View} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../stack/Navigation';
 
@@ -10,6 +10,7 @@ type Props = {
   isReset?: boolean;
   style?: any;
   onPressLeft?: any;
+  hideRight?: any;
 };
 
 const HeaderBack: React.FC<Props> = ({
@@ -17,6 +18,7 @@ const HeaderBack: React.FC<Props> = ({
   isReset = false,
   style,
   onPressLeft,
+  hideRight,
 }) => {
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
@@ -36,7 +38,12 @@ const HeaderBack: React.FC<Props> = ({
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <Text style={styles.text}>{title}</Text>
       </View>
-      <View style={{backgroundColor: '#FEB7B1', width: 30, height: 30}}></View>
+      {hideRight ? (
+        <Switch size="sm" />
+      ) : (
+        <View
+          style={{backgroundColor: '#FEB7B1', width: 30, height: 30}}></View>
+      )}
     </View>
   );
 };
