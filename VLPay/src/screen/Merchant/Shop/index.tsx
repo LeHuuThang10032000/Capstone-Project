@@ -1,14 +1,28 @@
-import {View, Text} from 'native-base';
 import React from 'react';
-import HeaderBack from '../../../components/HeaderBack';
+import {createStackNavigator} from '@react-navigation/stack';
+
+import {MAIN_STACK_SCREEN} from '../../../stack/Screen';
+import {ScreenParams} from '../../../stack/type';
+
+const Stack = createStackNavigator<ScreenParams>();
+const screenOptions = {headerShown: false};
 
 type Props = {};
 
 const MyStore = (props: Props) => {
   return (
-    <View flex={1}>
-      <HeaderBack title="Quán của tui" hideRight={true} />
-    </View>
+    <Stack.Navigator
+      initialRouteName={'MainTabM'}
+      screenOptions={screenOptions}>
+      {MAIN_STACK_SCREEN.map(item => (
+        <Stack.Screen
+          key={item.name}
+          name={item.name}
+          component={item.component}
+          options={item?.options}
+        />
+      ))}
+    </Stack.Navigator>
   );
 };
 

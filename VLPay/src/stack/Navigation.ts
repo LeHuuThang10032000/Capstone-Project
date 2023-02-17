@@ -90,6 +90,10 @@ export type MainStackParamList = {
   Demo: undefined;
   ApproveMerchant: undefined;
   NotiScreen: undefined;
+  OrderScreen: undefined;
+  MenuScreen: undefined;
+  MailScreen: undefined;
+  AccountScreen: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
@@ -102,6 +106,7 @@ export type MainStackScreenProps<RouteName extends S> = StackScreenProps<
 // for bottom tab navigation
 export type TabStackParamList = {
   MainTab: undefined;
+  MainTabM: undefined;
 };
 
 export type T = keyof TabStackParamList;
