@@ -26,6 +26,11 @@ import QR from '../screen/QR';
 import Demo from '../screen/Friends/Demo';
 import RegisterMerchant from '../screen/Merchant/RegisterMerchant';
 import NotiScreen from '../screen/Merchant/RegisterMerchant/NotiScreen';
+import OrderScreen from '../screen/Merchant/Shop/OrderScreen';
+import MenuScreen from '../screen/Merchant/Shop/MenuScreen';
+import BottomTabStackMerchant from './BottomTabMerchant';
+import MailScreen from '../screen/Merchant/Shop/MailScreen';
+import AccountScreen from '../screen/Merchant/Shop/AccountScreen';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -43,6 +48,10 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'MainTab',
     component: BottomTabStack,
+  },
+  {
+    name: 'MainTabM',
+    component: BottomTabStackMerchant,
   },
   {
     name: 'Otp',
@@ -129,5 +138,21 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'NotiScreen',
     component: NotiScreen,
+  },
+  {
+    name: 'OrderScreen',
+    component: OrderScreen,
+  },
+  {
+    name: 'MenuScreen',
+    component: MenuScreen,
+  },
+  {
+    name: 'MailScreen',
+    component: MailScreen,
+  },
+  {
+    name: 'AccountScreen',
+    component: AccountScreen,
   },
 ];
