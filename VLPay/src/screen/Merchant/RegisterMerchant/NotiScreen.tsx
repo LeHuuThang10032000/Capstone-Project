@@ -7,7 +7,7 @@ type Props = {};
 
 const NotiScreen = (props: Props) => {
   return (
-    <View flex={1}>
+    <View flex={1} backgroundColor="#FFFFFF">
       <HeaderBack title="Tạo Shop" />
       <Center flex={1}>
         <HStack>

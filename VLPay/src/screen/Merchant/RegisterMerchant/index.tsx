@@ -27,6 +27,7 @@ import Lottie from 'lottie-react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {UText} from '../../../components/UText';
 import MyStore from '../Shop';
+import NotiScreen from './NotiScreen';
 
 interface CreateShop {
   email: string;
@@ -98,8 +99,10 @@ const RegisterMerchant = () => {
   const isFocused = useIsFocused();
   const [image, setImage] = useState({});
   const [store, setStore] = useState(null);
+  const [noti, setNoti] = useState('');
   const [isLoading, setLoading] = useState(false);
   console.log('===>', store);
+  console.log('===>', noti);
 
   console.log(profile);
 
@@ -118,6 +121,7 @@ const RegisterMerchant = () => {
       'https://zennoshop.cf/api/user/get-request-create-store',
     );
     setStore(result.data?.data?.request?.status);
+    setNoti(result.data?.data?.status);
     setLoading(false);
   }, []);
 
@@ -141,278 +145,290 @@ const RegisterMerchant = () => {
         </Center>
       ) : (
         <>
-          {store === 'approved' && <MyStore />}
-          {store === 'pending' && (
-            <View flex={1} backgroundColor={'#FFFFFF'}>
-              <HeaderBack title="Tạo Shop" />
-              <ScrollView>
-                <VStack mx={3}>
-                  <Center mt={10}>
-                    <Heading size={'md'}>Đăng ký mở shop trên VLPay</Heading>
-                    <HStack my={10}>
-                      <FormControl.Label
-                        _text={{
-                          color: '#000',
-                          fontWeight: 'bold',
-                          fontSize: 16,
-                        }}>
-                        Họ và tên:
-                      </FormControl.Label>
-                      <TextInput
-                        value={profile.data?.f_name}
-                        editable={false}
-                        selectTextOnFocus={false}
-                        style={{
-                          fontFamily: 'Poppins-Regular',
-                          fontSize: 14,
-                          borderBottomWidth: 1,
-                          padding: 0,
-                          paddingLeft: 20,
-                          marginLeft: 10,
-                          flex: 1,
-                          fontWeight: 'bold',
-                          color: '#FF0000',
-                        }}
-                      />
-                    </HStack>
-                    <HStack mb={10}>
-                      <FormControl.Label
-                        _text={{
-                          color: '#000',
-                          fontWeight: 'bold',
-                          fontSize: 16,
-                        }}>
-                        Số điện thoại:
-                      </FormControl.Label>
-                      <TextInput
-                        value={profile.data?.phone}
-                        editable={false}
-                        selectTextOnFocus={false}
-                        style={{
-                          fontFamily: 'Poppins-Regular',
-                          fontSize: 14,
-                          borderBottomWidth: 1,
-                          padding: 0,
-                          paddingLeft: 20,
-                          marginLeft: 10,
-                          flex: 1,
-                          fontWeight: 'bold',
-                          color: '#FF0000',
-                        }}
-                      />
-                    </HStack>
-
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: 'Email không được để trống',
-                        validate: str => {
-                          if (str.length === 0) {
-                            return true;
-                          }
-                          if (!isValidEmail(str.replace(/\s/g, ''))) {
-                            return 'Email không đúng định dạng';
-                          }
-                          return true;
-                        },
-                      }}
-                      render={({field: {onChange, onBlur, value}}) => (
-                        <FormControl
-                          isInvalid={errors.email !== undefined}
-                          mb={10}>
-                          <HStack>
+          {noti == '1' && store === 'pending' ? (
+            <NotiScreen />
+          ) : (
+            <>
+              {store === 'approved' && <MyStore />}
+              {store === 'pending' ||
+                (store === undefined && (
+                  <View flex={1} backgroundColor={'#FFFFFF'}>
+                    <HeaderBack title="Tạo Shop" />
+                    <ScrollView>
+                      <VStack mx={3}>
+                        <Center mt={10}>
+                          <Heading size={'md'}>
+                            Đăng ký mở shop trên VLPay
+                          </Heading>
+                          <HStack my={10}>
                             <FormControl.Label
                               _text={{
                                 color: '#000',
                                 fontWeight: 'bold',
                                 fontSize: 16,
                               }}>
-                              Email:
+                              Họ và tên:
                             </FormControl.Label>
                             <TextInput
-                              value={value}
-                              onBlur={onBlur}
-                              onChangeText={onChange}
-                              keyboardType="email-address"
-                              placeholder="Vui lòng nhập email"
+                              value={profile.data?.f_name}
+                              editable={false}
+                              selectTextOnFocus={false}
                               style={{
                                 fontFamily: 'Poppins-Regular',
                                 fontSize: 14,
                                 borderBottomWidth: 1,
                                 padding: 0,
-                                paddingLeft: 10,
+                                paddingLeft: 20,
                                 marginLeft: 10,
                                 flex: 1,
+                                fontWeight: 'bold',
+                                color: '#FF0000',
                               }}
                             />
                           </HStack>
-                          <FormControl.ErrorMessage>
-                            {errors.email?.message}
-                          </FormControl.ErrorMessage>
-                        </FormControl>
-                      )}
-                      name="email"
-                    />
-
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: 'Tên quán không được để trống',
-                      }}
-                      render={({field: {onChange, onBlur, value}}) => (
-                        <FormControl
-                          isInvalid={errors.name !== undefined}
-                          mb={10}>
-                          <HStack>
+                          <HStack mb={10}>
                             <FormControl.Label
                               _text={{
                                 color: '#000',
                                 fontWeight: 'bold',
                                 fontSize: 16,
                               }}>
-                              Tên quán:
+                              Số điện thoại:
                             </FormControl.Label>
                             <TextInput
-                              value={value}
-                              onBlur={onBlur}
-                              onChangeText={onChange}
-                              keyboardType="email-address"
-                              placeholder="Vui lòng nhập tên quán"
+                              value={profile.data?.phone}
+                              editable={false}
+                              selectTextOnFocus={false}
                               style={{
                                 fontFamily: 'Poppins-Regular',
                                 fontSize: 14,
                                 borderBottomWidth: 1,
                                 padding: 0,
-                                paddingLeft: 10,
+                                paddingLeft: 20,
                                 marginLeft: 10,
                                 flex: 1,
-                              }}
-                            />
-                          </HStack>
-                          <FormControl.ErrorMessage>
-                            {errors.name?.message}
-                          </FormControl.ErrorMessage>
-                        </FormControl>
-                      )}
-                      name="name"
-                    />
-
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: 'Vị trí quán không được để trống',
-                      }}
-                      render={({field: {onChange, onBlur, value}}) => (
-                        <FormControl
-                          isInvalid={errors.location !== undefined}
-                          mb={10}>
-                          <HStack>
-                            <FormControl.Label
-                              _text={{
-                                color: '#000',
                                 fontWeight: 'bold',
-                                fontSize: 16,
-                              }}>
-                              Vị trí:
-                            </FormControl.Label>
-                            <TextInput
-                              value={value}
-                              onBlur={onBlur}
-                              onChangeText={onChange}
-                              keyboardType="email-address"
-                              placeholder="Vui lòng nhập vị trí quán"
-                              style={{
-                                fontFamily: 'Poppins-Regular',
-                                fontSize: 14,
-                                borderBottomWidth: 1,
-                                padding: 0,
-                                paddingLeft: 10,
-                                marginLeft: 10,
-                                flex: 1,
+                                color: '#FF0000',
                               }}
                             />
                           </HStack>
-                          <FormControl.ErrorMessage>
-                            {errors.location?.message}
-                          </FormControl.ErrorMessage>
-                        </FormControl>
-                      )}
-                      name="location"
-                    />
 
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: 'Sản phẩm kinh doanh không được để trống',
-                      }}
-                      render={({field: {onChange, onBlur, value}}) => (
-                        <FormControl
-                          isInvalid={errors.products !== undefined}
-                          mb={10}>
-                          <HStack>
-                            <FormControl.Label
-                              _text={{
-                                color: '#000',
-                                fontWeight: 'bold',
-                                fontSize: 16,
-                              }}>
-                              Sản phẩm kinh doanh:
-                            </FormControl.Label>
-                            <TextInput
-                              value={value}
-                              onBlur={onBlur}
-                              onChangeText={onChange}
-                              keyboardType="email-address"
-                              placeholder="Nhập sản phẩm KD"
-                              style={{
-                                fontFamily: 'Poppins-Regular',
-                                fontSize: 14,
-                                borderBottomWidth: 1,
-                                padding: 0,
-                                paddingLeft: 10,
-                                marginLeft: 10,
-                                flex: 1,
-                              }}
+                          <Controller
+                            control={control}
+                            rules={{
+                              required: 'Email không được để trống',
+                              validate: str => {
+                                if (str.length === 0) {
+                                  return true;
+                                }
+                                if (!isValidEmail(str.replace(/\s/g, ''))) {
+                                  return 'Email không đúng định dạng';
+                                }
+                                return true;
+                              },
+                            }}
+                            render={({field: {onChange, onBlur, value}}) => (
+                              <FormControl
+                                isInvalid={errors.email !== undefined}
+                                mb={10}>
+                                <HStack>
+                                  <FormControl.Label
+                                    _text={{
+                                      color: '#000',
+                                      fontWeight: 'bold',
+                                      fontSize: 16,
+                                    }}>
+                                    Email:
+                                  </FormControl.Label>
+                                  <TextInput
+                                    value={value}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    keyboardType="email-address"
+                                    placeholder="Vui lòng nhập email"
+                                    style={{
+                                      fontFamily: 'Poppins-Regular',
+                                      fontSize: 14,
+                                      borderBottomWidth: 1,
+                                      padding: 0,
+                                      paddingLeft: 10,
+                                      marginLeft: 10,
+                                      flex: 1,
+                                    }}
+                                  />
+                                </HStack>
+                                <FormControl.ErrorMessage>
+                                  {errors.email?.message}
+                                </FormControl.ErrorMessage>
+                              </FormControl>
+                            )}
+                            name="email"
+                          />
+
+                          <Controller
+                            control={control}
+                            rules={{
+                              required: 'Tên quán không được để trống',
+                            }}
+                            render={({field: {onChange, onBlur, value}}) => (
+                              <FormControl
+                                isInvalid={errors.name !== undefined}
+                                mb={10}>
+                                <HStack>
+                                  <FormControl.Label
+                                    _text={{
+                                      color: '#000',
+                                      fontWeight: 'bold',
+                                      fontSize: 16,
+                                    }}>
+                                    Tên quán:
+                                  </FormControl.Label>
+                                  <TextInput
+                                    value={value}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    keyboardType="email-address"
+                                    placeholder="Vui lòng nhập tên quán"
+                                    style={{
+                                      fontFamily: 'Poppins-Regular',
+                                      fontSize: 14,
+                                      borderBottomWidth: 1,
+                                      padding: 0,
+                                      paddingLeft: 10,
+                                      marginLeft: 10,
+                                      flex: 1,
+                                    }}
+                                  />
+                                </HStack>
+                                <FormControl.ErrorMessage>
+                                  {errors.name?.message}
+                                </FormControl.ErrorMessage>
+                              </FormControl>
+                            )}
+                            name="name"
+                          />
+
+                          <Controller
+                            control={control}
+                            rules={{
+                              required: 'Vị trí quán không được để trống',
+                            }}
+                            render={({field: {onChange, onBlur, value}}) => (
+                              <FormControl
+                                isInvalid={errors.location !== undefined}
+                                mb={10}>
+                                <HStack>
+                                  <FormControl.Label
+                                    _text={{
+                                      color: '#000',
+                                      fontWeight: 'bold',
+                                      fontSize: 16,
+                                    }}>
+                                    Vị trí:
+                                  </FormControl.Label>
+                                  <TextInput
+                                    value={value}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    keyboardType="email-address"
+                                    placeholder="Vui lòng nhập vị trí quán"
+                                    style={{
+                                      fontFamily: 'Poppins-Regular',
+                                      fontSize: 14,
+                                      borderBottomWidth: 1,
+                                      padding: 0,
+                                      paddingLeft: 10,
+                                      marginLeft: 10,
+                                      flex: 1,
+                                    }}
+                                  />
+                                </HStack>
+                                <FormControl.ErrorMessage>
+                                  {errors.location?.message}
+                                </FormControl.ErrorMessage>
+                              </FormControl>
+                            )}
+                            name="location"
+                          />
+
+                          <Controller
+                            control={control}
+                            rules={{
+                              required:
+                                'Sản phẩm kinh doanh không được để trống',
+                            }}
+                            render={({field: {onChange, onBlur, value}}) => (
+                              <FormControl
+                                isInvalid={errors.products !== undefined}
+                                mb={10}>
+                                <HStack>
+                                  <FormControl.Label
+                                    _text={{
+                                      color: '#000',
+                                      fontWeight: 'bold',
+                                      fontSize: 16,
+                                    }}>
+                                    Sản phẩm kinh doanh:
+                                  </FormControl.Label>
+                                  <TextInput
+                                    value={value}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    keyboardType="email-address"
+                                    placeholder="Nhập sản phẩm KD"
+                                    style={{
+                                      fontFamily: 'Poppins-Regular',
+                                      fontSize: 14,
+                                      borderBottomWidth: 1,
+                                      padding: 0,
+                                      paddingLeft: 10,
+                                      marginLeft: 10,
+                                      flex: 1,
+                                    }}
+                                  />
+                                </HStack>
+                                <FormControl.ErrorMessage>
+                                  {errors.products?.message}
+                                </FormControl.ErrorMessage>
+                              </FormControl>
+                            )}
+                            name="products"
+                          />
+                          <View style={{width: '100%', marginBottom: 10}}>
+                            <UText style={{fontWeight: '700'}}>
+                              Hình ảnh shop:{' '}
+                            </UText>
+                          </View>
+                          <TouchableOpacity onPress={ChoosePhotoFromLibrary}>
+                            <Image
+                              source={
+                                image?.path
+                                  ? {uri: image?.path}
+                                  : require('../../../assets/img/user_default.png')
+                              }
+                              alt="img"
+                              width={150}
+                              height={150}
+                              marginBottom={10}
                             />
-                          </HStack>
-                          <FormControl.ErrorMessage>
-                            {errors.products?.message}
-                          </FormControl.ErrorMessage>
-                        </FormControl>
-                      )}
-                      name="products"
-                    />
-                    <View style={{width: '100%', marginBottom: 10}}>
-                      <UText style={{fontWeight: '700'}}>Hình ảnh shop: </UText>
-                    </View>
-                    <TouchableOpacity onPress={ChoosePhotoFromLibrary}>
-                      <Image
-                        source={
-                          image?.path
-                            ? {uri: image?.path}
-                            : require('../../../assets/img/user_default.png')
-                        }
-                        alt="img"
-                        width={150}
-                        height={150}
-                        marginBottom={10}
-                      />
-                    </TouchableOpacity>
+                          </TouchableOpacity>
 
-                    <TouchableOpacity
-                      style={styles.button}
-                      disabled={isLoading}
-                      onPress={handleSubmit(onSubmit)}>
-                      {isLoading ? (
-                        <ActivityIndicator />
-                      ) : (
-                        <Text style={styles.text}>Gửi yêu cầu</Text>
-                      )}
-                    </TouchableOpacity>
-                  </Center>
-                </VStack>
-              </ScrollView>
-            </View>
+                          <TouchableOpacity
+                            style={styles.button}
+                            disabled={isLoading}
+                            onPress={handleSubmit(onSubmit)}>
+                            {isLoading ? (
+                              <ActivityIndicator />
+                            ) : (
+                              <Text style={styles.text}>Gửi yêu cầu</Text>
+                            )}
+                          </TouchableOpacity>
+                        </Center>
+                      </VStack>
+                    </ScrollView>
+                  </View>
+                ))}
+            </>
           )}
         </>
       )}
