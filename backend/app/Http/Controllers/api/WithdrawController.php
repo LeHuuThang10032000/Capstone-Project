@@ -32,8 +32,8 @@ class WithdrawController extends Controller
         
         try {
             $result = WithdrawRequest::create([
-                'user_name' => $user->f_name,
                 'transaction_id' => Helper::generateNumber(),
+                'user_id' => $user->id,
                 'status' => 'pending',
                 'amount' => $request->amount,
                 'created_at' => now(),

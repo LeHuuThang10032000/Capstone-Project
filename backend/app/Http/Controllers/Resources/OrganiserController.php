@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Resources;
 
 use App\Http\Controllers\Controller;
 use App\Models\CreditRequest;
+use App\Models\Notification;
 use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\User;
@@ -57,6 +58,15 @@ class OrganiserController extends Controller
         $store->status = 'approved';
         $store->save();
 
+        Notification::create([
+            'user_id' => $store->user_id,
+            'tag' => 'Cửa hàng',
+            'tag_model' => 'STORE',
+            'tag_model_id' => $request->store_id,
+            'title' => 'Yêu cầu mở cửa hàng VLPAY',
+            'body' => 'Yêu cầu mở cửa hàng ' . $store->name . ' của bạn đã được chấp nhận',
+        ]);
+        
         return back()->with('success', 'Chấp nhận yêu cầu mở cửa hàng thành công');
     }
 
@@ -74,6 +84,15 @@ class OrganiserController extends Controller
         $store->status = 'denied';
         $store->deny_reason = $request->deny_reason;
         $store->save();
+
+        Notification::create([
+            'user_id' => $store->user_id,
+            'tag' => 'Cửa hàng',
+            'tag_model' => 'STORE',
+            'tag_model_id' => $request->store_id,
+            'title' => 'Yêu cầu mở cửa hàng VLPAY',
+            'body' => 'Yêu cầu mở cửa hàng ' . $store->name . ' của bạn đã bị từ chối',
+        ]);
 
         return back()->with('success', 'Từ chối yêu cầu mở cửa hàng thành công');
     }
@@ -120,6 +139,15 @@ class OrganiserController extends Controller
         $wallet->credit_limit = $req->amount;
         $wallet->save();
 
+        Notification::create([
+            'user_id' => $req->user_id,
+            'tag' => 'Hỗ trợ tín dụng',
+            'tag_model' => 'CREDIT',
+            'tag_model_id' => $req->id,
+            'title' => 'Tín dụng sinh viên',
+            'body' => 'Tin vui tới. Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã được chấp thuận',
+        ]);
+
         return back()->with('success', 'Chấp nhận yêu cầu cấp hạn mức tín dụng thành công');
     }
 
@@ -130,16 +158,23 @@ class OrganiserController extends Controller
             'deny_reason' => 'required',
         ]);
 
-        dd($request->deny_reason);
-
         $req = CreditRequest::where('id', $request->request_id)->first();
         if (!$req) {
             return back()->with('error', 'Không tìm thấy yêu cầu');
         }
-        dd($req->deny_reason);
+
         $req->status = 'denied';
         $req->deny_reason = $request->deny_reason;
         $req->save();
+
+        Notification::create([
+            'user_id' => $req->user_id,
+            'tag' => 'Hỗ trợ tín dụng',
+            'tag_model' => 'CREDIT',
+            'tag_model_id' => $req->id,
+            'title' => 'Tín dụng sinh viên',
+            'body' => 'Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã bị từ chối',
+        ]);
 
         return back()->with('success', 'Từ chối yêu cầu cấp hạn mức tín dụng thành công');
     }
@@ -179,6 +214,15 @@ class OrganiserController extends Controller
         $wallet->balance = $wallet->balance - $req->amount;
         $wallet->save();
 
+        Notification::create([
+            'user_id' => $req->user_id,
+            'tag' => 'Rút tiền',
+            'tag_model' => 'WITHDRAW',
+            'tag_model_id' => $req->id,
+            'title' => 'Rút tiền thành công',
+            'body' => 'Bạn đã thành công rút số tiền ' . $req->amount . ' từ ví thành tiền mặt. Mã giao dịch '. $req->transaction_id,
+        ]);
+
         return back()->with('success', 'Chấp nhận yêu cầu rút tiền thành công');
     }
 
@@ -196,6 +240,15 @@ class OrganiserController extends Controller
         $req->status = 'denied';
         $req->deny_reason = $request->deny_reason;
         $req->save();
+
+        Notification::create([
+            'user_id' => $req->user_id,
+            'tag' => 'Rút tiền',
+            'tag_model' => 'WITHDRAW',
+            'tag_model_id' => $req->id,
+            'title' => 'Rút tiền thất bại',
+            'body' => 'Lệnh rút tiền ' . $req->transaction_id . ' của bạn đã bị từ chối',
+        ]);
 
         return back()->with('success', 'Từ chối yêu cầu rút tiền thành công');
     }

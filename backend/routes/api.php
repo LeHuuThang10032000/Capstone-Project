@@ -59,5 +59,8 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     //friends
     Route::apiResource('friends', FriendsController::class);
+    Route::get('friends', [FriendsController::class, 'index']);
+    Route::post('friends', [FriendsController::class, 'store']);
+    Route::post('unfriend', [FriendsController::class, 'destroy']);
 });
 
