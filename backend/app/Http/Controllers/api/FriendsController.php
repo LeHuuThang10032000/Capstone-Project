@@ -26,7 +26,6 @@ class FriendsController extends Controller
         }
         $users = User::whereIn('id', $id)
             ->get();
-//        return $users;
         return FriendsResource::collection($users);
     }
 
@@ -50,9 +49,14 @@ class FriendsController extends Controller
             );
         }
 
+        $user = new Friends();
+        $user->user_id = Auth::user()->id;
+        $user->friend_id = $request->friend_id;
+        $user->save();
+
         $friend = new Friends();
-        $friend->user_id = Auth::user()->id;
-        $friend->friend_id = $request->friend_id;
+        $friend->user_id = $request->friend_id;
+        $friend->friend_id = Auth::user()->id;
         $friend->save();
 
         return ApiResponse::successResponse([
@@ -66,23 +70,25 @@ class FriendsController extends Controller
             $validations = Validator::make($request->all(), [
                 'friend_id' => 'required'
             ]);
-    
+
             if ($validations->fails()) {
                 return ApiResponse::failureResponse($validations->messages()->first());
             }
-    
-            $relationship = Friends::where('user_id', Auth::user()->id)->where('friend_id', $request->friend_id)->first();
-    
-            if (!$relationship) {
+
+            $relationship = Friends::where('user_id', Auth::user()->id)
+                ->where('friend_id', $request->friend_id)
+                ->orWhere('user_id', $request->friend_id)
+                ->where('friend_id', Auth::user()->id);
+            if (!$relationship->get()) {
                 return ApiResponse::failureResponse(
                     'Hai bạn chưa phải là bạn bè'
                 );
             }
-    
+
             $relationship->delete();
-    
+
             return ApiResponse::successResponse(null);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
