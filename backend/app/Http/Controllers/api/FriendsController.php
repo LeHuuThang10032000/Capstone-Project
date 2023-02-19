@@ -7,6 +7,7 @@ use App\Http\Resources\api\FriendsResource;
 use App\Http\Response\ApiResponse;
 use App\Models\Friends;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -57,5 +58,32 @@ class FriendsController extends Controller
         return ApiResponse::successResponse([
             'message' => 'You are friends now'
         ]);
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            $validations = Validator::make($request->all(), [
+                'friend_id' => 'required'
+            ]);
+    
+            if ($validations->fails()) {
+                return ApiResponse::failureResponse($validations->messages()->first());
+            }
+    
+            $relationship = Friends::where('user_id', Auth::user()->id)->where('friend_id', $request->friend_id)->first();
+    
+            if (!$relationship) {
+                return ApiResponse::failureResponse(
+                    'Hai bạn chưa phải là bạn bè'
+                );
+            }
+    
+            $relationship->delete();
+    
+            return ApiResponse::successResponse(null);
+        } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
     }
 }
