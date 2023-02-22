@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\CreditRequest;
+use App\Models\Friends;
 use App\Models\Notification;
 use App\Models\Store;
 use App\Models\User;
@@ -19,7 +20,15 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     public function index(){
-        return User::all();
+        $userCurr = Auth::user()->id;
+        $friends = Friends::where('user_id', $userCurr)->get();
+        $arrFriends = [];
+        foreach($friends as $person){
+            array_push($arrFriends, $person['friend_id']);
+        }
+        array_push($arrFriends, $userCurr);
+        $users = User::whereNotIn('id', $arrFriends)->get();
+        return ApiResponse::successResponse($users);
     }
 
     public function update(Request $request):Response
