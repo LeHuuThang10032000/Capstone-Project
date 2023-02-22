@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Models\Notification;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
@@ -84,6 +85,14 @@ class TransactionController extends Controller
                     'code' => Helper::generateNumber(),
                 ]
             );
+
+            Notification::create([
+                'user_id' => $recipient->id,
+                'tag' => 'Chuyển tiền',
+                'tag_model' => 'TRANSACTION',
+                'tag_model_id' => $transaction->id,
+                'title' => 'Nhận ' . $transaction->amount . ' từ ' . $user->f_name,
+            ]);
 
             DB::commit();
             return ApiResponse::successResponse($transaction->id);

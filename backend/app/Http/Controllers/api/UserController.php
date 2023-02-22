@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\CreditRequest;
 use App\Models\Friends;
+use App\Models\Notification;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;

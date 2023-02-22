@@ -8,6 +8,7 @@ use App\Http\Controllers\api\WalletController;
 use App\Http\Controllers\api\CreditController;
 use App\Http\Controllers\api\WithdrawController;
 use App\Http\Controllers\api\FriendsController;
+use App\Http\Controllers\api\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,9 +59,10 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::get('/withdraw-history/{id}', [WithdrawController::class, 'detail']);
 
     //friends
-    Route::apiResource('friends', FriendsController::class);
     Route::get('friends', [FriendsController::class, 'index']);
     Route::post('friends', [FriendsController::class, 'store']);
     Route::post('unfriend', [FriendsController::class, 'destroy']);
+
+    Route::apiResource('notification', NotificationController::class);
 });
 

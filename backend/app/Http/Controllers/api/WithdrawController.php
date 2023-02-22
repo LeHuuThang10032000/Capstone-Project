@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\CreditRequest;
 use App\Models\WithdrawRequest;
+use Carbon\Carbon;
 use Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class WithdrawController extends Controller
         if ($validate->fails()) {
             return ApiResponse::failureResponse($validate->messages()->first());
         }
-        
+
         try {
             $result = WithdrawRequest::create([
                 'transaction_id' => Helper::generateNumber(),
@@ -50,6 +51,7 @@ class WithdrawController extends Controller
         $validate = Validator::make($request->all(), [
             'page' => 'integer',
             'limit' => 'integer',
+            'filter_key' => 'in:days,months,years',
         ]);
 
         if ($validate->fails()) {
@@ -57,19 +59,46 @@ class WithdrawController extends Controller
         }
 
         try {
-            $data = WithdrawRequest::where('user_id', Auth::user()->id)
-                ->select('id', 'created_at', 'status');
+            $historyGets = WithdrawRequest::where('user_id', Auth::user()->id)
+                ->select('id', 'created_at', 'status')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-            if($request->page) {
-                $limit = $request->limit;
-                $page = $request->page;
-                $offset = ($page-1) * $limit;
-                $data = $data->offset($offset)->limit($limit);
+            $limit = $request->limit ?? 10;
+            $page = $request->page ?? 1;
+            if ($request->filter_key == 'days') {
+                foreach ($historyGets as $item) {
+                    $date = Carbon::parse($item->created_at)->format('Y-m-d');
+                    $data[$date]['data'][] = $item;
+                    $data[$date]['date'] = $date;
+                }
+                $data = array_values($data);
+                $data = $limit ? array_slice($data, $limit * ($page - 1), $limit) : $data;
+            } else if ($request->filter_key == 'months') {
+                foreach ($historyGets as $item) {
+                    $date = Carbon::parse($item->created_at)->format('Y-m');
+                    $data[$date]['data'][] = $item;
+                    $data[$date]['date'] = $date;
+                }
+                $data = array_values($data);
+                $data = $limit ? array_slice($data, $limit * ($page - 1), $limit) : $data;
+            } else if ($request->filter_key == 'years') {
+                foreach ($historyGets as $item) {
+                    $date = Carbon::parse($item->created_at)->format('Y');
+                    $data[$date]['data'][] = $item;
+                    $data[$date]['date'] = $date;
+                }
+                $data = array_values($data);
+                $data = $limit ? array_slice($data, $limit * ($page - 1), $limit) : $data;
             }
 
-            $data = $data->get();
-
-            return ApiResponse::successResponse($data);
+            $response = [
+                'data' => $data,
+                'limit' => $limit,
+                'page' => $page,
+                'total' => count($data),
+            ];
+            return ApiResponse::successResponse($response);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
