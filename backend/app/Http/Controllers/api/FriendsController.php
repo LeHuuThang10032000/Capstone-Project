@@ -24,8 +24,7 @@ class FriendsController extends Controller
         foreach ($friends as $friend) {
             array_push($id, $friend->friend_id);
         }
-        $users = User::whereIn('id', $id)
-            ->get();
+        $users = User::whereIn('id', $id)->get();
 //        return $users;
         return FriendsResource::collection($users);
     }
