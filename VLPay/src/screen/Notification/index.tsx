@@ -9,134 +9,67 @@ import {
   View,
   VStack,
 } from 'native-base';
-import React from 'react';
-import {StyleSheet} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList, StyleSheet } from 'react-native';
+import { axiosClient } from '../../components/apis/axiosClient';
 import HeaderComp from '../../components/HeaderComp';
 import HeaderDivider from './HeaderDivider';
 
 type Props = {};
 
 const Index = (props: Props) => {
+
+  const [data, setData] = useState([]);
+
+  const fetchData = useCallback(async () => {
+    setInterval(async () => {
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/notification',
+      );
+      setData(result.data.data);
+    }, 1000);
+
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.bgColor}>
       <HeaderComp title="Thông báo" />
       <HeaderDivider />
-      <ScrollView>
-        <VStack space={4} alignItems="center" pt={5} pb={5}>
-          <Center
-            w="90%"
-            h="20"
-            bg="#C7CEEA"
-            rounded="md"
-            shadow={3}
-            alignItems="flex-start">
-            <HStack justifyContent="space-between" w={'100%'} px="5">
-              <Text style={styles.text}>VLPay</Text>
-              <Text>Thứ 2, 16/10</Text>
-            </HStack>
-            <View px="5">
-              <Text style={styles.titleText}>Get 35.000đ from BICH THUY</Text>
-            </View>
-          </Center>
+      <ScrollView backgroundColor={'red'} width={'100%'}>
 
-          <Center
-            w="90%"
-            h="20"
-            bg="#C7CEEA"
-            rounded="md"
-            shadow={3}
-            alignItems="flex-start">
-            <HStack justifyContent="space-between" w={'100%'} px="5">
-              <Text style={styles.text}>VLPay</Text>
-              <Text>Thứ 2, 16/10</Text>
-            </HStack>
-            <View px="5">
-              <Text style={styles.titleText}>Get 35.000đ from BICH THUY</Text>
-            </View>
-          </Center>
+        <FlatList
+          data={data}
+          renderItem={({ item }: any) => {
+            // console.log(item);
 
-          <Center
-            w="90%"
-            h="20"
-            bg="#C7CEEA"
-            rounded="md"
-            shadow={3}
-            alignItems="flex-start">
-            <HStack justifyContent="space-between" w={'100%'} px="5">
-              <Text style={styles.text}>VLPay</Text>
-              <Text>Thứ 2, 16/10</Text>
-            </HStack>
-            <View px="5">
-              <Text style={styles.titleText}>Get 35.000đ from BICH THUY</Text>
-            </View>
-          </Center>
-
-          <Center
-            w="90%"
-            h="20"
-            bg="#C7CEEA"
-            rounded="md"
-            shadow={3}
-            alignItems="flex-start">
-            <HStack justifyContent="space-between" w={'100%'} px="5">
-              <Text style={styles.text}>VLPay</Text>
-              <Text>Thứ 2, 16/10</Text>
-            </HStack>
-            <View px="5">
-              <Text style={styles.titleText}>Get 35.000đ from BICH THUY</Text>
-            </View>
-          </Center>
-
-          <Center
-            w="90%"
-            h="20"
-            bg="#C7CEEA"
-            rounded="md"
-            shadow={3}
-            alignItems="flex-start">
-            <HStack justifyContent="space-between" w={'100%'} px="5">
-              <Text style={styles.text}>VLPay</Text>
-              <Text>Thứ 2, 16/10</Text>
-            </HStack>
-            <View px="5">
-              <Text style={styles.titleText}>Get 35.000đ from BICH THUY</Text>
-            </View>
-          </Center>
-
-          <Center
-            w="90%"
-            h="20"
-            bg="#C7CEEA"
-            rounded="md"
-            shadow={3}
-            alignItems="flex-start">
-            <HStack justifyContent="space-between" w={'100%'} px="5">
-              <Text style={styles.text}>VLPay</Text>
-              <Text>Thứ 2, 16/10</Text>
-            </HStack>
-            <View px="5">
-              <Text style={styles.titleText}>Get 35.000đ from BICH THUY</Text>
-            </View>
-          </Center>
-
-          <Center
-            w="90%"
-            h="20"
-            bg="#C7CEEA"
-            rounded="md"
-            shadow={3}
-            alignItems="flex-start">
-            <HStack justifyContent="space-between" w={'100%'} px="5">
-              <Text style={styles.text}>VLPay</Text>
-              <Text>Thứ 2, 16/10</Text>
-            </HStack>
-            <View px="5">
-              <Text style={styles.titleText}>Get 35.000đ from BICH THUY</Text>
-            </View>
-          </Center>
-        </VStack>
+            return (
+              <Center
+                w="90%"
+                bg="#C7CEEA"
+                rounded="md"
+                shadow={3}
+                alignItems="flex-start">
+                <View paddingY={5}>
+                  <HStack justifyContent="space-between" w={'100%'} px="5">
+                    <View>
+                      <Text style={styles.text}>{item.title} ({item.tag_model})</Text>
+                      <Text>{item.created_at}</Text>
+                    </View>
+                  </HStack>
+                  <View px="5">
+                    <Text style={styles.titleText}>{item.body}</Text>
+                  </View>
+                </View>
+              </Center>
+            )
+          }}
+        />
       </ScrollView>
-    </View>
+    </View >
   );
 };
 
