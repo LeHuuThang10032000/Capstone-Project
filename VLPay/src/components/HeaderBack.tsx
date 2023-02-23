@@ -1,9 +1,10 @@
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import BackIcon from '../assets/svg/left-arrow.svg';
-import {HStack, Switch, Text, View} from 'native-base';
+import {HStack, Text, View} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../stack/Navigation';
+import SwitchButton from './SwitchButton';
 
 type Props = {
   title: string;
@@ -28,6 +29,11 @@ const HeaderBack: React.FC<Props> = ({
       navigation.navigate('Home');
     }
   };
+  const [switchValue, setSwitchValue] = useState(false);
+
+  const handleSwitchValueChange = (value: boolean) => {
+    setSwitchValue(value);
+  };
   return (
     <View style={[styles.header, style]}>
       <View>
@@ -39,7 +45,14 @@ const HeaderBack: React.FC<Props> = ({
         <Text style={styles.text}>{title}</Text>
       </View>
       {hideRight ? (
-        <Switch size="sm" />
+        <>
+          <SwitchButton
+            label1={'Mở'}
+            label2={'Tắt'}
+            value={switchValue}
+            onValueChange={handleSwitchValueChange}
+          />
+        </>
       ) : (
         <View
           style={{backgroundColor: '#FEB7B1', width: 30, height: 30}}></View>

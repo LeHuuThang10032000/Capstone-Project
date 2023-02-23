@@ -53,7 +53,8 @@ const HistoryWithDraw = (props: Props) => {
     getDays();
   }, []);
   return (
-    <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
+    <View style={{flex: 1}}>
+      <HeaderBack title="Lịch sử rút tiền" />
       {loading ? (
         <Center>
           <Lottie
@@ -82,19 +83,15 @@ const HistoryWithDraw = (props: Props) => {
                           style={styles.title}
                           ellipsizeMode="tail"
                           numberOfLines={1}>
-                          {item.title}
+                          {item.status === 'pending'
+                            ? 'Đang xử lý'
+                            : 'Đã duyệt'}
                         </Text>
                         <Text style={styles.textDate}>{item.created_at}</Text>
                       </VStack>
-                      {item.from_id !== profile ? (
-                        <Text style={styles.text}>
-                          {formatCurrency(`${item.amount}`)}đ
-                        </Text>
-                      ) : (
-                        <Text style={styles.text}>
-                          -{formatCurrency(`${item.amount}`)}đ
-                        </Text>
-                      )}
+                      <Text style={styles.text}>
+                        -{formatCurrency(`${item.amount}`)}đ
+                      </Text>
                     </HStack>
                   );
                 })}

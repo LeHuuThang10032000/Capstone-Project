@@ -31,6 +31,7 @@ import MenuScreen from '../screen/Merchant/Shop/MenuScreen';
 import BottomTabStackMerchant from './BottomTabMerchant';
 import MailScreen from '../screen/Merchant/Shop/MailScreen';
 import AccountScreen from '../screen/Merchant/Shop/AccountScreen';
+import HistoryWithDraw from '../screen/WithDraw/HistoryWithDraw';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -154,5 +155,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'AccountScreen',
     component: AccountScreen,
+  },
+  {
+    name: 'HistoryWithDraw',
+    component: HistoryWithDraw,
   },
 ];
