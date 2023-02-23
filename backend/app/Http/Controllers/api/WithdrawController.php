@@ -60,7 +60,7 @@ class WithdrawController extends Controller
 
         try {
             $historyGets = WithdrawRequest::where('user_id', Auth::user()->id)
-                ->select('id', 'created_at', 'status')
+                ->select('id', 'created_at', 'status', 'amount')
                 ->orderBy('created_at', 'desc')
                 ->get();
 
