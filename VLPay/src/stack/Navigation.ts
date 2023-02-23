@@ -94,6 +94,7 @@ export type MainStackParamList = {
   MenuScreen: undefined;
   MailScreen: undefined;
   AccountScreen: undefined;
+  HistoryWithDraw: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

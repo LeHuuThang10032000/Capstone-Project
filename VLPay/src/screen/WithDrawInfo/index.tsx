@@ -29,6 +29,13 @@ const WithDrawInfo = (props: any) => {
   const [profile, setProfile] = useState({});
   const isFocused = useIsFocused();
   const balances = useMemo(() => ['200000', '500000', '1000000'], []);
+  const [tranId, setTranId] = useState('');
+  const [amount, setAmount] = useState('');
+  const [day, setDay] = useState('');
+
+  console.log(tranId);
+  console.log(amount);
+  console.log(day);
 
   const {isWithdraw} =
     useRoute<RouteProp<MainStackParamList, 'WithDrawInfo'>>()?.params;
@@ -68,18 +75,26 @@ const WithDrawInfo = (props: any) => {
     const {amount} = data;
     const formData = new FormData();
     formData.append('amount', amount);
-    formData.append('name', profile?.data?.f_name);
-    formData.append('phone', profile?.data?.phone);
     console.log(formData);
 
     try {
-      await axiosClient.post(
-        'https://zennoshop.cf/api/user/create-withdraw-request',
-        formData,
-        {
-          headers: {'content-type': 'multipart/form-data'},
-        },
-      );
+      await axiosClient
+        .post(
+          'https://zennoshop.cf/api/user/create-withdraw-request',
+          formData,
+          {
+            headers: {'content-type': 'multipart/form-data'},
+          },
+        )
+        .then(res => {
+          const data = res.data?.data;
+          setTranId(data.transaction_id);
+          setAmount(data.amount);
+          setDay(data.created_at);
+          // console.log(res.data?.data?.transaction_id);
+          // console.log(res.data?.data?.amount);
+        })
+        .catch(err => console.log(err));
       console.log('Successfully!');
       setVisibleWarning(true);
       setInterval(() => {
@@ -105,7 +120,7 @@ const WithDrawInfo = (props: any) => {
             {isWithdraw ? 'Thông tin rút tiền' : 'Thông tin nạp tiền'}
           </TText>
           <TText style={{fontSize: 18, marginTop: 5}}>
-            {isWithdraw ? 'Mã rút' : 'Mã nạp'}: 8713
+            {isWithdraw ? 'Mã rút' : 'Mã nạp'}: {tranId}
           </TText>
           <HStack
             justifyContent={'space-between'}
@@ -124,14 +139,16 @@ const WithDrawInfo = (props: any) => {
             <TText style={{fontSize: 18}}>
               Số tiền yêu cầu {isWithdraw ? 'rút' : 'nạp'}:
             </TText>
-            <TText style={{fontSize: 18, opacity: 0.31}}>1.000.000đ</TText>
+            <TText style={{fontSize: 18, opacity: 0.31}}>
+              {formatCurrency(amount)}đ
+            </TText>
           </HStack>
           <HStack
             justifyContent={'space-between'}
             width={'100%'}
             marginBottom={5}>
             <TText style={{fontSize: 18}}>Ngày giao dịch:</TText>
-            <TText style={{fontSize: 18, opacity: 0.31}}>15/12/2022</TText>
+            <TText style={{fontSize: 18, opacity: 0.31}}>{day}</TText>
           </HStack>
           <HStack
             justifyContent={'space-between'}

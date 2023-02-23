@@ -51,6 +51,7 @@ const WithDraw = () => {
         </View>
         <View paddingX={10}>
           <TouchableOpacity
+            onPress={() => navigation.navigate('HistoryWithDraw')}
             style={{
               flexDirection: 'row',
               paddingHorizontal: 10,
