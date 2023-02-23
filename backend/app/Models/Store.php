@@ -30,5 +30,16 @@ class Store extends Model implements HasMedia
     protected $hidden = [
         'created_at',
         'updated_at',
+        'media'
     ];
+
+    public function getImageAttribute()
+    {
+        return $this->getMedia('images')->first()->getFullUrl();
+    }
+
+    public function getCoverPhotoAttribute()
+    {
+        return $this->getMedia('cover_photos')->first()->getFullUrl();
+    }
 }

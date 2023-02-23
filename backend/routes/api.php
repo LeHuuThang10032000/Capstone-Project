@@ -9,6 +9,7 @@ use App\Http\Controllers\api\CreditController;
 use App\Http\Controllers\api\WithdrawController;
 use App\Http\Controllers\api\FriendsController;
 use App\Http\Controllers\api\NotificationController;
+use App\Http\Controllers\api\StoreController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,5 +65,10 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('unfriend', [FriendsController::class, 'destroy']);
 
     Route::apiResource('notification', NotificationController::class);
+
+    Route::group(['prefix' => 'merchant'], function() {
+        Route::get('/store', [StoreController::class, 'index']);
+        Route::post('/store/update', [StoreController::class, 'update']);
+    });
 });
 
