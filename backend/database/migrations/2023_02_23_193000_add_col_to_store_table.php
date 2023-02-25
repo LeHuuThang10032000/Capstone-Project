@@ -30,6 +30,7 @@ class AddColToStoreTable extends Migration
     {
         Schema::table('stores', function (Blueprint $table) {
             $table->dropColumn('wallet_balance');
+            $table->dropColumn('cover_photo');
         });
     }
 }

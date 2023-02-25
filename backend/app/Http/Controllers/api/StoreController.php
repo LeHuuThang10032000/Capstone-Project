@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Store;
 use Exception;
 use Illuminate\Http\Request;
@@ -91,6 +93,110 @@ class StoreController extends Controller
             unset($store->media);
             return ApiResponse::successResponse($store);
         } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function createProduct(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|integer',
+            'name' => 'required|max:255',
+            'price' => 'required|integer',
+            'image' => 'required|mimes:jpeg,jpg,png',
+            'category_id' => 'required|integer',
+        ], [
+            'name.required' => 'Vui lòng nhập tên sản phẩm',
+            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
+            'price.required' => 'Vui lòng giá tiền của sản phẩm',
+            'image.required' => 'Vui lòng chọn hình ảnh cho sản phẩm của bạn',
+            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm của sản phẩm',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
+        if(!$store) {
+            return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $product = new Product;
+            $product->store_id = $request->store_id;
+            $product->name = $request->name;
+            $product->price = $request->price;
+            $product->status = 'comingsoon';
+            if($request->hasFile('image')) {
+                $product->addMediaFromRequest('image')->toMediaCollection('images');
+            }
+            $product->category_id = $request->category_id;
+            $product->save();
+
+            DB::commit();
+			return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function createProductCategory(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|integer',
+            'name' => 'required|max:255',
+        ], [
+            'name.required' => 'Vui lòng nhập tên sản phẩm',
+            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
+        if(!$store) {
+            return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
+        }
+
+        try {
+            DB::beginTransaction();
+            $category = new ProductCategory;
+            $category->name = $request->name;
+            $category->store_id = $request->store_id;
+            $category->save();
+
+            DB::commit();
+			return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getStoreMenu(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $categories = ProductCategory::where('store_id', $request->store_id)
+                ->with('products')
+                ->withCount('products')
+                ->get();
+            
+			return APIResponse::SuccessResponse($categories);
+        } catch(Exception $e) {
+            DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
     }

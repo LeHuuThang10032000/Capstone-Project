@@ -197,7 +197,8 @@ class UserController extends Controller
         }
     }
 
-    public function searchUser(Request $request){
+    public function searchUser(Request $request)
+    {
 
     }
 }
