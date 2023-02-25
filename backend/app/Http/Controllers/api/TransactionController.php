@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\Notification;
 use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use App\Models\User;
 use App\Models\Wallet;
 use Carbon\Carbon;
@@ -39,7 +40,6 @@ class TransactionController extends Controller
         ], 422);
     }
 
-    //method post
     public function transfer(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -70,12 +70,19 @@ class TransactionController extends Controller
             }
             $recipientWallet = $recipient->wallet;
             
+            // Update Recipient Wallet Balance
+            $recipientOpenBalance = $recipientWallet->balance;
             $recipientWallet->update([
-                "balance" => $recipientWallet->balance + $request->cash
+                "balance" => $recipientOpenBalance + $request->cash
             ]);
+            $recipientCloseBalance = $recipientWallet->balance;
+
+            // Update User Wallet Balance
+            $userOpenBalance = $userWallet->balance;
             $userWallet->update([
-                "balance" => $userWallet->balance - $request->cash
+                "balance" => $userOpenBalance - $request->cash
             ]);
+            $userCloseBalance = $userWallet->balance;
 
             $transaction = Transaction::create(
                 [
@@ -86,12 +93,27 @@ class TransactionController extends Controller
                 ]
             );
 
+            TransactionDetail::create([
+                'transaction_id' => $transaction->id,
+                'user_id' => $user->id,
+                'open_balance' => $userOpenBalance,
+                'close_balance' => $userCloseBalance,
+            ]);
+
+            TransactionDetail::create([
+                'transaction_id' => $transaction->id,
+                'user_id' => $recipient->id,
+                'open_balance' => $recipientOpenBalance,
+                'close_balance' => $recipientCloseBalance,
+            ]);
+
             Notification::create([
                 'user_id' => $recipient->id,
                 'tag' => 'Chuyển tiền',
                 'tag_model' => 'TRANSACTION',
                 'tag_model_id' => $transaction->id,
-                'title' => 'Nhận ' . $transaction->amount . ' từ ' . $user->f_name,
+                'title' => 'Chuyển tiền',
+                'body' => 'Nhận ' . number_format($transaction->amount) . ' từ ' . $user->f_name,
             ]);
 
             DB::commit();

@@ -26,6 +26,16 @@ class Store extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(ProductCategory::class);
+    }
     
     protected $hidden = [
         'created_at',
@@ -35,11 +45,19 @@ class Store extends Model implements HasMedia
 
     public function getImageAttribute()
     {
-        return $this->getMedia('images')->first()->getFullUrl();
+        $image = $this->getMedia('images')->first();
+        if($image) {
+            return $image->getFullUrl();
+        }
+        return null;
     }
 
     public function getCoverPhotoAttribute()
     {
-        return $this->getMedia('cover_photos')->first()->getFullUrl();
+        $image = $this->getMedia('cover_photos')->first();
+        if($image) {
+            return $image->getFullUrl();
+        }
+        return null;
     }
 }

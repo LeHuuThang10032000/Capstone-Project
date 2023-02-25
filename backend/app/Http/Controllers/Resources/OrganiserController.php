@@ -7,11 +7,16 @@ use App\Models\CreditRequest;
 use App\Models\Notification;
 use App\Models\Store;
 use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\WithdrawRequest;
+use Exception;
+use Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OrganiserController extends Controller
@@ -203,27 +208,57 @@ class OrganiserController extends Controller
             return back()->with('error', $validate->messages()->first());
         }
 
-        $req = WithdrawRequest::where('id', $request->request_id)->first();
-        if (!$req) {
-            return back()->with('error', 'Không tìm thấy yêu cầu');
-        }
-        $req->status = 'approved';
-        $req->save();
+        try {
+            DB::beginTransaction();
 
-        $wallet = Wallet::where('user_id', $req->user_id)->first();
-        $wallet->balance = $wallet->balance - $req->amount;
-        $wallet->save();
-
-        Notification::create([
-            'user_id' => $req->user_id,
-            'tag' => 'Rút tiền',
-            'tag_model' => 'WITHDRAW',
-            'tag_model_id' => $req->id,
-            'title' => 'Rút tiền thành công',
-            'body' => 'Bạn đã thành công rút số tiền ' . $req->amount . ' từ ví thành tiền mặt. Mã giao dịch '. $req->transaction_id,
-        ]);
-
-        return back()->with('success', 'Chấp nhận yêu cầu rút tiền thành công');
+            $req = WithdrawRequest::where('id', $request->request_id)->first();
+            if (!$req) {
+                return back()->with('error', 'Không tìm thấy yêu cầu');
+            }
+            $req->status = 'approved';
+            $req->save();
+    
+            $wallet = Wallet::where('user_id', $req->user_id)->first();
+            $open_balance = $wallet->balance;
+            $wallet->balance = $wallet->balance - $req->amount;
+            $close_balance = $wallet->balance;
+            $wallet->save();
+    
+            if($wallet) {
+                $transaction = Transaction::create([
+                    'code' => $req->transaction_id,
+                    'amount' => $req->amount,
+                    'from_id' => Auth::user()->id,
+                    'to_id' => $wallet->user->id,
+                    'message' => 'Rút ' . $req->amount . ' từ ví',
+                    'title' => 'Rút tiền'
+                ]);
+    
+                TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'user_id' => Auth::user()->id,
+                    'open_balance' => $open_balance,
+                    'close_balance' => $close_balance,
+                ]);
+            }
+    
+            Notification::create([
+                'user_id' => $req->user_id,
+                'tag' => 'Rút tiền',
+                'tag_model' => 'WITHDRAW',
+                'tag_model_id' => $req->id,
+                'title' => 'Rút tiền thành công',
+                'body' => 'Bạn đã thành công rút số tiền ' . $req->amount . ' từ ví thành tiền mặt. Mã giao dịch '. $req->transaction_id,
+            ]);
+    
+            DB::commit();
+    
+            return back()->with('success', 'Chấp nhận yêu cầu rút tiền thành công');
+        } catch(Exception $e) {
+            DB::commit();
+    
+            return back()->with('error', $e->getMessage());
+        }        
     }
 
     public function denyWithdraw(Request $request)

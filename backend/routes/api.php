@@ -69,6 +69,14 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::group(['prefix' => 'merchant'], function() {
         Route::get('/store', [StoreController::class, 'index']);
         Route::post('/store/update', [StoreController::class, 'update']);
+
+        Route::post('/product/create', [StoreController::class, 'createProduct']);
+        // Route::post('/product/update', [StoreController::class, 'updateProduct']);
+
+        Route::post('/product-category/create', [StoreController::class, 'createProductCategory']);
+        // Route::post('/product-category/update', [StoreController::class, 'updateProductCategory']);
+
+        Route::get('/menu', [StoreController::class, 'getStoreMenu']);
     });
 });
 

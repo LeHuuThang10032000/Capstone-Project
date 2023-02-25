@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 class Transaction extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'transactions';
 
@@ -25,7 +25,7 @@ class Transaction extends Model
     ];
 
     protected $hidden = [
-      "updated_at"
+      "updated_at", "deleted_at"
     ];
 
     public function fromUser()
@@ -36,6 +36,11 @@ class Transaction extends Model
     public function toUser()
     {
         return $this->belongsTo(User::class, 'to_id', 'id');
+    }
+
+    public function details()
+    {
+        return $this->hasMany(TransactionDetail::class, 'transaction_id', 'id');
     }
     
     protected function serializeDate(DateTimeInterface $date)
