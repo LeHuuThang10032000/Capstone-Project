@@ -1,5 +1,5 @@
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Center,
   Image,
@@ -12,14 +12,42 @@ import {
   Flex,
 } from 'native-base';
 import ExtendIcon from '../../../../assets/svg/extend.svg';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../../../stack/Navigation';
+import {axiosClient} from '../../../../components/apis/axiosClient';
 
-type Props = {};
+type Props = {
+  name: string;
+  image: string;
+  cover_photo: string;
+};
 
 const InfoShop = (props: Props) => {
+  const navigation = useNavigation<MainStackNavigation>();
+  const [data, setData] = useState(props);
+  console.log(data);
+
+  useEffect(() => {
+    getStore();
+  }, []);
+  const getStore = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/merchant/store',
+    );
+    setData(result.data?.data);
+  }, []);
   return (
     <View>
       <Center borderRadius={10} borderWidth={1} borderColor="#EFEFF4">
-        <Pressable style={styles.button}>
+        <Pressable
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('DetailShop', {
+              name: data.name,
+              image: data.image,
+              cover_photo: data.cover_photo,
+            })
+          }>
           <View style={styles.info}>
             <Image
               source={require('../../../../assets/img/iconShop.png')}
@@ -38,7 +66,7 @@ const InfoShop = (props: Props) => {
         </Pressable>
         <Center py={2}>
           <Text style={styles.text}>Tổng đơn hàng</Text>
-          <Text style={styles.textButton}>1000</Text>
+          <Text style={styles.textButton}>0</Text>
         </Center>
       </Center>
 

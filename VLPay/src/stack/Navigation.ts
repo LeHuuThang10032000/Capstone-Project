@@ -95,6 +95,11 @@ export type MainStackParamList = {
   MailScreen: undefined;
   AccountScreen: undefined;
   HistoryWithDraw: undefined;
+  DetailShop: {
+    name: string;
+    image: string;
+    cover_photo: string;
+  };
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

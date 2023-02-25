@@ -10,16 +10,18 @@ type Props = {
   title: string;
   isReset?: boolean;
   style?: any;
-  onPressLeft?: any;
+  onPressRight?: boolean;
   hideRight?: any;
+  onPress?: () => void;
 };
 
 const HeaderBack: React.FC<Props> = ({
   title,
   isReset = false,
   style,
-  onPressLeft,
+  onPressRight,
   hideRight,
+  onPress,
 }) => {
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
@@ -44,19 +46,24 @@ const HeaderBack: React.FC<Props> = ({
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <Text style={styles.text}>{title}</Text>
       </View>
-      {hideRight ? (
-        <>
-          <SwitchButton
-            label1={'Mở'}
-            label2={'Tắt'}
-            value={switchValue}
-            onValueChange={handleSwitchValueChange}
-          />
-        </>
-      ) : (
-        <View
-          style={{backgroundColor: '#FEB7B1', width: 30, height: 30}}></View>
-      )}
+      <View alignItems={'center'}>
+        {hideRight ? (
+          <>
+            <SwitchButton
+              label1={'Mở'}
+              label2={'Tắt'}
+              value={switchValue}
+              onValueChange={handleSwitchValueChange}
+            />
+          </>
+        ) : null}
+
+        {onPressRight ? (
+          <TouchableOpacity onPress={onPress}>
+            <Text style={[styles.text, {fontSize: 14}]}>Chỉnh sửa</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </View>
   );
 };
