@@ -190,7 +190,8 @@ class StoreController extends Controller
 
         try {
             $categories = ProductCategory::where('store_id', $request->store_id)
-                ->with('products')
+                ->select('id', 'name')
+                ->with('products:id,name,price,category_id')
                 ->withCount('products')
                 ->get();
             
