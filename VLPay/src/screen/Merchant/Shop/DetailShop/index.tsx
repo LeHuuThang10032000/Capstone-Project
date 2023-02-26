@@ -35,11 +35,7 @@ const DetailShop = ({route}: any) => {
             borderRadius={50}
             alt="image-store"
             resizeMode="cover"
-            zIndex={99}
             position={'absolute'}
-            top={-50}
-            left={150}
-            right={150}
           />
         ) : (
           <Image
@@ -49,13 +45,11 @@ const DetailShop = ({route}: any) => {
             borderRadius={50}
             alt="image-store"
             resizeMode="cover"
-            zIndex={99}
             position={'absolute'}
-            top={-50}
-            left={150}
-            right={150}
           />
         )}
+      </Center>
+      <Center>
         <View style={{paddingTop: 60}} justifyContent="center">
           <Text style={styles.text}>{name}</Text>
         </View>
