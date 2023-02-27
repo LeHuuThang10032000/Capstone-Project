@@ -15,7 +15,7 @@ class WalletController extends Controller
 {
     public function index()
     {
-        $wallets = Wallet::simplePaginate(10);
+        $wallets = Wallet::paginate(10);
         return view('wallets.index', compact('wallets'));
     }
 
