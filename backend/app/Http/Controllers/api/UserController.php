@@ -131,6 +131,7 @@ class UserController extends Controller
                 'location' => $request->location,
                 'image' => $request->image,
                 'status' => 'pending',
+                'wallet_balance' => 0,
             ]);
 
             if($request->hasFile('image') && $request->file('image')->isValid()) {

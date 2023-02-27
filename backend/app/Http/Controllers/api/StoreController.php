@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Models\AddOn;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Store;
@@ -121,9 +122,23 @@ class StoreController extends Controller
         if(!$store) {
             return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
+        $addOns = json_decode($request->get('add_ons'));
 
         try {
             DB::beginTransaction();
+
+            $newAddOns = [];
+            foreach($addOns as $key => $value) {
+                $addOnNew = AddOn::create(
+                    [
+                        'name' => $value->name,
+                        'price' => $value->price,
+                        'store_id' => $request->store_id,
+                    ]
+                );
+                $value->id = $addOnNew->id;
+                array_push($newAddOns, $addOnNew->id);
+            }
 
             $product = new Product;
             $product->store_id = $request->store_id;
@@ -133,6 +148,7 @@ class StoreController extends Controller
             if($request->hasFile('image')) {
                 $product->addMediaFromRequest('image')->toMediaCollection('images');
             }
+            $product->add_ons = json_encode($newAddOns);
             $product->category_id = $request->category_id;
             $product->save();
 
@@ -178,6 +194,101 @@ class StoreController extends Controller
         }
     }
 
+    public function updateProductCategory(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|integer',
+            'name' => 'required|max:255',
+            'category_id' => 'required|integer'
+        ], [
+            'name.required' => 'Vui lòng nhập tên sản phẩm',
+            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
+        if(!$store) {
+            return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
+        }
+
+        try {
+            DB::beginTransaction();
+            $category = ProductCategory::where('id', $request->category_id)->first();
+            $category->name = $request->name;
+            $category->save();
+
+            DB::commit();
+			return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function updateProduct(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|integer',
+            'name' => 'required|max:255',
+            'product_id' => 'required|integer',
+        ], [
+            'name.required' => 'Vui lòng nhập tên sản phẩm',
+            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
+        if(!$store) {
+            return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
+        }
+        $addOns = json_decode($request->get('add_ons'));
+
+        try {
+            DB::beginTransaction();
+
+            $newAddOns = [];
+            foreach($addOns as $key => $value) {
+                if(!$value->id){
+                    $addOnNew = AddOn::create(
+                        [
+                            'name' => $value->name,
+                            'price' => $value->price,
+                            'store_id' => $request->store_id,
+                        ]
+                    );
+                    $value->id =  $addOnNew->id;
+                    array_push($newAddOns, $addOnNew->id);
+                }
+                array_push($newAddOns, $value->id);
+            }
+
+            $product = Product::where('id', $request->product_id)->update([
+                'name' => $request->name,
+                'price' => $request->price,
+                'status' => 'comingsoon',
+                'add_ons' => json_encode($newAddOns),
+                'category_id' => $request->category_id,
+            ]);
+
+            if($request->hasFile('image')) {
+                $product->clearMediaCollection('images');
+                $product->addMediaFromRequest('image')->toMediaCollection('images');
+            }
+            
+            DB::commit();
+			return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
     public function getStoreMenu(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -200,5 +311,24 @@ class StoreController extends Controller
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
+    }
+
+    public function getAddOn(Request $request)
+    {
+        try{ 
+            $validate = Validator::make($request->all(), [
+                'store_id' => 'required',
+            ]);
+    
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+
+            $addOns = AddOn::select('id', 'name', 'price')->where('store_id', $request->store_id)->get();
+
+            return APIResponse::SuccessResponse($addOns);
+        } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }        
     }
 }
