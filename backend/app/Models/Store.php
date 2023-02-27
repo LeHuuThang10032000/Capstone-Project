@@ -20,6 +20,8 @@ class Store extends Model implements HasMedia
         'selling_products',
         'location',
         'image',
+        'wallet_balance',
+        'cover_photo',
     ];
 
     public function user()
