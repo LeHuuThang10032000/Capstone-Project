@@ -63,6 +63,9 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="py-2 px-3">
+        {{ $wallets->links() }}
+        </div>
     </div>
 </div>
 
