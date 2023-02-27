@@ -28,6 +28,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {UText} from '../../../components/UText';
 import MyStore from '../Shop';
 import NotiScreen from './NotiScreen';
+import Toast from 'react-native-toast-message';
 
 interface CreateShop {
   email: string;
@@ -90,6 +91,11 @@ const RegisterMerchant = () => {
       navigation.replace('NotiScreen');
     } catch (e) {
       console.log(e);
+      Toast.show({
+        type: 'error',
+        text1: 'Lỗi',
+        text2: `${e}`,
+      });
     }
     setLoading(false);
   };
@@ -102,7 +108,7 @@ const RegisterMerchant = () => {
   const [noti, setNoti] = useState('');
   const [isLoading, setLoading] = useState(false);
   console.log('===>', store);
-  console.log('===>', noti);
+  console.log('status ===>', noti);
 
   console.log(profile);
 

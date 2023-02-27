@@ -6,20 +6,52 @@ import {Center, HStack, Image, Pressable, View, VStack} from 'native-base';
 import Clock from '../../../../assets/svg/clock.svg';
 import ExtendIcon from '../../../../assets/svg/extend.svg';
 import Phone from '../../../../assets/svg/phone.svg';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../../../stack/Navigation';
 
-const DetailShop = ({route}: any) => {
-  const {name, image, cover_photo} = route.params;
-  console.log(cover_photo);
+type Props = {
+  id: string;
+  name: string;
+  image: string;
+  cover_photo: string;
+};
+
+const DetailShop = ({route}: any, props: Props) => {
+  const navigation = useNavigation<MainStackNavigation>();
+  const isFocused = useIsFocused();
+  const [data, setData] = useState(props);
+  console.log('myDAta:', data);
+
+  const getStore = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/merchant/store',
+    );
+    setData(result.data?.data);
+  }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      getStore();
+    }
+  }, [getStore, isFocused]);
 
   return (
     <View flex={1} backgroundColor="#FFFFFF">
       <HeaderBack
         title="Thông tin quán"
         onPressRight={true}
-        onPress={() => console.log('hellow')}
+        onPress={() =>
+          navigation.navigate('UpdateShop', {
+            store_id: data.id,
+            name: data.name,
+            image: data.image,
+            cover_photo: data.cover_photo,
+          })
+        }
       />
       <Image
-        source={{uri: image}}
+        source={{uri: data.image}}
         width={'100%'}
         height={'30%'}
         alt="image-store"
@@ -27,31 +59,35 @@ const DetailShop = ({route}: any) => {
         zIndex="-999"
       />
       <Center>
-        {cover_photo !== null ? (
+        {data.cover_photo !== null ? (
           <Image
-            source={{uri: image}}
+            source={{uri: data.cover_photo}}
             width={100}
             height={100}
             borderRadius={50}
             alt="image-store"
             resizeMode="cover"
             position={'absolute'}
+            borderWidth={1}
+            borderColor="amber.400"
           />
         ) : (
           <Image
-            source={require('../../../../assets/img/iconShop.png')}
+            source={{uri: 'https://via.placeholder.com/600/56acb2'}}
             width={100}
             height={100}
             borderRadius={50}
             alt="image-store"
             resizeMode="cover"
             position={'absolute'}
+            borderWidth={1}
+            borderColor="amber.400"
           />
         )}
       </Center>
       <Center>
         <View style={{paddingTop: 60}} justifyContent="center">
-          <Text style={styles.text}>{name}</Text>
+          <Text style={styles.text}>{data.name}</Text>
         </View>
         <TouchableOpacity style={styles.button}>
           <HStack>

@@ -95,10 +95,12 @@ export type MainStackParamList = {
   MailScreen: undefined;
   AccountScreen: undefined;
   HistoryWithDraw: undefined;
-  DetailShop: {
-    name: string;
+  DetailShop: undefined;
+  UpdateShop: {
+    store_id: string;
     image: string;
     cover_photo: string;
+    name: string;
   };
 };
 

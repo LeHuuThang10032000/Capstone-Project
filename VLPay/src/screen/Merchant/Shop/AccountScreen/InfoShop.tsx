@@ -17,6 +17,7 @@ import {MainStackNavigation} from '../../../../stack/Navigation';
 import {axiosClient} from '../../../../components/apis/axiosClient';
 
 type Props = {
+  id: string;
   name: string;
   image: string;
   cover_photo: string;
@@ -25,7 +26,7 @@ type Props = {
 const InfoShop = (props: Props) => {
   const navigation = useNavigation<MainStackNavigation>();
   const [data, setData] = useState(props);
-  console.log(data);
+  console.log('myDAta:', data);
 
   useEffect(() => {
     getStore();
@@ -41,13 +42,7 @@ const InfoShop = (props: Props) => {
       <Center borderRadius={10} borderWidth={1} borderColor="#EFEFF4">
         <Pressable
           style={styles.button}
-          onPress={() =>
-            navigation.navigate('DetailShop', {
-              name: data.name,
-              image: data.image,
-              cover_photo: data.cover_photo,
-            })
-          }>
+          onPress={() => navigation.navigate('DetailShop')}>
           <View style={styles.info}>
             <Image
               source={require('../../../../assets/img/iconShop.png')}
