@@ -42,6 +42,7 @@
     "react-native-compressor": "^1.6.1",
     "react-native-contacts": "^7.0.5",
     "react-native-currency-input": "^1.1.0",
+    "react-native-elements": "^3.4.3",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-image-crop-picker": "0.38.0",

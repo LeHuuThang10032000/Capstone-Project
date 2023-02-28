@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import HeaderComp from '../../../components/HeaderComp';
 import { Box, Center, Image } from 'native-base';
+import { Button } from 'react-native';
 import CameraIcon from '../../../assets/svg/camera.svg';
 import { Images } from '../../../components/helpers/resources';
 import { ActionSheetRef } from '../../../components/ActionSheet';
@@ -16,6 +17,8 @@ import { MAX_FOOD_PRICE } from '../../../components/helper/constants';
 import Helper from '../../../components/helpers/helper';
 import ECheckbox from '../../../components/ECheckbox';
 import AddCategory from './AddCategory';
+import { CheckBox, Input } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ProductMerchant = () => {
     const scrollViewRef = React.useRef<ScrollView>(null);
@@ -30,6 +33,19 @@ const ProductMerchant = () => {
     const masterViewRef = React.useRef<View>(null);
     const [image, setImage] = useState({});
     const [category, setCategory] = useState({});
+
+    const [checkboxes, setCheckboxes] = useState([]);
+
+    const createCheckbox = () => {
+        setCheckboxes(prevCheckboxes => [
+            ...prevCheckboxes,
+            { id: checkboxes.length + 1, title: '', checked: false },
+        ]);
+    };
+
+    const deleteCheckbox = () => {
+        setCheckboxes(prevCheckboxes => prevCheckboxes.slice(0, -1));
+    };
 
     /**
          * onSelectedCoverImageHandler
@@ -119,8 +135,6 @@ const ProductMerchant = () => {
                 {/* food's name */}
                 <EInput
                     ref={foodNameRef}
-                    value={''}
-                    label={`Tên Sản phẩm`}
                     autoFocus={false}
                     maxLength={255}
                     labelStyle={{
@@ -140,15 +154,13 @@ const ProductMerchant = () => {
                     }}
                     require={true}
                     variant="outline"
-                    placeholder={`Sản phẩm mới của cửa hàng`}
+                    placeholder={`Món ăn mới của Quán`}
                     onChangeText={onFoodInfoTextChange('name')}
                 />
 
                 {/* food's description */}
                 <EInput
                     ref={foodDescriptionRef}
-                    value={''}
-                    label={`Mô tả sản phẩm`}
                     maxLength={255}
                     labelStyle={{
                         fontWeight: '700',
@@ -171,15 +183,13 @@ const ProductMerchant = () => {
                     }}
                     require={true}
                     variant="outline"
-                    placeholder={`Thêm mô tả của sản phẩm`}
+                    placeholder={`Thêm mô tả của món ăn`}
                     onChangeText={onFoodInfoTextChange('description')}
                 />
 
                 {/* food's price */}
                 <EInput
                     ref={foodPriceRef}
-                    value={''}
-                    label={`Giá sản phẩm`}
                     labelStyle={{
                         fontWeight: '700',
                         fontSize: 14,
@@ -198,7 +208,6 @@ const ProductMerchant = () => {
                     _wrapper={{
                         flex: 1,
                         marginTop: 0,
-                        marginLeft: 16,
                     }}
                     keyboardType={'number-pad'}
                     _container={{
@@ -214,7 +223,7 @@ const ProductMerchant = () => {
                     }}
                     require={true}
                     variant="outline"
-                    placeholder={`Nhập giá sản phẩm`}
+                    placeholder={`Giá món ăn`}
                     onChangeText={onFoodInfoTextChange('price')}
                     rightComponent={
                         <EText
@@ -229,12 +238,12 @@ const ProductMerchant = () => {
                     }
                 />
 
+
                 {/* list */}
                 <View
                     ref={foodCategoryRef}
                     style={{
                         backgroundColor: '#fff',
-                        paddingHorizontal: 16,
                         paddingVertical: 18,
                         marginTop: 8,
                     }}
@@ -247,54 +256,52 @@ const ProductMerchant = () => {
                                 color: '#010F07',
                             }}
                         >
-                            Chọn danh sách
+                            Món thêm
                         </EText>
-                        <EText style={styles.require}> *</EText>
                     </View>
 
                     <View style={{ marginTop: 16 }}>
-                        {(category?.data || []).map(item => {
-                            return (
-                                <ECheckbox
-                                    key={item.product_category_id}
-                                    name={String(item.product_category_id)}
-                                    onChange={onSelectCategoryPress(item.product_category_id)}
-                                    _container={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        minHeight: 50,
-                                    }}
-                                    _uncheck={{
-                                        borderRadius: 1,
-                                        borderColor: item.status === 'isProcessing' ? '#979797' : '#000',
-                                        borderWidth: 1,
-                                    }}
-                                    disabled={item.status === 'isProcessing'}
-                                    _checked={{
-                                        borderRadius: 2,
-                                    }}
-                                >
-                                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                                        <EText
-                                            style={{
-                                                flex: 1,
-                                                fontWeight: '400',
-                                                fontSize: 16,
-                                                color: item.status === 'isProcessing' ? '#979797' : '#010F07',
-                                                opacity: 0.84,
-                                                marginLeft: 20,
-                                                paddingVertical: 10,
-                                            }}
-                                        >
-                                            {item.name}
-                                        </EText>
-                                        {item.status === 'isProcessing' && <ActivityIndicator />}
-                                    </View>
-                                </ECheckbox>
-                            );
-                        })}
-                        {/* Add new category */}
-                        <AddCategory />
+
+                        <View>
+                            {checkboxes.map(checkbox => (
+                                <View key={checkbox.id} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <CheckBox
+                                        checked={checkbox.checked}
+                                        onPress={() => {
+                                            setCheckboxes(prevCheckboxes =>
+                                                prevCheckboxes.map(prevCheckbox =>
+                                                    prevCheckbox.id === checkbox.id
+                                                        ? { ...prevCheckbox, checked: !prevCheckbox.checked }
+                                                        : prevCheckbox,
+                                                ),
+                                            );
+                                        }}
+                                        iconRight
+                                        iconType="material"
+                                        checkedIcon={<Icon name="check-box" size={24} color="#2ecc71" />}
+                                        uncheckedIcon={<Icon name="check-box-outline-blank" size={24} color="#bdc3c7" />}
+                                        containerStyle={{ margin: 0, padding: 0, backgroundColor: 'transparent', borderWidth: 0 }}
+                                    />
+                                    <Input
+                                        placeholder="Enter title"
+                                        value={checkbox.title}
+                                        onChangeText={text => {
+                                            setCheckboxes(prevCheckboxes =>
+                                                prevCheckboxes.map(prevCheckbox =>
+                                                    prevCheckbox.id === checkbox.id
+                                                        ? { ...prevCheckbox, title: text }
+                                                        : prevCheckbox,
+                                                ),
+                                            );
+                                        }}
+                                    />
+                                </View>
+                            ))}
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Button title="Add Checkbox" onPress={createCheckbox} />
+                                {checkboxes.length > 0 && <Button title="Delete Checkbox" onPress={deleteCheckbox} />}
+                            </View>
+                        </View>
                     </View>
                 </View>
             </View>
