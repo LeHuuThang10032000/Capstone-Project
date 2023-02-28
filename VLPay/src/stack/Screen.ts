@@ -1,7 +1,7 @@
 import Login from '../screen/Login';
 import ForgotPwd from '../screen/ForgotPassword';
 import Register from '../screen/Register';
-import {Screen} from './type';
+import { Screen } from './type';
 import BottomTabStack from './BottomTabStack';
 import Search from '../screen/Search';
 import ProfileUser from '../screen/ProfileUser';
@@ -33,6 +33,7 @@ import MailScreen from '../screen/Merchant/Shop/MailScreen';
 import AccountScreen from '../screen/Merchant/Shop/AccountScreen';
 import HistoryWithDraw from '../screen/WithDraw/HistoryWithDraw';
 import DetailShop from '../screen/Merchant/Shop/DetailShop';
+import ProductMerchant from '../screen/Merchant/ProductMerchant';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -107,8 +108,8 @@ export const MAIN_STACK_SCREEN: Screen[] = [
     name: 'RegisterMerchant',
     component: RegisterMerchant,
   },
-  {name: 'WithDraw', component: WithDraw},
-  {name: 'WithDrawInfo', component: WithDrawInfo},
+  { name: 'WithDraw', component: WithDraw },
+  { name: 'WithDrawInfo', component: WithDrawInfo },
   {
     name: 'Support',
     component: SupportStudent,
@@ -164,5 +165,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'DetailShop',
     component: DetailShop,
+  },
+  {
+    name: 'ProductMerchant',
+    component: ProductMerchant,
   },
 ];
