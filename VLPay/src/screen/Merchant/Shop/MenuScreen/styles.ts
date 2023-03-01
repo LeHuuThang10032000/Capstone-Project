@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
     titles: {
         color: 'black',
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
         marginVertical: 10,
         marginHorizontal: 30

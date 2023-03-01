@@ -43,5 +43,40 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+    radioWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 8,
+        width: '100%',
+        justifyContent: 'space-between'
+    },
+    radioContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    radio: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: '#4285F4',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 8,
+    },
+    checkedRadio: {
+        backgroundColor: '#4285F4',
+    },
+    addButton: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: '#4285F4',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 24,
+        right: 24,
+    },
 });

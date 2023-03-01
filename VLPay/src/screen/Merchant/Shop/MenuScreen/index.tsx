@@ -16,13 +16,18 @@ const MenuScreen = (props: Props) => {
 
   const [storeInfo, setStoreInfo] = useState([]);
   const [products, setProducts] = useState([]);
+  const [addons, setAddons] = useState([]);
+  const [store_di, setStore_id] = useState(0);
   const fetchData = async () => {
     try {
       const result = await axiosClient.get(baseUrl + 'merchant/store');
       const products = await axiosClient.get(baseUrl + 'merchant/menu/?store_id=' + result.data.data.id);
+      const addons = await axiosClient.get(baseUrl + 'merchant/add-on?store_id=' + result.data.data.id);
       setProducts(products.data.data);
-      console.log(products.data.data);
+      setAddons(addons.data.data);
       setStoreInfo(result.data.data);
+      setStore_id(result.data.data.id)
+
     } catch (error) {
       console.log(error);
     }
@@ -33,16 +38,26 @@ const MenuScreen = (props: Props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <HeaderComp title="Quan ly menu" />
+      <HeaderComp title="Quản lý menu" />
       <Image source={{ uri: storeInfo.image }}
         style={{ width: '100%', height: '25%' }} alt={'hell o'} resizeMode={'cover'} />
       <Text style={styles.titles}>{storeInfo.name}</Text>
       <View style={styles.btnWrapper}>
         <TouchableOpacity style={styles.buttons} onPress={() => {
-          navigation.navigate('ProductMerchant');
+          const item = {
+            'products': products,
+            'addons': addons,
+            'store_id': store_di
+          }
+          navigation.navigate('ProductMerchant', {
+            data: item
+          });
         }}>
           <Text style={styles.btnTitle}>Thêm món Mới hoặc danh sách</Text>
         </TouchableOpacity>
+      </View>
+      <View>
+
       </View>
     </View>
   );

@@ -1138,8 +1138,47 @@ const Reply2Icon = (props: SvgProps): JSX.Element => {
     return <SvgXml xml={xml} {...props} />;
 };
 
+
+/**
+ * Reply2Icon
+ * @param props SvgProps
+ * @returns JSX.Element
+ */
+const CheckboxIcon = (props: SvgProps): JSX.Element => {
+    const xml = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0.5 0.5H17.5V17.5H0.5V0.5Z" fill="white" stroke="black"/>
+    </svg>
+    `;
+
+    return <SvgXml xml={xml} {...props} />;
+};
+
+const AddIcon = (props: SvgProps): JSX.Element => {
+    const xml = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9.64844 5.78125H10.3516C10.4141 5.78125 10.4453 5.8125 10.4453 5.875V14.125C10.4453 14.1875 10.4141 14.2188 10.3516 14.2188H9.64844C9.58594 14.2188 9.55469 14.1875 9.55469 14.125V5.875C9.55469 5.8125 9.58594 5.78125 9.64844 5.78125Z" fill="#4285F4"/>
+    <path d="M6.0625 9.55469H13.9375C14 9.55469 14.0312 9.58594 14.0312 9.64844V10.3516C14.0312 10.4141 14 10.4453 13.9375 10.4453H6.0625C6 10.4453 5.96875 10.4141 5.96875 10.3516V9.64844C5.96875 9.58594 6 9.55469 6.0625 9.55469Z" fill="#4285F4"/>
+    <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#4285F4"/>
+    </svg>
+    `;
+
+    return <SvgXml xml={xml} {...props} />;
+};
+
+const UnCheckboxIcon = (props: SvgProps): JSX.Element => {
+    const xml = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0.5 0.5H17.5V17.5H0.5V0.5Z" fill="#4285F4" stroke="#4285F4"/>
+    </svg>
+    
+    `;
+
+    return <SvgXml xml={xml} {...props} />;
+};
+
 const Icons = {
+    CheckboxIcon,
+    AddIcon,
     EShipLogo,
+    UnCheckboxIcon,
     EShipMerchantSlogan,
     EShipMerchantLogo,
     SplashScreenBG,

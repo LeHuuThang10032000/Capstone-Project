@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {UText, Utitle} from '../../components/UText';
+import { UText, Utitle } from '../../components/UText';
 import LockIcon from '../../assets/svg/lock.svg';
 import Mail from '../../assets/svg/mail.svg';
 import PhoneIcon from '../../assets/svg/phone_icon.svg';
@@ -15,24 +15,24 @@ import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import BlindIcon from '../../assets/svg/blind_icon.svg';
 import EyeIcon from '../../assets/svg/eye_icon.svg';
-import {Flex, HStack, Image, ScrollView, VStack} from 'native-base';
+import { Flex, HStack, Image, ScrollView, VStack } from 'native-base';
 import strings from '../../components/helpers/Strings';
 import Input from '../../components/InputForm';
-import {Control, Controller, useForm} from 'react-hook-form';
-import {IRegisterInfoValue} from './useHook';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
-import {InputProps} from '@rneui/base';
+import { Control, Controller, useForm } from 'react-hook-form';
+import { IRegisterInfoValue } from './useHook';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { MainStackNavigation, MainStackParamList } from '../../stack/Navigation';
+import { InputProps } from '@rneui/base';
 import KeyboardInputScrollView from '../../components/KeyboardInputScrollView';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
-import {LOGIN} from '../../redux/constants';
-import {useDispatch} from 'react-redux';
-import {Login} from '../../redux/actions/authAction';
+import { LOGIN } from '../../redux/constants';
+import { useDispatch } from 'react-redux';
+import { Login } from '../../redux/actions/authAction';
 import Icons from '../../components/icons';
 import YesNoModal from '../../components/YesNoModal';
 import Colors from '../../components/helpers/Colors';
-import {axiosClient} from '../../components/apis/axiosClient';
+import { axiosClient } from '../../components/apis/axiosClient';
 import Arrow from '../../assets/svg/arrow_left.svg';
 
 interface IFormInputControllerProps {
@@ -43,7 +43,7 @@ interface IFormInputControllerProps {
 
 const Index = function () {
   const navigation = useNavigation<MainStackNavigation>();
-  const {phone} =
+  const { phone } =
     useRoute<RouteProp<MainStackParamList, 'ChangePassword'>>()?.params;
 
   const dispatch = useDispatch();
@@ -57,7 +57,7 @@ const Index = function () {
     handleSubmit,
     watch,
     control,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       password: '',
@@ -68,7 +68,7 @@ const Index = function () {
   const [hideConfirm, setHideConfirm] = useState(true);
 
   const submit = useCallback(async (data: any) => {
-    const {password: password, passwordConfirmation: password_confirmation} =
+    const { password: password, passwordConfirmation: password_confirmation } =
       data;
 
     setBtnBlock(true);
@@ -90,7 +90,7 @@ const Index = function () {
         dispatch(await Login(phone, password ?? ''));
         navigation.reset({
           index: 0,
-          routes: [{name: 'Home'}],
+          routes: [{ name: 'Home' }],
         });
         navigation.navigate('Home');
         setBtnBlock(false);
@@ -131,8 +131,8 @@ const Index = function () {
   const Header = () => {
     return (
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <HStack style={{marginTop: 25}}>
-          <Arrow style={{marginLeft: 15}} />
+        <HStack style={{ marginTop: 25 }}>
+          <Arrow style={{ marginLeft: 15 }} />
         </HStack>
       </TouchableOpacity>
     );
@@ -245,7 +245,7 @@ const Index = function () {
           setVisibleWarning(false);
         }}
         btnTextLeft={'Xác nhận'}
-        style={{flexDirection: 'column'}}
+        style={{ flexDirection: 'column' }}
       />
     </LinearGradient>
   );
@@ -278,7 +278,7 @@ const FormInputController = (
     ...rest
   } = props;
   return (
-    <View style={{marginBottom: -5}}>
+    <View style={{ marginBottom: -5 }}>
       <Utitle
         style={{
           fontSize: 18,
@@ -292,10 +292,10 @@ const FormInputController = (
       <Controller
         name={name}
         control={control}
-        rules={{required: required, validate: validation}}
-        render={({field: {value, onChange}}) => {
+        rules={{ required: required, validate: validation }}
+        render={({ field: { value, onChange } }) => {
           return (
-            <View style={{height: 80}}>
+            <View style={{ height: 80 }}>
               <Input
                 leftIcon={props.LeftIcon}
                 placeholder={placeHolder}
