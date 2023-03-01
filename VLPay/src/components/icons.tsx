@@ -1,6 +1,6 @@
 import React from 'react';
-import {SvgProps, SvgXml} from 'react-native-svg';
-import {EColors} from '../helper/Colors';
+import { SvgProps, SvgXml } from 'react-native-svg';
+import { EColors } from '../helper/Colors';
 
 const NetworkOn = (props: SvgProps) => {
   const xml = `
@@ -741,9 +741,23 @@ const DisActiveDot = (props: SvgProps) => {
   return <SvgXml xml={xml} {...props} />;
 };
 
+const CameraIcon = (props: SvgProps): JSX.Element => {
+  const xml = `<svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10.0008 13.1998C11.7681 13.1998 13.2008 11.7671 13.2008 9.9998C13.2008 8.23249 11.7681 6.7998 10.0008 6.7998C8.23347 6.7998 6.80078 8.23249 6.80078 9.9998C6.80078 11.7671 8.23347 13.1998 10.0008 13.1998Z" fill=${String(
+    props.fill || '#4285F4',
+  )} />
+  <path d="M7 0L5.17 2H2C0.9 2 0 2.9 0 4V16C0 17.1 0.9 18 2 18H18C19.1 18 20 17.1 20 16V4C20 2.9 19.1 2 18 2H14.83L13 0H7ZM10 15C7.24 15 5 12.76 5 10C5 7.24 7.24 5 10 5C12.76 5 15 7.24 15 10C15 12.76 12.76 15 10 15Z" fill=${String(
+    props.fill || '#4285F4',
+  )} />
+  </svg>`;
+
+  return <SvgXml xml={xml} {...props} />;
+};
+
 const Icons = {
   NetworkOn,
   NetworkOff,
+  CameraIcon,
   Menu,
   CloseIcon,
   SuccessIcon,
