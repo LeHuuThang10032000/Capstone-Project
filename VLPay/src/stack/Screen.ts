@@ -34,6 +34,7 @@ import AccountScreen from '../screen/Merchant/Shop/AccountScreen';
 import HistoryWithDraw from '../screen/WithDraw/HistoryWithDraw';
 import DetailShop from '../screen/Merchant/Shop/DetailShop';
 import ProductMerchant from '../screen/Merchant/ProductMerchant';
+import UpdateShop from '../screen/Merchant/Shop/UpdateShop';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -169,5 +170,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'ProductMerchant',
     component: ProductMerchant,
+  },
+  {
+    name: 'UpdateShop',
+    component: UpdateShop,
   },
 ];

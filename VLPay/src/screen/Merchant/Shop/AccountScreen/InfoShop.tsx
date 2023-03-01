@@ -10,13 +10,15 @@ import {
   VStack,
   Switch,
   Flex,
+  Skeleton,
 } from 'native-base';
 import ExtendIcon from '../../../../assets/svg/extend.svg';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../../../stack/Navigation';
 import {axiosClient} from '../../../../components/apis/axiosClient';
 
 type Props = {
+  id: string;
   name: string;
   image: string;
   cover_photo: string;
@@ -25,35 +27,47 @@ type Props = {
 const InfoShop = (props: Props) => {
   const navigation = useNavigation<MainStackNavigation>();
   const [data, setData] = useState(props);
-  console.log(data);
+  const [isLoading, setIsLoading] = useState(false);
+  const isFocused = useIsFocused();
+  console.log('myDAta:', data);
 
-  useEffect(() => {
-    getStore();
-  }, []);
   const getStore = useCallback(async () => {
+    setIsLoading(true);
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/merchant/store',
     );
     setData(result.data?.data);
+    setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      getStore();
+    }
+  }, [getStore, isFocused]);
   return (
     <View>
       <Center borderRadius={10} borderWidth={1} borderColor="#EFEFF4">
         <Pressable
           style={styles.button}
-          onPress={() =>
-            navigation.navigate('DetailShop', {
-              name: data.name,
-              image: data.image,
-              cover_photo: data.cover_photo,
-            })
-          }>
+          onPress={() => navigation.navigate('DetailShop')}>
           <View style={styles.info}>
-            <Image
-              source={require('../../../../assets/img/iconShop.png')}
-              style={styles.image}
-              alt="image-shop"
-            />
+            {isLoading ? (
+              <Skeleton
+                borderWidth={1}
+                borderColor="coolGray.200"
+                endColor="warmGray.50"
+                size="16"
+                rounded="full"
+              />
+            ) : (
+              <Image
+                source={{uri: data.cover_photo}}
+                style={styles.image}
+                alt="image-shop"
+              />
+            )}
             <View style={{paddingLeft: 10}}>
               <>
                 <Text style={styles.textButton}>Quản lý thông tin quán</Text>
