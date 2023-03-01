@@ -8,8 +8,6 @@ import { Images } from '../../../components/helpers/resources';
 import { ActionSheetRef } from '../../../components/ActionSheet';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import styles from './styles';
-import FastImage from 'react-native-fast-image';
-import EInput from '../../../components/EInput';
 import { formatNumber } from '../../../components/helper';
 import EText from '../../../components/EText';
 import { MAX_FOOD_PRICE } from '../../../components/helper/constants';
@@ -23,6 +21,7 @@ import { MainStackParamList } from '../../../stack/Navigation';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { axiosClient } from '../../../components/apis/axiosClient';
 import { baseUrl } from '../../../components/apis/baseUrl';
+import EInput from '../../../components/EInput';
 
 const ProductMerchant = () => {
     const scrollViewRef = React.useRef<ScrollView>(null);
@@ -105,7 +104,7 @@ const ProductMerchant = () => {
             >
                 {/* Banner */}
                 <View style={styles.banner}>
-                    <FastImage
+                    <Image
                         source={image?.path ? { uri: image?.path } : require('../../../assets/img/no-food.png')}
                         style={{
                             width: 200,
@@ -311,7 +310,10 @@ const ProductMerchant = () => {
                                                 />
                                             )}
                                         </View>
-                                        <Text style={{ color: 'black', fontSize: 16 }}>{option.name}</Text>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '85%' }}>
+                                            <Text style={{ color: 'black', fontSize: 16 }}>{option.name}</Text>
+                                            <Text style={{ color: 'black', fontSize: 16 }}>{option.price}</Text>
+                                        </View>
                                     </TouchableOpacity>
                                 ))}
                             </View>
@@ -366,8 +368,8 @@ const ProductMerchant = () => {
                         }}>
                         <Text>Tạo món mới</Text></TouchableOpacity>
                 </View>
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
     )
 }
 
