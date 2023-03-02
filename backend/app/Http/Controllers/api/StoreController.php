@@ -119,9 +119,6 @@ class StoreController extends Controller
 //        }
 
         $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
-        return ApiResponse::successResponse([
-            'thanh cong' => $store
-        ]);
         if(!$store) {
             return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
@@ -151,6 +148,7 @@ class StoreController extends Controller
             $product->name = $request->name;
             $product->price = $request->price;
             $product->status = 'comingsoon';
+            return 123;
             if($request->hasFile('image')) {
                 $product->addMediaFromRequest('image')->toMediaCollection('images');
             }
