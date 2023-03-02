@@ -128,8 +128,8 @@ class StoreController extends Controller
             DB::beginTransaction();
 
             $newAddOns = [];
+            return $addOns;
             foreach($addOns as $key => $value) {
-                return $value->id;
                 if(!$value->id){
                     $addOnNew = AddOn::create(
                         [
