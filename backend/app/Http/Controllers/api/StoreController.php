@@ -100,23 +100,23 @@ class StoreController extends Controller
 
     public function createProduct(Request $request)
     {
-//        $validate = Validator::make($request->all(), [
-//            'store_id' => 'required|integer',
-//            'name' => 'required|max:255',
-//            'price' => 'required|integer',
-//            'image' => 'required|mimes:jpeg,jpg,png',
-//            'category_id' => 'required|integer',
-//        ], [
-//            'name.required' => 'Vui lòng nhập tên sản phẩm',
-//            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
-//            'price.required' => 'Vui lòng giá tiền của sản phẩm',
-//            'image.required' => 'Vui lòng chọn hình ảnh cho sản phẩm của bạn',
-//            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm của sản phẩm',
-//        ]);
-//
-//        if ($validate->fails()) {
-//            return APIResponse::FailureResponse($validate->messages()->first());
-//        }
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|integer',
+            'name' => 'required|max:255',
+            'price' => 'required|integer',
+            'image' => 'required|mimes:jpeg,jpg,png',
+            'category_id' => 'required|integer',
+        ], [
+            'name.required' => 'Vui lòng nhập tên sản phẩm',
+            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
+            'price.required' => 'Vui lòng giá tiền của sản phẩm',
+            'image.required' => 'Vui lòng chọn hình ảnh cho sản phẩm của bạn',
+            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm của sản phẩm',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
 
         $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
         if(!$store) {
@@ -129,6 +129,7 @@ class StoreController extends Controller
 
             $newAddOns = [];
             foreach($addOns as $key => $value) {
+                return $value->id;
                 if(!$value->id){
                     $addOnNew = AddOn::create(
                         [
@@ -142,14 +143,12 @@ class StoreController extends Controller
                 }
                 array_push($newAddOns, $value->id);
             }
-            return 123;
 
             $product = new Product;
             $product->store_id = $request->store_id;
             $product->name = $request->name;
             $product->price = $request->price;
             $product->status = 'comingsoon';
-            return 123;
             if($request->hasFile('image')) {
                 $product->addMediaFromRequest('image')->toMediaCollection('images');
             }
