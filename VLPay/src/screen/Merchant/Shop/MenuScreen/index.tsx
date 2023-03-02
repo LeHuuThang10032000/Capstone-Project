@@ -27,7 +27,6 @@ const MenuScreen = (props: Props) => {
       setAddons(addons.data.data);
       setStoreInfo(result.data.data);
       setStore_id(result.data.data.id)
-
     } catch (error) {
       console.log(error);
     }

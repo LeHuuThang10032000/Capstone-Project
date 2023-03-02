@@ -17,8 +17,8 @@ import AddCategory from './AddCategory';
 import { CheckBox, Input } from 'react-native-elements';
 import Icons from '../../../components/Icons';
 import { UText } from '../../../components/UText';
-import { MainStackParamList } from '../../../stack/Navigation';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { MainStackNavigation, MainStackParamList } from '../../../stack/Navigation';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { axiosClient } from '../../../components/apis/axiosClient';
 import { baseUrl } from '../../../components/apis/baseUrl';
 import EInput from '../../../components/EInput';
@@ -28,6 +28,8 @@ const ProductMerchant = () => {
     const openGalleryRef = React.useRef<ActionSheetRef>(null);
     const { data } =
         useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
+  const navigation = useNavigation<MainStackNavigation>();
+
 
     // const foodCategories = React.useMemo(() => food.category || [], [food.category]);
     // const foodVariations = React.useMemo(() => food?.variations || [], [food?.variations]);
@@ -328,7 +330,6 @@ const ProductMerchant = () => {
                     }}
                         onPress={async () => {
                             const addOns = [];
-                            const categories = [];
                             let totalPrice = 0;
                             selectedOptions.forEach(item => {
                                 data.addons.map((_item) => {
@@ -339,31 +340,32 @@ const ProductMerchant = () => {
                                 });
 
                             });
+                            
                             totalPrice += parseInt(cost);
                             const formData = new FormData();
-                            if (image?.path) {
-                                let fileName = image?.path.split('/');
-                                fileName = fileName[fileName.length - 1];
-                                const filename = `${new Date().getTime()}-${fileName}`;
-                                const file = {
-                                    uri: image.path,
-                                    name: filename,
-                                    type: 'image/png',
-                                };
-                                formData.append('image', file);
-                            }
+                            let fileName = image?.path.split('/');
+                            fileName = fileName[fileName.length - 1];
+                            const filename = `${new Date().getTime()}-${fileName}`;
+                            const file = {
+                                uri: image.path,
+                                name: filename,
+                                type: 'image/png',
+                            };
+                            formData.append('image', file);
                             formData.append('name', name);
                             formData.append('price', totalPrice);
                             formData.append('category_id', selectedOption.id);
                             formData.append('store_id', data.store_id);
-                            formData.append('add_ons', addOns);
+                            formData.append('add_ons', JSON.stringify(addOns));
+                            console.log(formData);
+                            
                             const result = await axiosClient.post('https://zennoshop.cf/api/user/merchant/product/create',
                                 formData,
                                 {
                                     headers: { 'content-type': 'multipart/form-data' },
                                 },);
 
-                            console.log(result);
+                            
 
                         }}>
                         <Text>Tạo món mới</Text></TouchableOpacity>
