@@ -130,7 +130,6 @@ class StoreController extends Controller
             $newAddOns = [];
 
             try{
-                return $request;
                 foreach($addOns as $key => $value) {
                     if(!$value->id){
                         $addOnNew = AddOn::create(
