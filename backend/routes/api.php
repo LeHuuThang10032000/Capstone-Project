@@ -79,6 +79,8 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::get('/add-on', [StoreController::class, 'getAddOn']);
 
         Route::get('/menu', [StoreController::class, 'getStoreMenu']);
+        Route::get('/activate-time', [StoreController::class, 'getTimeActive']);
+        Route::post('/activate-time', [StoreController::class, 'updateTimeActive']);
     });
 });
 
