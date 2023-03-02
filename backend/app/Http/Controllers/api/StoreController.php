@@ -59,7 +59,7 @@ class StoreController extends Controller
                 ->first();
 
             if($request->name) {
-                
+
                 $store->name = $request->name;
             }
 
@@ -100,23 +100,23 @@ class StoreController extends Controller
 
     public function createProduct(Request $request)
     {
-        $validate = Validator::make($request->all(), [
-            'store_id' => 'required|integer',
-            'name' => 'required|max:255',
-            'price' => 'required|integer',
-            'image' => 'required|mimes:jpeg,jpg,png',
-            'category_id' => 'required|integer',
-        ], [
-            'name.required' => 'Vui lòng nhập tên sản phẩm',
-            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
-            'price.required' => 'Vui lòng giá tiền của sản phẩm',
-            'image.required' => 'Vui lòng chọn hình ảnh cho sản phẩm của bạn',
-            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm của sản phẩm',
-        ]);
-
-        if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
-        }
+//        $validate = Validator::make($request->all(), [
+//            'store_id' => 'required|integer',
+//            'name' => 'required|max:255',
+//            'price' => 'required|integer',
+//            'image' => 'required|mimes:jpeg,jpg,png',
+//            'category_id' => 'required|integer',
+//        ], [
+//            'name.required' => 'Vui lòng nhập tên sản phẩm',
+//            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
+//            'price.required' => 'Vui lòng giá tiền của sản phẩm',
+//            'image.required' => 'Vui lòng chọn hình ảnh cho sản phẩm của bạn',
+//            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm của sản phẩm',
+//        ]);
+//
+//        if ($validate->fails()) {
+//            return APIResponse::FailureResponse($validate->messages()->first());
+//        }
 
         $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
         if(!$store) {
@@ -283,7 +283,7 @@ class StoreController extends Controller
                 $product->clearMediaCollection('images');
                 $product->addMediaFromRequest('image')->toMediaCollection('images');
             }
-            
+
             DB::commit();
 			return APIResponse::SuccessResponse(null);
         } catch(Exception $e) {
@@ -308,7 +308,7 @@ class StoreController extends Controller
                 ->with('products:id,name,price,category_id')
                 ->withCount('products')
                 ->get();
-            
+
 			return APIResponse::SuccessResponse($categories);
         } catch(Exception $e) {
             DB::rollBack();
@@ -318,11 +318,11 @@ class StoreController extends Controller
 
     public function getAddOn(Request $request)
     {
-        try{ 
+        try{
             $validate = Validator::make($request->all(), [
                 'store_id' => 'required',
             ]);
-    
+
             if ($validate->fails()) {
                 return APIResponse::FailureResponse($validate->messages()->first());
             }
@@ -332,6 +332,6 @@ class StoreController extends Controller
             return APIResponse::SuccessResponse($addOns);
         } catch(Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
-        }        
+        }
     }
 }
