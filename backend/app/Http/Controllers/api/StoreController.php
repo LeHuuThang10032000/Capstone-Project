@@ -122,12 +122,13 @@ class StoreController extends Controller
         if(!$store) {
             return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
-        $addOns = $request->add_ons;
-
+        $addOns = json_encode($request->get('add_ons'));
+        return $addOns;
         try {
             DB::beginTransaction();
 
             $newAddOns = [];
+            return $addOns;
             foreach($addOns as $key => $value) {
                 if(!$value->id){
                     $addOnNew = AddOn::create(
