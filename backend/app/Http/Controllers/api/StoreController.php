@@ -120,7 +120,7 @@ class StoreController extends Controller
 
         $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
         return ApiResponse::successResponse([
-            'thanh cong' => 'thanh cong'
+            'thanh cong' => $store
         ]);
         if(!$store) {
             return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
