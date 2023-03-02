@@ -123,7 +123,6 @@ class StoreController extends Controller
             return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
         $addOns = json_decode($request->get('add_ons'));
-        return 123;
 
         try {
             DB::beginTransaction();
@@ -143,6 +142,7 @@ class StoreController extends Controller
                 }
                 array_push($newAddOns, $value->id);
             }
+            return 123;
 
             $product = new Product;
             $product->store_id = $request->store_id;
