@@ -122,8 +122,8 @@ class StoreController extends Controller
         if(!$store) {
             return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
-        return 123;
         $addOns = json_decode($request->get('add_ons'));
+        return 123;
 
         try {
             DB::beginTransaction();
