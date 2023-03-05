@@ -130,8 +130,7 @@ class StoreController extends Controller
             DB::beginTransaction();
 
             $newAddOns = [];
-
-            try{
+            try {
                 foreach($addOns as $key => $value) {
                     if(!$value->id){
                         $addOnNew = AddOn::create(
@@ -152,7 +151,7 @@ class StoreController extends Controller
                     }
                     array_push($newAddOns, $value->id);
                 }
-            }catch(Exception $e){
+            } catch(Exception $e) {
                 return ApiResponse::failureResponse($e);
             }
 
@@ -269,19 +268,29 @@ class StoreController extends Controller
             DB::beginTransaction();
 
             $newAddOns = [];
-            foreach($addOns as $key => $value) {
-                if(!$value->id){
-                    $addOnNew = AddOn::create(
-                        [
-                            'name' => $value->name,
-                            'price' => $value->price,
-                            'store_id' => $request->store_id,
-                        ]
-                    );
-                    $value->id =  $addOnNew->id;
-                    array_push($newAddOns, $addOnNew->id);
+            try {
+                foreach($addOns as $key => $value) {
+                    if(!$value->id){
+                        $addOnNew = AddOn::create(
+                            [
+                                'name' => $value->name,
+                                'price' => $value->price,
+                                'store_id' => $request->store_id,
+                            ]
+                        );
+                        $value->id =  $addOnNew->id;
+                        array_push($newAddOns, $addOnNew->id);
+                    }
+
+                    if(isset($value->price)){
+                        AddOn::where('id', $value->id)->update([
+                           'price' => $value->price
+                        ]);
+                    }
+                    array_push($newAddOns, $value->id);
                 }
-                array_push($newAddOns, $value->id);
+            } catch(Exception $e) {
+                return ApiResponse::failureResponse($e);
             }
 
             $product = Product::where('id', $request->product_id)->update([
@@ -318,7 +327,7 @@ class StoreController extends Controller
         try {
             $categories = ProductCategory::where('store_id', $request->store_id)
                 ->select('id', 'name as category_name')
-                ->with('products:id,name,price,category_id')
+                ->with('products:id,name,price,category_id,image')
                 ->withCount('products')
                 ->get();
 
