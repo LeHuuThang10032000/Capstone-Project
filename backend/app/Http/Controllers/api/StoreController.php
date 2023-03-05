@@ -144,6 +144,12 @@ class StoreController extends Controller
                         $value->id =  $addOnNew->id;
                         array_push($newAddOns, $addOnNew->id);
                     }
+
+                    if(isset($value->price)){
+                        AddOn::where('id', $value->id)->update([
+                           'price' => $value->price
+                        ]);
+                    }
                     array_push($newAddOns, $value->id);
                 }
             }catch(Exception $e){
