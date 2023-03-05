@@ -82,5 +82,9 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::get('/activate-time', [StoreController::class, 'getTimeActive']);
         Route::post('/activate-time', [StoreController::class, 'updateTimeActive']);
     });
+
+    Route::group(['prefix' => 'store'], function() {
+        Route::get('', [UserController::class, 'getStores']);
+    });
 });
 

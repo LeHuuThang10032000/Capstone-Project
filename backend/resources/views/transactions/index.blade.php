@@ -15,16 +15,17 @@
                 <div class="rounded border">
                     <div class="p-3">
                         <b class="m-0">Mã giao dịch: {{$transaction->code}}</b>
+                        <p class="m-0">Số lượng: {{ number_format($transaction->amount) }} VNĐ</p>
                         <div class="rounded border p-2 my-1">
                             <p class="m-0">Thông tin người gửi</p>
                             <p class="m-0">Số diện thoại: {{$transaction->fromUser->phone ?? null}}</p>
-                            <p class="m-0">Tên: {{$transaction->fromUser->f_name}}</p>
+                            <p class="m-0">Tên: {{$transaction->fromUser->f_name ?? null}}</p>
                             <p class="m-0">Trạng thái: <span style="{{ ($transaction->fromUser->status == 'active') ? 'color: #189F7F' : 'color: #E76969' }}">{{$transaction->fromUser->status}}</span></p>
                         </div>
                         <div class="rounded border p-2 my-1">
                             <p class="m-0">Thông tin người nhận</p>
-                            <p class="m-0">Số điện thoại: {{$transaction->toUser->phone}}</p>
-                            <p class="m-0">Tên: {{$transaction->toUser->f_name}}</p>
+                            <p class="m-0">Số điện thoại: {{$transaction->toUser->phone ?? null}}</p>
+                            <p class="m-0">Tên: {{$transaction->toUser->f_name ?? null}}</p>
                             <p class="m-0">Trạng thái: <span style="{{ ($transaction->toUser->status == 'active') ? 'color: #189F7F' : 'color: #E76969' }}">{{$transaction->toUser->status}}</span></p>
                         </div>
                         <p class="m-0">Thời gian giao dịch: {{$transaction->created_at}}</p>

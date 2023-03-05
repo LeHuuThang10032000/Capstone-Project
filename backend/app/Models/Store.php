@@ -38,6 +38,11 @@ class Store extends Model implements HasMedia
     {
         return $this->hasMany(ProductCategory::class);
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(StoreSchedule::class);
+    }
     
     protected $hidden = [
         'created_at',

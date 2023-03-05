@@ -198,8 +198,69 @@ class UserController extends Controller
         }
     }
 
-    public function searchUser(Request $request)
+    public function getStores(Request $request): JsonResponse
     {
+        $validate = Validator::make($request->all(), [
+            'limit' => 'integer',
+            'page' => 'integer',
+        ]);
 
+        if ($validate->fails())
+        {
+            return APIResponse::failureResponse($validate->messages()->first());
+        }
+
+        try{
+            $stores = Store::whereNotIn('status', ['pending, denied'])
+                ->with('schedules');
+
+            if ($request->page) {
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page - 1) * $limit;
+                $stores = $stores->offset($offset)->limit($limit);
+            }
+
+            $stores = $stores->get();
+            
+            return ApiResponse::successResponse($stores);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function searchStore(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'limit' => 'integer',
+            'page' => 'integer',
+            'key' => 'string'
+        ]);
+
+        if ($validate->fails())
+        {
+            return APIResponse::failureResponse($validate->messages()->first());
+        }
+
+        try{
+            $stores = Store::whereNotIn('status', ['pending', 'denied'])
+                ->where('name', 'LIKE', '%' . $request->key . '%')
+                ->with('schedules');
+
+            if ($request->page) {
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page - 1) * $limit;
+                $stores = $stores->offset($offset)->limit($limit);
+            }
+
+            $stores = $stores->get();
+            
+            return ApiResponse::successResponse($stores);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
     }
 }
