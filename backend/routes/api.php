@@ -85,6 +85,8 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     Route::group(['prefix' => 'store'], function() {
         Route::get('', [UserController::class, 'getStores']);
+        Route::get('/search', [UserController::class, 'searchStores']);
+        Route::get('/{id}', [UserController::class, 'getStoreDetail']);
     });
 });
 
