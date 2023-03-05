@@ -205,13 +205,13 @@ class UserController extends Controller
             'page' => 'integer',
         ]);
 
-        if ($validate->fails())
-        {
+        if ($validate->fails()) {
             return APIResponse::failureResponse($validate->messages()->first());
         }
 
-        try{
+        try {
             $stores = Store::whereNotIn('status', ['pending, denied'])
+                ->select('id', 'name', 'image', 'phone', 'location')
                 ->with('schedules');
 
             if ($request->page) {
@@ -230,7 +230,7 @@ class UserController extends Controller
         }
     }
 
-    public function searchStore(Request $request): JsonResponse
+    public function searchStores(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'limit' => 'integer',
@@ -238,12 +238,11 @@ class UserController extends Controller
             'key' => 'string'
         ]);
 
-        if ($validate->fails())
-        {
+        if ($validate->fails()) {
             return APIResponse::failureResponse($validate->messages()->first());
         }
 
-        try{
+        try {
             $stores = Store::whereNotIn('status', ['pending', 'denied'])
                 ->where('name', 'LIKE', '%' . $request->key . '%')
                 ->with('schedules');
@@ -258,6 +257,21 @@ class UserController extends Controller
             $stores = $stores->get();
             
             return ApiResponse::successResponse($stores);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getStoreDetail($id): JsonResponse
+    {
+        try {
+            $store = Store::whereNotIn('status', ['pending', 'denied'])
+                ->where('id', $id)
+                ->with('schedules')
+                ->get();
+            
+            return ApiResponse::successResponse($store);
         } catch(\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
