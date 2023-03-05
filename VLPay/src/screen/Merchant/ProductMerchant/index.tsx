@@ -365,6 +365,10 @@ const ProductMerchant = () => {
                                     headers: { 'content-type': 'multipart/form-data' },
                                 },);
 
+                                if(result){
+                                    navigation.goBack()
+                                }
+
                             
 
                         }}>
