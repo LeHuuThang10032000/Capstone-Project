@@ -3,7 +3,7 @@ import {
   MaterialBottomTabNavigationProp,
   MaterialBottomTabScreenProps,
 } from '@react-navigation/material-bottom-tabs';
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 
 // import {Job} from '../model/Job';
 // import {Social} from '../model/Social';
@@ -31,7 +31,7 @@ export type MainStackParamList = {
   Payment: {
     data: any;
   };
-  PaymentDetails: { data: any };
+  PaymentDetails: {data: any};
   Otp: {
     isHoldingLogin?: boolean;
     full_name?: string;
@@ -68,7 +68,7 @@ export type MainStackParamList = {
   Transfer: {
     userWallet: number;
   };
-  EditProfile: { name: string; phone: string };
+  EditProfile: {name: string; phone: string};
   ChangePassword: {
     phone: string;
   };
@@ -103,6 +103,7 @@ export type MainStackParamList = {
     name: string;
   };
   ProductMerchant: undefined;
+  ListStore: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
