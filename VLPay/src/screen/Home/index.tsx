@@ -1,4 +1,4 @@
-import {ScrollView} from 'react-native';
+import {ScrollView, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Header from './Header';
 import Banner from './Banner';
@@ -10,6 +10,7 @@ import Login from '../Login';
 import {useDispatch, useSelector} from 'react-redux';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {formatCurrency} from '../../components/helper';
+import ListStore from './ListStore';
 
 const Index = () => {
   const token = useSelector((state: any) => state.authReducer.authToken);
@@ -45,6 +46,7 @@ const Index = () => {
           <ManageCash wallet={userWallet} credit={credit} loading={isloading} />
           <ContentWallet />
           <PromoCarousel />
+          <ListStore />
         </ScrollView>
       ) : (
         <Login />
