@@ -24,7 +24,7 @@ import {Image} from '@rneui/base';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {axiosClient} from '../../components/apis/axiosClient';
 import YesNoModal from '../../components/YesNoModal';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import Colors from '../../components/helpers/Colors';
 import axios from 'axios';
 const Payment = () => {

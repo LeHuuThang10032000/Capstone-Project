@@ -4,7 +4,7 @@ import React, {useEffect} from 'react';
 import {BackHandler, ScrollView, View} from 'react-native';
 import HeaderBack from '../../components/HeaderBack';
 import {formatCurrency} from '../../components/helper';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import {UText} from '../../components/UText';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import styles from '../Login/styles';

@@ -34,7 +34,7 @@ import {
 } from '../../components/helpers/formatNum';
 import TText from './TText';
 import YesNoModal from '../../components/YesNoModal';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import Colors from '../../components/helpers/Colors';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {UText} from '../../components/UText';

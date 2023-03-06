@@ -21,7 +21,7 @@ import Colors from '../../../components/helpers/Colors';
 import {moderateScale} from '../ScaleUtils';
 import {axiosClient} from '../../../components/apis/axiosClient';
 import YesNoModal from '../../../components/YesNoModal';
-import Icons from '../../../components/icons';
+import Icons from '../../../components/Icons';
 import axios from 'axios';
 
 type Props = {};

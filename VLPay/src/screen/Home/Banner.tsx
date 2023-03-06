@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {Image} from 'native-base';
 import YesNoModal from '../../components/YesNoModal';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import Colors from '../../components/helpers/Colors';
 
 type Props = {

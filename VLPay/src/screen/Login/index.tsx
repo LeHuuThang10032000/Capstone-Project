@@ -19,7 +19,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {Login} from '../../redux/actions/authAction';
 import {InputProps} from '@rneui/base';
 import YesNoModal from '../../components/YesNoModal';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import Colors from '../../components/helpers/Colors';
 import {axiosClient} from '../../components/apis/axiosClient';
 

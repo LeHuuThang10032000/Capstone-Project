@@ -4,7 +4,7 @@ import {TextInput, TouchableOpacity, View} from 'react-native';
 import HeaderBack from '../../components/HeaderBack';
 import TText from '../Transfer/TText';
 import YesNoModal from '../../components/YesNoModal';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import Colors from '../../components/helpers/Colors';
 import {
   RouteProp,

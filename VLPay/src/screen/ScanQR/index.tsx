@@ -6,7 +6,7 @@ import {useCameraDevices} from 'react-native-vision-camera';
 import {Camera} from 'react-native-vision-camera';
 import {useScanBarcodes, BarcodeFormat} from 'vision-camera-code-scanner';
 import Colors from '../../components/helpers/Colors';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import YesNoModal from '../../components/YesNoModal';
 import {MainStackNavigation} from '../../stack/Navigation';
 type Props = {

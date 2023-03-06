@@ -21,7 +21,7 @@ import {MainStackNavigation} from '../../stack/Navigation';
 import {HStack} from 'native-base';
 import {axiosClient} from '../../components/apis/axiosClient';
 import YesNoModal from '../../components/YesNoModal';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import Colors from '../../components/helpers/Colors';
 import auth from '@react-native-firebase/auth';
 interface IFormInputControllerProps {

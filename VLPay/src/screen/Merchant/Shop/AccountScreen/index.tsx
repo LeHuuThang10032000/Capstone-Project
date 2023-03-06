@@ -58,7 +58,7 @@ const FirstRoute = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <InfoShop name={''} image={''} cover_photo={''} />
+        <InfoShop name={''} image={''} cover_photo={''} id={''} />
       </ScrollView>
     </View>
   );

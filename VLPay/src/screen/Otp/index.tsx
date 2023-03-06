@@ -13,7 +13,7 @@ import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import authFireBase, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {axiosClient} from '../../components/apis/axiosClient';
 import YesNoModal from '../../components/YesNoModal';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import strings from '../../components/helpers/Strings';
 import Colors from '../../components/helpers/Colors';
 import {Login} from '../../redux/actions/authAction';

@@ -29,7 +29,7 @@ import axios from 'axios';
 import {LOGIN} from '../../redux/constants';
 import {useDispatch} from 'react-redux';
 import {Login} from '../../redux/actions/authAction';
-import Icons from '../../components/icons';
+import Icons from '../../components/Icons';
 import YesNoModal from '../../components/YesNoModal';
 import Colors from '../../components/helpers/Colors';
 import {axiosClient} from '../../components/apis/axiosClient';

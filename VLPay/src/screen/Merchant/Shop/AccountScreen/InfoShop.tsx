@@ -254,8 +254,8 @@ export default InfoShop;
 
 const styles = StyleSheet.create({
   image: {
-    width: 64,
-    height: 64,
+    width: 52,
+    height: 52,
     borderRadius: 50,
   },
   imagePromo: {
