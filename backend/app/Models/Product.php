@@ -52,8 +52,10 @@ class Product extends Model implements HasMedia
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function getAddOnsAttribute()
+    public function getAddOnsAttribute($value)
     {
-        
+        $addon = json_decode($value, true);
+        $addon = AddOn::whereIn('id', $addon)->select('id', 'name', 'price')->get();
+        return $addon;
     }
 }
