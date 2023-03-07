@@ -285,12 +285,6 @@ class UserController extends Controller
     {
         try {
             $product = Product::where('id', $id)->first();
-
-            $product = json_decode(json_encode($product), true);
-            $addon = json_decode($product['add_ons'], true);
-            $addon = AddOn::whereIn('id', $addon)->select('id', 'name', 'price')->get();
-
-            $product['add_ons'] = $addon;
             
             return ApiResponse::successResponse($product);
         } catch(\Exception $e) {
