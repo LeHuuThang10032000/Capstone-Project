@@ -4,9 +4,11 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Models\AddOn;
 use App\Models\CreditRequest;
 use App\Models\Friends;
 use App\Models\Notification;
+use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -230,11 +232,9 @@ class UserController extends Controller
         }
     }
 
-    public function searchStores(Request $request): JsonResponse
+    public function search(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'limit' => 'integer',
-            'page' => 'integer',
             'key' => 'string'
         ]);
 
@@ -245,18 +245,20 @@ class UserController extends Controller
         try {
             $stores = Store::whereNotIn('status', ['pending', 'denied'])
                 ->where('name', 'LIKE', '%' . $request->key . '%')
-                ->with('schedules');
+                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->with('schedules')
+                ->get();
 
-            if ($request->page) {
-                $limit = $request->limit;
-                $page = $request->page;
-                $offset = ($page - 1) * $limit;
-                $stores = $stores->offset($offset)->limit($limit);
-            }
+            $users = User::where('status', '!=', 'inactive')
+                ->where('f_name', 'LIKE', '%' . $request->key . '%')
+                ->get();
 
-            $stores = $stores->get();
+            $data = [
+                'stores' => $stores,
+                'users' => $users
+            ];
             
-            return ApiResponse::successResponse($stores);
+            return ApiResponse::successResponse($data);
         } catch(\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -268,10 +270,28 @@ class UserController extends Controller
         try {
             $store = Store::whereNotIn('status', ['pending', 'denied'])
                 ->where('id', $id)
-                ->with('schedules')
+                ->with('schedules', 'categories.products:id,name,image,price,status,category_id')
                 ->get();
             
             return ApiResponse::successResponse($store);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getProductDetail($id)
+    {
+        try {
+            $product = Product::where('id', $id)->first();
+
+            $product = json_decode(json_encode($product), true);
+            $addon = json_decode($product['add_ons'], true);
+            $addon = AddOn::whereIn('id', $addon)->select('id', 'name', 'price')->get();
+
+            $product['add_ons'] = $addon;
+            
+            return ApiResponse::successResponse($product);
         } catch(\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
