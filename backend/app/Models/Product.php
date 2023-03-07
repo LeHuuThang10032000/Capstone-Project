@@ -18,6 +18,7 @@ class Product extends Model implements HasMedia
         'price',
         'category_id',
         'status',
+        'add_ons'
     ];
 
     protected $hidden = [

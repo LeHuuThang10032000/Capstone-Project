@@ -32,6 +32,7 @@ Route::post('/checkPassword', [AuthController::class, 'checkPassword']);
 Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('/search', [UserController::class, 'search']);
     //User
     Route::post('/update/{id}',[UserController::class, 'update']);
     Route::post('/updateProfile',[UserController::class, 'profileUpdate']);
@@ -85,8 +86,11 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     Route::group(['prefix' => 'store'], function() {
         Route::get('', [UserController::class, 'getStores']);
-        Route::get('/search', [UserController::class, 'searchStores']);
         Route::get('/{id}', [UserController::class, 'getStoreDetail']);
+    });
+
+    Route::group(['prefix' => 'product'], function() {
+        Route::get('/{id}', [UserController::class, 'getProductDetail']);
     });
 });
 
