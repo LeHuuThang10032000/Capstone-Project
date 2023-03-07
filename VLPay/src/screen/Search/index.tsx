@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-search-bar-filter-on-listview/
 
 // import React in our code
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {
   Center,
   Heading,
@@ -13,7 +13,7 @@ import {
   Skeleton,
   VStack,
 } from 'native-base';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import BackIcon from '../../assets/svg/left-arrow.svg';
 import SearchIcon from '../../assets/svg/search.svg';
 
@@ -28,11 +28,12 @@ import {
   Alert,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
-import { MainStackNavigation } from '../../stack/Navigation';
-import { UserData } from '../../model/UserData';
+import {MainStackNavigation} from '../../stack/Navigation';
+import {UserData} from '../../model/UserData';
 import Lottie from 'lottie-react-native';
-import { axiosClient } from '../../components/apis/axiosClient';
+import {axiosClient} from '../../components/apis/axiosClient';
 import HeaderBack from '../../components/HeaderBack';
 
 type Props = {
@@ -64,11 +65,10 @@ const Index = () => {
       .get('https://zennoshop.cf/api/user/users')
       .then(res => {
         setMasterDataSource(res.data.data);
-        setFilteredDataSource(res.data.data);
         setLoading(false);
       })
       .catch(e => console.log(e));
-  }
+  };
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -81,7 +81,7 @@ const Index = () => {
   useEffect(() => {
     setLoading(true);
     axiosClient
-      .get('https://zennoshop.cf/api/user/users')
+      .get('https://zennoshop.cf/api/user/search?key')
       .then(res => {
         setMasterDataSource(res.data.data);
         setFilteredDataSource(res.data.data);
@@ -90,28 +90,27 @@ const Index = () => {
       .catch(e => console.log(e));
   }, []);
 
-  const searchFilterFunction = (text: string) => {
+  const searchFilterFunction = async (text: string) => {
     // Check if searched text is not blank
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = masterDataSource.filter(function (item: UserData) {
-        // Applying filter for the inserted text in search bar
-        const itemData = item.phone ? item.phone : '';
-        const textData = text;
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredDataSource(newData);
-      setSearch(text);
-    } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(masterDataSource);
-      setSearch(text);
+      // const newData = masterDataSource.filter(function (item: UserData) {
+      // Applying filter for the inserted text in search bar
+      // const itemData = item.phone ? item.phone : '';
+      // const textData = text;
+      // return itemData.indexOf(textData) > -1;
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/search?key=' + text,
+      );
+      console.log(result);
+
+      setFilteredDataSource(result.data.data);
+      // setSearch(text);
     }
   };
 
-  const ItemView = ({ item }: any) => {
+  const ItemView = ({item}: any) => {
     return (
       // Flat List Item
 
@@ -121,14 +120,14 @@ const Index = () => {
         }}>
         <HStack alignItems="center" p="5" backgroundColor={'white'} marginY={1}>
           <Image
-            source={{ uri: 'https://picsum.photos/200/150' }}
+            source={{uri: 'https://picsum.photos/200/150'}}
             alt="rduser"
             size="sm"
             borderRadius="50"
           />
           <VStack>
             <Text
-              style={[styles.itemStyle, { fontWeight: 'bold', fontSize: 16 }]}>
+              style={[styles.itemStyle, {fontWeight: 'bold', fontSize: 16}]}>
               {item.f_name}
             </Text>
             <Text style={styles.itemStyle}>{item.phone}</Text>
@@ -138,39 +137,59 @@ const Index = () => {
     );
   };
 
-  const ItemSeparatorView = () => {
-    return (
-      // Flat List Item Separator
-      <View
-        style={{
-          height: 0.5,
-          width: '100%',
-          backgroundColor: '#C8C8C8',
-        }}
-      />
-    );
-  };
-
   const EmptyComponent = () => {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Lottie
           source={require('../../assets/lottie-file/not-found.json')}
           autoPlay={true}
-          style={{ width: 200, height: 200 }}
+          style={{width: 200, height: 200}}
         />
         <Heading size={'md'}>Không tìm thấy người dùng nào.</Heading>
       </View>
     );
   };
 
-  const getItem = (item: UserData) => {
-    // Function for click on an item
-    Alert.alert(item.f_name);
+  const StoreAndUserList = ({data}) => {
+    return (
+      <ScrollView style={styles.container}>
+        <Text style={styles.sectionHeader}>{data?.stores && 'Quán:'}</Text>
+        <View>
+          {data?.stores &&
+            data?.stores.map(store => (
+              <TouchableOpacity>
+                <HStack key={store.id}>
+                  <Image source={{uri: store.image}} width={50} height={50} />
+                  <VStack style={{marginLeft: 10, marginBottom: 10}}>
+                    <Text style={styles.item}>{store.name}</Text>
+                    <Text style={styles.item}>{store.phone}</Text>
+                  </VStack>
+                </HStack>
+              </TouchableOpacity>
+            ))}
+        </View>
+        <Text style={styles.sectionHeader}>{data?.users && 'Người dùng:'}</Text>
+        <View>
+          {data?.users &&
+            data?.users.map(user => (
+              <TouchableOpacity>
+                <HStack key={user.id}>
+                  <Image source={{uri: ''}} alt={''} width={50} height={50} />
+                  <VStack style={{marginLeft: 10, marginBottom: 10}}>
+                    <Text style={styles.item}>{user.f_name}</Text>
+                    <Text style={styles.item}>{user.phone}</Text>
+                  </VStack>
+                </HStack>
+              </TouchableOpacity>
+            ))}
+        </View>
+        <View style={{height: 30}} />
+      </ScrollView>
+    );
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <HeaderBack title="Người dùng trên VLPay" />
       <Center marginY={5}>
         <Input
@@ -183,7 +202,6 @@ const Index = () => {
           fontSize="14"
           bgColor={'white'}
           onChangeText={text => searchFilterFunction(text)}
-          value={search}
           InputRightElement={
             <Icon
               m="2"
@@ -196,31 +214,12 @@ const Index = () => {
           }
         />
       </Center>
-      {loading ? (
-        <Center>
-          <Lottie
-            source={require('../../assets/lottie-file/loading.json')}
-            autoPlay={true}
-            style={{ width: 100, height: 100 }}
-          />
-        </Center>
-      ) : (
-        <FlatList
-          data={filteredDataSource}
-          keyExtractor={(item, index) => index.toString()}
-          // ItemSeparatorComponent={ItemSeparatorView}
-          renderItem={ItemView}
-          ListEmptyComponent={EmptyComponent}
-        />
-      )}
+      <StoreAndUserList data={filteredDataSource} />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-  },
   itemStyle: {
     paddingLeft: 10,
     fontFamily: 'Poppins-Regular',
@@ -254,6 +253,21 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Poppins-Regular',
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  sectionHeader: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  item: {
+    fontSize: 16,
+    marginBottom: 4,
   },
 });
 
