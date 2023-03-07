@@ -251,6 +251,7 @@ class UserController extends Controller
 
             $users = User::where('status', '!=', 'inactive')
                 ->where('f_name', 'LIKE', '%' . $request->key . '%')
+                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
                 ->get();
 
             $data = [
