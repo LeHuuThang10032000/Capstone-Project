@@ -1,1 +1,1 @@
-export const baseUrl = 'https://zennoshop.cf/api/user/';
+export const baseUrl = 'https://zennoshop.cf/api/user';

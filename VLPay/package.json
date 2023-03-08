@@ -76,7 +76,8 @@
     "redux-persist-filesystem-storage": "^4.1.0",
     "redux-persist-transform-filter": "^0.0.20",
     "vision-camera-code-scanner": "^0.2.0",
-    "yarn": "^1.22.19"
+    "yarn": "^1.22.19",
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
