@@ -104,6 +104,12 @@ export type MainStackParamList = {
   };
   ProductMerchant: undefined;
   ListStore: undefined;
+  DetailStore: {
+    id: number;
+  };
+  DetailProduct: {
+    id: number;
+  };
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

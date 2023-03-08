@@ -92,6 +92,10 @@ const ListStore = () => {
     return null;
   };
 
+  const renderHeader = () => {
+    return <Text>Header</Text>;
+  };
+
   const handleLoadMore = () => {
     if (hasMore) {
       setPage(page + 1);
@@ -119,7 +123,6 @@ const ListStore = () => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
-        nestedScrollEnabled
       />
     </View>
   );
