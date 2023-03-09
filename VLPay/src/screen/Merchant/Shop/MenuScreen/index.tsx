@@ -183,7 +183,6 @@ const MenuScreen = (props: Props) => {
       </ScrollView>
     );
   };
-  console.log('products', products);
 
   return (
     <View style={{flex: 1}}>

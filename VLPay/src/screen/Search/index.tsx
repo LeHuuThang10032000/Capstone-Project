@@ -157,7 +157,12 @@ const Index = () => {
         <View>
           {data?.stores &&
             data?.stores.map(store => (
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('DetailStore', {
+                    id: store.id,
+                  });
+                }}>
                 <HStack key={store.id}>
                   <Image source={{uri: store.image}} width={50} height={50} />
                   <VStack style={{marginLeft: 10, marginBottom: 10}}>
@@ -172,7 +177,14 @@ const Index = () => {
         <View>
           {data?.users &&
             data?.users.map(user => (
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('DetailUser', {
+                    id: user.id,
+                    f_name: user.f_name,DetailStore
+                    phone: user.phone,
+                  });
+                }}>
                 <HStack key={user.id}>
                   <Image source={{uri: ''}} alt={''} width={50} height={50} />
                   <VStack style={{marginLeft: 10, marginBottom: 10}}>
