@@ -1,84 +1,88 @@
 import {create} from 'zustand';
-
-type Product = {
+export interface Product {
   id: number;
   name: string;
-  description: string;
   price: number;
-};
+  image: string;
+}
 
-type CartItem = {
+export interface CartItem {
   product: Product;
   quantity: number;
-};
+}
 
-type CartState = {
-  items: CartItem[];
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: number) => void;
-  increaseQuantity: (productId: number) => void;
-  decreaseQuantity: (productId: number) => void;
+interface CartStore {
+  cartItems: CartItem[];
+  addToCart: (item: Product, quantity: number) => void;
   totalItems: number;
-};
+  clearCart: () => void;
+  totalPrice: () => number;
+  incrementCartItem: (productId: number) => void;
+  decrementCartItem: (productId: number) => void;
+}
 
-export const useCart = create<CartState>(set => ({
-  items: [],
-  addToCart: product =>
+const useCartStore = create<CartStore>((set, get) => ({
+  cartItems: [],
+  addToCart: (item, quantity) =>
     set(state => {
-      const existingItemIndex = state.items.findIndex(
-        item => item.product.id === product.id,
+      // Check if the product is already in the cart
+      const itemIndex = state.cartItems.findIndex(
+        cartItem => cartItem.product.id === item.id,
       );
 
-      if (existingItemIndex !== -1) {
-        const updatedItems = [...state.items];
-        updatedItems[existingItemIndex].quantity++;
+      if (itemIndex !== -1) {
+        // If the product is already in the cart, increment its quantity
+        const updatedCartItems = [...state.cartItems];
+        updatedCartItems[itemIndex].quantity += quantity;
         return {
-          items: updatedItems,
-          totalItems: state.totalItems + 1,
+          cartItems: updatedCartItems,
+          totalItems: state.totalItems + quantity,
         };
       } else {
+        // If the product is not in the cart, add it as a new item
         return {
-          items: [...state.items, {product, quantity: 1}],
-          totalItems: state.totalItems + 1,
+          cartItems: [...state.cartItems, {product: item, quantity: quantity}],
+          totalItems: state.totalItems + quantity,
         };
       }
     }),
-  removeFromCart: productId =>
-    set(state => {
-      const filteredItems = state.items.filter(
-        item => item.product.id !== productId,
-      );
-      return {
-        items: filteredItems,
-        totalItems: state.totalItems - 1,
-      };
-    }),
-  increaseQuantity: productId =>
-    set(state => {
-      const updatedItems = [...state.items];
-      const itemIndex = updatedItems.findIndex(
-        item => item.product.id === productId,
-      );
-      updatedItems[itemIndex].quantity++;
-      return {
-        items: updatedItems,
-        totalItems: state.totalItems + 1,
-      };
-    }),
-  decreaseQuantity: productId =>
-    set(state => {
-      const updatedItems = [...state.items];
-      const itemIndex = updatedItems.findIndex(
-        item => item.product.id === productId,
-      );
-      updatedItems[itemIndex].quantity--;
-      if (updatedItems[itemIndex].quantity === 0) {
-        updatedItems.splice(itemIndex, 1);
-      }
-      return {
-        items: updatedItems,
-        totalItems: state.totalItems - 1,
-      };
-    }),
   totalItems: 0,
+  clearCart: () => set({cartItems: [], totalItems: 0}),
+  totalPrice: () =>
+    get().cartItems.reduce(
+      (total, product) => total + product.product.price * product.quantity,
+      0,
+    ),
+  incrementCartItem: (productId: number) => {
+    const cartItem = get().cartItems.find(
+      item => item.product.id === productId,
+    );
+
+    if (cartItem) {
+      cartItem.quantity += 1;
+      set({cartItems: get().cartItems, totalItems: get().totalItems + 1});
+    }
+  },
+  decrementCartItem: (productId: number) => {
+    const cartItem = get().cartItems.find(
+      item => item.product.id === productId,
+    );
+
+    if (cartItem) {
+      if (cartItem.quantity > 1) {
+        cartItem.quantity -= 1;
+        set({cartItems: get().cartItems, totalItems: get().totalItems - 1});
+      } else {
+        // remove cart item
+        set({
+          cartItems: get().cartItems.filter(
+            item => item.product.id !== productId,
+          ),
+          totalItems: get().totalItems - 1,
+        });
+      }
+    }
+  },
 }));
+
+export default useCartStore;

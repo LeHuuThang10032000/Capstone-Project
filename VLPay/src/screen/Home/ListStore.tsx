@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {Heading, HStack, Image, VStack} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 interface Post {
   id: number;
@@ -19,6 +21,7 @@ interface Post {
 }
 
 const ListStore = () => {
+  const navigation = useNavigation<MainStackNavigation>();
   const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -56,7 +59,8 @@ const ListStore = () => {
   }, [page]);
 
   const renderItem = ({item}: {item: Post}) => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('DetailStore', {id: item.id})}>
       <HStack
         py={3}
         mx={3}

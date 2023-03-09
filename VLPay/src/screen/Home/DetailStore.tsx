@@ -19,7 +19,7 @@ import Detail from '../../assets/svg/detail.svg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {formatCurrency} from '../../components/helper';
-import {useCart} from '../../store/cart';
+import useCartStore from '../../store/cart';
 
 interface Products {
   id: number;
@@ -57,15 +57,10 @@ const DetailStore = ({route}: any) => {
   const HEADER_HEIGHT_EXPANDED = 190;
   const HEADER_HEIGHT_NARROWED = 60 + insets.top;
   const scrollY = useRef(new Animated.Value(0)).current;
-  const {addToCart, totalItems, items} = useCart();
-  const {height, width} = useWindowDimensions();
+  const {width} = useWindowDimensions();
 
-  console.log(items);
-
-  const handleAddToCart = () => {
-    addToCart(id);
-    Alert.alert('Added to cart!');
-  };
+  const {totalItems} = useCartStore();
+  const totalPrice = useCartStore(state => state.totalPrice());
 
   // console.log(store);
 
@@ -126,7 +121,7 @@ const DetailStore = ({route}: any) => {
                 <VStack paddingBottom={'5'} key={item.id}>
                   <Heading size={'lg'}>{item.name}</Heading>
                   {item.products.map(item => (
-                    <View my={3}>
+                    <View my={3} key={item.id}>
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate('DetailProduct', {id: item.id})
@@ -157,45 +152,46 @@ const DetailStore = ({route}: any) => {
           </View>
         ))}
       </ScrollView>
-      <HStack
-        zIndex={99}
-        position={'absolute'}
-        width={width}
-        bottom={0}
-        paddingY={3}
-        paddingX={3}
-        backgroundColor={'#FFFFFF'}>
-        {/* <Text>Total items in cart: {totalItems}</Text> */}
-        <TouchableOpacity>
-          <View
-            borderRadius={10}
-            padding={5}
-            borderWidth={1}
-            borderColor="#4285F4"
-            justifyContent="center"
-            alignItems={'center'}
-            flexDirection="row">
-            <CartIcon />
-            <Text>{totalItems}</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View
-            justifyContent="center"
-            alignItems={'center'}
-            style={{
-              width: 280,
-              padding: 19,
-              backgroundColor: '#4285F4',
-              marginHorizontal: 10,
-              borderRadius: 10,
-            }}>
-            <Text color={'#FFFFFF'} fontWeight="bold" fontSize={16}>
-              Xem đơn hàng
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </HStack>
+      {totalItems > 0 ? (
+        <HStack
+          zIndex={99}
+          position={'absolute'}
+          width={width}
+          bottom={0}
+          paddingY={3}
+          paddingX={3}
+          backgroundColor={'#FFFFFF'}>
+          <TouchableOpacity onPress={() => navigation.navigate('DetailCart')}>
+            <View
+              borderRadius={10}
+              padding={5}
+              borderWidth={1}
+              borderColor="#4285F4"
+              justifyContent="center"
+              alignItems={'center'}
+              flexDirection="row">
+              <CartIcon />
+              <Text>{totalItems}</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View
+              justifyContent="center"
+              alignItems={'center'}
+              style={{
+                width: 280,
+                padding: 19,
+                backgroundColor: '#4285F4',
+                marginHorizontal: 10,
+                borderRadius: 10,
+              }}>
+              <Text color={'#FFFFFF'} fontWeight="bold" fontSize={16}>
+                {`Xem đơn hàng: ${formatCurrency(totalPrice.toString())}đ`}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </HStack>
+      ) : null}
     </View>
   );
 };

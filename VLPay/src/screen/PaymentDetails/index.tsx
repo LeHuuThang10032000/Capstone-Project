@@ -41,7 +41,7 @@ const PaymentDetails = () => {
             borderColor={'#E0E0E0'}>
             <VStack my={3}>
               <UText>Chuyển tiền qua VLPAY</UText>
-              <UText style={{fontsize: 18, fontWeight: '700'}}>
+              <UText style={{fontSize: 18, fontWeight: '700'}}>
                 -{formatCurrency(money ?? 0)}đ
               </UText>
               <UText style={{fontSize: 15}}>
