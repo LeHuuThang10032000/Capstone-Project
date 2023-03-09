@@ -84,7 +84,7 @@ const Banner = (props: Props) => {
             </TouchableOpacity>
             <Text style={styles.text}>SCAN QR</Text>
           </View> */}
-          <YesNoModal
+          {/* <YesNoModal
             icon={<Icons.WarningIcon />}
             visible={visibleWarning}
             btnLeftStyle={{
@@ -106,7 +106,7 @@ const Banner = (props: Props) => {
             }}
             btnTextLeft={'Xác nhận'}
             style={{flexDirection: 'column'}}
-          />
+          /> */}
         </View>
       </ImageBackground>
     </View>
