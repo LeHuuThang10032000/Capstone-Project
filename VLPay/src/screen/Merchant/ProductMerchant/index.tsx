@@ -312,7 +312,7 @@ const ProductMerchant = () => {
                       alignItems: 'center',
                       borderColor: '#4285F4',
                     }}>
-                    {selectedOption.id
+                    {selectedOption?.id
                       ? selectedOption.id === option.id && (
                           <View
                             style={{
@@ -323,7 +323,7 @@ const ProductMerchant = () => {
                             }}
                           />
                         )
-                      : option.id === data.product.category_id && (
+                      : option.id === data?.product?.category_id && (
                           <View
                             style={{
                               height: '100%',

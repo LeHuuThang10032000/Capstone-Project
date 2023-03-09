@@ -5,6 +5,7 @@ import {HStack, Text, View} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../stack/Navigation';
 import SwitchButton from './SwitchButton';
+import Trash from '../assets/svg/trash.svg';
 
 type Props = {
   title: string;
@@ -12,6 +13,7 @@ type Props = {
   style?: any;
   onPressRight?: boolean;
   hideRight?: any;
+  TrashIcon?: boolean;
   onPress?: () => void;
 };
 
@@ -21,6 +23,7 @@ const HeaderBack: React.FC<Props> = ({
   style,
   onPressRight,
   hideRight,
+  TrashIcon,
   onPress,
 }) => {
   const navigation = useNavigation<MainStackNavigation>();
@@ -61,6 +64,12 @@ const HeaderBack: React.FC<Props> = ({
         {onPressRight ? (
           <TouchableOpacity onPress={onPress}>
             <Text style={[styles.text, {fontSize: 14}]}>Chỉnh sửa</Text>
+          </TouchableOpacity>
+        ) : null}
+
+        {TrashIcon ? (
+          <TouchableOpacity onPress={onPress}>
+            <Trash width={30} height={30} />
           </TouchableOpacity>
         ) : null}
       </View>
