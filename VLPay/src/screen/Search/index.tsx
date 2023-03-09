@@ -181,7 +181,7 @@ const Index = () => {
                 onPress={() => {
                   navigation.navigate('DetailUser', {
                     id: user.id,
-                    f_name: user.f_name,DetailStore
+                    f_name: user.f_name,
                     phone: user.phone,
                   });
                 }}>
