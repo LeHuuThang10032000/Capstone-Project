@@ -10,7 +10,7 @@ export default StyleSheet.create({
   buttons: {
     width: '100%',
     height: 50,
-    backgroundColor: '#4285F4',
+    backgroundColor: '#B5EAD8',
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -20,10 +20,12 @@ export default StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
     marginTop: 20,
+    position: 'absolute',
+    bottom: 0,
   },
   btnTitle: {
     alignSelf: 'center',
-    color: 'white',
+    color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
   },

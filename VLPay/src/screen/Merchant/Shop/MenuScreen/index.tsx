@@ -163,23 +163,6 @@ const MenuScreen = (props: Props) => {
             </View>
           ),
         )}
-        <View style={styles.btnWrapper}>
-          <TouchableOpacity
-            style={styles.buttons}
-            onPress={() => {
-              const item = {
-                products: products,
-                addons: addons,
-                store_id: store_di,
-                isUpdated: false,
-              };
-              navigation.navigate('ProductMerchant', {
-                data: item,
-              });
-            }}>
-            <Text style={styles.btnTitle}>Thêm món Mới hoặc danh sách</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
     );
   };
@@ -195,6 +178,23 @@ const MenuScreen = (props: Props) => {
       />
       <Text style={styles.titles}>{storeInfo.name}</Text>
       {products[0] && <DataList data={products} />}
+      <View style={styles.btnWrapper}>
+        <TouchableOpacity
+          style={styles.buttons}
+          onPress={() => {
+            const item = {
+              products: products,
+              addons: addons,
+              store_id: store_di,
+              isUpdated: false,
+            };
+            navigation.navigate('ProductMerchant', {
+              data: item,
+            });
+          }}>
+          <Text style={styles.btnTitle}>Thêm món Mới hoặc danh sách</Text>
+        </TouchableOpacity>
+      </View>
       <View></View>
     </View>
   );
