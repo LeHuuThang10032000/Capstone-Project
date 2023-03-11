@@ -76,8 +76,12 @@ Route::group(['middleware' => ['auth:api']], function(){
 
         Route::post('/product-category/create', [StoreController::class, 'createProductCategory']);
         Route::post('/product-category/update', [StoreController::class, 'updateProductCategory']);
+        Route::post('/product-category/delete', [StoreController::class, 'deleteProductCategory']);
 
         Route::get('/add-on', [StoreController::class, 'getAddOn']);
+        Route::post('/add-on/create', [StoreController::class, 'createAddon']);
+        Route::post('/add-on/update', [StoreController::class, 'updateAddon']);
+        Route::post('/add-on/delete', [StoreController::class, 'deleteAddon']);
 
         Route::get('/menu', [StoreController::class, 'getStoreMenu']);
         Route::get('/activate-time', [StoreController::class, 'getTimeActive']);

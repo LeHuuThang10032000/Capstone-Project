@@ -53,6 +53,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Transaction::class);
     }
 
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     // /**
     //  * The attributes that should be cast.
     //  *

@@ -243,6 +243,36 @@ class StoreController extends Controller
         }
     }
 
+    public function deleteProductCategory(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:'.app(ProductCategory::class)->getTable().',id',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try{
+            DB::beginTransaction();
+
+            $productCategory = ProductCategory::where('id', $request->id)->first();
+            $products = $productCategory->products->count();
+            if($products > 0)
+            {
+                return APIResponse::FailureResponse('Không thể xóa do đang có món ăn thuộc danh sách này');
+            }
+            
+            $productCategory->delete();
+
+            DB::commit();
+            return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
     public function updateProduct(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -352,6 +382,85 @@ class StoreController extends Controller
             $addOns = AddOn::select('id', 'name', 'price')->where('store_id', $request->store_id)->get();
 
             return APIResponse::SuccessResponse($addOns);
+        } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function createAddon(Request $request)
+    {
+        try{
+            $validate = Validator::make($request->all(), [
+                'store_id' => 'required|integer|exists:'.app(Store::class)->getTable().',id',
+                'name' => 'required',
+                'price' => 'required|integer',
+            ]);
+
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+
+            $addon = AddOn::where('store_id', $request->store_id)->where('name', $request->name)->get();
+            if($addon) {
+                return ApiResponse::failureResponse('Món thêm này đã tồn tại');
+            }
+
+            AddOn::create(
+                [
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'store_id' => $request->store_id,
+                ]
+            );
+
+            return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function updateAddon(Request $request)
+    {
+        try{
+            $validate = Validator::make($request->all(), [
+                'store_id' => 'required|integer|exists:'.app(Store::class)->getTable().',id',
+                'id' => 'required|integer|exists:'.app(AddOn::class)->getTable().',id',
+                'name' => 'required',
+                'price' => 'required|integer',
+            ]);
+
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+
+            $addOn = AddOn::where('id', $request->id)->update(
+                [
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'store_id' => $request->store_id,
+                ]
+            );
+
+            return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function deleteAddon(Request $request)
+    {
+        try{
+            $validate = Validator::make($request->all(), [
+                'id' => 'required|integer|exists:'.app(AddOn::class)->getTable().',id',
+            ]);
+
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+
+            $addOn = AddOn::where('id', $request->id)->delete();
+
+            return APIResponse::SuccessResponse(null);
         } catch(Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
