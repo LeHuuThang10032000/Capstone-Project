@@ -292,4 +292,50 @@ class UserController extends Controller
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
+
+    public function getCart()
+    {
+        try {
+            $user = Auth::user();
+            
+            // return ApiResponse::successResponse($cart);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function addToCart(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+            'products' => 'array',
+            'products.*.id' => 'required|exists:'.app(Product::class)->getTable().',id',
+            'products.*.quantity' => 'required|numeric',
+            'products.*.add_ons' => 'array',
+            'products.*.add_ons.*.id' => 'required_with:products.*.add_ons.*',
+        ], [
+            'products.*.id.exists' => 'Sản phẩm không tồn tại'
+        ]);
+
+        if ($validate->fails())
+        {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+        $user = Auth::user();
+
+        try {
+            DB::beginTransaction();
+            $user->carts()->delete();
+            $products = $request->products ?? [];
+            $storeId = null;
+
+            
+            DB::commit();
+            return APIResponse::SuccessResponse(true);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
 }
