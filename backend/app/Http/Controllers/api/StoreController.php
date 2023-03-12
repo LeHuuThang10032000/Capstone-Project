@@ -8,6 +8,8 @@ use App\Models\AddOn;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Store;
+use App\Models\StoreSchedule;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -122,14 +124,14 @@ class StoreController extends Controller
         if(!$store) {
             return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
+
         $addOns = json_decode($request->get('add_ons'));
 
         try {
             DB::beginTransaction();
 
             $newAddOns = [];
-
-            try{
+            try {
                 foreach($addOns as $key => $value) {
                     if(!$value->id){
                         $addOnNew = AddOn::create(
@@ -150,7 +152,7 @@ class StoreController extends Controller
                     }
                     array_push($newAddOns, $value->id);
                 }
-            }catch(Exception $e){
+            } catch(Exception $e) {
                 return ApiResponse::failureResponse($e);
             }
 
@@ -242,6 +244,36 @@ class StoreController extends Controller
         }
     }
 
+    public function deleteProductCategory(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:'.app(ProductCategory::class)->getTable().',id',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try{
+            DB::beginTransaction();
+
+            $productCategory = ProductCategory::where('id', $request->id)->first();
+            $products = $productCategory->products->count();
+            if($products > 0)
+            {
+                return APIResponse::FailureResponse('Không thể xóa do đang có món ăn thuộc danh sách này');
+            }
+            
+            $productCategory->delete();
+
+            DB::commit();
+            return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
     public function updateProduct(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -304,9 +336,30 @@ class StoreController extends Controller
 
         try {
             $categories = ProductCategory::where('store_id', $request->store_id)
-                ->select('id', 'name')
-                ->with('products:id,name,price,category_id')
+                ->select('id', 'name as category_name')
+                ->with('products')
                 ->withCount('products')
+                ->get();
+
+			return APIResponse::SuccessResponse($categories);
+        } catch(Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getProductCategory(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $categories = ProductCategory::where('store_id', $request->store_id)
                 ->get();
 
 			return APIResponse::SuccessResponse($categories);
@@ -333,5 +386,166 @@ class StoreController extends Controller
         } catch(Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
+    }
+
+    public function createAddon(Request $request)
+    {
+        try{
+            $validate = Validator::make($request->all(), [
+                'store_id' => 'required|integer|exists:'.app(Store::class)->getTable().',id',
+                'name' => 'required',
+                'price' => 'required|integer',
+            ]);
+
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+
+            $addon = AddOn::where('store_id', $request->store_id)->where('name', $request->name)->get();
+            if($addon->count() > 0) {
+                return ApiResponse::failureResponse('Món thêm này đã tồn tại');
+            }
+
+            AddOn::create(
+                [
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'store_id' => $request->store_id,
+                ]
+            );
+
+            return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function updateAddon(Request $request)
+    {
+        try{
+            $validate = Validator::make($request->all(), [
+                'store_id' => 'required|integer|exists:'.app(Store::class)->getTable().',id',
+                'id' => 'required|integer|exists:'.app(AddOn::class)->getTable().',id',
+                'name' => 'required',
+                'price' => 'required|integer',
+            ]);
+
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+
+            $addOn = AddOn::where('id', $request->id)->update(
+                [
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'store_id' => $request->store_id,
+                ]
+            );
+
+            return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function deleteAddon(Request $request)
+    {
+        try{
+            $validate = Validator::make($request->all(), [
+                'id' => 'required|integer|exists:'.app(AddOn::class)->getTable().',id',
+            ]);
+
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+
+            $addOn = AddOn::where('id', $request->id)->delete();
+
+            return APIResponse::SuccessResponse(null);
+        } catch(Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getTimeActive(Request $request)
+    {
+        try{
+            $validate = Validator::make($request->all(), [
+                'store_id' => 'required|integer',
+            ]);
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+            $data = StoreSchedule::select('id','day','opening_time','closing_time')->where('store_id', $request->store_id)->get();
+            if(count($data) == 0){
+                $data = $this->initTimeActive($request->store_id);
+            }
+            return APIResponse::SuccessResponse($data);
+		} catch (\Exception $e) {
+            return APIResponse::FailureResponse(trans('api.something_went_wrong'), null, 500);
+		}
+    }
+
+    private function initTimeActive($storeId)
+    {
+        $data = [];
+        $timeNow = Carbon::now();
+        $openingTime = Carbon::createFromFormat('H:i:s', '10:00:00')->format('H:i:s');
+        $closingTime = Carbon::createFromFormat('H:i:s', '18:00:00')->format('H:i:s');
+        for ($i=2; $i <= 8; $i++) { 
+            array_push($data, [
+                'store_id' => $storeId,
+                'day' => $i,
+                'opening_time' => $openingTime,
+                'closing_time' => $closingTime,
+                'created_at'  => $timeNow,
+                'updated_at'  => $timeNow,
+            ]);
+        }
+        StoreSchedule::insert($data);
+        return $data;
+    }
+
+    public function updateTimeActive(Request $request)
+    {
+        try{
+            $validate = Validator::make($request->all(), [
+                'flag_set_all' => 'required|integer|in:0,1',
+                'day_id' => 'integer|required_if:flag_set_all,0',
+                'store_id' => 'required|integer',
+                'opening_time' => 'required|date_format:H:i:s',
+                'closing_time' => 'required|date_format:H:i:s',
+            ],[
+                'day_id.required_if' => 'Trường day_id không được bỏ trống.'
+            ]);
+            if ($validate->fails()) {
+                return APIResponse::FailureResponse($validate->messages()->first());
+            }
+
+            $openingTime = Carbon::createFromFormat('H:i:s', $request->opening_time)->format('H:i:s');
+            $closingTime = Carbon::createFromFormat('H:i:s', $request->closing_time)->format('H:i:s');
+            
+            if ($request->flag_set_all){
+                StoreSchedule::where("store_id", $request->store_id)
+                ->update(
+                    [
+                        "opening_time" => $openingTime,
+                        "closing_time" => $closingTime,
+                    ]
+                );
+            }else {
+                StoreSchedule::where("day", $request->day_id)
+                ->where("store_id", $request->store_id)
+                ->update(
+                    [
+                        "opening_time" => $openingTime,
+                        "closing_time" => $closingTime,
+                    ]
+                );
+            }
+            return APIResponse::SuccessResponse(null);
+		} catch (\Exception $e) {
+            return APIResponse::FailureResponse(trans('api.something_went_wrong'), null, 500);
+		}
     }
 }

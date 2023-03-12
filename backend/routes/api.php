@@ -32,6 +32,7 @@ Route::post('/checkPassword', [AuthController::class, 'checkPassword']);
 Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('/search', [UserController::class, 'search']);
     //User
     Route::post('/update/{id}',[UserController::class, 'update']);
     Route::post('/updateProfile',[UserController::class, 'profileUpdate']);
@@ -73,12 +74,35 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::post('/product/create', [StoreController::class, 'createProduct']);
         Route::post('/product/update', [StoreController::class, 'updateProduct']);
 
+        Route::get('/product-category', [StoreController::class, 'getProductCategory']);
         Route::post('/product-category/create', [StoreController::class, 'createProductCategory']);
         Route::post('/product-category/update', [StoreController::class, 'updateProductCategory']);
+        Route::post('/product-category/delete', [StoreController::class, 'deleteProductCategory']);
 
         Route::get('/add-on', [StoreController::class, 'getAddOn']);
+        Route::post('/add-on/create', [StoreController::class, 'createAddon']);
+        Route::post('/add-on/update', [StoreController::class, 'updateAddon']);
+        Route::post('/add-on/delete', [StoreController::class, 'deleteAddon']);
 
         Route::get('/menu', [StoreController::class, 'getStoreMenu']);
+        Route::get('/activate-time', [StoreController::class, 'getTimeActive']);
+        Route::post('/activate-time', [StoreController::class, 'updateTimeActive']);
+    });
+
+    Route::group(['prefix' => 'store'], function() {
+        Route::get('', [UserController::class, 'getStores']);
+        Route::get('/{id}', [UserController::class, 'getStoreDetail']);
+    });
+
+    Route::group(['prefix' => 'product'], function() {
+        Route::get('/{id}', [UserController::class, 'getProductDetail']);
+    });
+
+    Route::group(['prefix' => 'cart'], function() {
+        Route::get('', [UserController::class, 'getCart']);
+        Route::post('', [UserController::class, 'addToCart']);
+        Route::put('', [UserController::class, 'updateCart']);
+        Route::delete('', [UserController::class, 'deleteCart']);
     });
 });
 

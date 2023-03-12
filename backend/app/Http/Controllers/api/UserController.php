@@ -4,9 +4,13 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Models\AddOn;
+use App\Models\Cart;
 use App\Models\CreditRequest;
 use App\Models\Friends;
 use App\Models\Notification;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +23,8 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index(){
+    public function index(): JsonResponse
+    {
         $userCurr = Auth::user()->id;
         $friends = Friends::where('user_id', $userCurr)->get();
         $arrFriends = [];
@@ -31,7 +36,7 @@ class UserController extends Controller
         return ApiResponse::successResponse($users);
     }
 
-    public function update(Request $request):Response
+    public function update(Request $request): JsonResponse
     {
         $user = User::find($request->id);
 
@@ -52,15 +57,19 @@ class UserController extends Controller
         return ApiResponse::successResponse($user);
     }
 
-    public function getProfile(){
+    public function getProfile(): JsonResponse
+    {
         if(auth::check()){
             $user = auth()->user();
             auth()->user()->media->all();
+
+            $user['withdraw_request'] = $user->pending_withdraw_request;
+            $user['credit_request'] = $user->pending_credit_request;
             return ApiResponse::successResponse($user);
         }
     }
 
-    public function profileUpdate(Request $request)
+    public function profileUpdate(Request $request): JsonResponse
     {
         $request->validate([
             'full_name'=>'required|min:3',
@@ -81,7 +90,8 @@ class UserController extends Controller
         return ApiResponse::successResponse($user);
     }
 
-    public function checkUserSendRequestCreateStore(){
+    public function checkUserSendRequestCreateStore(): JsonResponse
+    {
         $user = Auth::user()->id;
         $request = Store::where('user_id',$user)->where('status', 'approved')->select('status')->first();
         if($request){
@@ -97,7 +107,7 @@ class UserController extends Controller
 
     }
 
-    public function createStoreRequest(Request $request)
+    public function createStoreRequest(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required',
@@ -146,7 +156,8 @@ class UserController extends Controller
         }
     }
 
-    public function findUserById($phone){
+    public function findUserById($phone)
+    {
         if(Auth::check()){
             $user = User::where("phone", $phone)->first();
             return response([
@@ -198,8 +209,260 @@ class UserController extends Controller
         }
     }
 
-    public function searchUser(Request $request)
+    public function getStores(Request $request): JsonResponse
     {
+        $validate = Validator::make($request->all(), [
+            'limit' => 'integer',
+            'page' => 'integer',
+        ]);
 
+        if ($validate->fails()) {
+            return APIResponse::failureResponse($validate->messages()->first());
+        }
+
+        try {
+            $stores = Store::whereNotIn('status', ['pending, denied'])
+                ->select('id', 'name', 'image', 'phone', 'location')
+                ->with('schedules');
+
+            if ($request->page) {
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page - 1) * $limit;
+                $stores = $stores->offset($offset)->limit($limit);
+            }
+
+            $stores = $stores->get();
+            
+            return ApiResponse::successResponse($stores);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'key' => 'string'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::failureResponse($validate->messages()->first());
+        }
+
+        try {
+            $stores = Store::whereNotIn('status', ['pending', 'denied'])
+                ->where('name', 'LIKE', '%' . $request->key . '%')
+                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->with('schedules')
+                ->get();
+
+            $users = User::where('status', '!=', 'inactive')
+                ->where('f_name', 'LIKE', '%' . $request->key . '%')
+                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->get();
+
+            $data = [
+                'stores' => $stores,
+                'users' => $users
+            ];
+            
+            return ApiResponse::successResponse($data);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getStoreDetail($id): JsonResponse
+    {
+        try {
+            $store = Store::whereNotIn('status', ['pending', 'denied'])
+                ->where('id', $id)
+                ->with('schedules')
+                ->get();
+
+            $productCategories = ProductCategory::where('store_id', $id)
+                ->with(['products' => function($query) {
+                    $query->select('id','name','price','image','category_id')->where('status', '!=', 'unavailable');
+                }])
+                ->has('products')
+                ->get();
+
+            $store[0]['categories'] = $productCategories;
+            
+            return ApiResponse::successResponse($store);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getProductDetail($id): JsonResponse
+    {
+        try {
+            $product = Product::where('id', $id)->first();
+            
+            return ApiResponse::successResponse($product);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getCart(): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            
+            return ApiResponse::successResponse($user->carts);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function deleteCart(): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            $user->carts()->where(function ($query) {
+                $query->doesntHave('product')
+                    ->orWhereHas('product', function ($q) {
+                        $q->where('status', '!=', 'ACTIVE');
+                    });
+            })->delete();
+            
+            return ApiResponse::successResponse(null);
+        } catch(\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function addToCart(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+            'product_id' => 'required|exists:'.app(Product::class)->getTable().',id',
+            'quantity' => 'required|numeric',
+            'add_ons' => 'array',
+        ], [
+            'product_id.exists' => 'Sản phẩm không tồn tại'
+        ]);
+
+        if ($validate->fails())
+        {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+        $user = Auth::user();
+        try {
+            DB::beginTransaction();
+            
+            $addOns = json_encode($request->add_ons);
+            $product = DB::table('carts')->where('user_id', $user->id)
+                            ->where('product_id', $request->product_id)
+                            ->where('add_ons', $addOns)
+                            ->where('store_id', $request->store_id)
+                            ->first();
+
+            if($product) {
+                $quantity = $product->quantity + $request->quantity;
+
+                DB::table('carts')->where('user_id', $user->id)
+                    ->where('product_id', $request->product_id)
+                    ->where('add_ons', $addOns)
+                    ->where('store_id', $request->store_id)
+                    ->update(['quantity' => $quantity]);
+                
+                DB::commit();
+                return APIResponse::SuccessResponse(null);
+            }
+
+            $newCart = new Cart;
+            $newCart->create([
+                'user_id' => $user->id,
+                'product_id' => $request->product_id,
+                'add_ons' => $addOns,
+                'quantity' => $request->quantity,
+                'store_id' => $request->store_id,
+            ]);
+
+            DB::commit();
+            return APIResponse::SuccessResponse(null);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function updateCart(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'product_id' => 'required|exists:'.app(Product::class)->getTable().',id',
+            'quantity' => 'required|numeric',
+            'add_ons' => 'array',
+        ], [
+            'product_id.exists' => 'Sản phẩm không tồn tại'
+        ]);
+
+        if ($validate->fails())
+        {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+        $user = Auth::user();
+        try {
+            DB::beginTransaction();
+            
+            $addOns = json_encode($request->add_ons);
+            $product = DB::table('carts')->where('user_id', $user->id)
+                            ->where('product_id', $request->product_id)
+                            ->where('add_ons', $addOns)
+                            ->where('store_id', $request->store_id)
+                            ->update([
+                                'quantity' => $request->quantity
+                            ]);
+
+            DB::commit();
+            return APIResponse::SuccessResponse(null);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function createOrder(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'product_id' => 'required|exists:'.app(Product::class)->getTable().',id',
+            'quantity' => 'required|numeric',
+            'add_ons' => 'array',
+        ], [
+            'product_id.exists' => 'Sản phẩm không tồn tại'
+        ]);
+
+        if ($validate->fails())
+        {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+        $user = Auth::user();
+        try {
+            DB::beginTransaction();
+            
+            $addOns = json_encode($request->add_ons);
+            $product = DB::table('carts')->where('user_id', $user->id)
+                            ->where('product_id', $request->product_id)
+                            ->where('add_ons', $addOns)
+                            ->where('store_id', $request->store_id)
+                            ->update([
+                                'quantity' => $request->quantity
+                            ]);
+
+            DB::commit();
+            return APIResponse::SuccessResponse(null);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
     }
 }

@@ -18,6 +18,7 @@ class Product extends Model implements HasMedia
         'price',
         'category_id',
         'status',
+        'add_ons'
     ];
 
     protected $hidden = [
@@ -49,5 +50,12 @@ class Product extends Model implements HasMedia
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function getAddOnsAttribute($value)
+    {
+        $addon = json_decode($value, true);
+        $addon = AddOn::whereIn('id', $addon)->select('id', 'name', 'price')->get();
+        return $addon;
     }
 }
