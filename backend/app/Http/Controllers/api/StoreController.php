@@ -368,6 +368,27 @@ class StoreController extends Controller
         }
     }
 
+    public function getProductCategory(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $categories = ProductCategory::where('store_id', $request->store_id)
+                ->get();
+
+			return APIResponse::SuccessResponse($categories);
+        } catch(Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
     public function getAddOn(Request $request)
     {
         try{
