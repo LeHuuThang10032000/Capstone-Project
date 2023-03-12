@@ -26,6 +26,7 @@ const DetailCart = (props: Props) => {
   const {clearCart, incrementCartItem, decrementCartItem} = useCartStore();
   const totalPrice = useCartStore(state => state.totalPrice());
 
+  console.log(cartItems);
   return (
     <View style={{backgroundColor: '#ffffff', flex: 1}}>
       <HeaderBack title="Giỏ hàng" TrashIcon={true} onPress={clearCart} />

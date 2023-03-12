@@ -14,9 +14,9 @@ const PaymentDetails = () => {
     useRoute<RouteProp<MainStackParamList, 'PaymentDetails'>>()?.params;
   const navigation = useNavigation<MainStackNavigation>();
   const {name, phone, current_wallet, mess, code, money} = data;
-  console.log(data, '---');
-  console.log('====================================');
   console.log(data);
+  console.log('====================================');
+  console.log(code);
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => {
       navigation.navigate('Home');
