@@ -281,7 +281,7 @@ class UserController extends Controller
             $store = Store::whereNotIn('status', ['pending', 'denied'])
                 ->where('id', $id)
                 ->with('schedules')
-                ->first();
+                ->get();
 
             $productCategories = ProductCategory::where('store_id', $id)
                 ->with(['products' => function($query) {
@@ -290,7 +290,7 @@ class UserController extends Controller
                 ->has('products')
                 ->get();
 
-            $store['categories'] = $productCategories;
+            $store[0]['categories'] = $productCategories;
             
             return ApiResponse::successResponse($store);
         } catch(\Exception $e) {
@@ -302,7 +302,7 @@ class UserController extends Controller
     public function getProductDetail($id): JsonResponse
     {
         try {
-            $product = Product::where('id', $id)->get();
+            $product = Product::where('id', $id)->first();
             
             return ApiResponse::successResponse($product);
         } catch(\Exception $e) {
