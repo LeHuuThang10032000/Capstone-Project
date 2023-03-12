@@ -268,17 +268,6 @@ class StoreController extends Controller
 
             $newAddOns = [];
             foreach($addOns as $key => $value) {
-                if(!$value->id){
-                    $addOnNew = AddOn::create(
-                        [
-                            'name' => $value->name,
-                            'price' => $value->price,
-                            'store_id' => $request->store_id,
-                        ]
-                    );
-                    $value->id =  $addOnNew->id;
-                    array_push($newAddOns, $addOnNew->id);
-                }
                 array_push($newAddOns, $value->id);
             }
 
