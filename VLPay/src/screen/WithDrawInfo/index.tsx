@@ -93,14 +93,21 @@ const WithDrawInfo = (props: any) => {
           setDay(data.created_at);
           // console.log(res.data?.data?.transaction_id);
           // console.log(res.data?.data?.amount);
+          console.log('Successfully!');
+          setVisibleWarning(true);
+          setInterval(() => {
+            setVisibleWarning(false);
+            setInfoWithdraw(true);
+          }, 2000);
         })
-        .catch(err => console.log(err));
-      console.log('Successfully!');
-      setVisibleWarning(true);
-      setInterval(() => {
-        setVisibleWarning(false);
-        setInfoWithdraw(true);
-      }, 2000);
+        .catch(err => {
+          console.log(err);
+          return Toast.show({
+            type: 'error',
+            text1: 'Lỗi giao dịch',
+            text2: 'Số dư ví không đủ.',
+          });
+        });
     } catch (e) {
       console.log('Error is:', e);
       Toast.show({
@@ -150,38 +157,12 @@ const WithDrawInfo = (props: any) => {
             <TText style={{fontSize: 18}}>Ngày giao dịch:</TText>
             <TText style={{fontSize: 18, opacity: 0.31}}>{day}</TText>
           </HStack>
-          <HStack
-            justifyContent={'space-between'}
-            width={'100%'}
-            marginBottom={5}>
-            <View>
-              <TText
-                style={{
-                  fontSize: 18,
-                  borderBottomWidth: 1,
-                  borderBottomColor: 'red',
-                }}>
-                Tải xuống thông tin tại đây
-              </TText>
-            </View>
-            <VStack alignItems={'center'}>
-              <Icons.PDFIcon />
-              <TText>Bấm để tải</TText>
-            </VStack>
-          </HStack>
-
           <View
             style={{
               width: '100%',
               position: 'absolute',
               bottom: 30,
             }}>
-            <TText style={{marginBottom: 20, color: 'red', fontSize: 18}}>
-              <TText style={{fontWeight: '700', fontSize: 18}}>Lưu ý:</TText>{' '}
-              Sau khi tải xuống thông tin bạn cần đem thông tin này đến trung
-              tâm hỗ trợ của VLPay tại trường để được nhân viên hỗ trợ xét duyệt
-              {isWithdraw ? ' rút tiền' : ' nạp tiền'}
-            </TText>
             <TouchableOpacity
               onPress={() => {
                 console.log(123);

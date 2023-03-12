@@ -62,7 +62,7 @@ const DetailStore = ({route}: any) => {
   const {totalItems} = useCartStore();
   const totalPrice = useCartStore(state => state.totalPrice());
 
-  // console.log(store);
+  console.log(store);
 
   const getDetailStore = useCallback(async () => {
     const result = await axiosClient.get(`/store/${id}`);
@@ -80,7 +80,7 @@ const DetailStore = ({route}: any) => {
     <View flex={1}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {store.map(item => (
-          <View key={item.id}>
+          <View key={item.id} paddingBottom={50}>
             <HStack
               style={{zIndex: 2, top: insets.top + 20}}
               paddingX={3}
@@ -156,10 +156,11 @@ const DetailStore = ({route}: any) => {
         <HStack
           zIndex={99}
           position={'absolute'}
+          justifyContent="space-between"
           width={width}
           bottom={0}
           paddingY={3}
-          paddingX={3}
+          paddingX={'2.5'}
           backgroundColor={'#FFFFFF'}>
           <TouchableOpacity onPress={() => navigation.navigate('DetailCart')}>
             <View
@@ -179,10 +180,9 @@ const DetailStore = ({route}: any) => {
               justifyContent="center"
               alignItems={'center'}
               style={{
-                width: 280,
+                width: 250,
                 padding: 19,
                 backgroundColor: '#4285F4',
-                marginHorizontal: 10,
                 borderRadius: 10,
               }}>
               <Text color={'#FFFFFF'} fontWeight="bold" fontSize={16}>

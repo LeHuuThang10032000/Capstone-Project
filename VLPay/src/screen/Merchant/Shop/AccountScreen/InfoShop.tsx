@@ -213,7 +213,7 @@ const InfoShop = (props: Props) => {
         </Pressable>
       </Center>
 
-      <Center
+      {/* <Center
         mt={5}
         mb={3}
         borderRadius={10}
@@ -245,7 +245,7 @@ const InfoShop = (props: Props) => {
             <ExtendIcon />
           </View>
         </Pressable>
-      </Center>
+      </Center> */}
     </View>
   );
 };

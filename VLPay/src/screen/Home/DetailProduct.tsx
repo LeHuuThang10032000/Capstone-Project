@@ -149,10 +149,11 @@ const DetailProduct = ({route, productId}: any) => {
         <HStack
           zIndex={99}
           position={'absolute'}
+          justifyContent="space-between"
           width={width}
           bottom={0}
           paddingY={3}
-          paddingX={3}
+          paddingX={'2.5'}
           backgroundColor={'#FFFFFF'}>
           <TouchableOpacity onPress={() => navigation.navigate('DetailCart')}>
             <View
@@ -172,13 +173,17 @@ const DetailProduct = ({route, productId}: any) => {
               justifyContent="center"
               alignItems={'center'}
               style={{
-                width: 280,
+                width: 250,
                 padding: 19,
                 backgroundColor: '#4285F4',
-                marginHorizontal: 10,
                 borderRadius: 10,
               }}>
-              <Text color={'#FFFFFF'} fontWeight="bold" fontSize={16}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                color={'#FFFFFF'}
+                fontWeight="bold"
+                fontSize={16}>
                 {`Thêm vào giỏ hàng: ${formatCurrency(
                   (handlePrice ?? 0).toString(),
                 )}đ`}
