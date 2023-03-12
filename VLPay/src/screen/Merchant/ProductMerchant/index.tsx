@@ -42,7 +42,6 @@ const ProductMerchant = () => {
   console.log('data', data);
 
   const navigation = useNavigation<MainStackNavigation>();
-  console.log(data);
 
   // const foodCategories = React.useMemo(() => food.category || [], [food.category]);
   // const foodVariations = React.useMemo(() => food?.variations || [], [food?.variations]);
@@ -134,6 +133,16 @@ const ProductMerchant = () => {
     }
     return true;
   };
+
+  useEffect(() => {
+    if (data?.product?.add_ons) {
+      let array = [];
+      data.product.add_ons.forEach(element => {
+        array.push(element.id);
+      });
+      setSelectedOptions(array);
+    }
+  }, []);
 
   return (
     <View style={styles.container} ref={masterViewRef}>
@@ -479,12 +488,13 @@ const ProductMerchant = () => {
                   : data.product.category_id,
               );
               formData.append('store_id', data.store_id);
-              formData.append('add_ons', JSON.stringify(_addOns));
+              if (_addOns) {
+                formData.append('add_ons', JSON.stringify(_addOns));
+              }
               console.log(formData);
+              const url = data?.isUpdated ? 'update' : 'create';
               const result = await axiosClient.post(
-                baseUrl + 'merchant/product/' + data?.isUpdated
-                  ? 'update'
-                  : 'create',
+                baseUrl + 'merchant/product/' + url,
                 formData,
                 {
                   headers: {'content-type': 'multipart/form-data'},

@@ -105,7 +105,10 @@ const MenuScreen = (props: Props) => {
                 <Text>{products_count} món</Text>
               </HStack>
               {_products.map(
-                ({id: productId, name, price, image, category_id}, index) => (
+                (
+                  {id: productId, name, price, image, category_id, add_ons},
+                  index,
+                ) => (
                   <>
                     <View key={productId} style={styles.productContainer}>
                       <HStack flex={1} alignItems={'center'}>
@@ -117,7 +120,9 @@ const MenuScreen = (props: Props) => {
                         />
                         <VStack>
                           <Text style={styles.productName}>{name}</Text>
-                          <Text style={styles.price}>{price}</Text>
+                          <Text style={styles.price}>
+                            {price.toLocaleString()}
+                          </Text>
                         </VStack>
                       </HStack>
                       {selectedProduct === productId && (
@@ -143,6 +148,7 @@ const MenuScreen = (props: Props) => {
                                   price,
                                   image,
                                   category_id,
+                                  add_ons,
                                 },
                                 isUpdated: true,
                               };
