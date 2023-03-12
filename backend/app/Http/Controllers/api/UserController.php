@@ -302,7 +302,7 @@ class UserController extends Controller
     public function getProductDetail($id): JsonResponse
     {
         try {
-            $product = Product::where('id', $id)->first();
+            $product = Product::where('id', $id)->get();
             
             return ApiResponse::successResponse($product);
         } catch(\Exception $e) {
