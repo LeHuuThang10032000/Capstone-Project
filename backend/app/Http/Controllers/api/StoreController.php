@@ -299,29 +299,8 @@ class StoreController extends Controller
             DB::beginTransaction();
 
             $newAddOns = [];
-            try {
-                foreach($addOns as $key => $value) {
-                    if(!$value->id){
-                        $addOnNew = AddOn::create(
-                            [
-                                'name' => $value->name,
-                                'price' => $value->price,
-                                'store_id' => $request->store_id,
-                            ]
-                        );
-                        $value->id =  $addOnNew->id;
-                        array_push($newAddOns, $addOnNew->id);
-                    }
-
-                    if(isset($value->price)){
-                        AddOn::where('id', $value->id)->update([
-                           'price' => $value->price
-                        ]);
-                    }
-                    array_push($newAddOns, $value->id);
-                }
-            } catch(Exception $e) {
-                return ApiResponse::failureResponse($e);
+            foreach($addOns as $key => $value) {
+                array_push($newAddOns, $value->id);
             }
 
             $product = Product::where('id', $request->product_id)->update([
