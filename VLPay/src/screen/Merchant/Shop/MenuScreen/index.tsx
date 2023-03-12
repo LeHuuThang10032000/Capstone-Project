@@ -121,7 +121,7 @@ const MenuScreen = (props: Props) => {
                         <VStack>
                           <Text style={styles.productName}>{name}</Text>
                           <Text style={styles.price}>
-                            {price.toLocaleString()}
+                            {price.toLocaleString()}đ
                           </Text>
                         </VStack>
                       </HStack>

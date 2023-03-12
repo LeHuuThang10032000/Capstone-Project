@@ -39,20 +39,15 @@ const ProductMerchant = () => {
   const scrollViewRef = React.useRef<ScrollView>(null);
   const openGalleryRef = React.useRef<ActionSheetRef>(null);
   const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
-  console.log('data', data);
+  console.log('data', data?.product);
 
   const navigation = useNavigation<MainStackNavigation>();
 
-  // const foodCategories = React.useMemo(() => food.category || [], [food.category]);
-  // const foodVariations = React.useMemo(() => food?.variations || [], [food?.variations]);
   const foodNameRef = React.useRef<TextInput>(null);
-  const foodDescriptionRef = React.useRef<TextInput>(null);
   const foodPriceRef = React.useRef<TextInput>(null);
   const foodCategoryRef = React.useRef<TextInput>(null);
-  const foodAttributeRef = React.useRef<TextInput>(null);
   const masterViewRef = React.useRef<View>(null);
   const [image, setImage] = useState(data?.product ?? {});
-  const [category, setCategory] = useState({});
 
   const [selectedOption, setSelectedOption] = useState({});
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -488,9 +483,11 @@ const ProductMerchant = () => {
                   : data.product.category_id,
               );
               formData.append('store_id', data.store_id);
+              formData.append('product_id', data?.product?.id);
               if (_addOns) {
                 formData.append('add_ons', JSON.stringify(_addOns));
               }
+
               console.log(formData);
               const url = data?.isUpdated ? 'update' : 'create';
               const result = await axiosClient.post(
