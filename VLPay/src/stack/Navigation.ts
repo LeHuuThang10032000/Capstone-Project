@@ -112,6 +112,7 @@ export type MainStackParamList = {
   };
   DetailCart: undefined;
   AddItems: undefined;
+  UpdateItem: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

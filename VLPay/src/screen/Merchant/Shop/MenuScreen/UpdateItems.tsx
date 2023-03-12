@@ -1,6 +1,6 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {Input, VStack, Icon, Text, HStack} from 'native-base';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {View, TouchableOpacity, ScrollView} from 'react-native';
 import {Menu, MenuItem} from 'react-native-material-menu';
 import {axiosClient} from '../../../../components/apis/axiosClient';
@@ -16,156 +16,21 @@ import {
 import Colors from '../../../Transfer/Colors';
 import styles from './styles';
 
-const AddItems = () => {
+const UpdateItem = () => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {data} = useRoute<RouteProp<MainStackParamList, 'AddItems'>>()?.params;
-  const {addons, isAddCategories, products, store_id} = data;
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [visible, setVisible] = useState(false);
-  const [menuPosition, setMenuPosition] = useState(null);
-  const [addItem, setAddItem] = useState('');
-  const [addItemPrice, setAddItemPrice] = useState(0);
+  const {data} =
+    useRoute<RouteProp<MainStackParamList, 'UpdateItem'>>()?.params;
+
+  const {id, isAddCategories, name, store_id, price} = data;
+  const [addItem, setAddItem] = useState(name ?? '');
+  const [addItemPrice, setAddItemPrice] = useState(price ?? 0);
+
   const [isDisabled, setDisabled] = useState(false);
-  const [item, setItem] = useState(isAddCategories ? products : addons);
   const [visibleWarning, setVisibleWarning] = useState(false);
 
   const [url, setUrl] = useState(
     isAddCategories ? 'product-category' : 'add-on',
   );
-
-  const showMenu = (id, e) => {
-    setSelectedProduct(id);
-    setVisible(true);
-    setMenuPosition({x: e.nativeEvent.pageX, y: e.nativeEvent.pageY});
-  };
-
-  const fetchData = async () => {
-    try {
-      const typeItem = isAddCategories ? 'product-category' : 'add-on';
-      const _result = await axiosClient.get(
-        baseUrl + 'merchant/' + typeItem + '?store_id=' + store_id,
-      );
-      setItem(_result.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      fetchData();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
-  const handleUpdatePress = item => {
-    setVisible(false);
-  };
-
-  const DataList = ({data}) => {
-    console.log(data);
-
-    return (
-      <ScrollView style={{height: 400}}>
-        {data.map(item => (
-          <View
-            key={item.id}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <HStack
-              alignItems={'center'}
-              justifyContent={'space-between'}
-              style={{marginTop: 16, marginBottom: 8}}>
-              <Text style={{fontSize: 16}}>
-                {isAddCategories
-                  ? item.category_name
-                    ? item.category_name
-                    : item.name
-                  : item.name}
-              </Text>
-            </HStack>
-            {selectedProduct === item.id && (
-              <Menu
-                visible={visible}
-                onRequestClose={() => setVisible(false)}
-                style={[
-                  styles.menuContainer,
-                  menuPosition && {
-                    top: menuPosition.y,
-                    left: menuPosition.x - 90,
-                  },
-                ]}>
-                <MenuItem
-                  onPress={() => {
-                    const _localItems = {
-                      id: item.id,
-                      price: item.price,
-                      store_id: store_id,
-                      isAddCategories: isAddCategories,
-                      name: isAddCategories
-                        ? item.category_name
-                          ? item.category_name
-                          : item.name
-                        : item.name,
-                    };
-                    navigation.navigate('UpdateItem', {
-                      data: _localItems,
-                    });
-                  }}>
-                  Cập nhập
-                </MenuItem>
-                <MenuItem
-                  onPress={async () => {
-                    try {
-                      await axiosClient.post(
-                        baseUrl + 'merchant/' + url + '/delete',
-                        {
-                          id: item.id,
-                        },
-                      );
-                      const typeItem = isAddCategories
-                        ? 'product-category'
-                        : 'add-on';
-                      const _result = await axiosClient.get(
-                        baseUrl +
-                          'merchant/' +
-                          typeItem +
-                          '?store_id=' +
-                          store_id,
-                      );
-                      setItem(_result.data.data);
-                    } catch (e) {
-                      setVisibleWarning(true);
-                    }
-                  }}>
-                  xoá
-                </MenuItem>
-              </Menu>
-            )}
-            <TouchableOpacity
-              onPress={e => showMenu(item.id, e)}
-              style={{
-                height: 20,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Text style={{fontSize: 20}}>
-                <Icons.ThreeHorizontalDot />
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
-    );
-  };
 
   return (
     <View>
@@ -211,17 +76,17 @@ const AddItems = () => {
           />
           {!isAddCategories && (
             <Input
+              value={addItemPrice.toString()}
               placeholder={'Giá tiền'}
               rightElement={
                 <TouchableOpacity
                   onPress={() => {
-                    setAddItemPrice(0);
+                    setAddItemPrice('0');
                   }}>
                   <Icons.RemoveIcon />
                   <View style={{width: 20}} />
                 </TouchableOpacity>
               }
-              value={addItemPrice}
               onChangeText={text => {
                 setAddItemPrice(parseInt(text));
               }}
@@ -240,10 +105,13 @@ const AddItems = () => {
                 formData.append('name', addItem);
                 if (addItemPrice) {
                   formData.append('price', addItemPrice);
+                  formData.append('id', id);
+                } else {
+                  formData.append('category_id', id);
                 }
                 formData.append('store_id', store_id);
                 await axiosClient.post(
-                  baseUrl + 'merchant/' + url + '/create',
+                  baseUrl + 'merchant/' + url + '/update',
                   formData,
                   {
                     headers: {
@@ -259,8 +127,8 @@ const AddItems = () => {
                 );
                 setAddItem('');
                 setAddItemPrice(0);
-                setItem(result.data.data);
                 setDisabled(false);
+                navigation.goBack();
               } catch (e) {
                 console.log(e);
                 setDisabled(false);
@@ -277,13 +145,9 @@ const AddItems = () => {
               borderRadius: 10,
               marginVertical: 10,
             }}>
-            <UText style={{fontWeight: '700', color: 'white'}}>Thêm</UText>
+            <UText style={{fontWeight: '700', color: 'white'}}>Cập nhập</UText>
           </TouchableOpacity>
         </View>
-        <UText style={{fontWeight: '700', fontSize: 16, marginTop: 20}}>
-          {isAddCategories ? 'Danh sách đã tạo' : 'Món thêm đã tạo'}
-        </UText>
-        {item && <DataList data={item} />}
       </View>
       <YesNoModal
         icon={<Icons.ErrorIcon />}
@@ -312,4 +176,4 @@ const AddItems = () => {
   );
 };
 
-export default AddItems;
+export default UpdateItem;
