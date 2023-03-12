@@ -35,7 +35,9 @@ class User extends Authenticatable implements HasMedia
         'password',
         'remember_token',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'pending_withdraw_request',
+        'pending_credit_request'
     ];
 
     public function stores()
@@ -56,6 +58,16 @@ class User extends Authenticatable implements HasMedia
     public function carts()
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function pending_withdraw_request()
+    {
+        return $this->hasOne(WithdrawRequest::class)->where('status', 'pending');
+    }
+
+    public function pending_credit_request()
+    {
+        return $this->hasOne(CreditRequest::class)->where('status', 'pending');
     }
 
     // /**
