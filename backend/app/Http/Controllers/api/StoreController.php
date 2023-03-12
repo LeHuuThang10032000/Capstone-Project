@@ -422,7 +422,7 @@ class StoreController extends Controller
             }
 
             $addon = AddOn::where('store_id', $request->store_id)->where('name', $request->name)->get();
-            if($addon) {
+            if($addon->count() > 0) {
                 return ApiResponse::failureResponse('Món thêm này đã tồn tại');
             }
 
