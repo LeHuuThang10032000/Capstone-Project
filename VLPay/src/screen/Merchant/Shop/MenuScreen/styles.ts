@@ -7,6 +7,13 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginHorizontal: 30,
   },
+  btnTab: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E4E9F2',
+    padding: 16,
+    marginVertical: 5,
+  },
   buttons: {
     width: '100%',
     height: 50,
@@ -50,6 +57,9 @@ export default StyleSheet.create({
   //   fontWeight: 'bold',
   // },
   container: {
+    padding: 16,
+  },
+  contentContainer: {
     padding: 16,
   },
   category: {

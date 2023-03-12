@@ -6,7 +6,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import HeaderComp from '../../../../components/HeaderComp';
 import styles from './styles';
 import {axiosClient} from '../../../../components/apis/axiosClient';
@@ -17,6 +17,8 @@ import {MainStackNavigation} from '../../../../stack/Navigation';
 import {useNavigation} from '@react-navigation/native';
 import {Menu, MenuItem} from 'react-native-material-menu';
 import Icons from '../../../../components/Icons';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {UText} from '../../../../components/UText';
 
 type Props = {};
 const MenuScreen = (props: Props) => {
@@ -28,6 +30,19 @@ const MenuScreen = (props: Props) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [visible, setVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState(null);
+
+  // ref
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ['10%', '50%'], []);
+
+  // callbacks5
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {}, []);
+
   const fetchData = async () => {
     try {
       const result = await axiosClient.get(baseUrl + 'merchant/store');
@@ -169,33 +184,84 @@ const MenuScreen = (props: Props) => {
 
   return (
     <View style={{flex: 1}}>
-      <HeaderComp title="Quản lý menu" />
-      <Image
-        source={{uri: storeInfo.image}}
-        style={{width: '100%', height: '25%'}}
-        alt={'hell o'}
-        resizeMode={'cover'}
-      />
-      <Text style={styles.titles}>{storeInfo.name}</Text>
-      {products[0] && <DataList data={products} />}
-      <View style={styles.btnWrapper}>
-        <TouchableOpacity
-          style={styles.buttons}
-          onPress={() => {
-            const item = {
-              products: products,
-              addons: addons,
-              store_id: store_di,
-              isUpdated: false,
-            };
-            navigation.navigate('ProductMerchant', {
-              data: item,
-            });
-          }}>
-          <Text style={styles.btnTitle}>Thêm món Mới hoặc danh sách</Text>
-        </TouchableOpacity>
-      </View>
-      <View></View>
+      <BottomSheetModalProvider>
+        <HeaderComp title="Quản lý menu" />
+        <Image
+          source={{uri: storeInfo.image}}
+          style={{width: '100%', height: '25%'}}
+          alt={'hell o'}
+          resizeMode={'cover'}
+        />
+        <Text style={styles.titles}>{storeInfo.name}</Text>
+        {products[0] && <DataList data={products} />}
+        <View style={{height: 50}}></View>
+        <View style={styles.btnWrapper}>
+          <TouchableOpacity
+            style={styles.buttons}
+            onPress={handlePresentModalPress}>
+            <Text style={styles.btnTitle}>Thêm món Mới hoặc danh sách</Text>
+          </TouchableOpacity>
+        </View>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}>
+          <View style={styles.contentContainer}>
+            <Text style={{fontWeight: '700', fontSize: 16, color: 'black'}}>
+              Thêm danh sách / món mới
+            </Text>
+            <TouchableOpacity
+              style={styles.btnTab}
+              onPress={() => {
+                const item = {
+                  products: products,
+                  addons: addons,
+                  store_id: store_di,
+                  isAddCategories: true,
+                };
+                navigation.navigate('AddItems', {
+                  data: item,
+                });
+                bottomSheetModalRef.current?.close();
+              }}>
+              <UText>Thêm danh sách mới</UText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnTab}
+              onPress={() => {
+                const item = {
+                  products: products,
+                  addons: addons,
+                  store_id: store_di,
+                  isUpdated: false,
+                };
+                navigation.navigate('ProductMerchant', {
+                  data: item,
+                });
+                bottomSheetModalRef.current?.close();
+              }}>
+              <UText>Thêm món mới</UText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnTab}
+              onPress={() => {
+                const item = {
+                  products: products,
+                  addons: addons,
+                  store_id: store_di,
+                  isAddCategories: false,
+                };
+                navigation.navigate('AddItems', {
+                  data: item,
+                });
+                bottomSheetModalRef.current?.close();
+              }}>
+              <UText>Món thêm</UText>
+            </TouchableOpacity>
+          </View>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
     </View>
   );
 };

@@ -111,6 +111,7 @@ export type MainStackParamList = {
     id: number;
   };
   DetailCart: undefined;
+  AddItems: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

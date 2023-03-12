@@ -39,6 +39,7 @@ import ListStore from '../screen/Home/ListStore';
 import DetailStore from '../screen/Home/DetailStore';
 import DetailProduct from '../screen/Home/DetailProduct';
 import DetailCart from '../screen/Home/DetailCart';
+import AddItems from '../screen/Merchant/Shop/MenuScreen/AddItems';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -189,4 +190,5 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   },
   {name: 'DetailProduct', component: DetailProduct},
   {name: 'DetailCart', component: DetailCart},
+  {name: 'AddItems', component: AddItems},
 ];
