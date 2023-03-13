@@ -317,11 +317,10 @@ class UserController extends Controller
             $user = Auth::user();
             $carts = $user->carts;
             $result = null;
+            $products = [];
 
             if (count($carts)) {
-                $haveProductUnavailable = false;
-                $products = $carts->map(function ($item, $key) use (&$haveProductUnavailable) {
-                    if (($item->product->status ?? '') != 'ACTIVE') $haveProductUnavailable = true;
+                $products = $carts->map(function ($item, $key) {
                     return [
                         'id' => $item->product_id ?? '',
                         'name' => $item->product->name ?? '',
