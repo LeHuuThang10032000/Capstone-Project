@@ -664,6 +664,15 @@ const CameraIcon = (props: SvgProps): JSX.Element => {
   return <SvgXml xml={xml} {...props} />;
 };
 
+const WarningIcon = (props: SvgProps) => {
+  const xml = `
+  <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M24.333 35.0002H29.6663V40.3335H24.333V35.0002ZM24.333 13.6668H29.6663V29.6668H24.333V13.6668ZM26.973 0.333496C12.253 0.333496 0.333008 12.2802 0.333008 27.0002C0.333008 41.7202 12.253 53.6668 26.973 53.6668C41.7197 53.6668 53.6663 41.7202 53.6663 27.0002C53.6663 12.2802 41.7197 0.333496 26.973 0.333496ZM26.9997 48.3335C15.213 48.3335 5.66634 38.7868 5.66634 27.0002C5.66634 15.2135 15.213 5.66683 26.9997 5.66683C38.7863 5.66683 48.333 15.2135 48.333 27.0002C48.333 38.7868 38.7863 48.3335 26.9997 48.3335Z" fill="#F60202"/>
+</svg>
+  `;
+  return <SvgXml xml={xml} {...props} />;
+};
+
 /**
  * Calendar2Icon
  * @param props SvgProps
@@ -1078,6 +1087,15 @@ const ErrorIcon = (props: SvgProps): JSX.Element => {
   return <SvgXml xml={xml} {...props} />;
 };
 
+const RemoveIcon = (props: SvgProps): JSX.Element => {
+  const xml = `
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="black" fill-opacity="0.87"/>
+  </svg>
+  `;
+  return <SvgXml xml={xml} {...props} />;
+};
+
 /**
  * QuestionIcon
  * @param props SvgProps
@@ -1301,6 +1319,8 @@ const Icons = {
   SuccessIcon,
   SupportIcon,
   NoteIcon,
+  WarningIcon,
+  RemoveIcon,
 };
 
 export default Icons;

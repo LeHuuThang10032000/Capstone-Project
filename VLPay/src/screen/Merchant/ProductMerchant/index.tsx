@@ -141,7 +141,12 @@ const ProductMerchant = () => {
 
   return (
     <View style={styles.container} ref={masterViewRef}>
-      <HeaderComp title="Món ăn" />
+      <HeaderComp
+        title="Món ăn"
+        onPressBack={() => {
+          navigation.goBack();
+        }}
+      />
       <ScrollView
         style={{flex: 1, backgroundColor: 'white'}}
         ref={scrollViewRef}

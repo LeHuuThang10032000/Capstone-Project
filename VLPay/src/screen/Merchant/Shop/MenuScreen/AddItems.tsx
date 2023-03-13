@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {Input, VStack, Icon, Text, HStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {View, TouchableOpacity, ScrollView} from 'react-native';
+import {View, TouchableOpacity, ScrollView, BackHandler} from 'react-native';
 import {Menu, MenuItem} from 'react-native-material-menu';
 import {axiosClient} from '../../../../components/apis/axiosClient';
 import {baseUrl} from '../../../../components/apis/baseUrl';
@@ -24,7 +24,7 @@ const AddItems = () => {
   const [visible, setVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState(null);
   const [addItem, setAddItem] = useState('');
-  const [addItemPrice, setAddItemPrice] = useState(0);
+  const [addItemPrice, setAddItemPrice] = useState('0');
   const [isDisabled, setDisabled] = useState(false);
   const [item, setItem] = useState(isAddCategories ? products : addons);
   const [visibleWarning, setVisibleWarning] = useState(false);
@@ -50,6 +50,20 @@ const AddItems = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -80,10 +94,7 @@ const AddItems = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <HStack
-              alignItems={'center'}
-              justifyContent={'space-between'}
-              style={{marginTop: 16, marginBottom: 8}}>
+            <VStack style={{marginTop: 16, marginBottom: 8}}>
               <Text style={{fontSize: 16}}>
                 {isAddCategories
                   ? item.category_name
@@ -91,7 +102,13 @@ const AddItems = () => {
                     : item.name
                   : item.name}
               </Text>
-            </HStack>
+
+              {item?.price && (
+                <Text style={{fontSize: 16}}>
+                  {item?.price.toLocaleString()}đ
+                </Text>
+              )}
+            </VStack>
             {selectedProduct === item.id && (
               <Menu
                 visible={visible}
@@ -169,7 +186,14 @@ const AddItems = () => {
 
   return (
     <View>
-      <HeaderComp title={isAddCategories ? 'Danh sách mới' : 'Món Thêm'} />
+      <View>
+        <HeaderComp
+          title={isAddCategories ? 'Danh sách mới' : 'Món Thêm'}
+          onPressBack={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
       <View style={{paddingVertical: 16, paddingHorizontal: 16}}>
         <View
           style={{
@@ -239,7 +263,7 @@ const AddItems = () => {
                 const formData = new FormData();
                 formData.append('name', addItem);
                 if (addItemPrice) {
-                  formData.append('price', addItemPrice);
+                  formData.append('price', parseInt(addItemPrice));
                 }
                 formData.append('store_id', store_id);
                 await axiosClient.post(
@@ -258,9 +282,10 @@ const AddItems = () => {
                   baseUrl + 'merchant/' + typeItem + '?store_id=' + store_id,
                 );
                 setAddItem('');
-                setAddItemPrice(0);
+                setAddItemPrice('0');
                 setItem(result.data.data);
                 setDisabled(false);
+                navigation.goBack();
               } catch (e) {
                 console.log(e);
                 setDisabled(false);

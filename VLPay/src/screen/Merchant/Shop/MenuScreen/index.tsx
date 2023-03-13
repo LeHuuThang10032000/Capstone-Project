@@ -5,6 +5,7 @@ import {
   FlatList,
   ScrollView,
   Alert,
+  BackHandler,
 } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import HeaderComp from '../../../../components/HeaderComp';
@@ -70,6 +71,21 @@ const MenuScreen = (props: Props) => {
       data: item,
     });
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      bottomSheetModalRef.current?.close();
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const showMenu = (productId, e) => {
     setSelectedProduct(productId);

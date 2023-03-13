@@ -1,5 +1,6 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {HStack, VStack} from 'native-base';
+import {getRandomString} from 'native-base/lib/typescript/theme/tools';
 import React, {useEffect} from 'react';
 import {BackHandler, ScrollView, View} from 'react-native';
 import HeaderBack from '../../components/HeaderBack';
@@ -14,6 +15,8 @@ const PaymentDetails = () => {
     useRoute<RouteProp<MainStackParamList, 'PaymentDetails'>>()?.params;
   const navigation = useNavigation<MainStackNavigation>();
   const {name, phone, current_wallet, mess, code, money} = data;
+  console.log(data);
+
   console.log(data);
   console.log('====================================');
   console.log(code);
@@ -46,7 +49,10 @@ const PaymentDetails = () => {
               </UText>
               <UText style={{fontSize: 15}}>
                 Mã giao dịch:
-                <UText style={{color: '#0088CC'}}> {code ?? 0}</UText>
+                <UText style={{color: '#0088CC'}}>
+                  {' '}
+                  {code ?? Math.floor(Math.random() * 100000)}
+                </UText>
               </UText>
             </VStack>
             <HStack
