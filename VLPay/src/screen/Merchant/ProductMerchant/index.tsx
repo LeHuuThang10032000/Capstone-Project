@@ -322,25 +322,9 @@ const ProductMerchant = () => {
                       borderColor: '#4285F4',
                     }}>
                     {selectedOption?.id
-                      ? selectedOption.id === option.id && (
-                          <View
-                            style={{
-                              height: '100%',
-                              width: '100%',
-                              borderRadius: 2,
-                              backgroundColor: '#4285F4',
-                            }}
-                          />
-                        )
+                      ? selectedOption.id === option.id && <Icons.StickChoose />
                       : option.id === data?.product?.category_id && (
-                          <View
-                            style={{
-                              height: '100%',
-                              width: '100%',
-                              borderRadius: 2,
-                              backgroundColor: '#4285F4',
-                            }}
-                          />
+                          <Icons.StickChoose />
                         )}
                   </View>
                   <Text style={{color: 'black', fontSize: 16}}>
@@ -385,14 +369,7 @@ const ProductMerchant = () => {
                           borderColor: '#4285F4',
                         }}>
                         {selectedOptions.includes(option.id) && (
-                          <View
-                            style={{
-                              height: '100%',
-                              width: '100%',
-                              borderRadius: 2,
-                              backgroundColor: '#4285F4',
-                            }}
-                          />
+                          <Icons.StickChoose />
                         )}
                       </View>
                       <View
