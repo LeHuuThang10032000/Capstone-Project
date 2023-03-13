@@ -315,8 +315,30 @@ class UserController extends Controller
     {
         try {
             $user = Auth::user();
+            $carts = $user->carts;
+            $result = null;
+
+            if (count($carts)) {
+                $haveProductUnavailable = false;
+                $products = $carts->map(function ($item, $key) use (&$haveProductUnavailable) {
+                    if (($item->product->status ?? '') != 'ACTIVE') $haveProductUnavailable = true;
+                    return [
+                        'id' => $item->product_id ?? '',
+                        'name' => $item->product->name ?? '',
+                        'image' => $item->product->image ?? '',
+                        'price' => $item->product->price ?? 0,
+                        'quantity' => $item->quantity ?? 0,
+                        'add_ons' => $item->add_ons ?? [],
+                    ];
+                });
+            }
+
+            $data = [
+                'products' => $products,
+                'total_quantity' => count($carts)
+            ];
             
-            return ApiResponse::successResponse($user->carts);
+            return ApiResponse::successResponse($data);
         } catch(\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
