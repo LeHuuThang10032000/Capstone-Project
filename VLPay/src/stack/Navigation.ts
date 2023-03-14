@@ -105,14 +105,16 @@ export type MainStackParamList = {
   ProductMerchant: undefined;
   ListStore: undefined;
   DetailStore: {
-    id: number;
+    store_id: number;
   };
   DetailProduct: {
     id: number;
+    store_id: number;
   };
   DetailCart: undefined;
   AddItems: undefined;
   UpdateItem: undefined;
+  DetailOrder: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

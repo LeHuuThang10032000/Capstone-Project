@@ -1,14 +1,37 @@
 import {create} from 'zustand';
+
+export interface AddOns {
+  id: number;
+  name: string;
+  price: number;
+}
 export interface Product {
   id: number;
   name: string;
   price: number;
   image: string;
+  quantity: number;
+  add_ons: AddOns[];
 }
 
 export interface CartItem {
   product: Product;
   quantity: number;
+}
+
+export interface Cart {
+  user_id: number;
+  product_id: number;
+  store_id: number;
+  quantity: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface myCart {
+  products: Product[];
+  total_quantity: number;
+  total_price: string;
 }
 
 interface CartStore {

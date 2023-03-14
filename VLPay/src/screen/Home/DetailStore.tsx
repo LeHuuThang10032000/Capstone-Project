@@ -19,7 +19,7 @@ import Detail from '../../assets/svg/detail.svg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {formatCurrency} from '../../components/helper';
-import useCartStore from '../../store/cart';
+import useCartStore, {myCart} from '../../store/cart';
 
 interface Products {
   id: number;
@@ -50,7 +50,7 @@ const AnimatedImageBackground =
 const DetailStore = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
 
-  const {id} = route.params;
+  const {store_id} = route.params;
   const [store, setStore] = useState<DetailShop[]>([]);
   const isFocused = useIsFocused();
   const insets = useSafeAreaInsets();
@@ -61,23 +61,34 @@ const DetailStore = ({route}: any) => {
 
   const {totalItems} = useCartStore();
   const totalPrice = useCartStore(state => state.totalPrice());
+  const [cart, setCart] = useState<myCart>();
+  const [totalItem, setTotalItem] = useState(0);
 
-  console.log(store);
+  console.log(cart);
+
+  console.log('Store ID:', store_id);
 
   const getDetailStore = useCallback(async () => {
-    const result = await axiosClient.get(`/store/${id}`);
+    const result = await axiosClient.get(`/store/${store_id}`);
     setStore(result.data?.data);
+  }, []);
+
+  const getCart = useCallback(async () => {
+    const result = await axiosClient.get('/cart');
+    setCart(result.data?.data);
+    setTotalItem(result?.data?.data?.total_quantity);
   }, []);
 
   useEffect(() => {
     // Call only when screen open or when back on screen
     if (isFocused) {
       getDetailStore();
+      getCart();
     }
-  }, [getDetailStore, isFocused]);
+  }, [getDetailStore, getCart, isFocused]);
 
   return (
-    <View flex={1}>
+    <View flex={1} backgroundColor="#FFFFFF">
       <ScrollView showsVerticalScrollIndicator={false}>
         {store.map(item => (
           <View key={item.id} paddingBottom={50}>
@@ -124,7 +135,10 @@ const DetailStore = ({route}: any) => {
                     <View my={3} key={item.id}>
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate('DetailProduct', {id: item.id})
+                          navigation.navigate('DetailProduct', {
+                            id: item.id,
+                            store_id: store_id,
+                          })
                         }>
                         <HStack>
                           <Image
@@ -152,7 +166,7 @@ const DetailStore = ({route}: any) => {
           </View>
         ))}
       </ScrollView>
-      {totalItems > 0 ? (
+      {totalItem > 0 ? (
         <HStack
           zIndex={99}
           position={'absolute'}
@@ -167,12 +181,12 @@ const DetailStore = ({route}: any) => {
               borderRadius={10}
               padding={5}
               borderWidth={1}
-              borderColor="#4285F4"
+              borderColor="#B5EAD8"
               justifyContent="center"
               alignItems={'center'}
               flexDirection="row">
               <CartIcon />
-              <Text>{totalItems}</Text>
+              <Text>{totalItem}</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity>
@@ -182,11 +196,13 @@ const DetailStore = ({route}: any) => {
               style={{
                 width: 250,
                 padding: 19,
-                backgroundColor: '#4285F4',
+                backgroundColor: '#B5EAD8',
                 borderRadius: 10,
               }}>
-              <Text color={'#FFFFFF'} fontWeight="bold" fontSize={16}>
-                {`Xem đơn hàng: ${formatCurrency(totalPrice.toString())}đ`}
+              <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+                {`Xem đơn hàng: ${formatCurrency(
+                  (cart?.total_price ?? 0).toString(),
+                )}đ`}
               </Text>
             </View>
           </TouchableOpacity>
