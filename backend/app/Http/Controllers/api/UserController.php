@@ -311,16 +311,20 @@ class UserController extends Controller
         }
     }
 
-    public function getCart(): JsonResponse
+    public function getCart()
     {
         try {
             $user = Auth::user();
             $carts = $user->carts;
-            $result = null;
             $products = [];
+            $totalPrice = 0;
+            $totalQuantity = 0;
 
             if (count($carts)) {
-                $products = $carts->map(function ($item, $key) {
+                $products = $carts->map(function ($item, $key) use (&$totalPrice, &$totalQuantity) {
+                    $totalPrice += $item->total_price;
+                    $totalQuantity += $item->quantity;
+                    
                     return [
                         'id' => $item->product_id ?? '',
                         'name' => $item->product->name ?? '',
@@ -328,13 +332,16 @@ class UserController extends Controller
                         'price' => $item->product->price ?? 0,
                         'quantity' => $item->quantity ?? 0,
                         'add_ons' => $item->add_ons ?? [],
+                        'add_on_price' => $item->add_ons_price,
+                        'total_price' => $item->total_price,
                     ];
                 });
             }
 
             $data = [
                 'products' => $products,
-                'total_quantity' => count($carts)
+                'total_quantity' => $totalQuantity,
+                'total_price' => $totalPrice,
             ];
             
             return ApiResponse::successResponse($data);
@@ -470,14 +477,7 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
             
-            $addOns = json_encode($request->add_ons);
-            $product = DB::table('carts')->where('user_id', $user->id)
-                            ->where('product_id', $request->product_id)
-                            ->where('add_ons', $addOns)
-                            ->where('store_id', $request->store_id)
-                            ->update([
-                                'quantity' => $request->quantity
-                            ]);
+            
 
             DB::commit();
             return APIResponse::SuccessResponse(null);
