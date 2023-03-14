@@ -15,6 +15,8 @@ class Cart extends Model
         'store_id',
     ];
 
+    protected $appends = ['add_ons_price', 'total_price'];
+
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -40,5 +42,21 @@ class Cart extends Model
         $addon = json_decode($value, true);
         $addon = AddOn::whereIn('id', $addon)->select('id', 'name', 'price')->get();
         return $addon;
+    }
+
+    public function getAddOnsPriceAttribute($value)
+    {
+        $addons = $this->add_ons;
+        $totalPrice = 0;
+        foreach($addons as $addon) {
+            $totalPrice += $addon->price;
+        }
+        return $totalPrice;
+    }
+
+    public function getTotalPriceAttribute($value)
+    {
+        $totalPrice = ($this->add_ons_price + $this->product->price) * $this->quantity;
+        return $totalPrice;
     }
 }
