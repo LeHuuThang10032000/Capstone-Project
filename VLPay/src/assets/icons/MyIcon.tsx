@@ -98,7 +98,7 @@ const Account = (props: SvgProps) => {
   return <SvgXml xml={xml} {...props} />;
 };
 
-const Icons = {
+const MyIcon = {
   BackIcon,
   History,
   HomeIcon,
@@ -111,4 +111,4 @@ const Icons = {
   Mail,
   Account,
 };
-export default Icons;
+export default MyIcon;

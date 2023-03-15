@@ -43,6 +43,7 @@ import AddItems from '../screen/Merchant/Shop/MenuScreen/AddItems';
 import UpdateItem from '../screen/Merchant/Shop/MenuScreen/UpdateItems';
 import PromoTypes from '../screen/Merchant/Shop/Promo/PromoTypes';
 import CreatePromo from '../screen/Merchant/Shop/Promo/CreatePromo';
+import DetailOrder from '../screen/DetailOrder';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -197,4 +198,8 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {name: 'UpdateItem', component: UpdateItem},
   {name: 'PromoType', component: PromoTypes},
   {name: 'CreatePromo', component: CreatePromo},
+  {
+    name: 'DetailOrder',
+    component: DetailOrder,
+  },
 ];

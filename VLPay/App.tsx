@@ -12,7 +12,7 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#5660E6',
+    primary: '#4285F4',
     accent: '#B381F8',
     text: '#B381F8',
   },
@@ -26,7 +26,9 @@ const App = () => {
   return (
     <NativeBaseProvider>
       <Provider store={store}>
-        <AppRouter />
+        <PaperProvider>
+          <AppRouter />
+        </PaperProvider>
       </Provider>
       <Toast position="top" bottomOffset={20} />
     </NativeBaseProvider>

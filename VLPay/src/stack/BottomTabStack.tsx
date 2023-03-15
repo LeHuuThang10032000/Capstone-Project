@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/core';
 // import {useTranslation} from 'react-i18next';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {MainStackNavigation} from './Navigation';
-import Icons from '../assets/icons/icons';
+import Icons from '../assets/icons/MyIcon';
 import {ScreenParams, BottomTabScreen} from './type';
 import Home from '../screen/Home';
 import TranSactionHistory from '../screen/TransactionHistory';
