@@ -198,14 +198,16 @@ const InfoShop = (props: Props) => {
               style={styles.imagePromo}
               alt="image-shop"
             />
-            <VStack pl={2}>
-              <Text style={[styles.text, {fontSize: 14}]}>
-                Chương trình quảng cáo
-              </Text>
-              <Text style={[styles.text, {color: '#818181', fontSize: 10}]}>
-                Tạo và theo dõi các chương trình giảm giá của bạn
-              </Text>
-            </VStack>
+            <TouchableOpacity onPress={() => navigation.navigate('PromoType')}>
+              <VStack pl={2}>
+                <Text style={[styles.text, {fontSize: 14}]}>
+                  Chương trình quảng cáo
+                </Text>
+                <Text style={[styles.text, {color: '#818181', fontSize: 10}]}>
+                  Tạo và theo dõi các chương trình giảm giá của bạn
+                </Text>
+              </VStack>
+            </TouchableOpacity>
           </HStack>
           <View>
             <ExtendIcon />
