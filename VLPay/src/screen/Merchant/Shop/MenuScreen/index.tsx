@@ -126,74 +126,41 @@ const MenuScreen = (props: Props) => {
                   index,
                 ) => (
                   <>
-                    <View key={productId} style={styles.productContainer}>
-                      <HStack flex={1} alignItems={'center'}>
-                        <Image
-                          source={{uri: image}}
-                          width={50}
-                          height={50}
-                          style={{marginRight: 10}}
-                        />
-                        <VStack>
-                          <Text style={styles.productName}>{name}</Text>
-                          <Text style={styles.price}>
-                            {price.toLocaleString()}đ
-                          </Text>
-                        </VStack>
-                      </HStack>
-                      {selectedProduct === productId && (
-                        <Menu
-                          visible={visible}
-                          onRequestClose={() => setVisible(false)}
-                          style={[
-                            styles.menuContainer,
-                            menuPosition && {
-                              top: menuPosition.y,
-                              left: menuPosition.x - 90,
-                            },
-                          ]}>
-                          <MenuItem
-                            onPress={() => {
-                              const item = {
-                                products: products,
-                                addons: addons,
-                                store_id: store_di,
-                                product: {
-                                  id: productId,
-                                  name,
-                                  price,
-                                  image,
-                                  category_id,
-                                  add_ons,
-                                },
-                                isUpdated: true,
-                              };
-                              handleUpdatePress(item);
-                            }}>
-                            cập nhập
-                          </MenuItem>
-                        </Menu>
-                      )}
-                      <TouchableOpacity
-                        onPress={e => showMenu(productId, e)}
-                        style={{
-                          height: 20,
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Text style={{fontSize: 20}}>
-                          <Icons.ThreeHorizontalDot />
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View
-                      style={{
-                        width: '100%',
-                        height: 1,
-                        backgroundColor: '#C4C4C4',
-                        opacity: 0.3,
-                      }}
-                    />
+                    <TouchableOpacity
+                      onPress={() => {
+                        const item = {
+                          products: products,
+                          addons: addons,
+                          store_id: store_di,
+                          product: {
+                            id: productId,
+                            name,
+                            price,
+                            image,
+                            category_id,
+                            add_ons,
+                          },
+                          isUpdated: true,
+                        };
+                        handleUpdatePress(item);
+                      }}>
+                      <View key={productId} style={styles.productContainer}>
+                        <HStack flex={1} alignItems={'center'}>
+                          <Image
+                            source={{uri: image}}
+                            width={50}
+                            height={50}
+                            style={{marginRight: 10}}
+                          />
+                          <VStack>
+                            <Text style={styles.productName}>{name}</Text>
+                            <Text style={styles.price}>
+                              {price.toLocaleString()}đ
+                            </Text>
+                          </VStack>
+                        </HStack>
+                      </View>
+                    </TouchableOpacity>
                   </>
                 ),
               )}

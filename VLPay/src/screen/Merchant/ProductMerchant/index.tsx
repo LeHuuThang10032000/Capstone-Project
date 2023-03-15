@@ -454,10 +454,7 @@ const ProductMerchant = () => {
                 formData.append('image', file);
               }
               formData.append('name', name ? name : data.product.name);
-              formData.append(
-                'price',
-                totalPrice ? totalPrice : data.product.price,
-              );
+              formData.append('price', cost ? cost : data.product.price);
               formData.append(
                 'category_id',
                 selectedOption.id
