@@ -44,6 +44,8 @@ import UpdateItem from '../screen/Merchant/Shop/MenuScreen/UpdateItems';
 import PromoTypes from '../screen/Merchant/Shop/Promo/PromoTypes';
 import CreatePromo from '../screen/Merchant/Shop/Promo/CreatePromo';
 import DetailOrder from '../screen/DetailOrder';
+import PaymentOrder from '../screen/PaymentOrder';
+import OrderProcess from '../screen/PaymentOrder/OrderProcess';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -201,5 +203,13 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'DetailOrder',
     component: DetailOrder,
+  },
+  {
+    name: 'PaymentOrder',
+    component: PaymentOrder,
+  },
+  {
+    name: 'OrderProcess',
+    component: OrderProcess,
   },
 ];

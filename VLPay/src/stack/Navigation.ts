@@ -115,6 +115,8 @@ export type MainStackParamList = {
   AddItems: undefined;
   UpdateItem: undefined;
   DetailOrder: undefined;
+  PaymentOrder: undefined;
+  OrderProcess: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
