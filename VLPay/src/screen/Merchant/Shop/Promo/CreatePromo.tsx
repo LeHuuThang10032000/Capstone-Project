@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {HStack, Input, VStack} from 'native-base';
 import React, {useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import HeaderComp from '../../../../components/HeaderComp';
 import StagePromo from '../../../../components/helpers/StagePromo';
 import Icons from '../../../../components/Icons';
@@ -102,103 +102,105 @@ const CreatePromo = () => {
       case PROMOS[1]:
         return (
           <>
-            <VStack alignItems={'center'}>
-              <View style={{marginVertical: 20}}>
-                <StagePromo.StageOne />
-              </View>
-              <View
-                style={{
-                  width: '100%',
-                  backgroundColor: '#F7F9FC',
-                  padding: 16,
-                }}>
-                <UText>Chi tiết giảm giá</UText>
-              </View>
-              <HStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Mã giảm giá</UText>
-                <UText>N372HYU3OP</UText>
-              </HStack>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Nhập giá trị giảm giá trên tổng đơn hàng</UText>
-                <Input value={'0%'} borderRadius={10} />
-              </VStack>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Hoặc chọn giá trị giảm giá </UText>
-                <HStack justifyContent={'space-between'}>
-                  <TouchableOpacity
-                    style={{
-                      borderRadius: 50,
-                      borderWidth: 1,
-                      borderColor: '#E4E9F2',
-                      width: 80,
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <UText>5%</UText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      borderRadius: 50,
-                      borderWidth: 1,
-                      borderColor: '#E4E9F2',
-                      width: 80,
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <UText>5%</UText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      borderRadius: 50,
-                      borderWidth: 1,
-                      borderColor: '#E4E9F2',
-                      width: 80,
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <UText>5%</UText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      borderRadius: 50,
-                      borderWidth: 1,
-                      borderColor: '#E4E9F2',
-                      width: 80,
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <UText>5%</UText>
-                  </TouchableOpacity>
+            <ScrollView style={{height: ' 100%'}}>
+              <VStack alignItems={'center'}>
+                <View style={{marginVertical: 20}}>
+                  <StagePromo.StageOne />
+                </View>
+                <View
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#F7F9FC',
+                    padding: 16,
+                  }}>
+                  <UText>Chi tiết giảm giá</UText>
+                </View>
+                <HStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Mã giảm giá</UText>
+                  <UText>N372HYU3OP</UText>
                 </HStack>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Nhập giá trị giảm giá trên tổng đơn hàng</UText>
+                  <Input value={'0%'} borderRadius={10} />
+                </VStack>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Hoặc chọn giá trị giảm giá </UText>
+                  <HStack justifyContent={'space-between'}>
+                    <TouchableOpacity
+                      style={{
+                        borderRadius: 50,
+                        borderWidth: 1,
+                        borderColor: '#E4E9F2',
+                        width: 80,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <UText>5%</UText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        borderRadius: 50,
+                        borderWidth: 1,
+                        borderColor: '#E4E9F2',
+                        width: 80,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <UText>5%</UText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        borderRadius: 50,
+                        borderWidth: 1,
+                        borderColor: '#E4E9F2',
+                        width: 80,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <UText>5%</UText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        borderRadius: 50,
+                        borderWidth: 1,
+                        borderColor: '#E4E9F2',
+                        width: 80,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <UText>5%</UText>
+                    </TouchableOpacity>
+                  </HStack>
+                </VStack>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Trị giá đơn hàng tối thiểu</UText>
+                  <Input value={'đ'} borderRadius={10} />
+                </VStack>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Nhập giá trị giảm tối đa</UText>
+                  <Input value={'đ'} borderRadius={10} />
+                </VStack>
               </VStack>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Trị giá đơn hàng tối thiểu</UText>
-                <Input value={'đ'} borderRadius={10} />
-              </VStack>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Nhập giá trị giảm tối đa</UText>
-                <Input value={'đ'} borderRadius={10} />
-              </VStack>
-            </VStack>
+            </ScrollView>
             <TouchableOpacity
               style={{
                 backgroundColor: '#B5EAD8',
@@ -208,8 +210,6 @@ const CreatePromo = () => {
                 borderRadius: 10,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                position: 'absolute',
-                bottom: 20,
               }}
               onPress={() => {
                 setPage(PROMOS[2]);
@@ -221,105 +221,107 @@ const CreatePromo = () => {
       case PROMOS[2]:
         return (
           <>
-            <VStack alignItems={'center'}>
-              <View style={{marginVertical: 20}}>
-                <StagePromo.StageTwo />
-              </View>
-              <View
-                style={{
-                  width: '100%',
-                  backgroundColor: '#F7F9FC',
-                  padding: 16,
-                }}>
-                <UText>Thời gian áp dụng</UText>
-              </View>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Bắt đầu</UText>
-                <TouchableOpacity onPress={() => setOpenDateStart(true)}>
-                  <Input
-                    value={
-                      dateStart
-                        ? dateStart.toDateString()
-                        : 'Chọn ngày và thời gian'
-                    }
-                    borderRadius={10}
-                    isReadOnly={true}
-                  />
-                </TouchableOpacity>
-                {/* <DatePicker date={date} onDateChange={setDate} /> */}
-                <DatePicker
-                  modal
-                  open={openDateStart}
-                  date={dateStart}
-                  onConfirm={date => {
-                    setOpenDateStart(false);
-                    setDateStart(date);
-                  }}
-                  onCancel={() => {
-                    setOpenDateStart(false);
-                  }}
-                />
-              </VStack>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Kết thúc</UText>
-                <TouchableOpacity onPress={() => setOpenDateEnd(true)}>
-                  <Input
-                    value={
-                      dateEnd
-                        ? dateEnd.toDateString()
-                        : 'Chọn ngày và thời gian'
-                    }
-                    borderRadius={10}
-                    isReadOnly={true}
-                  />
-                </TouchableOpacity>
-                {/* <DatePicker date={date} onDateChange={setDate} /> */}
-                <DatePicker
-                  modal
-                  open={openDateEnd}
-                  date={dateEnd}
-                  onConfirm={date => {
-                    setOpenDateEnd(false);
-                    setDateEnd(date);
-                  }}
-                  onCancel={() => {
-                    setOpenDateEnd(false);
-                  }}
-                />
-              </VStack>
-              <HStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}
-                borderBottomColor={'#E4E9F2'}
-                borderBottomWidth={1}
-                paddingBottom={2}
-                marginBottom={0}>
-                <VStack>
+            <ScrollView style={{height: '100%', marginBottom: 100}}>
+              <VStack alignItems={'center'}>
+                <View style={{marginVertical: 20}}>
+                  <StagePromo.StageTwo />
+                </View>
+                <View
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#F7F9FC',
+                    padding: 16,
+                  }}>
                   <UText>Thời gian áp dụng</UText>
-                  <UText>Vào khung giờ mở cửa bán</UText>
+                </View>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Bắt đầu</UText>
+                  <TouchableOpacity onPress={() => setOpenDateStart(true)}>
+                    <Input
+                      value={
+                        dateStart
+                          ? dateStart.toDateString()
+                          : 'Chọn ngày và thời gian'
+                      }
+                      borderRadius={10}
+                      isReadOnly={true}
+                    />
+                  </TouchableOpacity>
+                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                  <DatePicker
+                    modal
+                    open={openDateStart}
+                    date={dateStart}
+                    onConfirm={date => {
+                      setOpenDateStart(false);
+                      setDateStart(date);
+                    }}
+                    onCancel={() => {
+                      setOpenDateStart(false);
+                    }}
+                  />
                 </VStack>
-              </HStack>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Kết thúc</UText>
+                  <TouchableOpacity onPress={() => setOpenDateEnd(true)}>
+                    <Input
+                      value={
+                        dateEnd
+                          ? dateEnd.toDateString()
+                          : 'Chọn ngày và thời gian'
+                      }
+                      borderRadius={10}
+                      isReadOnly={true}
+                    />
+                  </TouchableOpacity>
+                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                  <DatePicker
+                    modal
+                    open={openDateEnd}
+                    date={dateEnd}
+                    onConfirm={date => {
+                      setOpenDateEnd(false);
+                      setDateEnd(date);
+                    }}
+                    onCancel={() => {
+                      setOpenDateEnd(false);
+                    }}
+                  />
+                </VStack>
+                <HStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}
+                  borderBottomColor={'#E4E9F2'}
+                  borderBottomWidth={1}
+                  paddingBottom={2}
+                  marginBottom={0}>
+                  <VStack>
+                    <UText>Thời gian áp dụng</UText>
+                    <UText>Vào khung giờ mở cửa bán</UText>
+                  </VStack>
+                </HStack>
 
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Giới hạn mã giảm giá (không bắt buộc)</UText>
-                <SelectList
-                  placeholder="Chọn mã giảm giá"
-                  setSelected={val => setDropdownOptionSelect(val)}
-                  data={dropdownOptions}
-                  save="value"
-                />
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Giới hạn mã giảm giá (không bắt buộc)</UText>
+                  <SelectList
+                    placeholder="Chọn mã giảm giá"
+                    setSelected={val => setDropdownOptionSelect(val)}
+                    data={dropdownOptions}
+                    save="value"
+                  />
+                </VStack>
               </VStack>
-            </VStack>
+            </ScrollView>
             <TouchableOpacity
               style={{
                 backgroundColor: '#B5EAD8',
@@ -342,77 +344,82 @@ const CreatePromo = () => {
       case PROMOS[3]:
         return (
           <>
-            <VStack backgroundColor={'white'} height={'100%'}>
-              <View>
-                <HStack
-                  justifyContent={'space-between'}
-                  backgroundColor={'#F7F9FC'}
-                  style={{padding: 16}}>
-                  <UText>Giá trị của mã giảm giá</UText>
-                  <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
-                </HStack>
-                <HStack justifyContent={'space-between'} style={{padding: 16}}>
-                  <UText>Giá trị của mã giảm giá</UText>
-                </HStack>
-                <HStack
-                  justifyContent={'space-between'}
-                  backgroundColor={'#F7F9FC'}
-                  style={{padding: 16}}>
-                  <UText
-                    style={{
-                      fontSize: 20,
-                      color: '#818181',
-                      fontWeight: 'bold',
-                    }}>
-                    Điều kiện giảm giá
-                  </UText>
-                  <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
-                </HStack>
-                <VStack style={{paddingHorizontal: 16}}>
-                  <VStack style={{paddingVertical: 16}}>
-                    <UText style={{fontSize: 14, color: '#818181'}}>
-                      Ngày và thời gian bắt đầu{' '}
-                    </UText>
-                    <UText>27/11/2022, Th 5 lúc 13:30</UText>
-                    <View
+            <ScrollView style={{height: '100%', marginBottom: 100}}>
+              <VStack backgroundColor={'white'} height={'100%'}>
+                <View>
+                  <HStack
+                    justifyContent={'space-between'}
+                    backgroundColor={'#F7F9FC'}
+                    style={{padding: 16}}>
+                    <UText>Giá trị của mã giảm giá</UText>
+                    <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
+                  </HStack>
+                  <HStack
+                    justifyContent={'space-between'}
+                    style={{padding: 16}}>
+                    <UText>Giá trị của mã giảm giá</UText>
+                  </HStack>
+                  <HStack
+                    justifyContent={'space-between'}
+                    backgroundColor={'#F7F9FC'}
+                    style={{padding: 16}}>
+                    <UText
                       style={{
-                        height: 1,
-                        backgroundColor: '#E4E9F2',
-                        width: '100%',
-                      }}
-                    />
-                  </VStack>
+                        fontSize: 20,
+                        color: '#818181',
+                        fontWeight: 'bold',
+                      }}>
+                      Điều kiện giảm giá
+                    </UText>
+                    <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
+                  </HStack>
+                  <VStack style={{paddingHorizontal: 16}}>
+                    <VStack style={{paddingVertical: 16}}>
+                      <UText style={{fontSize: 14, color: '#818181'}}>
+                        Ngày và thời gian bắt đầu{' '}
+                      </UText>
+                      <UText>27/11/2022, Th 5 lúc 13:30</UText>
+                      <View
+                        style={{
+                          height: 1,
+                          backgroundColor: '#E4E9F2',
+                          width: '100%',
+                        }}
+                      />
+                    </VStack>
 
-                  <VStack style={{paddingVertical: 16}}>
-                    <UText style={{fontSize: 14, color: '#818181'}}>
-                      Ngày và thời gian bắt đầu{' '}
-                    </UText>
-                    <UText>27/11/2022, Th 5 lúc 13:30</UText>
-                    <View
-                      style={{
-                        height: 1,
-                        backgroundColor: '#E4E9F2',
-                        width: '100%',
-                      }}
-                    />
-                  </VStack>
+                    <VStack style={{paddingVertical: 16}}>
+                      <UText style={{fontSize: 14, color: '#818181'}}>
+                        Ngày và thời gian bắt đầu{' '}
+                      </UText>
+                      <UText>27/11/2022, Th 5 lúc 13:30</UText>
+                      <View
+                        style={{
+                          height: 1,
+                          backgroundColor: '#E4E9F2',
+                          width: '100%',
+                        }}
+                      />
+                    </VStack>
 
-                  <VStack style={{paddingVertical: 16}}>
-                    <UText style={{fontSize: 14, color: '#818181'}}>
-                      Ngày và thời gian bắt đầu{' '}
-                    </UText>
-                    <UText>27/11/2022, Th 5 lúc 13:30</UText>
-                    <View
-                      style={{
-                        height: 1,
-                        backgroundColor: '#E4E9F2',
-                        width: '100%',
-                      }}
-                    />
+                    <VStack style={{paddingVertical: 16}}>
+                      <UText style={{fontSize: 14, color: '#818181'}}>
+                        Ngày và thời gian bắt đầu{' '}
+                      </UText>
+                      <UText>27/11/2022, Th 5 lúc 13:30</UText>
+                      <View
+                        style={{
+                          height: 1,
+                          backgroundColor: '#E4E9F2',
+                          width: '100%',
+                        }}
+                      />
+                    </VStack>
                   </VStack>
-                </VStack>
-              </View>
-            </VStack>
+                </View>
+              </VStack>
+            </ScrollView>
+
             <TouchableOpacity
               style={{
                 backgroundColor: '#B5EAD8',
@@ -484,105 +491,107 @@ const CreatePromo = () => {
       case PROMOS[5]:
         return (
           <>
-            <VStack alignItems={'center'}>
-              <View style={{marginVertical: 20}}>
-                <StagePromo.StageTwo />
-              </View>
-              <View
-                style={{
-                  width: '100%',
-                  backgroundColor: '#F7F9FC',
-                  padding: 16,
-                }}>
-                <UText>Thời gian áp dụng</UText>
-              </View>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Bắt đầu</UText>
-                <TouchableOpacity onPress={() => setOpenDateStart(true)}>
-                  <Input
-                    value={
-                      dateStart
-                        ? dateStart.toDateString()
-                        : 'Chọn ngày và thời gian'
-                    }
-                    borderRadius={10}
-                    isReadOnly={true}
-                  />
-                </TouchableOpacity>
-                {/* <DatePicker date={date} onDateChange={setDate} /> */}
-                <DatePicker
-                  modal
-                  open={openDateStart}
-                  date={dateStart}
-                  onConfirm={date => {
-                    setOpenDateStart(false);
-                    setDateStart(date);
-                  }}
-                  onCancel={() => {
-                    setOpenDateStart(false);
-                  }}
-                />
-              </VStack>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Kết thúc</UText>
-                <TouchableOpacity onPress={() => setOpenDateEnd(true)}>
-                  <Input
-                    value={
-                      dateEnd
-                        ? dateEnd.toDateString()
-                        : 'Chọn ngày và thời gian'
-                    }
-                    borderRadius={10}
-                    isReadOnly={true}
-                  />
-                </TouchableOpacity>
-                {/* <DatePicker date={date} onDateChange={setDate} /> */}
-                <DatePicker
-                  modal
-                  open={openDateEnd}
-                  date={dateEnd}
-                  onConfirm={date => {
-                    setOpenDateEnd(false);
-                    setDateEnd(date);
-                  }}
-                  onCancel={() => {
-                    setOpenDateEnd(false);
-                  }}
-                />
-              </VStack>
-              <HStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}
-                borderBottomColor={'#E4E9F2'}
-                borderBottomWidth={1}
-                paddingBottom={2}
-                marginBottom={0}>
-                <VStack>
+            <ScrollView style={{height: '100%', marginBottom: 100}}>
+              <VStack alignItems={'center'}>
+                <View style={{marginVertical: 20}}>
+                  <StagePromo.StageTwo />
+                </View>
+                <View
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#F7F9FC',
+                    padding: 16,
+                  }}>
                   <UText>Thời gian áp dụng</UText>
-                  <UText>Vào khung giờ mở cửa bán</UText>
+                </View>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Bắt đầu</UText>
+                  <TouchableOpacity onPress={() => setOpenDateStart(true)}>
+                    <Input
+                      value={
+                        dateStart
+                          ? dateStart.toDateString()
+                          : 'Chọn ngày và thời gian'
+                      }
+                      borderRadius={10}
+                      isReadOnly={true}
+                    />
+                  </TouchableOpacity>
+                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                  <DatePicker
+                    modal
+                    open={openDateStart}
+                    date={dateStart}
+                    onConfirm={date => {
+                      setOpenDateStart(false);
+                      setDateStart(date);
+                    }}
+                    onCancel={() => {
+                      setOpenDateStart(false);
+                    }}
+                  />
                 </VStack>
-              </HStack>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Kết thúc</UText>
+                  <TouchableOpacity onPress={() => setOpenDateEnd(true)}>
+                    <Input
+                      value={
+                        dateEnd
+                          ? dateEnd.toDateString()
+                          : 'Chọn ngày và thời gian'
+                      }
+                      borderRadius={10}
+                      isReadOnly={true}
+                    />
+                  </TouchableOpacity>
+                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                  <DatePicker
+                    modal
+                    open={openDateEnd}
+                    date={dateEnd}
+                    onConfirm={date => {
+                      setOpenDateEnd(false);
+                      setDateEnd(date);
+                    }}
+                    onCancel={() => {
+                      setOpenDateEnd(false);
+                    }}
+                  />
+                </VStack>
+                <HStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}
+                  borderBottomColor={'#E4E9F2'}
+                  borderBottomWidth={1}
+                  paddingBottom={2}
+                  marginBottom={0}>
+                  <VStack>
+                    <UText>Thời gian áp dụng</UText>
+                    <UText>Vào khung giờ mở cửa bán</UText>
+                  </VStack>
+                </HStack>
 
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Giới hạn mã giảm giá (không bắt buộc)</UText>
-                <SelectList
-                  placeholder="Chọn mã giảm giá"
-                  setSelected={val => setDropdownOptionSelect(val)}
-                  data={dropdownOptions}
-                  save="value"
-                />
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Giới hạn mã giảm giá (không bắt buộc)</UText>
+                  <SelectList
+                    placeholder="Chọn mã giảm giá"
+                    setSelected={val => setDropdownOptionSelect(val)}
+                    data={dropdownOptions}
+                    save="value"
+                  />
+                </VStack>
               </VStack>
-            </VStack>
+            </ScrollView>
             <TouchableOpacity
               style={{
                 backgroundColor: '#B5EAD8',
@@ -890,7 +899,6 @@ const CreatePromo = () => {
                     isReadOnly={true}
                   />
                 </TouchableOpacity>
-                {/* <DatePicker date={date} onDateChange={setDate} /> */}
                 <DatePicker
                   modal
                   open={openDateEnd}
