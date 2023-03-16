@@ -18,10 +18,11 @@ import HeaderBack from '../../components/HeaderBack';
 import {Controller, useForm} from 'react-hook-form';
 import {myCart} from '../../store/cart';
 import {axiosClient} from '../../components/apis/axiosClient';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {formatCurrency} from '../../components/helper';
 import PromoOder from '../../assets/svg/promo_order.svg';
 import ContactIcon from '../../assets/svg/contact.svg';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 interface DetailOrder {
   phone: string;
@@ -40,6 +41,7 @@ const DetailOrder = () => {
     },
   });
 
+  const navigation = useNavigation<MainStackNavigation>();
   const [cart, setCart] = useState<myCart>();
   const [totalItem, setTotalItem] = useState(0);
   const [isLoading, setLoading] = useState(false);
@@ -67,91 +69,6 @@ const DetailOrder = () => {
   return (
     <View flex={1} backgroundColor="#FFFFFF">
       <HeaderBack title="Chi tiết đơn hàng" />
-      {/* <ScrollView paddingTop={5}>
-        <Text>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias
-          illo cupiditate sequi distinctio id. Provident, ad delectus
-          voluptatibus quod nam facilis harum unde excepturi exercitationem
-          error consequatur perferendis, accusantium eaque? Lorem ipsum, dolor
-          sit amet consectetur adipisicing elit. Molestias illo cupiditate sequi
-          distinctio id. Provident, ad delectus voluptatibus quod nam facilis
-          harum unde excepturi exercitationem error consequatur perferendis,
-          accusantium eaque? Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Molestias illo cupiditate sequi distinctio id. Provident, ad
-          delectus voluptatibus quod nam facilis harum unde excepturi
-          exercitationem error consequatur perferendis, accusantium eaque? Lorem
-          ipsum, dolor sit amet consectetur adipisicing elit. Molestias illo
-          cupiditate sequi distinctio id. Provident, ad delectus voluptatibus
-          quod nam facilis harum unde excepturi exercitationem error consequatur
-          perferendis, accusantium eaque? Lorem ipsum, dolor sit amet
-          consectetur adipisicing elit. Molestias illo cupiditate sequi
-          distinctio id. Provident, ad delectus voluptatibus quod nam facilis
-          harum unde excepturi exercitationem error consequatur perferendis,
-          accusantium eaque? Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Molestias illo cupiditate sequi distinctio id. Provident, ad
-          delectus voluptatibus quod nam facilis harum unde excepturi
-          exercitationem error consequatur perferendis, accusantium eaque? Lorem
-          ipsum, dolor sit amet consectetur adipisicing elit. Molestias illo
-          cupiditate sequi distinctio id. Provident, ad delectus voluptatibus
-          quod nam facilis harum unde excepturi exercitationem error consequatur
-          perferendis, accusantium eaque? Lorem ipsum, dolor sit amet
-          consectetur adipisicing elit. Molestias illo cupiditate sequi
-          distinctio id. Provident, ad delectus voluptatibus quod nam facilis
-          harum unde excepturi exercitationem error consequatur perferendis,
-          accusantium eaque? Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Molestias illo cupiditate sequi distinctio id. Provident, ad
-          delectus voluptatibus quod nam facilis harum unde excepturi
-          exercitationem error consequatur perferendis, accusantium eaque? Lorem
-          ipsum, dolor sit amet consectetur adipisicing elit. Molestias illo
-          cupiditate sequi distinctio id. Provident, ad delectus voluptatibus
-          quod nam facilis harum unde excepturi exercitationem error consequatur
-          perferendis, accusantium eaque? Lorem ipsum, dolor sit amet
-          consectetur adipisicing elit. Molestias illo cupiditate sequi
-          distinctio id. Provident, ad delectus voluptatibus quod nam facilis
-          harum unde excepturi exercitationem error consequatur perferendis,
-          accusantium eaque? Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Molestias illo cupiditate sequi distinctio id. Provident, ad
-          delectus voluptatibus quod nam facilis harum unde excepturi
-          exercitationem error consequatur perferendis, accusantium eaque? Lorem
-          ipsum, dolor sit amet consectetur adipisicing elit. Molestias illo
-          cupiditate sequi distinctio id. Provident, ad delectus voluptatibus
-          quod nam facilis harum unde excepturi exercitationem error consequatur
-          perferendis, accusantium eaque? Lorem ipsum, dolor sit amet
-          consectetur adipisicing elit. Molestias illo cupiditate sequi
-          distinctio id. Provident, ad delectus voluptatibus quod nam facilis
-          harum unde excepturi exercitationem error consequatur perferendis,
-          accusantium eaque? Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Molestias illo cupiditate sequi distinctio id. Provident, ad
-          delectus voluptatibus quod nam facilis harum unde excepturi
-          exercitationem error consequatur perferendis, accusantium eaque? Lorem
-          ipsum, dolor sit amet consectetur adipisicing elit. Molestias illo
-          cupiditate sequi distinctio id. Provident, ad delectus voluptatibus
-          quod nam facilis harum unde excepturi exercitationem error consequatur
-          perferendis, accusantium eaque? Lorem ipsum, dolor sit amet
-          consectetur adipisicing elit. Molestias illo cupiditate sequi
-          distinctio id. Provident, ad delectus voluptatibus quod nam facilis
-          harum unde excepturi exercitationem error consequatur perferendis,
-          accusantium eaque? Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Molestias illo cupiditate sequi distinctio id. Provident, ad
-          delectus voluptatibus quod nam facilis harum unde excepturi
-          exercitationem error consequatur perferendis, accusantium eaque? Lorem
-          ipsum, dolor sit amet consectetur adipisicing elit. Molestias illo
-          cupiditate sequi distinctio id. Provident, ad delectus voluptatibus
-          quod nam facilis harum unde excepturi exercitationem error consequatur
-          perferendis, accusantium eaque? Lorem ipsum, dolor sit amet
-          consectetur adipisicing elit. Molestias illo cupiditate sequi
-          distinctio id. Provident, ad delectus voluptatibus quod nam facilis
-          harum unde excepturi exercitationem error consequatur perferendis,
-          accusantium eaque? Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Molestias illo cupiditate sequi distinctio id. Provident, ad
-          delectus voluptatibus quod nam facilis harum unde excepturi
-          exercitationem error consequatur perferendis, accusantium eaque? Lorem
-          ipsum, dolor sit amet consectetur adipisicing elit. Molestias illo
-          cupiditate sequi distinctio id. Provident, ad delectus voluptatibus
-          quod nam facilis harum unde excepturi exercitationem error consequatur
-          perferendis, accusantium eaque?
-        </Text>
-      </ScrollView> */}
       <ScrollView showsVerticalScrollIndicator={false}>
         <View flex={1} paddingTop={10} paddingBottom={'5'}>
           <Center paddingBottom={3}>
@@ -314,7 +231,8 @@ const DetailOrder = () => {
             </Text>
           </HStack>
           <View paddingY={5} paddingX={5}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('PaymentOrder')}>
               <View
                 justifyContent="center"
                 alignItems={'center'}

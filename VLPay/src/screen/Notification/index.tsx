@@ -44,7 +44,7 @@ const Index = (props: Props) => {
             // console.log(item);
 
             return (
-              <View marginX={3}>
+              <View marginX={3} marginBottom={3}>
                 <View
                   p={3}
                   w={'100%'}
