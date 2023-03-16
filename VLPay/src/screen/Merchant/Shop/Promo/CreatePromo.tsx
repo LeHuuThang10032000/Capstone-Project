@@ -8,6 +8,7 @@ import Icons from '../../../../components/Icons';
 import {UText} from '../../../../components/UText';
 import {MainStackNavigation} from '../../../../stack/Navigation';
 import {SelectList} from 'react-native-dropdown-select-list';
+import DatePicker from 'react-native-date-picker';
 
 const CreatePromo = () => {
   const PROMOS = [
@@ -26,6 +27,10 @@ const CreatePromo = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const [page, setPage] = useState(PROMOS[0]);
   const [dropdownOptionSelect, setDropdownOptionSelect] = useState('');
+  const [dateStart, setDateStart] = useState(new Date());
+  const [dateEnd, setDateEnd] = useState(new Date());
+  const [openDateStart, setOpenDateStart] = useState(false);
+  const [openDateEnd, setOpenDateEnd] = useState(false);
   const dropdownOptions = [
     {key: '1', value: 'Không giới hạn (mặc định)'},
     {key: '2', value: 'Không giới hạn'},
@@ -233,14 +238,60 @@ const CreatePromo = () => {
                 justifyContent={'space-between'}
                 style={{padding: 16}}>
                 <UText>Bắt đầu</UText>
-                <Input value={'Chọn ngày và thời gian'} borderRadius={10} />
+                <TouchableOpacity onPress={() => setOpenDateStart(true)}>
+                  <Input
+                    value={
+                      dateStart
+                        ? dateStart.toDateString()
+                        : 'Chọn ngày và thời gian'
+                    }
+                    borderRadius={10}
+                    isReadOnly={true}
+                  />
+                </TouchableOpacity>
+                {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                <DatePicker
+                  modal
+                  open={openDateStart}
+                  date={dateStart}
+                  onConfirm={date => {
+                    setOpenDateStart(false);
+                    setDateStart(date);
+                  }}
+                  onCancel={() => {
+                    setOpenDateStart(false);
+                  }}
+                />
               </VStack>
               <VStack
                 width={'100%'}
                 justifyContent={'space-between'}
                 style={{padding: 16}}>
                 <UText>Kết thúc</UText>
-                <Input value={'Chọn ngày và thời gian'} borderRadius={10} />
+                <TouchableOpacity onPress={() => setOpenDateEnd(true)}>
+                  <Input
+                    value={
+                      dateEnd
+                        ? dateEnd.toDateString()
+                        : 'Chọn ngày và thời gian'
+                    }
+                    borderRadius={10}
+                    isReadOnly={true}
+                  />
+                </TouchableOpacity>
+                {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                <DatePicker
+                  modal
+                  open={openDateEnd}
+                  date={dateEnd}
+                  onConfirm={date => {
+                    setOpenDateEnd(false);
+                    setDateEnd(date);
+                  }}
+                  onCancel={() => {
+                    setOpenDateEnd(false);
+                  }}
+                />
               </VStack>
               <HStack
                 width={'100%'}
@@ -450,14 +501,60 @@ const CreatePromo = () => {
                 justifyContent={'space-between'}
                 style={{padding: 16}}>
                 <UText>Bắt đầu</UText>
-                <Input value={'Chọn ngày và thời gian'} borderRadius={10} />
+                <TouchableOpacity onPress={() => setOpenDateStart(true)}>
+                  <Input
+                    value={
+                      dateStart
+                        ? dateStart.toDateString()
+                        : 'Chọn ngày và thời gian'
+                    }
+                    borderRadius={10}
+                    isReadOnly={true}
+                  />
+                </TouchableOpacity>
+                {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                <DatePicker
+                  modal
+                  open={openDateStart}
+                  date={dateStart}
+                  onConfirm={date => {
+                    setOpenDateStart(false);
+                    setDateStart(date);
+                  }}
+                  onCancel={() => {
+                    setOpenDateStart(false);
+                  }}
+                />
               </VStack>
               <VStack
                 width={'100%'}
                 justifyContent={'space-between'}
                 style={{padding: 16}}>
                 <UText>Kết thúc</UText>
-                <Input value={'Chọn ngày và thời gian'} borderRadius={10} />
+                <TouchableOpacity onPress={() => setOpenDateEnd(true)}>
+                  <Input
+                    value={
+                      dateEnd
+                        ? dateEnd.toDateString()
+                        : 'Chọn ngày và thời gian'
+                    }
+                    borderRadius={10}
+                    isReadOnly={true}
+                  />
+                </TouchableOpacity>
+                {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                <DatePicker
+                  modal
+                  open={openDateEnd}
+                  date={dateEnd}
+                  onConfirm={date => {
+                    setOpenDateEnd(false);
+                    setDateEnd(date);
+                  }}
+                  onCancel={() => {
+                    setOpenDateEnd(false);
+                  }}
+                />
               </VStack>
               <HStack
                 width={'100%'}
@@ -752,14 +849,60 @@ const CreatePromo = () => {
                 justifyContent={'space-between'}
                 style={{padding: 16}}>
                 <UText>Bắt đầu</UText>
-                <Input value={'Chọn ngày và thời gian'} borderRadius={10} />
+                <TouchableOpacity onPress={() => setOpenDateStart(true)}>
+                  <Input
+                    value={
+                      dateStart
+                        ? dateStart.toDateString()
+                        : 'Chọn ngày và thời gian'
+                    }
+                    borderRadius={10}
+                    isReadOnly={true}
+                  />
+                </TouchableOpacity>
+                {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                <DatePicker
+                  modal
+                  open={openDateStart}
+                  date={dateStart}
+                  onConfirm={date => {
+                    setOpenDateStart(false);
+                    setDateStart(date);
+                  }}
+                  onCancel={() => {
+                    setOpenDateStart(false);
+                  }}
+                />
               </VStack>
               <VStack
                 width={'100%'}
                 justifyContent={'space-between'}
                 style={{padding: 16}}>
                 <UText>Kết thúc</UText>
-                <Input value={'Chọn ngày và thời gian'} borderRadius={10} />
+                <TouchableOpacity onPress={() => setOpenDateEnd(true)}>
+                  <Input
+                    value={
+                      dateEnd
+                        ? dateEnd.toDateString()
+                        : 'Chọn ngày và thời gian'
+                    }
+                    borderRadius={10}
+                    isReadOnly={true}
+                  />
+                </TouchableOpacity>
+                {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                <DatePicker
+                  modal
+                  open={openDateEnd}
+                  date={dateEnd}
+                  onConfirm={date => {
+                    setOpenDateEnd(false);
+                    setDateEnd(date);
+                  }}
+                  onCancel={() => {
+                    setOpenDateEnd(false);
+                  }}
+                />
               </VStack>
               <HStack
                 width={'100%'}

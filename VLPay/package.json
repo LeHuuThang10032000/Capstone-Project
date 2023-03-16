@@ -43,6 +43,7 @@
     "react-native-compressor": "^1.6.1",
     "react-native-contacts": "^7.0.5",
     "react-native-currency-input": "^1.1.0",
+    "react-native-date-picker": "^4.2.9",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-elements": "^3.4.3",
     "react-native-fast-image": "^8.6.3",
