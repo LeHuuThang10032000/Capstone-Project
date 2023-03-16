@@ -60,6 +60,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Cart::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function pending_withdraw_request()
     {
         return $this->hasOne(WithdrawRequest::class)->where('status', 'pending');

@@ -9,10 +9,15 @@ use App\Models\Cart;
 use App\Models\CreditRequest;
 use App\Models\Friends;
 use App\Models\Notification;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Promocode;
 use App\Models\Store;
+use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use App\Models\User;
+use Helper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -311,7 +316,7 @@ class UserController extends Controller
         }
     }
 
-    public function getCart()
+    public function getCart(): JsonResponse
     {
         try {
             $user = Auth::user();
@@ -378,7 +383,7 @@ class UserController extends Controller
         ], [
             'product_id.exists' => 'Sản phẩm không tồn tại'
         ]);
-
+        
         if ($validate->fails())
         {
             return APIResponse::FailureResponse($validate->messages()->first());
@@ -452,32 +457,207 @@ class UserController extends Controller
                             ]);
 
             DB::commit();
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::SuccessResponse($user->carts);
         } catch(\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
 
-    public function createOrder(Request $request): JsonResponse
+    public function getStorePromocode(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'product_id' => 'required|exists:'.app(Product::class)->getTable().',id',
-            'quantity' => 'required|numeric',
-            'add_ons' => 'array',
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
         ], [
-            'product_id.exists' => 'Sản phẩm không tồn tại'
+            'store_id.exists' => 'Sản phẩm không tồn tại'
         ]);
 
         if ($validate->fails())
         {
             return APIResponse::FailureResponse($validate->messages()->first());
         }
+
+        try {
+            $promocodes = Promocode::where('store_id', $request->store_id)
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->whereTime('start_time', '<=', now())
+                ->whereTime('end_time', '>=', now())
+                ->whereColumn('limit', '>=', 'total_used')
+                ->get();
+
+            return APIResponse::SuccessResponse($promocodes);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function createOrder(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+            'note' => 'nullable',
+            'promocode_id' => 'nullable|integer|exists:'.app(Promocode::class)->getTable().',id',
+            'message' => 'nullable'
+        ], [
+            'store_id.exists' => 'Cửa hàng không tồn tại',
+            'promocode_id.exists' => 'Mã giảm giá không tồn tại'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
         $user = Auth::user();
+        $store = Store::select('id', 'user_id')->where('id', $request->store_id)->first();
+
+        if($store->user_id == $user->id) {
+            return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
+        }
+
+        $carts = $user->carts;
+        $cartPrice = 0;
+        foreach($carts as $item) {
+            if($item->store_id != $request->store_id) {
+                return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
+            }
+            $cartPrice += $item->total_price;
+        }
+
+        if(!isset($carts)) {
+            return APIResponse::FailureResponse('Giỏ hàng của bạn đang rỗng');
+        }
+
+        if(($user->wallet->balance + $user->wallet->credit_limit) < $cartPrice) {
+            return APIResponse::FailureResponse('Số dư trong ví không đủ');
+        }
+
+        $promocode = null;
+        if($request->promocode_id != null || $request->promocode_id != '') {
+            $promocode = Promocode::where('id', $request->promocode_id)->first();
+            if($promocode->limit > 0) {
+                if($promocode->limit = $promocode->total_used) {
+                    return APIResponse::FailureResponse('Mã giảm giá đã hết lượt sử dụng');
+                } 
+            }
+            if($promocode->end_date < now() || $promocode->end_time < now()) {
+                return APIResponse::FailureResponse('Mã giảm giá đã hết hạn sử dụng');
+            }
+            if($promocode->min_purchase > $cartPrice) {
+                return APIResponse::FailureResponse('Yêu cầu giá trị đơn hàng của bạn tối thiểu phải là ' . number_format($promocode->min_purchase) . 'đ để có thể áp dụng mã giảm giá này');
+            }
+            if(DB::table('promocode_used')->where('user_id', $user->id)->where('promocode_id', $request->promocode_id)->count() > 0) {
+                return APIResponse::FailureResponse('Bạn đã sử dụng mã giảm giá này rồi');
+            }
+        }
+
         try {
             DB::beginTransaction();
             
+            $orderDetails = [];
+            $order = new Order;
+            $order->order_code = Helper::generateOrderCode();
+            $order->user_id = $user->id;
+            $order->store_id = $request->store_id;
+            $order->promocode_id = $request->promocode_id ?? null;
+            $order->order_total = $cartPrice;
+            $order->discount_amount = 0;
+            if($request->promocode_id) {
+                if($promocode->discount_type == 'percentage') {
+                    $discount = round(($cartPrice * $promocode->discount) / 100);
+                    $order->discount_amount = ($discount > $promocode->max_discount) ? $promocode->max_discount : $discount;
+                } else {
+                    $order->discount_amount = $promocode->discount;
+                }
+            }
+            $order->status = 'pending';
+            $order->note = $request->note ?? null;
+
+            foreach($carts as $cart) {
+                $orderDetails[] = [
+                    'product_id' => $cart->product_id,
+                    'name' => $cart->product->name,
+                    'price' => $cart->product->price,
+                    'add_ons' => $cart->add_ons,
+                    'quantity' => $cart->quantity,
+                    'add_ons_price' => $cart->add_ons_price,
+                    'total_price' => $cart->total_price
+                ];
+            }
+
+            $order->product_detail = json_encode($orderDetails);
+            $order->created_at = now();
+            $order->updated_at = now();
+            $order->save();
             
+            $user->carts()->delete();
+            
+            if(isset($promocode)) {
+                DB::table('promocode_used')->insert([
+                    'user_id' => $user->id,
+                    'order_id' => $order->id,
+                    'promocode_id' => $promocode->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                $promocode->total_used += 1;
+                $promocode->save();
+            }
+
+            $total = $order->order_total - $order->discount_amount;
+            
+            $merchant = $store->user;
+            $transaction = Transaction::create([
+                'code' => Helper::generateNumber(),
+                'amount' => $total,
+                'from_id' => $user->id,
+                'to_id' => $merchant->id,
+                'order_id' => $order->id,
+                'type' => 'T'
+            ]);
+
+            $userWallet = $user->wallet;
+            $merchantWallet = $merchant->wallet;
+            if($userWallet->balance < $total) {
+                // trừ tiền vào ví tín dụng của user
+                $userOpenBalance = $userWallet->credit_limit;
+                $userWallet->credit_limit = $userWallet->credit_limit - $total;
+                $userCloseBalance = $userWallet->credit_limit;
+
+                TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'user_id' => $user->id,
+                    'open_balance' => $userOpenBalance,
+                    'close_balance' => $userCloseBalance,
+                ]);
+            } else {
+                // trừ tiền vào ví của user
+                $userOpenBalance = $userWallet->balance;
+                $userWallet->balance = $userWallet->balance - $total;
+                $userCloseBalance = $userWallet->balance;
+
+                TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'user_id' => $user->id,
+                    'open_balance' => $userOpenBalance,
+                    'close_balance' => $userCloseBalance,
+                ]);
+            }
+            $merchantOpenBalance = $merchantWallet->balance;
+            $merchantWallet->balance = $merchantWallet->balance + $total;
+            $merchantCloseBalance = $merchantWallet->balance;
+
+            TransactionDetail::create([
+                'transaction_id' => $transaction->id,
+                'user_id' => $merchant->id,
+                'open_balance' => $merchantOpenBalance,
+                'close_balance' => $merchantCloseBalance,
+            ]);
+            
+            $merchantWallet->save();
+            $userWallet->save();
 
             DB::commit();
             return APIResponse::SuccessResponse(null);

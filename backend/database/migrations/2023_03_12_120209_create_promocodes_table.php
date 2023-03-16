@@ -22,11 +22,11 @@ class CreatePromocodesTable extends Migration
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
             $table->integer('discount');
-            $table->integer('discount_type');
+            $table->string('discount_type');
             $table->integer('max_discount');
             $table->integer('min_purchase');
             $table->integer('limit');
-            $table->boolean('flag_discount_total')->default(false);
+            $table->integer('total_used');
             $table->unsignedBigInteger('store_id')->nullable();
             $table->timestamps();
         });
