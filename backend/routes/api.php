@@ -31,7 +31,6 @@ Route::post('/checkPassword', [AuthController::class, 'checkPassword']);
 
 Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
-
     Route::get('/search', [UserController::class, 'search']);
     //User
     Route::post('/update/{id}',[UserController::class, 'update']);
@@ -71,6 +70,7 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::get('/store', [StoreController::class, 'index']);
         Route::post('/store/update', [StoreController::class, 'update']);
 
+        Route::get('/menu', [StoreController::class, 'getStoreMenu']);
         Route::post('/product/create', [StoreController::class, 'createProduct']);
         Route::post('/product/update', [StoreController::class, 'updateProduct']);
 
@@ -84,9 +84,13 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::post('/add-on/update', [StoreController::class, 'updateAddon']);
         Route::post('/add-on/delete', [StoreController::class, 'deleteAddon']);
 
-        Route::get('/menu', [StoreController::class, 'getStoreMenu']);
         Route::get('/activate-time', [StoreController::class, 'getTimeActive']);
         Route::post('/activate-time', [StoreController::class, 'updateTimeActive']);
+
+        Route::get('/promocode', [StoreController::class, 'getPromocode']);
+        Route::post('/promocode/create', [StoreController::class, 'createPromocode']);
+        Route::post('/promocode/update', [StoreController::class, 'updatePromocode']);
+        Route::post('/promocode/cancel', [StoreController::class, 'cancelPromocode']);
     });
 
     Route::group(['prefix' => 'store'], function() {
@@ -98,11 +102,17 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::get('/{id}', [UserController::class, 'getProductDetail']);
     });
 
+    Route::group(['prefix' => 'order'], function() {
+        Route::post('/create-order', [UserController::class, 'createOrder']);
+    });
+
     Route::group(['prefix' => 'cart'], function() {
         Route::get('', [UserController::class, 'getCart']);
         Route::post('', [UserController::class, 'addToCart']);
         Route::put('', [UserController::class, 'updateCart']);
         Route::delete('', [UserController::class, 'deleteCart']);
     });
+
+    Route::get('/promocode', [UserController::class, 'getStorePromocode']);
 });
 

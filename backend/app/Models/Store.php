@@ -43,6 +43,11 @@ class Store extends Model implements HasMedia
     {
         return $this->hasMany(StoreSchedule::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
     
     protected $hidden = [
         'created_at',

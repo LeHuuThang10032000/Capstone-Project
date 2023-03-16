@@ -7,6 +7,7 @@ use App\Http\Response\ApiResponse;
 use App\Models\AddOn;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Promocode;
 use App\Models\Store;
 use App\Models\StoreSchedule;
 use Carbon\Carbon;
@@ -482,7 +483,7 @@ class StoreController extends Controller
             }
             return APIResponse::SuccessResponse($data);
 		} catch (\Exception $e) {
-            return APIResponse::FailureResponse(trans('api.something_went_wrong'), null, 500);
+            return APIResponse::FailureResponse($e->getMessage());
 		}
     }
 
@@ -545,7 +546,205 @@ class StoreController extends Controller
             }
             return APIResponse::SuccessResponse(null);
 		} catch (\Exception $e) {
-            return APIResponse::FailureResponse(trans('api.something_went_wrong'), null, 500);
+            return APIResponse::FailureResponse($e->getMessage());
+		}
+    }
+
+    public function getPromocode(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|integer|exists:'.app(Store::class)->getTable().',id',
+            'limit' => 'integer',
+            'page' => 'integer',
+            'status' => 'required|in:RUNNING,UPCOMING,FINISHED',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $promocodes = Promocode::where('store_id', $request->store_id)
+                ->orderBy('created_at','desc');
+
+            $today = Carbon::now();
+            if ($request->status == 'RUNNING') {
+                $promocodes = $promocodes->where('start_date', '<=', $today)->where('end_date', '>=', $today);          
+            } else if($request->status == 'UPCOMING') {
+                $promocodes = $promocodes->where('start_date', '>', $today);
+            } else {
+                $promocodes = $promocodes->where('end_date','<', $today);
+            }
+
+            if($request->limit && $request->page){
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page-1) * $limit;
+
+                $promocodes = $promocodes->offset($offset)->limit($limit);
+            }
+
+            $promocodes = $promocodes->get();
+            return APIResponse::SuccessResponse($promocodes);
+        } catch (\Exception $e) {
+            return APIResponse::FailureResponse($e->getMessage());
+		}
+    }
+
+    public function createPromocode(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'code' => 'required|string|max:255',
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d',
+            'start_time' => 'required|date_format:H:i:s',
+            'end_time' => 'required|date_format:H:i:s',
+            'discount' => 'required|integer',
+            'discount_type' => 'required|in:amount,percentage',
+            'max_discount' => 'numeric',
+            'min_purchase' => 'numeric|min:0',
+            'limit' => 'numeric',
+            'store_id' => 'required|numeric',
+        ],[
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
+        ]);
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->start_date);
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->end_date);
+
+            $startTime = Carbon::createFromFormat('H:i:s', $request->start_time);
+            $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
+
+            if($startDate > $endDate){
+                return APIResponse::FailureResponse('Ngày bắt đầu phải trước ngày kết thúc');
+            }
+
+            if($request->discount_type == 'percentage' && $request->discount > 100) {
+                return APIResponse::FailureResponse('Giá trị giảm giá không được vượt quá 100%');
+            }
+
+            $promocode = new Promocode;
+            $promocode->store_id = $request->store_id;
+            $promocode->code = $request->code;
+            $promocode->start_date = $startDate;
+            $promocode->end_date = $endDate;
+            $promocode->start_time = $startTime;
+            $promocode->end_time = $endTime;
+            $promocode->discount = $request->discount;
+            $promocode->discount_type = $request->discount_type;
+            $promocode->max_discount = $request->max_discount;
+            $promocode->min_purchase = $request->min_purchase;
+            $promocode->limit = $request->limit ?? 0;
+            $promocode->total_used = 0;
+
+            $promoDescription = "";
+            if ($request->discount_type == 'percentage') {
+                $promoDescription = "Giảm ". $request->discount ."%, tối đa ". $promocode->max_discount . "đ cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
+            } else {
+                $promoDescription = "Giảm ". $request->discount ."đ cho đơn hàng từ ". $promocode->min_total_order."đ trở lên trên";
+            }
+            $promocode->title = $promoDescription;
+
+            $promocode->save();
+            return APIResponse::SuccessResponse(null);
+        } catch (\Exception $e) {
+            return APIResponse::FailureResponse($e->getMessage());
+		}
+    }
+
+    public function updatePromocode(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'promo_id' => 'required|exists:'.app(Promocode::class)->getTable().',id',
+            'code' => 'required|string|max:255',
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d',
+            'start_time' => 'required|date_format:H:i:s',
+            'end_time' => 'required|date_format:H:i:s',
+            'discount' => 'required|integer',
+            'discount_type' => 'required|in:amount,percentage',
+            'max_discount' => 'numeric',
+            'min_purchase' => 'numeric|min:0',
+            'limit' => 'numeric',
+            'store_id' => 'required|numeric',
+        ],[
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->start_date);
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->end_date);
+
+            $startTime = Carbon::createFromFormat('H:i:s', $request->start_time);
+            $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
+
+            if($startDate >= now()) {
+                return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
+            }
+            if($startDate > $endDate) {
+                return APIResponse::FailureResponse('Ngày bắt đầu phải trước ngày kết thúc');
+            }
+
+            if($request->discount_type == 'percentage' && $request->discount > 100) {
+                return APIResponse::FailureResponse('Giá trị giảm giá không được vượt quá 100%');
+            }
+
+            $promocode = Promocode::where('id', $request->promo_id)->where('store_id', $request->store_id)->first();
+            $promocode->start_date = $startDate;
+            $promocode->end_date = $endDate;
+            $promocode->start_time = $startTime;
+            $promocode->end_time = $endTime;
+            $promocode->discount = $request->discount;
+            $promocode->discount_type = $request->discount_type;
+            $promocode->max_discount = $request->max_discount;
+            $promocode->min_purchase = $request->min_purchase;
+            $promocode->limit = $request->limit ?? 0;
+            $promocode->total_used = 0;
+
+            $promoDescription = "";
+            if ($request->discount_type == 'percentage') {
+                $promoDescription = "Giảm ". $request->discount ."%, tối đa ". $promocode->max_discount . "đ cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
+            } else {
+                $promoDescription = "Giảm ". $request->discount ."đ cho đơn hàng từ ". $promocode->min_total_order."đ trở lên trên";
+            }
+            $promocode->title = $promoDescription;
+
+            $promocode->save();
+            return APIResponse::SuccessResponse(null);
+        } catch (\Exception $e) {
+            return APIResponse::FailureResponse($e->getMessage());
+		}
+    }
+
+    public function cancelPromocode(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'promo_id' => 'required|exists:'.app(Promocode::class)->getTable().',id',
+            'store_id' => 'required|numeric',
+        ],[
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $promocode = Promocode::where('id', $request->promo_id)->where('store_id', $request->store_id)->first();
+            $promocode->end_date = now();
+            $promocode->end_time = now();
+            $promocode->save();
+            return APIResponse::SuccessResponse(null);
+        } catch (\Exception $e) {
+            return APIResponse::FailureResponse($e->getMessage());
 		}
     }
 }

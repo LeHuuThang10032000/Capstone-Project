@@ -21,7 +21,8 @@ class Transaction extends Model
         "message",
         "code",
         "title",
-        "created_at"
+        "created_at",
+        "order_id"
     ];
 
     protected $hidden = [
@@ -31,6 +32,11 @@ class Transaction extends Model
     public function fromUser()
     {
         return $this->belongsTo(User::class, 'from_id', 'id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     public function toUser()
