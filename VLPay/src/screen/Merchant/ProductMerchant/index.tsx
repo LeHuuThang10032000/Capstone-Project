@@ -481,7 +481,7 @@ const ProductMerchant = () => {
                 navigation.goBack();
               }
             }}>
-            <Text> {data?.isUpdated ? 'cập nhập món' : 'Tạo món mới'}</Text>
+            <Text> {data?.isUpdated ? 'Chỉnh sửa món' : 'Tạo món mới'}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
