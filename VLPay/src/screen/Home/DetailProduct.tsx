@@ -96,7 +96,7 @@ const DetailProduct = ({route, productId}: any) => {
       headers: {'content-type': 'multipart/form-data'},
     });
     console.log(result.data);
-    getCart();
+    navigation.goBack();
   }, [quantity, checkedItems]);
 
   const handlePrice = price !== undefined ? price * quantity : 0;
@@ -196,79 +196,32 @@ const DetailProduct = ({route, productId}: any) => {
           </Center>
         </View>
       </ScrollView>
-
-      {totalItem > 0 ? (
-        <HStack
-          zIndex={99}
-          position={'absolute'}
-          justifyContent="space-between"
-          width={width}
-          bottom={0}
-          paddingY={3}
-          paddingX={'2.5'}
-          backgroundColor={'#FFFFFF'}>
-          <TouchableOpacity onPress={() => navigation.navigate('DetailCart')}>
-            <View
-              borderRadius={10}
-              padding={5}
-              borderWidth={1}
-              borderColor="#B5EAD8"
-              justifyContent="center"
-              alignItems={'center'}
-              flexDirection="row">
-              <CartIcon />
-              <Text>{totalItem}</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={addCart}>
-            <View
-              justifyContent="center"
-              alignItems={'center'}
-              style={{
-                width: 250,
-                padding: 19,
-                backgroundColor: '#B5EAD8',
-                borderRadius: 10,
-              }}>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                color={'#000000'}
-                fontWeight="bold"
-                fontSize={16}>
-                {`Thêm vào giỏ hàng: ${formatCurrency(
-                  (handlePrice ?? 0).toString(),
-                )}đ`}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </HStack>
-      ) : (
-        <View
-          zIndex={99}
-          position={'absolute'}
-          width={width}
-          bottom={0}
-          paddingY={3}
-          paddingX={3}
-          backgroundColor={'#FFFFFF'}>
-          <TouchableOpacity onPress={addCart}>
-            <View
-              justifyContent="center"
-              alignItems={'center'}
-              style={{
-                width: '100%',
-                padding: 20,
-                backgroundColor: '#B5EAD8',
-                borderRadius: 10,
-              }}>
-              <Text color={'#000000'} fontWeight="bold" fontSize={16}>
-                Thêm vào giỏ hàng
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      )}
+      <View
+        zIndex={99}
+        position={'absolute'}
+        width={width}
+        bottom={0}
+        paddingY={3}
+        paddingX={3}
+        backgroundColor={'#FFFFFF'}>
+        <TouchableOpacity onPress={addCart}>
+          <View
+            justifyContent="center"
+            alignItems={'center'}
+            style={{
+              width: '100%',
+              padding: 20,
+              backgroundColor: '#B5EAD8',
+              borderRadius: 10,
+            }}>
+            <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+              {`Thêm vào giỏ hàng: ${formatCurrency(
+                (handlePrice ?? 0).toString(),
+              )}đ`}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

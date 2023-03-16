@@ -189,7 +189,7 @@ const DetailStore = ({route}: any) => {
               <Text>{totalItem}</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('DetailOrder')}>
             <View
               justifyContent="center"
               alignItems={'center'}
