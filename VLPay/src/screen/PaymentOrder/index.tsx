@@ -1,17 +1,44 @@
-import {StyleSheet, TextInput, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {Alert, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import React, {useCallback, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
 import {Center, Divider, Image, Input, Text, TextArea, View} from 'native-base';
 import MessageIcon from '../../assets/svg/message.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
+import {formatCurrency} from '../../components/helper';
+import {axiosClient} from '../../components/apis/axiosClient';
 
-type Props = {};
-
-const PaymentOrder = (props: Props) => {
+const PaymentOrder = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-
+  const {total_price, store_id} = route.params;
   const [text, onChangeText] = React.useState('');
+
+  console.log('STORE ID:', store_id);
+
+  // const handleOrder = useCallback(async () => {
+  //   const formData = new FormData();
+  //   formData.append('store_id', store_id);
+  //   const result = await axiosClient.post('/create-order', formData, {
+  //     headers: {'content-type': 'multipart/form-data'},
+  //   });
+  //   console.log(result.data);
+  //   navigation.navigate('OrderProcess');
+  // }, []);
+
+  const handleOrder = useCallback(async () => {
+    const formData = new FormData();
+    formData.append('store_id', store_id);
+    try {
+      const result = await axiosClient.post('/order/create-order', formData, {
+        headers: {'content-type': 'multipart/form-data'},
+      });
+      console.log(result.data);
+      navigation.navigate('OrderProcess');
+    } catch (error) {
+      Alert.alert('Lỗi hệ thống', 'Có lỗi xảy ra vui lòng thử lại sau!');
+    }
+  }, []);
+
   return (
     <View flex={1} backgroundColor="#FFFFFF">
       <HeaderBack title="Thanh toán đơn hàng" />
@@ -27,7 +54,12 @@ const PaymentOrder = (props: Props) => {
           alt="food"
         />
         <Text style={{marginTop: 10, fontSize: 16}}>Kios Số 10</Text>
-        <TextInput style={styles.input} value={'180.000đ'} />
+        <Text
+          borderBottomWidth={1}
+          borderBottomColor="#FFA0A7"
+          style={{marginTop: 10, fontSize: 16}}>
+          {formatCurrency((total_price ?? 0).toString())}đ
+        </Text>
         <TextArea
           value={text}
           // onBlur={onBlur}
@@ -50,7 +82,7 @@ const PaymentOrder = (props: Props) => {
         <Divider marginTop={200} />
       </Center>
       <View paddingY={5} paddingX={3}>
-        <TouchableOpacity onPress={() => navigation.navigate('OrderProcess')}>
+        <TouchableOpacity onPress={handleOrder}>
           <View
             justifyContent="center"
             alignItems={'center'}

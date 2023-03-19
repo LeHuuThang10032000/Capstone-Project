@@ -176,7 +176,10 @@ const DetailStore = ({route}: any) => {
           paddingY={3}
           paddingX={'2.5'}
           backgroundColor={'#FFFFFF'}>
-          <TouchableOpacity onPress={() => navigation.navigate('DetailCart')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('DetailCart', {store_id: store_id})
+            }>
             <View
               borderRadius={10}
               padding={5}
@@ -189,7 +192,10 @@ const DetailStore = ({route}: any) => {
               <Text>{totalItem}</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('DetailOrder')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('DetailOrder', {store_id: store_id})
+            }>
             <View
               justifyContent="center"
               alignItems={'center'}

@@ -111,11 +111,11 @@ export type MainStackParamList = {
     id: number;
     store_id: number;
   };
-  DetailCart: undefined;
+  DetailCart: {store_id: number};
   AddItems: undefined;
   UpdateItem: undefined;
-  DetailOrder: undefined;
-  PaymentOrder: undefined;
+  DetailOrder: {store_id: number};
+  PaymentOrder: {total_price: string; store_id: number};
   OrderProcess: undefined;
 };
 
