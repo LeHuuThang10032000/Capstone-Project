@@ -22,14 +22,12 @@ import {MainStackNavigation} from '../../../stack/Navigation';
 
 type Props = {};
 
+let limit = 0;
 const DetailCart = ({route}: any) => {
   const {width} = useWindowDimensions();
   const isFocused = useIsFocused();
   const navigation = useNavigation<MainStackNavigation>();
 
-  const cartItems = useCartStore(state => state.cartItems);
-  const {clearCart, incrementCartItem, decrementCartItem} = useCartStore();
-  const totalPrice = useCartStore(state => state.totalPrice());
   const [cart, setCart] = useState<myCart>();
   const [totalItem, setTotalItem] = useState(0);
   const [isLoading, setLoading] = useState(false);
@@ -59,7 +57,11 @@ const DetailCart = ({route}: any) => {
     }
   }, [getCart, isFocused]);
 
-  console.log();
+  useEffect(() => {
+    setTimeout(() => {
+      limit = 0;
+    }, 1000);
+  });
 
   return (
     <View style={{backgroundColor: '#ffffff', flex: 1}}>
@@ -75,65 +77,89 @@ const DetailCart = ({route}: any) => {
       ) : (
         <View flex={1}>
           <ScrollView flex={1}>
+            {/* Render list cart */}
             {totalItem > 0 ? (
-              cart?.products.map(item => (
-                <HStack
-                  justifyContent={'space-between'}
-                  alignItems="center"
-                  key={item.id}
-                  borderBottomWidth={1}
-                  borderBottomColor="#B2BABB"
-                  paddingY={5}
-                  marginX={5}>
-                  <HStack alignItems={'center'}>
-                    <Image
-                      source={{uri: item.image}}
-                      width={52}
-                      height={52}
-                      borderWidth={1}
-                      borderColor="#000"
-                      alt="product"
-                    />
-                    <VStack paddingLeft={5}>
-                      <Text fontSize={16}>{item.name}</Text>
-                      {item.add_ons.map(item => (
-                        <Text key={item.id} color={'#747980'}>
-                          {item.name}
+              cart?.products.map(item => {
+                console.log(item);
+
+                return (
+                  <HStack
+                    justifyContent={'space-between'}
+                    alignItems="center"
+                    key={item.id}
+                    borderBottomWidth={1}
+                    borderBottomColor="#B2BABB"
+                    paddingY={5}
+                    marginX={5}>
+                    <HStack alignItems={'center'}>
+                      <Image
+                        source={{uri: item.image}}
+                        width={52}
+                        height={52}
+                        borderWidth={1}
+                        borderColor="#000"
+                        alt="product"
+                      />
+                      <VStack paddingLeft={5}>
+                        <Text fontSize={16}>{item.name}</Text>
+                        {item.add_ons.map(item => (
+                          <Text key={item.id} color={'#747980'}>
+                            {item.name}
+                          </Text>
+                        ))}
+                        <Text>
+                          {formatCurrency((item?.price ?? 0).toString())}đ
                         </Text>
-                      ))}
-                      <Text>
-                        {formatCurrency((item?.price ?? 0).toString())}đ
-                      </Text>
-                    </VStack>
+                      </VStack>
+                    </HStack>
+                    <HStack alignItems={'center'}>
+                      <TouchableOpacity
+                        onPress={async () => {
+                          if (item?.quantity > 0) {
+                            const formData = new FormData();
+                            formData.append('product_id', item?.id);
+                            formData.append('store_id', store_id);
+                            formData.append('quantity', -1);
+                            let array = [];
+                            item?.add_ons.forEach(element => {
+                              array.push(element.id);
+                            });
+                            formData.append('add_ons[]', array);
+
+                            await axiosClient.post('/cart', formData, {
+                              headers: {'content-type': 'multipart/form-data'},
+                            });
+                            getCart();
+                          }
+                        }}
+                        disabled={item.quantity === 1}>
+                        <DecreaseIcon />
+                      </TouchableOpacity>
+                      <Text paddingX={5}>{item.quantity}</Text>
+                      <TouchableOpacity
+                        onPress={async () => {
+                          const formData = new FormData();
+                          formData.append('product_id', item?.id);
+                          formData.append('store_id', store_id);
+                          formData.append('quantity', 1);
+                          let array = [];
+                          item?.add_ons.forEach(element => {
+                            array.push(element.id);
+                          });
+                          formData.append('add_ons[]', array);
+                          console.log('so dem', 1);
+
+                          await axiosClient.post('/cart', formData, {
+                            headers: {'content-type': 'multipart/form-data'},
+                          });
+                          getCart();
+                        }}>
+                        <IncreaseIcon />
+                      </TouchableOpacity>
+                    </HStack>
                   </HStack>
-                  <HStack alignItems={'center'}>
-                    <TouchableOpacity
-                      onPress={() => setQuantity(item.quantity - 1)}
-                      disabled={item.quantity === 1}>
-                      <DecreaseIcon />
-                    </TouchableOpacity>
-                    <Text paddingX={5}>{item.quantity}</Text>
-                    <TouchableOpacity
-                      onPress={async () => {
-                        setQuantity(item.quantity + 1);
-                        const formData = new FormData();
-                        formData.append('product_id', cart?.products?.id);
-                        formData.append('store_id', store_id);
-                        formData.append('quantity', quantity);
-                        formData.append('add_ons[]', []);
-                        // const result = await axiosClient.post(
-                        //   '/cart',
-                        //   formData,
-                        //   {
-                        //     headers: {'content-type': 'multipart/form-data'},
-                        //   },
-                        // );
-                      }}>
-                      <IncreaseIcon />
-                    </TouchableOpacity>
-                  </HStack>
-                </HStack>
-              ))
+                );
+              })
             ) : (
               // cart?.products.map(item => <Text>{item.name}</Text>)
               <View height={500}>
