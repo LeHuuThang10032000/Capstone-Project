@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {HStack, Input, VStack} from 'native-base';
 import React, {useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
@@ -6,9 +6,14 @@ import HeaderComp from '../../../../components/HeaderComp';
 import StagePromo from '../../../../components/helpers/StagePromo';
 import Icons from '../../../../components/Icons';
 import {UText} from '../../../../components/UText';
-import {MainStackNavigation} from '../../../../stack/Navigation';
+import {
+  MainStackNavigation,
+  MainStackParamList,
+} from '../../../../stack/Navigation';
 import {SelectList} from 'react-native-dropdown-select-list';
 import DatePicker from 'react-native-date-picker';
+import {axiosClient} from '../../../../components/apis/axiosClient';
+import {baseUrl} from '../../../../components/apis/baseUrl';
 
 const CreatePromo = () => {
   const PROMOS = [
@@ -25,12 +30,26 @@ const CreatePromo = () => {
   ];
 
   const navigation = useNavigation<MainStackNavigation>();
+  const {id} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
+
   const [page, setPage] = useState(PROMOS[0]);
   const [dropdownOptionSelect, setDropdownOptionSelect] = useState('');
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
   const [openDateStart, setOpenDateStart] = useState(false);
   const [openDateEnd, setOpenDateEnd] = useState(false);
+
+  const [code, setCode] = useState(Math.random().toString(36));
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [startTime, setStartTime] = useState('01:00:00');
+  const [endTime, setEndTime] = useState('23:59:59');
+  const [discount, setDiscount] = useState(0);
+  const [discountType, setDiscountType] = useState('');
+  const [maxDiscount, setMaxDiscount] = useState(0);
+  const [minPurchase, setMinPurchase] = useState(0);
+  const [limit, setLimit] = useState(0);
+
   const dropdownOptions = [
     {key: '1', value: 'Không giới hạn (mặc định)'},
     {key: '2', value: 'Không giới hạn'},
@@ -100,6 +119,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[1]:
+        setDiscountType('percentage');
         return (
           <>
             <ScrollView style={{height: ' 100%'}}>
@@ -120,14 +140,20 @@ const CreatePromo = () => {
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
                   <UText>Mã giảm giá</UText>
-                  <UText>N372HYU3OP</UText>
+                  <UText>{code}</UText>
                 </HStack>
                 <VStack
                   width={'100%'}
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
                   <UText>Nhập giá trị giảm giá trên tổng đơn hàng</UText>
-                  <Input value={'0%'} borderRadius={10} />
+                  <Input
+                    value={discount.toString() + '%'}
+                    borderRadius={10}
+                    onChangeText={text => {
+                      setDiscount(parseInt(text));
+                    }}
+                  />
                 </VStack>
                 <VStack
                   width={'100%'}
@@ -144,6 +170,9 @@ const CreatePromo = () => {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
+                      }}
+                      onPress={() => {
+                        setDiscount(5);
                       }}>
                       <UText>5%</UText>
                     </TouchableOpacity>
@@ -156,8 +185,11 @@ const CreatePromo = () => {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
+                      }}
+                      onPress={() => {
+                        setDiscount(10);
                       }}>
-                      <UText>5%</UText>
+                      <UText>10%</UText>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{
@@ -168,8 +200,11 @@ const CreatePromo = () => {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
+                      }}
+                      onPress={() => {
+                        setDiscount(15);
                       }}>
-                      <UText>5%</UText>
+                      <UText>15%</UText>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{
@@ -180,8 +215,11 @@ const CreatePromo = () => {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
+                      }}
+                      onPress={() => {
+                        setDiscount(20);
                       }}>
-                      <UText>5%</UText>
+                      <UText>20%</UText>
                     </TouchableOpacity>
                   </HStack>
                 </VStack>
@@ -190,14 +228,38 @@ const CreatePromo = () => {
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
                   <UText>Trị giá đơn hàng tối thiểu</UText>
-                  <Input value={'đ'} borderRadius={10} />
+                  <Input
+                    defaultValue={minPurchase.toString()}
+                    borderRadius={10}
+                    keyboardType={'decimal-pad'}
+                    onSubmitEditing={event => {
+                      if (event.nativeEvent.text.length > 0) {
+                        const result = parseInt(event.nativeEvent.text);
+                        setMinPurchase(result);
+                      } else {
+                        setMinPurchase(0);
+                      }
+                    }}
+                  />
                 </VStack>
                 <VStack
                   width={'100%'}
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
                   <UText>Nhập giá trị giảm tối đa</UText>
-                  <Input value={'đ'} borderRadius={10} />
+                  <Input
+                    defaultValue={maxDiscount.toString()}
+                    borderRadius={10}
+                    keyboardType={'decimal-pad'}
+                    onSubmitEditing={event => {
+                      if (event.nativeEvent.text.length > 0) {
+                        const result = parseInt(event.nativeEvent.text);
+                        setMaxDiscount(result);
+                      } else {
+                        setMaxDiscount(0);
+                      }
+                    }}
+                  />
                 </VStack>
               </VStack>
             </ScrollView>
@@ -258,6 +320,7 @@ const CreatePromo = () => {
                     onConfirm={date => {
                       setOpenDateStart(false);
                       setDateStart(date);
+                      setStartDate(date.toISOString().slice(0, 10));
                     }}
                     onCancel={() => {
                       setOpenDateStart(false);
@@ -288,6 +351,7 @@ const CreatePromo = () => {
                     onConfirm={date => {
                       setOpenDateEnd(false);
                       setDateEnd(date);
+                      setEndDate(date.toISOString().slice(0, 10));
                     }}
                     onCancel={() => {
                       setOpenDateEnd(false);
@@ -334,7 +398,28 @@ const CreatePromo = () => {
                 position: 'absolute',
                 bottom: 20,
               }}
-              onPress={() => {
+              onPress={async () => {
+                const formData = new FormData();
+                formData.append('store_id', id);
+                formData.append('code', code);
+                formData.append('start_date', startDate);
+                formData.append('end_date', endDate);
+                formData.append('start_time', startTime);
+                formData.append('end_time', endTime);
+                formData.append('discount', discount);
+                formData.append('discount_type', discountType);
+                formData.append('max_discount', maxDiscount);
+                formData.append('min_purchase', minPurchase);
+                formData.append('limit', limit);
+                const result = await axiosClient.post(
+                  baseUrl + 'merchant/promocode/create',
+                  formData,
+                  {
+                    headers: {'content-type': 'multipart/form-data'},
+                  },
+                );
+                console.log('result', result);
+
                 setPage(PROMOS[3]);
               }}>
               <UText>Tiếp theo</UText>

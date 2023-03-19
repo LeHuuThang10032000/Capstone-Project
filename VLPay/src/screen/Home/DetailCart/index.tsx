@@ -36,9 +36,6 @@ const DetailCart = ({route}: any) => {
   const [quantity, setQuantity] = useState(1);
   const {store_id} = route.params;
 
-  console.log('MY CART ==>', cart);
-  console.log('STORE ID ==>', store_id);
-
   //Get Cart
   const getCart = useCallback(async () => {
     setLoading(true);
@@ -55,26 +52,14 @@ const DetailCart = ({route}: any) => {
     getCart();
   }, []);
 
-  //Update Cart
-  // const updateCart = useCallback(async () => {
-  //   const formData = new FormData();
-  //   formData.append('product_id', cart?.products.);
-  //   formData.append('store_id', store_id);
-  //   formData.append('quantity', quantity);
-  //   formData.append('add_ons[]', [checkedItems]);
-  //   const result = await axiosClient.post('/cart', formData, {
-  //     headers: {'content-type': 'multipart/form-data'},
-  //   });
-  //   console.log(result.data);
-  //   getCart();
-  // }, [quantity, checkedItems]);
-
   useEffect(() => {
     // Call only when screen open or when back on screen
     if (isFocused) {
       getCart();
     }
   }, [getCart, isFocused]);
+
+  console.log();
 
   return (
     <View style={{backgroundColor: '#ffffff', flex: 1}}>
@@ -129,7 +114,21 @@ const DetailCart = ({route}: any) => {
                     </TouchableOpacity>
                     <Text paddingX={5}>{item.quantity}</Text>
                     <TouchableOpacity
-                      onPress={() => setQuantity(item.quantity + 1)}>
+                      onPress={async () => {
+                        setQuantity(item.quantity + 1);
+                        const formData = new FormData();
+                        formData.append('product_id', cart?.products?.id);
+                        formData.append('store_id', store_id);
+                        formData.append('quantity', quantity);
+                        formData.append('add_ons[]', []);
+                        // const result = await axiosClient.post(
+                        //   '/cart',
+                        //   formData,
+                        //   {
+                        //     headers: {'content-type': 'multipart/form-data'},
+                        //   },
+                        // );
+                      }}>
                       <IncreaseIcon />
                     </TouchableOpacity>
                   </HStack>

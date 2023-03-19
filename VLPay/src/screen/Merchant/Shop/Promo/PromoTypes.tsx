@@ -1,21 +1,28 @@
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {HStack, VStack} from 'native-base';
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import HeaderComp from '../../../../components/HeaderComp';
 import Icons from '../../../../components/Icons';
 import {UText} from '../../../../components/UText';
-import {MainStackNavigation} from '../../../../stack/Navigation';
+import {
+  MainStackNavigation,
+  MainStackParamList,
+} from '../../../../stack/Navigation';
 
 const PromoTypes = () => {
   const navigation = useNavigation<MainStackNavigation>();
+  const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
+  console.log(data.id);
 
   const Element = ({icon, title, desc}) => {
     return (
       <TouchableOpacity
         style={{width: '100%', alignItems: 'center', justifyContent: 'center'}}
         onPress={() => {
-          navigation.navigate('CreatePromo');
+          navigation.navigate('CreatePromo', {
+            id: data.id,
+          });
         }}>
         <HStack
           alignItems={'center'}
