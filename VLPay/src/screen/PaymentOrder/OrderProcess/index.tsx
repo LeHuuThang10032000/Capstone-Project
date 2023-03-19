@@ -14,13 +14,16 @@ import {
 import {ScrollView} from 'react-native-gesture-handler';
 import {myCart} from '../../../store/cart';
 import {axiosClient} from '../../../components/apis/axiosClient';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {formatCurrency} from '../../../components/helper';
+import {MainStackNavigation} from '../../../stack/Navigation';
 
 type State = 'loading' | 'error' | 'success';
 
 const OrderProcess = () => {
-  const [state, setState] = useState<State>('error');
+  const navigation = useNavigation<MainStackNavigation>();
+
+  const [state, setState] = useState<State>('loading');
   const [cart, setCart] = useState<myCart>();
   const [totalItem, setTotalItem] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -168,7 +171,7 @@ const OrderProcess = () => {
                   Ví VLpay
                 </Text>
               </HStack>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                 <View
                   justifyContent="center"
                   alignItems={'center'}

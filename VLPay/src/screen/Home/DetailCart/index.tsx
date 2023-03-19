@@ -22,7 +22,7 @@ import {MainStackNavigation} from '../../../stack/Navigation';
 
 type Props = {};
 
-const DetailCart = (props: Props) => {
+const DetailCart = ({route}: any) => {
   const {width} = useWindowDimensions();
   const isFocused = useIsFocused();
   const navigation = useNavigation<MainStackNavigation>();
@@ -34,9 +34,10 @@ const DetailCart = (props: Props) => {
   const [totalItem, setTotalItem] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const {store_id} = route.params;
 
   console.log('MY CART ==>', cart);
-  console.log('TOTAL Price ==>', cart?.total_price);
+  console.log('STORE ID ==>', store_id);
 
   //Get Cart
   const getCart = useCallback(async () => {
@@ -153,7 +154,9 @@ const DetailCart = (props: Props) => {
           {totalItem > 0 ? (
             <View paddingY={5} paddingX={5}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('DetailOrder')}>
+                onPress={() =>
+                  navigation.navigate('DetailOrder', {store_id: store_id})
+                }>
                 <View
                   justifyContent="center"
                   alignItems={'center'}

@@ -29,7 +29,7 @@ interface DetailOrder {
   name: string;
 }
 
-const DetailOrder = () => {
+const DetailOrder = ({route}: any) => {
   const {
     control,
     handleSubmit,
@@ -41,20 +41,24 @@ const DetailOrder = () => {
     },
   });
 
+  const {store_id} = route.params;
+
   const navigation = useNavigation<MainStackNavigation>();
   const [cart, setCart] = useState<myCart>();
   const [totalItem, setTotalItem] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [text, onChangeText] = React.useState('');
+  const [totalPrice, setTotalPrice] = useState('');
   const isFocused = useIsFocused();
 
-  console.log(cart);
+  console.log('======>', store_id);
 
   //Get Cart
   const getCart = useCallback(async () => {
     setLoading(true);
     const result = await axiosClient.get('/cart');
     setCart(result?.data?.data);
+    setTotalPrice(result?.data?.data?.total_price);
     setTotalItem(result?.data?.data?.total_quantity);
     setLoading(false);
   }, []);
@@ -147,12 +151,22 @@ const DetailOrder = () => {
                     </Text>
                   ))}
                 </VStack>
-                <Text fontWeight={'bold'} fontSize={16}>
-                  {formatCurrency((item?.price ?? 0).toString())}đ
-                </Text>
+                <VStack>
+                  <Text fontWeight={'bold'} fontSize={16}>
+                    {formatCurrency((item?.price ?? 0).toString())}đ
+                  </Text>
+                  {item.add_ons.map(item => (
+                    <Text key={item.id} color={'#747980'}>
+                      {formatCurrency((item?.price ?? 0).toString())}đ
+                    </Text>
+                  ))}
+                </VStack>
               </HStack>
             ))}
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('DetailCart', {store_id: store_id})
+              }>
               <Text fontSize={16} fontWeight="bold" color={'#0088CC'}>
                 Chỉnh sửa
               </Text>
@@ -160,11 +174,13 @@ const DetailOrder = () => {
             <VStack marginTop={5}>
               <HStack paddingBottom={3} justifyContent={'space-between'}>
                 <Text>Tổng tạm tính</Text>
-                <Text>150.000đ</Text>
+                <Text>
+                  {formatCurrency((cart?.total_price ?? 0).toString())}đ
+                </Text>
               </HStack>
               <HStack justifyContent={'space-between'}>
                 <Text>Giảm giá</Text>
-                <Text>35.000đ</Text>
+                <Text>0đ</Text>
               </HStack>
 
               {/* <Controller
@@ -232,7 +248,12 @@ const DetailOrder = () => {
           </HStack>
           <View paddingY={5} paddingX={5}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('PaymentOrder')}>
+              onPress={() =>
+                navigation.navigate('PaymentOrder', {
+                  total_price: totalPrice,
+                  store_id: store_id,
+                })
+              }>
               <View
                 justifyContent="center"
                 alignItems={'center'}
