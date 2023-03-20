@@ -41,14 +41,20 @@ const CreatePromo = () => {
 
   const [code, setCode] = useState(Math.random().toString(36));
   const [startDate, setStartDate] = useState('');
+  const [startDateError, setStartDateError] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [endDateError, setEndDateError] = useState('');
   const [startTime, setStartTime] = useState('01:00:00');
   const [endTime, setEndTime] = useState('23:59:59');
   const [discount, setDiscount] = useState(0);
+  const [discountError, setDiscountError] = useState('');
   const [discountType, setDiscountType] = useState('');
   const [maxDiscount, setMaxDiscount] = useState(0);
+  const [maxDiscountError, setMaxDiscountError] = useState('');
   const [minPurchase, setMinPurchase] = useState(0);
+  const [minPurchaseError, setMinPurchaseError] = useState('');
   const [limit, setLimit] = useState(0);
+  const [limitError, setLimitError] = useState(0);
 
   const dropdownOptions = [
     {key: '1', value: 'Không giới hạn (mặc định)'},
@@ -147,13 +153,31 @@ const CreatePromo = () => {
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
                   <UText>Nhập giá trị giảm giá trên tổng đơn hàng</UText>
+
                   <Input
-                    value={discount.toString() + '%'}
+                    defaultValue={discount.toString() + '%'}
                     borderRadius={10}
-                    onChangeText={text => {
-                      setDiscount(parseInt(text));
+                    keyboardType={'decimal-pad'}
+                    onSubmitEditing={event => {
+                      if (event.nativeEvent.text.length > 0) {
+                        if (
+                          parseInt(event.nativeEvent.text.replace('%', '')) <
+                          100
+                        ) {
+                          setDiscountError('');
+                          const result = parseInt(event.nativeEvent.text);
+                          setDiscount(result);
+                        } else {
+                          setDiscountError('Không được vượt quá 100%');
+                        }
+                      } else {
+                        setDiscount(10);
+                      }
                     }}
                   />
+                  {discountError && (
+                    <UText style={{color: 'red'}}>{discountError}</UText>
+                  )}
                 </VStack>
                 <VStack
                   width={'100%'}
@@ -172,6 +196,7 @@ const CreatePromo = () => {
                         alignItems: 'center',
                       }}
                       onPress={() => {
+                        setDiscountError('');
                         setDiscount(5);
                       }}>
                       <UText>5%</UText>
@@ -187,6 +212,7 @@ const CreatePromo = () => {
                         alignItems: 'center',
                       }}
                       onPress={() => {
+                        setDiscountError('');
                         setDiscount(10);
                       }}>
                       <UText>10%</UText>
@@ -202,6 +228,7 @@ const CreatePromo = () => {
                         alignItems: 'center',
                       }}
                       onPress={() => {
+                        setDiscountError('');
                         setDiscount(15);
                       }}>
                       <UText>15%</UText>
@@ -217,6 +244,7 @@ const CreatePromo = () => {
                         alignItems: 'center',
                       }}
                       onPress={() => {
+                        setDiscountError('');
                         setDiscount(20);
                       }}>
                       <UText>20%</UText>
@@ -234,13 +262,21 @@ const CreatePromo = () => {
                     keyboardType={'decimal-pad'}
                     onSubmitEditing={event => {
                       if (event.nativeEvent.text.length > 0) {
-                        const result = parseInt(event.nativeEvent.text);
-                        setMinPurchase(result);
+                        if (parseInt(event.nativeEvent.text) > 0) {
+                          setMinPurchaseError('');
+                          const result = parseInt(event.nativeEvent.text);
+                          setMinPurchase(result);
+                        } else {
+                          setMinPurchaseError('Không được bé hơn hoặc bằng 0');
+                        }
                       } else {
-                        setMinPurchase(0);
+                        setMinPurchase(1);
                       }
                     }}
                   />
+                  {minPurchaseError && (
+                    <UText style={{color: 'red'}}>{minPurchaseError}</UText>
+                  )}
                 </VStack>
                 <VStack
                   width={'100%'}
@@ -253,8 +289,13 @@ const CreatePromo = () => {
                     keyboardType={'decimal-pad'}
                     onSubmitEditing={event => {
                       if (event.nativeEvent.text.length > 0) {
-                        const result = parseInt(event.nativeEvent.text);
-                        setMaxDiscount(result);
+                        if (parseInt(event.nativeEvent.text) > 0) {
+                          setMaxDiscountError('');
+                          const result = parseInt(event.nativeEvent.text);
+                          setMaxDiscount(result);
+                        } else {
+                          setMaxDiscountError('Không được bé hơn hoặc bằng 0');
+                        }
                       } else {
                         setMaxDiscount(0);
                       }
@@ -274,13 +315,18 @@ const CreatePromo = () => {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                setPage(PROMOS[2]);
+                if (!maxDiscountError && !minPurchaseError && !discountError) {
+                  setPage(PROMOS[2]);
+                }
               }}>
               <UText>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
       case PROMOS[2]:
+        const currentTime = new Date();
+        const time = currentTime.getTime();
+
         return (
           <>
             <ScrollView style={{height: '100%', marginBottom: 100}}>
@@ -318,14 +364,27 @@ const CreatePromo = () => {
                     open={openDateStart}
                     date={dateStart}
                     onConfirm={date => {
+                      if (time > date.getTime()) {
+                        setStartDateError('');
+                        if (dateEnd) {
+                          if (date.getTime() < dateEnd?.getTime()) {
+                            setEndDateError('');
+                          }
+                        }
+                        setDateStart(date);
+                        setStartDate(date.toISOString().slice(0, 10));
+                      } else {
+                        setStartDateError('Không được vượt ngày hôm nay');
+                      }
                       setOpenDateStart(false);
-                      setDateStart(date);
-                      setStartDate(date.toISOString().slice(0, 10));
                     }}
                     onCancel={() => {
                       setOpenDateStart(false);
                     }}
                   />
+                  {startDateError && (
+                    <UText style={{color: 'red'}}>{startDateError}</UText>
+                  )}
                 </VStack>
                 <VStack
                   width={'100%'}
@@ -349,14 +408,26 @@ const CreatePromo = () => {
                     open={openDateEnd}
                     date={dateEnd}
                     onConfirm={date => {
+                      if (
+                        time > date.getTime() &&
+                        dateStart.getTime() < date.getTime()
+                      ) {
+                        setEndDateError('');
+                        setDateEnd(date);
+                        setEndDate(date.toISOString().slice(0, 10));
+                      } else {
+                        setEndDateError('Thời gian không hợp lệ');
+                      }
+
                       setOpenDateEnd(false);
-                      setDateEnd(date);
-                      setEndDate(date.toISOString().slice(0, 10));
                     }}
                     onCancel={() => {
                       setOpenDateEnd(false);
                     }}
                   />
+                  {endDateError && (
+                    <UText style={{color: 'red'}}>{endDateError}</UText>
+                  )}
                 </VStack>
                 <HStack
                   width={'100%'}
@@ -399,34 +470,44 @@ const CreatePromo = () => {
                 bottom: 20,
               }}
               onPress={async () => {
-                const formData = new FormData();
-                formData.append('store_id', id);
-                formData.append('code', code);
-                formData.append('start_date', startDate);
-                formData.append('end_date', endDate);
-                formData.append('start_time', startTime);
-                formData.append('end_time', endTime);
-                formData.append('discount', discount);
-                formData.append('discount_type', discountType);
-                formData.append('max_discount', maxDiscount);
-                formData.append('min_purchase', minPurchase);
-                formData.append('limit', limit);
-                const result = await axiosClient.post(
-                  baseUrl + 'merchant/promocode/create',
-                  formData,
-                  {
-                    headers: {'content-type': 'multipart/form-data'},
-                  },
-                );
-                console.log('result', result);
+                if (!startDateError && !endDateError) {
+                  const time = new Date();
+                  const formData = new FormData();
+                  formData.append('store_id', id);
+                  formData.append('code', code);
+                  formData.append(
+                    'start_date',
+                    startDate ? startDate : time.toISOString().slice(0, 10),
+                  );
+                  formData.append(
+                    'end_date',
+                    endDate ? endDate : time.toISOString().slice(0, 10),
+                  );
+                  formData.append('start_time', startTime);
+                  formData.append('end_time', endTime);
+                  formData.append('discount', discount);
+                  formData.append('discount_type', discountType);
+                  formData.append('max_discount', maxDiscount);
+                  formData.append('min_purchase', minPurchase);
+                  formData.append('limit', limit);
+                  const result = await axiosClient.post(
+                    baseUrl + 'merchant/promocode/create',
+                    formData,
+                    {
+                      headers: {'content-type': 'multipart/form-data'},
+                    },
+                  );
+                  console.log('result', result);
 
-                setPage(PROMOS[3]);
+                  setPage(PROMOS[3]);
+                }
               }}>
               <UText>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
       case PROMOS[3]:
+        const _time = new Date();
         return (
           <>
             <ScrollView style={{height: '100%', marginBottom: 100}}>
@@ -439,11 +520,12 @@ const CreatePromo = () => {
                     <UText>Giá trị của mã giảm giá</UText>
                     <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
                   </HStack>
-                  <HStack
+                  <VStack
                     justifyContent={'space-between'}
                     style={{padding: 16}}>
                     <UText>Giá trị của mã giảm giá</UText>
-                  </HStack>
+                    <UText>{discount}% trên tổng hoá đơn</UText>
+                  </VStack>
                   <HStack
                     justifyContent={'space-between'}
                     backgroundColor={'#F7F9FC'}
@@ -463,7 +545,12 @@ const CreatePromo = () => {
                       <UText style={{fontSize: 14, color: '#818181'}}>
                         Ngày và thời gian bắt đầu{' '}
                       </UText>
-                      <UText>27/11/2022, Th 5 lúc 13:30</UText>
+                      <UText>
+                        {startDate
+                          ? startDate
+                          : _time.toISOString().slice(0, 10)}{' '}
+                        {startTime}
+                      </UText>
                       <View
                         style={{
                           height: 1,
@@ -477,21 +564,10 @@ const CreatePromo = () => {
                       <UText style={{fontSize: 14, color: '#818181'}}>
                         Ngày và thời gian bắt đầu{' '}
                       </UText>
-                      <UText>27/11/2022, Th 5 lúc 13:30</UText>
-                      <View
-                        style={{
-                          height: 1,
-                          backgroundColor: '#E4E9F2',
-                          width: '100%',
-                        }}
-                      />
-                    </VStack>
-
-                    <VStack style={{paddingVertical: 16}}>
-                      <UText style={{fontSize: 14, color: '#818181'}}>
-                        Ngày và thời gian bắt đầu{' '}
+                      <UText>
+                        {endDate ? endDate : _time.toISOString().slice(0, 10)}{' '}
+                        {endTime}
                       </UText>
-                      <UText>27/11/2022, Th 5 lúc 13:30</UText>
                       <View
                         style={{
                           height: 1,

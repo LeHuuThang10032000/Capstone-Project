@@ -15,15 +15,11 @@ const PromoTypes = () => {
   const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
   console.log(data.id);
 
-  const Element = ({icon, title, desc}) => {
+  const Element = ({icon, title, desc, onPress}) => {
     return (
       <TouchableOpacity
         style={{width: '100%', alignItems: 'center', justifyContent: 'center'}}
-        onPress={() => {
-          navigation.navigate('CreatePromo', {
-            id: data.id,
-          });
-        }}>
+        onPress={onPress}>
         <HStack
           alignItems={'center'}
           width={'95%'}
@@ -53,8 +49,24 @@ const PromoTypes = () => {
       <View style={{flexDirection: 'column', alignItems: 'center'}}>
         <Element
           icon={<Icons.PromoStar />}
+          onPress={() => {
+            navigation.navigate('CreatePromo', {
+              id: data.id,
+            });
+          }}
           title={'Chương trình giảm giá'}
           desc={'Tạo và quản lý các mã giảm giá của quán'}
+        />
+        <View style={{height: 30}} />
+        <Element
+          onPress={() => {
+            navigation.navigate('PromoList', {
+              data: data,
+            });
+          }}
+          icon={<Icons.PromoList />}
+          title={'Xem danh sách'}
+          desc={'Quản lí các mã giảm giá đã tạo'}
         />
       </View>
     </View>
