@@ -91,6 +91,8 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::post('/promocode/create', [StoreController::class, 'createPromocode']);
         Route::post('/promocode/update', [StoreController::class, 'updatePromocode']);
         Route::post('/promocode/cancel', [StoreController::class, 'cancelPromocode']);
+
+        Route::get('/order', [StoreController::class, 'getOrder']);
     });
 
     Route::group(['prefix' => 'store'], function() {
@@ -103,7 +105,12 @@ Route::group(['middleware' => ['auth:api']], function(){
     });
 
     Route::group(['prefix' => 'order'], function() {
+        Route::get('', [UserController::class, 'getOrder']);
+        Route::get('/calc-order', [UserController::class, 'calcOrderTotal']);
+        Route::get('/detail', [UserController::class, 'getOrderDetail']);
         Route::post('/create-order', [UserController::class, 'createOrder']);
+        Route::post('/cancel-order', [UserController::class, 'cancelOrder']);
+        Route::post('/taken-order', [UserController::class, 'takenOrder']);
     });
 
     Route::group(['prefix' => 'cart'], function() {
