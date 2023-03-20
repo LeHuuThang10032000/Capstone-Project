@@ -347,6 +347,7 @@ class UserController extends Controller
                 'products' => $products,
                 'total_quantity' => $totalQuantity,
                 'total_price' => $totalPrice,
+                'store_id' => $carts->first()->store_id,
             ];
             
             return ApiResponse::successResponse($data);
@@ -389,6 +390,14 @@ class UserController extends Controller
             return APIResponse::FailureResponse($validate->messages()->first());
         }
         $user = Auth::user();
+
+        $cart = $user->carts()->first();
+        if($cart) {
+            if($request->store_id != $cart->store_id) {
+                return APIResponse::FailureResponse('Bạn đang có giỏ hàng ở cửa hàng');
+            }
+        }
+        
         try {
             DB::beginTransaction();
             
@@ -493,6 +502,54 @@ class UserController extends Controller
         }
     }
 
+    public function calcOrderTotal(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+            'promocode_id' => 'nullable|integer|exists:'.app(Promocode::class)->getTable().',id',
+        ], [
+            'store_id.exists' => 'Cửa hàng không tồn tại',
+            'promocode_id.exists' => 'Mã giảm giá không tồn tại'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+        
+        $user = Auth::user();
+
+        try {
+            $carts = $user->carts;
+            $productPrice = 0;
+            foreach($carts as $item) {
+                if($item->store_id != $request->store_id) {
+                    return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
+                }
+                $productPrice += $item->total_price;
+            }
+
+            $discount = 0;
+            if(isset($request->promocode_id)) {
+                $promocode = DB::table('promocodes')
+                    ->where('store_id', $request->store_id)
+                    ->where('id', $request->promocode_id)
+                    ->first();
+
+                $discount = Helper::calcPromocodeDiscount($promocode, $productPrice);
+            }
+
+            $data = [
+                'products_total' => $productPrice,
+                'discount' => $discount,
+                'total' => $productPrice - $discount,
+            ];
+            return APIResponse::SuccessResponse($data);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
     public function createOrder(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -562,15 +619,7 @@ class UserController extends Controller
             $order->store_id = $request->store_id;
             $order->promocode_id = $request->promocode_id ?? null;
             $order->order_total = $cartPrice;
-            $order->discount_amount = 0;
-            if($request->promocode_id) {
-                if($promocode->discount_type == 'percentage') {
-                    $discount = round(($cartPrice * $promocode->discount) / 100);
-                    $order->discount_amount = ($discount > $promocode->max_discount) ? $promocode->max_discount : $discount;
-                } else {
-                    $order->discount_amount = $promocode->discount;
-                }
-            }
+            $order->discount_amount = Helper::calcPromocodeDiscount($promocode, $cartPrice);
             $order->status = 'pending';
             $order->note = $request->note ?? null;
 
@@ -654,16 +703,170 @@ class UserController extends Controller
                 'user_id' => $merchant->id,
                 'open_balance' => $merchantOpenBalance,
                 'close_balance' => $merchantCloseBalance,
+                'message' => $request->message
             ]);
             
             $merchantWallet->save();
             $userWallet->save();
 
             DB::commit();
-            return APIResponse::SuccessResponse(null);
+
+            $data = [
+                'request_id' => $order->id,
+            ];
+            return APIResponse::SuccessResponse($data);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse('Đặt hàng không thành công. Vui lòng thử lại sau');
+        }
+    }
+
+    public function getOrderDetail(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
+        ], [
+            'order_id.exists' => 'Đơn hàng không tồn tại',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $order = Order::with('user', 'store')
+                ->where('id', $request->order_id)
+                ->where('user_id', Auth::user()->id)
+                ->first();
+            $order['product_count'] = count($order->product_detail);
+            return APIResponse::SuccessResponse($order);
         } catch(\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function cancelOrder(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
+            'reason' => 'required',
+        ], [
+            'order_id.exists' => 'Đơn hàng không tồn tại',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $order = Order::where('id', $request->order_id)
+                ->where('user_id', Auth::user()->id)
+                ->firstOrFail();
+
+            if($order->status == 'processing')
+            {
+                return APIResponse::FailureResponse('Không thể hủy đơn hàng vì cửa hàng đang chuẩn bị cho đơn hàng của bạn');
+            }
+
+            if($order->status == 'canceled')
+            {
+                return APIResponse::FailureResponse('Đơn hàng đã bị hủy');
+            }
+
+            if($order->status == 'finished')
+            {
+                return APIResponse::FailureResponse('Không thể hủy đơn hàng vì cửa hàng đã chuẩn bị xong đơn hàng và đang chờ bạn đến lấy');
+            }
+            $order->status = 'canceled';
+            $order->canceled_at = now();
+            $order->save();
+            
+            return APIResponse::SuccessResponse(null);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse('Không thể hủy đơn hàng. Đã có lỗi xảy ra');
+        }
+    }
+
+    public function takenOrder(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
+        ], [
+            'order_id.exists' => 'Đơn hàng không tồn tại',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $order = Order::where('id', $request->order_id)
+                ->where('user_id', Auth::user()->id)
+                ->firstOrFail();
+
+            if($order->status == 'canceled')
+            {
+                return APIResponse::FailureResponse('Đơn hàng đã bị hủy');
+            }
+
+            if($order->status != 'finished')
+            {
+                return APIResponse::FailureResponse('Đơn hàng vẫn chưa được chuẩn bị xong');
+            }
+
+            $order->status = 'taken';
+            $order->taken_at = now();
+            $order->save();
+            
+            return APIResponse::SuccessResponse(null);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse('Không thể hủy đơn hàng. Đã có lỗi xảy ra');
+        }
+    }
+
+    public function getOrder(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'limit' => 'required|integer',
+            'page' => 'required|integer',
+            'status' => ''
+        ],[
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $orders = Order::where('user_id', Auth::user()->id);
+
+            if($request->status) {
+                $orders = $orders->where('status', $request->status);
+            }
+
+            if ($request->page) {
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page - 1) * $limit;
+                $orders = $orders->offset($offset)->limit($limit);
+            }
+
+            $orders = $orders->get();
+
+            $data = [
+                'total_size' => $orders->count(),
+                'limit' => $limit,
+                'page' => $page,
+                'orders' => $orders
+            ];
+
+            return ApiResponse::successResponse($data);
+        } catch(\Exception $e) {
+
         }
     }
 }

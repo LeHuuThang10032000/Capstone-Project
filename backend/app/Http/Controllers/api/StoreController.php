@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\AddOn;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Promocode;
@@ -746,5 +747,44 @@ class StoreController extends Controller
         } catch (\Exception $e) {
             return APIResponse::FailureResponse($e->getMessage());
 		}
+    }
+
+    public function getOrder(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'limit' => 'required|integer',
+            'page' => 'required|integer',
+            'status' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total')
+                ->where('store_id', $request->store_id)
+                ->where('status', $request->status);
+
+            if ($request->page) {
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page - 1) * $limit;
+                $orders = $orders->offset($offset)->limit($limit);
+            }
+
+            $orders = $orders->get();
+
+            $data = [
+                'total_size' => $orders->count(),
+                'limit' => $limit,
+                'page' => $page,
+                'orders' => $orders
+            ];
+
+            return ApiResponse::successResponse($data);
+        } catch(\Exception $e) {
+            return APIResponse::FailureResponse($e->getMessage());
+        }
     }
 }

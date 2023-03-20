@@ -17,4 +17,18 @@ class Helper {
         if (Order::where('order_code', $number)->count() > 0) self::generateNumber();
         return $number;
     }
+
+    public static function calcPromocodeDiscount($promocode = null, $cartPrice)
+    {
+        $promoDiscount = 0;
+        if($promocode) {
+            if($promocode->discount_type == 'percentage') {
+                $discount = round(($cartPrice * $promocode->discount) / 100);
+                return $promoDiscount = ($discount > $promocode->max_discount) ? $promocode->max_discount : $discount;
+            } else {
+                return $promoDiscount = $promocode->discount;
+            }
+        }
+        return $promoDiscount;
+    }
 }
