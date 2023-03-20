@@ -754,7 +754,7 @@ class StoreController extends Controller
         $validate = Validator::make($request->all(), [
             'limit' => 'required|integer',
             'page' => 'required|integer',
-            'status' => 'required'
+            'status' => 'required|in:pending,processing,finished'
         ]);
 
         if ($validate->fails()) {
