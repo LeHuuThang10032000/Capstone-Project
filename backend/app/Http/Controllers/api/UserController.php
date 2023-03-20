@@ -520,12 +520,12 @@ class UserController extends Controller
 
         try {
             $carts = $user->carts;
-            $productPrice = 0;
+            $cartPrice = 0;
             foreach($carts as $item) {
                 if($item->store_id != $request->store_id) {
                     return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
                 }
-                $productPrice += $item->total_price;
+                $cartPrice += $item->total_price;
             }
 
             $discount = 0;
@@ -535,13 +535,13 @@ class UserController extends Controller
                     ->where('id', $request->promocode_id)
                     ->first();
 
-                $discount = Helper::calcPromocodeDiscount($promocode, $productPrice);
+                $discount = Helper::calcPromocodeDiscount($promocode, $cartPrice);
             }
 
             $data = [
-                'products_total' => $productPrice,
+                'products_total' => $cartPrice,
                 'discount' => $discount,
-                'total' => $productPrice - $discount,
+                'total' => $cartPrice - $discount,
             ];
             return APIResponse::SuccessResponse($data);
         } catch(\Exception $e) {

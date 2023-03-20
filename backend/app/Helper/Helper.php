@@ -18,7 +18,7 @@ class Helper {
         return $number;
     }
 
-    public static function calcPromocodeDiscount($promocode = null, $cartPrice)
+    public static function calcPromocodeDiscount($promocode = null, $cartPrice = null)
     {
         $promoDiscount = 0;
         if($promocode) {
