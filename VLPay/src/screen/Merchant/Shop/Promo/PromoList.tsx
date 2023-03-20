@@ -24,14 +24,23 @@ const PromoList = () => {
         'merchant/promocode?store_id=' +
         data.id +
         '&page=1&limit=10&status=' +
-        state,
+        'RUNNING',
     );
     setItems(result.data.data);
+    console.log('result', result);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={{flex: 1}}>
@@ -118,7 +127,7 @@ const PromoList = () => {
           </UText>
         </TouchableOpacity>
       </HStack>
-      <VStack>
+      <VStack style={{marginBottom: 20}}>
         <View style={{height: 20}} />
         <ScrollView>
           {items &&
@@ -130,6 +139,12 @@ const PromoList = () => {
                     backgroundColor: 'white',
                     marginHorizontal: 5,
                     paddingVertical: 10,
+                  }}
+                  onPress={() => {
+                    navigation.navigate('CreatePromo', {
+                      id: item.store_id,
+                      data: item,
+                    });
                   }}>
                   <HStack alignItems={'center'}>
                     <View style={{width: 20}} />

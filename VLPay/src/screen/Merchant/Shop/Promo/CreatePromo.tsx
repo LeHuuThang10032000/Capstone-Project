@@ -1,6 +1,6 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {HStack, Input, VStack} from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import HeaderComp from '../../../../components/HeaderComp';
 import StagePromo from '../../../../components/helpers/StagePromo';
@@ -30,9 +30,16 @@ const CreatePromo = () => {
   ];
 
   const navigation = useNavigation<MainStackNavigation>();
-  const {id} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
+  const {id, data} =
+    useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
 
-  const [page, setPage] = useState(PROMOS[0]);
+  const [page, setPage] = useState(
+    data
+      ? data?.discount_type === 'percentage'
+        ? PROMOS[1]
+        : PROMOS[4]
+      : PROMOS[0],
+  );
   const [dropdownOptionSelect, setDropdownOptionSelect] = useState('');
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
@@ -40,21 +47,23 @@ const CreatePromo = () => {
   const [openDateEnd, setOpenDateEnd] = useState(false);
 
   const [code, setCode] = useState(Math.random().toString(36));
-  const [startDate, setStartDate] = useState('');
+  const [startDate, setStartDate] = useState(data ? data.start_date : '');
   const [startDateError, setStartDateError] = useState('');
   const [endDate, setEndDate] = useState('');
   const [endDateError, setEndDateError] = useState('');
   const [startTime, setStartTime] = useState('01:00:00');
   const [endTime, setEndTime] = useState('23:59:59');
-  const [discount, setDiscount] = useState(0);
+  const [discount, setDiscount] = useState(data ? data.discount : 0);
   const [discountError, setDiscountError] = useState('');
-  const [discountType, setDiscountType] = useState('');
-  const [maxDiscount, setMaxDiscount] = useState(0);
+  const [discountType, setDiscountType] = useState(
+    data ? data.discount_type : '',
+  );
+  const [maxDiscount, setMaxDiscount] = useState(data ? data.max_discount : 0);
   const [maxDiscountError, setMaxDiscountError] = useState('');
-  const [minPurchase, setMinPurchase] = useState(0);
+  const [minPurchase, setMinPurchase] = useState(data ? data.min_purchase : 0);
   const [minPurchaseError, setMinPurchaseError] = useState('');
-  const [limit, setLimit] = useState(0);
-  const [limitError, setLimitError] = useState(0);
+  const [limit, setLimit] = useState(data ? data.limit : 0);
+  const [limitError, setLimitError] = useState('');
 
   const dropdownOptions = [
     {key: '1', value: 'Không giới hạn (mặc định)'},
@@ -315,6 +324,12 @@ const CreatePromo = () => {
                 justifyContent: 'center',
               }}
               onPress={() => {
+                console.log(
+                  !maxDiscountError && !minPurchaseError && !discountError,
+                );
+
+                console.log(page);
+
                 if (!maxDiscountError && !minPurchaseError && !discountError) {
                   setPage(PROMOS[2]);
                 }
@@ -489,15 +504,28 @@ const CreatePromo = () => {
                   formData.append('discount_type', discountType);
                   formData.append('max_discount', maxDiscount);
                   formData.append('min_purchase', minPurchase);
-                  formData.append('limit', limit);
-                  const result = await axiosClient.post(
-                    baseUrl + 'merchant/promocode/create',
-                    formData,
-                    {
-                      headers: {'content-type': 'multipart/form-data'},
-                    },
-                  );
-                  console.log('result', result);
+                  formData.append('limit', 10);
+                  if (data) {
+                    if (data?.id) {
+                      formData.append('promo_id', data.id);
+                      const result = await axiosClient.post(
+                        baseUrl + 'merchant/promocode/update',
+                        formData,
+                        {
+                          headers: {'content-type': 'multipart/form-data'},
+                        },
+                      );
+                      console.log(result);
+                    }
+                  } else {
+                    await axiosClient.post(
+                      baseUrl + 'merchant/promocode/create',
+                      formData,
+                      {
+                        headers: {'content-type': 'multipart/form-data'},
+                      },
+                    );
+                  }
 
                   setPage(PROMOS[3]);
                 }
