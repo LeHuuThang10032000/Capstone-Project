@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  FlatList,
   ImageBackground,
   RefreshControl,
   SafeAreaView,
@@ -29,46 +30,65 @@ import {axiosClient} from '../../../../components/apis/axiosClient';
 import {formatCurrency} from '../../../../components/helpers/formatNum';
 import TText from '../../../Transfer/TText';
 import HeaderBack from '../../../../components/HeaderBack';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../../../stack/Navigation';
 
+interface Order {
+  id: number;
+  order_code: string;
+  created_at: string;
+  user_id: number;
+  order_total: number;
+}
+
+interface Orders {
+  orders: Order[];
+  total_size: number;
+  limit: string;
+  page: string;
+}
+
 const FirstRoute = () => {
-  const [history, setHistory] = useState([]);
-  const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [page, setPage] = useState<number>(1);
+  const [storeId, setStoreId] = useState(null);
+  const [order, setOrder] = useState<Orders>();
+  const isFocused = useIsFocused();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getDays();
+    getOrders();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
-  }, []);
+  }, [storeId]);
 
-  // console.log('===>', history);
-  console.log('MyID:', profile);
+  console.log('store ID:', storeId);
+  console.log('Order LIst:', order);
 
-  const fetchData = useCallback(async () => {
+  const getStore = useCallback(async () => {
     const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/get-profile',
+      'https://zennoshop.cf/api/user/merchant/store',
     );
-    setProfile(result.data?.data?.id);
+    setStoreId(result?.data?.data?.id);
   }, []);
 
-  const getDays = useCallback(async () => {
+  const getOrders = useCallback(async () => {
     const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/history-transaction?filter_key=days',
+      `/merchant/order?limit=100&page=1&store_id=${storeId}&status=pending`,
     );
-    setHistory(result.data?.data?.data);
-    setLoading(false);
-  }, []);
+    const data = result?.data?.data;
+    setOrder(data);
+  }, [storeId]);
 
   useEffect(() => {
-    setLoading(true);
-    fetchData();
-    getDays();
-  }, []);
+    getStore();
+    if (isFocused) {
+      getOrders();
+    }
+  }, [getStore, getOrders, isFocused]);
+
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
       <ScrollView
@@ -76,7 +96,30 @@ const FirstRoute = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <Center>Không có đơn hàng nào</Center>
+        {order ? (
+          order?.orders?.map(item => (
+            <>
+              <HStack
+                py={3}
+                alignItems={'center'}
+                justifyContent="space-between">
+                <VStack>
+                  <Text fontWeight={'bold'} color="#4285F4">
+                    #{item.order_code}
+                  </Text>
+                  <Text color="#818181">{item.created_at}</Text>
+                  <Text fontWeight={'bold'}>{item.id}</Text>
+                </VStack>
+                <Text fontWeight={'bold'} color="#818181">
+                  {formatCurrency(`${item.order_total}`)}đ
+                </Text>
+              </HStack>
+              <Divider />
+            </>
+          ))
+        ) : (
+          <Center>Không có đơn hàng nào</Center>
+        )}
       </ScrollView>
     </View>
   );
@@ -90,42 +133,19 @@ const SecondRoute = () => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getMonths();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
 
-  // console.log('===>', history);
-  console.log('MyID:', profile);
-
-  const fetchData = useCallback(async () => {
-    const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/get-profile',
-    );
-    setProfile(result.data?.data?.id);
-  }, []);
-
-  const getMonths = useCallback(async () => {
-    const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/history-transaction?filter_key=months',
-    );
-    setHistory(result.data?.data?.data);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchData();
-    getMonths();
-  }, []);
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
+      >
         <Center>Không có đơn hàng nào</Center>
       </ScrollView>
     </View>
@@ -140,35 +160,11 @@ const ThirdRoute = () => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getYears();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
 
-  // console.log('===>', history);
-  console.log('MyID:', profile);
-
-  const fetchData = useCallback(async () => {
-    const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/get-profile',
-    );
-    setProfile(result.data?.data?.id);
-  }, []);
-
-  const getYears = useCallback(async () => {
-    const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/history-transaction?filter_key=years',
-    );
-    setHistory(result.data?.data?.data);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchData();
-    getYears();
-  }, []);
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
       <ScrollView
