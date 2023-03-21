@@ -796,7 +796,7 @@ class StoreController extends Controller
             'limit' => 'required|integer',
             'page' => 'required|integer',
             'status' => 'required|in:taken,canceled',
-            'date' => 'required|date_format:Y-m-d'
+            'date' => 'date_format:Y-m-d'
         ]);
 
         if ($validate->fails()) {
@@ -806,7 +806,7 @@ class StoreController extends Controller
         try {
             $date = $request->date ?? now();
 
-            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total')
+            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total', 'discount_amount')
                 ->whereDate('created_at', $date)
                 ->where('store_id', $request->store_id)
                 ->where('status', $request->status);
@@ -851,6 +851,9 @@ class StoreController extends Controller
                 ->where('id', $request->order_id)
                 ->where('store_id', $request->store_id)
                 ->first();
+                
+            if(!isset($order)) return APIResponse::FailureResponse('Không tìm thấy đơn hàng');
+            
             $order['product_count'] = count($order->product_detail);
             return APIResponse::SuccessResponse($order);
         } catch(\Exception $e) {
@@ -862,10 +865,11 @@ class StoreController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
-            'status' => 'required|in:processing,finished',
+            'status' => 'required|in:processing,finished,accepted,canceled',
             'cancel_reason' => 'required_if:status,==,canceled'
         ], [
             'order_id.exists' => 'Đơn hàng không tồn tại',
+            'cancel_reason.required_if' => 'Vui lòng nhập lí do hủy đơn hàng'
         ]);
 
         if ($validate->fails()) {
@@ -873,13 +877,38 @@ class StoreController extends Controller
         }
 
         try {
+            DB::beginTransaction();
             $order = Order::with('user')
                 ->where('id', $request->order_id)
                 ->where('store_id', $request->store_id)
                 ->first();
-            $order['product_count'] = count($order->product_detail);
+
+            if(!isset($order)) return APIResponse::FailureResponse('Không tìm thấy đơn hàng');
+
+            if($request->status == 'canceled') {
+                if($order->status != 'pending') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi hủy đơn hàng');
+                $order->status = 'canceled';
+                $order->canceled_at = now();
+                $order->cancel_reason = $request->cancel_reason;
+            } else if($request->status == 'accepted') {
+                if($order->status != 'pending') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi tiếp nhận đơn hàng');
+                $order->status = 'accepted';
+                $order->accepted_at = now();
+            } else if($request->status == 'processing') {
+                if($order->status != 'accepted') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi thực hiện đơn hàng');
+                $order->status = 'processing';
+                $order->processing_at = now();
+            } else {
+                if($order->status != 'processing') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi hoàn thành đơn hàng');
+                $order->status = 'finished';
+                $order->finished_at = now();
+            }
+            $order->save();
+
+            DB::commit();
             return APIResponse::SuccessResponse($order);
         } catch(\Exception $e) {
+            DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
     }

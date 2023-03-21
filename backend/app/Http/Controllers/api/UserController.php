@@ -583,7 +583,7 @@ class UserController extends Controller
         }
 
         if(!isset($carts)) {
-            return APIResponse::FailureResponse('Giỏ hàng của bạn đang rỗng');
+            return APIResponse::FailureResponse('Giỏ hàng của bạn đang trống');
         }
 
         if(($user->wallet->balance + $user->wallet->credit_limit) < $cartPrice) {
@@ -830,8 +830,6 @@ class UserController extends Controller
             'limit' => 'required|integer',
             'page' => 'required|integer',
             'status' => ''
-        ],[
-            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
         ]);
 
         if ($validate->fails()) {

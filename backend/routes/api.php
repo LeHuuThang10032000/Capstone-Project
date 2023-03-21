@@ -95,6 +95,7 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::get('/order', [StoreController::class, 'getOrder']);
         Route::get('/order/detail', [StoreController::class, 'getOrderDetail']);
         Route::get('/history-order', [StoreController::class, 'getHistoryOrder']);
+        Route::post('/order/update-status', [StoreController::class, 'updateOrderStatus']);
     });
 
     Route::group(['prefix' => 'store'], function() {
