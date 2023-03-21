@@ -752,6 +752,7 @@ class StoreController extends Controller
     public function getOrder(Request $request)
     {
         $validate = Validator::make($request->all(), [
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
             'limit' => 'required|integer',
             'page' => 'required|integer',
             'status' => 'required|in:pending,processing,finished'
@@ -772,11 +773,11 @@ class StoreController extends Controller
                 $offset = ($page - 1) * $limit;
                 $orders = $orders->offset($offset)->limit($limit);
             }
-
+            $totalOrders = $orders->count();
             $orders = $orders->get();
 
             $data = [
-                'total_size' => $orders->count(),
+                'total_size' => $totalOrders,
                 'limit' => $limit,
                 'page' => $page,
                 'orders' => $orders
@@ -785,6 +786,101 @@ class StoreController extends Controller
             return ApiResponse::successResponse($data);
         } catch(\Exception $e) {
             return APIResponse::FailureResponse($e->getMessage());
+        }
+    }
+
+    public function getHistoryOrder(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+            'limit' => 'required|integer',
+            'page' => 'required|integer',
+            'status' => 'required|in:taken,canceled',
+            'date' => 'required|date_format:Y-m-d'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $date = $request->date ?? now();
+
+            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total')
+                ->whereDate('created_at', $date)
+                ->where('store_id', $request->store_id)
+                ->where('status', $request->status);
+
+            if ($request->page) {
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page - 1) * $limit;
+                $orders = $orders->offset($offset)->limit($limit);
+            }
+            $totalOrders = $orders->count();
+            $orders = $orders->get();
+
+            $data = [
+                'total_size' => $totalOrders,
+                'limit' => $limit,
+                'page' => $page,
+                'orders' => $orders
+            ];
+
+            return ApiResponse::successResponse($data);
+        } catch(\Exception $e) {
+            return APIResponse::FailureResponse($e->getMessage());
+        }
+    }
+
+    public function getOrderDetail(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+        ], [
+            'order_id.exists' => 'Đơn hàng không tồn tại',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $order = Order::with('user')
+                ->where('id', $request->order_id)
+                ->where('store_id', $request->store_id)
+                ->first();
+            $order['product_count'] = count($order->product_detail);
+            return APIResponse::SuccessResponse($order);
+        } catch(\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function updateOrderStatus(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
+            'status' => 'required|in:processing,finished',
+            'cancel_reason' => 'required_if:status,==,canceled'
+        ], [
+            'order_id.exists' => 'Đơn hàng không tồn tại',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $order = Order::with('user')
+                ->where('id', $request->order_id)
+                ->where('store_id', $request->store_id)
+                ->first();
+            $order['product_count'] = count($order->product_detail);
+            return APIResponse::SuccessResponse($order);
+        } catch(\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
         }
     }
 }

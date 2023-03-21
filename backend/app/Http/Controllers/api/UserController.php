@@ -741,7 +741,6 @@ class UserController extends Controller
             $order['product_count'] = count($order->product_detail);
             return APIResponse::SuccessResponse($order);
         } catch(\Exception $e) {
-            DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
@@ -784,7 +783,6 @@ class UserController extends Controller
             
             return APIResponse::SuccessResponse(null);
         } catch(\Exception $e) {
-            DB::rollBack();
             return ApiResponse::failureResponse('Không thể hủy đơn hàng. Đã có lỗi xảy ra');
         }
     }
@@ -822,7 +820,6 @@ class UserController extends Controller
             
             return APIResponse::SuccessResponse(null);
         } catch(\Exception $e) {
-            DB::rollBack();
             return ApiResponse::failureResponse('Không thể hủy đơn hàng. Đã có lỗi xảy ra');
         }
     }
@@ -866,7 +863,7 @@ class UserController extends Controller
 
             return ApiResponse::successResponse($data);
         } catch(\Exception $e) {
-
+            return ApiResponse::failureResponse($e->getMessage());
         }
     }
 }

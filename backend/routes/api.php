@@ -93,6 +93,8 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::post('/promocode/cancel', [StoreController::class, 'cancelPromocode']);
 
         Route::get('/order', [StoreController::class, 'getOrder']);
+        Route::get('/order/detail', [StoreController::class, 'getOrderDetail']);
+        Route::get('/history-order', [StoreController::class, 'getHistoryOrder']);
     });
 
     Route::group(['prefix' => 'store'], function() {
