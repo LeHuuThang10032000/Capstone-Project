@@ -1,5 +1,5 @@
 import {Alert, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
 import {Center, Divider, Image, Input, Text, TextArea, View} from 'native-base';
 import MessageIcon from '../../assets/svg/message.svg';
@@ -12,18 +12,10 @@ const PaymentOrder = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const {total_price, store_id} = route.params;
   const [text, onChangeText] = React.useState('');
+  const [orderId, setOrderId] = useState(0);
 
   console.log('STORE ID:', store_id);
-
-  // const handleOrder = useCallback(async () => {
-  //   const formData = new FormData();
-  //   formData.append('store_id', store_id);
-  //   const result = await axiosClient.post('/create-order', formData, {
-  //     headers: {'content-type': 'multipart/form-data'},
-  //   });
-  //   console.log(result.data);
-  //   navigation.navigate('OrderProcess');
-  // }, []);
+  console.log('ORDER ID:', orderId);
 
   const handleOrder = useCallback(async () => {
     const formData = new FormData();
@@ -33,11 +25,19 @@ const PaymentOrder = ({route}: any) => {
         headers: {'content-type': 'multipart/form-data'},
       });
       console.log(result.data);
-      navigation.navigate('OrderProcess');
+      const request_id = result.data.data.request_id;
+      navigation.navigate('OrderProcess', {
+        order_id: request_id,
+        store_id: store_id,
+      });
     } catch (error) {
       Alert.alert('Lỗi hệ thống', 'Có lỗi xảy ra vui lòng thử lại sau!');
     }
-  }, []);
+  }, [orderId]);
+
+  // useEffect(() => {
+  //   handleOrder();
+  // }, []);
 
   return (
     <View flex={1} backgroundColor="#FFFFFF">
