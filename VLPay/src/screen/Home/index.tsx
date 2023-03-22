@@ -59,7 +59,9 @@ const Index = () => {
   return (
     <>
       {token ? (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={{backgroundColor: '#fff'}}
+          showsVerticalScrollIndicator={false}>
           <Header />
           <Banner wallet={userWallet} />
           <ManageCash wallet={userWallet} credit={credit} loading={isloading} />
