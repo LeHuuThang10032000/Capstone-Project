@@ -32,6 +32,9 @@ import TText from '../../../Transfer/TText';
 import HeaderBack from '../../../../components/HeaderBack';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../../../stack/Navigation';
+import {baseUrl} from '../../../../components/apis/baseUrl';
+import {UText} from '../../../../components/UText';
+import DatePicker from 'react-native-date-picker';
 
 interface Order {
   id: number;
@@ -49,11 +52,13 @@ interface Orders {
 }
 
 const FirstRoute = () => {
+  const navigation = useNavigation<MainStackNavigation>();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [page, setPage] = useState<number>(1);
   const [storeId, setStoreId] = useState(null);
   const [order, setOrder] = useState<Orders>();
+  const [history, setHistory] = useState([]);
   const isFocused = useIsFocused();
 
   const onRefresh = React.useCallback(() => {
@@ -68,6 +73,9 @@ const FirstRoute = () => {
   console.log('Order LIst:', order);
 
   const getStore = useCallback(async () => {
+    const date = new Date(); // Create a new date object with the current date and time
+    const isoString = date.toISOString(); // Convert the date to an ISO-formatted string
+    const formattedDate = isoString.slice(0, 10); // Extract the first 10 characters of the string (YYYY-MM-DD)
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/merchant/store',
     );
@@ -99,26 +107,36 @@ const FirstRoute = () => {
         {order ? (
           order?.orders?.map(item => (
             <>
-              <HStack
-                py={3}
-                alignItems={'center'}
-                justifyContent="space-between">
-                <VStack>
-                  <Text fontWeight={'bold'} color="#4285F4">
-                    #{item.order_code}
+              <TouchableOpacity
+                onPress={() => {
+                  item.store_id = storeId;
+                  navigation.navigate('OrderDetailScreen', {
+                    data: item,
+                  });
+                }}>
+                <HStack
+                  py={3}
+                  alignItems={'center'}
+                  justifyContent="space-between">
+                  <VStack>
+                    <Text fontWeight={'bold'} color="#4285F4">
+                      #{item.order_code}
+                    </Text>
+                    <Text color="#818181">{item.created_at}</Text>
+                    <Text fontWeight={'bold'}>{item.id}</Text>
+                  </VStack>
+                  <Text fontWeight={'bold'} color="#818181">
+                    {formatCurrency(`${item.order_total}`)}đ
                   </Text>
-                  <Text color="#818181">{item.created_at}</Text>
-                  <Text fontWeight={'bold'}>{item.id}</Text>
-                </VStack>
-                <Text fontWeight={'bold'} color="#818181">
-                  {formatCurrency(`${item.order_total}`)}đ
-                </Text>
-              </HStack>
+                </HStack>
+              </TouchableOpacity>
               <Divider />
             </>
           ))
         ) : (
-          <Center>Không có đơn hàng nào</Center>
+          <Center>
+            <Text>Không có đơn hàng nào</Text>
+          </Center>
         )}
       </ScrollView>
     </View>
@@ -180,6 +198,25 @@ const ThirdRoute = () => {
 
 const FourthRoute = () => {
   const [refreshing, setRefreshing] = React.useState(false);
+  const [date, setDate] = useState(new Date());
+  const [dateStr, setDateStr] = useState(new Date().toISOString().slice(0, 10));
+  const [open, setOpen] = useState(false);
+  const [storeId, setStoreId] = useState(0);
+  const [history, setHistory] = useState([]);
+
+  const getStore = useCallback(async () => {
+    const date = new Date(); // Create a new date object with the current date and time
+    const isoString = date.toISOString(); // Convert the date to an ISO-formatted string
+    const formattedDate = isoString.slice(0, 10); // Extract the first 10 characters of the string (YYYY-MM-DD)
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/merchant/store',
+    );
+    setStoreId(result?.data?.data?.id);
+  }, []);
+
+  useEffect(() => {
+    getStore();
+  }, [getStore]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -187,6 +224,7 @@ const FourthRoute = () => {
       setRefreshing(false);
     }, 2000);
   }, []);
+
   return (
     <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
       <ScrollView
@@ -194,7 +232,40 @@ const FourthRoute = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <Center>Không có đơn hàng nào</Center>
+        <VStack>
+          <UText style={{alignSelf: 'center'}}>Chọn ngày</UText>
+          <TouchableOpacity onPress={() => setOpen(true)}>
+            <Input
+              value={date ? date.toString() : 'Chọn ngày và thời gian'}
+              borderRadius={10}
+              isReadOnly={true}
+            />
+          </TouchableOpacity>
+          <DatePicker
+            modal
+            open={open}
+            date={date}
+            onConfirm={async _date => {
+              if (date.getTime() > _date.getTime()) {
+                setDate(date);
+                const time = date.toISOString().slice(0, 10);
+                const result = await axiosClient.get(
+                  baseUrl +
+                    'merchant/history-order?page=1&limit=1&status=canceled&store_id=' +
+                    storeId +
+                    '&date=' +
+                    time,
+                );
+                setHistory(result?.data?.data);
+              }
+              setOpen(false);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
+          {history && <View></View>}
+        </VStack>
       </ScrollView>
     </View>
   );
