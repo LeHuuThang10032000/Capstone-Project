@@ -316,7 +316,7 @@ class UserController extends Controller
         }
     }
 
-    public function getCart(): JsonResponse
+    public function getCart()
     {
         try {
             $user = Auth::user();
@@ -325,11 +325,11 @@ class UserController extends Controller
             $totalPrice = 0;
             $totalQuantity = 0;
 
-            if (count($carts)) {
+            if (count($carts) > 0) {
                 $products = $carts->map(function ($item, $key) use (&$totalPrice, &$totalQuantity) {
                     $totalPrice += $item->total_price;
                     $totalQuantity += $item->quantity;
-                    
+                                
                     return [
                         'id' => $item->product_id ?? '',
                         'name' => $item->product->name ?? '',
@@ -347,7 +347,7 @@ class UserController extends Controller
                 'products' => $products,
                 'total_quantity' => $totalQuantity,
                 'total_price' => $totalPrice,
-                'store_id' => $carts->first()->store_id,
+                'store_id' => $carts->first()->store_id ?? '',
             ];
             
             return ApiResponse::successResponse($data);
@@ -357,16 +357,11 @@ class UserController extends Controller
         }
     }
 
-    public function deleteCart(): JsonResponse
+    public function deleteCart()
     {
         try {
             $user = Auth::user();
-            $user->carts()->where(function ($query) {
-                $query->doesntHave('product')
-                    ->orWhereHas('product', function ($q) {
-                        $q->where('status', '!=', 'ACTIVE');
-                    });
-            })->delete();
+            $user->carts()->delete();
             
             return ApiResponse::successResponse(null);
         } catch(\Exception $e) {
