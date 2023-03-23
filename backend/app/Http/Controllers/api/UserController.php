@@ -577,7 +577,7 @@ class UserController extends Controller
             $cartPrice += $item->total_price;
         }
 
-        if(!isset($carts)) {
+        if(!count($carts)) {
             return APIResponse::FailureResponse('Giỏ hàng của bạn đang trống');
         }
 
@@ -733,7 +733,9 @@ class UserController extends Controller
                 ->where('id', $request->order_id)
                 ->where('user_id', Auth::user()->id)
                 ->first();
-            $order['product_count'] = count($order->product_detail);
+            if(!isset($order)) {
+                return APIResponse::FailureResponse('Không tìm thấy đơn hàng');
+            }
             return APIResponse::SuccessResponse($order);
         } catch(\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
@@ -834,8 +836,10 @@ class UserController extends Controller
         try {
             $orders = Order::where('user_id', Auth::user()->id);
 
-            if($request->status) {
+            if($request->status == 'taken') {
                 $orders = $orders->where('status', $request->status);
+            } else {
+                $orders = $orders->where('status', '!=', 'taken');
             }
 
             if ($request->page) {
@@ -844,11 +848,11 @@ class UserController extends Controller
                 $offset = ($page - 1) * $limit;
                 $orders = $orders->offset($offset)->limit($limit);
             }
-
+            $totalOrders = $orders->count();
             $orders = $orders->get();
 
             $data = [
-                'total_size' => $orders->count(),
+                'total_size' => $totalOrders,
                 'limit' => $limit,
                 'page' => $page,
                 'orders' => $orders
