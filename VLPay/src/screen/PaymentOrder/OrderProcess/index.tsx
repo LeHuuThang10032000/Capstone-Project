@@ -379,6 +379,7 @@ const OrderProcess = ({route}: any) => {
           </View>
         );
       case 'finished':
+      case 'taken':
         return (
           <View>
             <Center marginY={5}>

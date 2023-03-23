@@ -388,53 +388,6 @@ const Index = () => {
   return (
     <SafeAreaView style={styles.container}>
       <HeaderComp title="Lịch sử giao dịch" />
-      {/* <View style={{paddingHorizontal: 15, flex: 1}}>
-        <Center bg="white">
-          <Input
-            placeholder="Tìm giao dịch"
-            fontFamily={'Poppins-Regular'}
-            width="100%"
-            borderRadius="4"
-            borderColor={'#A2A2A6'}
-            mt="21"
-            mb="21"
-            py="3"
-            px="1"
-            pl="2"
-            fontSize="16"
-            bgColor={'rgba(0, 0, 0, 0.06)'}
-            autoFocus={false}
-            // onChangeText={text => searchFilterFunction(text)}
-            // value={search}
-            InputLeftElement={
-              <Icon ml="3" as={<SearchIcon color={'#000000'} />} />
-            }
-          />
-        </Center>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {HISTORY_TRANSACTION_SAMPLE.map(item => {
-            return (
-              <View key={item.id}>
-                <View style={styles.containerMonth}>
-                  <Text style={styles.titleText}>{item.month}</Text>
-                </View>
-                {item.list_transaction.map(item => {
-                  return (
-                    <VStack py={5} key={item.id}>
-                      <HStack justifyContent={'space-between'}>
-                        <Text style={styles.text}>{item.description}</Text>
-                        <Text style={styles.text}>{item.money}đ</Text>
-                      </HStack>
-                      <Text style={styles.textDate}>{item.date}</Text>
-                    </VStack>
-                  );
-                })}
-                <Divider my={5} bgColor={'black'} />
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View> */}
       <TabView
         navigationState={{index, routes}}
         renderScene={renderScene}

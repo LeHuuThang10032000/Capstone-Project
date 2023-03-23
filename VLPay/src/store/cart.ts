@@ -78,6 +78,31 @@ export interface myCart {
   total_price: string;
 }
 
+export interface HistoryOrder {
+  orders: myOrder[];
+}
+
+export interface myOrder {
+  id: number;
+  order_code: string;
+  user_id: number;
+  store_id: number;
+  promocode_id: number;
+  order_total: number;
+  discount_amount: number;
+  status: string;
+  note: string;
+  created_at: string;
+  accepted_at: string;
+  canceled_at: string;
+  processing_at: string;
+  finished_at: string;
+  updated_at: string;
+  taken_at: string;
+  cancel_reason: string;
+  product_quantity: number;
+  product_detail: Product[];
+}
 interface CartStore {
   cartItems: CartItem[];
   addToCart: (item: Product, quantity: number) => void;

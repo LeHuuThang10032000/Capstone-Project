@@ -49,6 +49,7 @@ import OrderProcess from '../screen/PaymentOrder/OrderProcess';
 import PromoList from '../screen/Merchant/Shop/Promo/PromoList';
 import OrderDetailScreen from '../screen/Merchant/Shop/OrderScreen/OrderDetailScreen';
 import OrderDetailCancel from '../screen/Merchant/Shop/OrderScreen/OrderDetailCancel';
+import MyDetailOrder from '../screen/MyOrder/MyDetailOrder';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -226,5 +227,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'OrderDetailCancel',
     component: OrderDetailCancel,
+  },
+  {
+    name: 'MyDetailOrder',
+    component: MyDetailOrder,
   },
 ];
