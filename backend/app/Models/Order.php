@@ -24,6 +24,8 @@ class Order extends Model
 
     ];
 
+    protected $appends = ['product_quantity'];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -53,5 +55,15 @@ class Order extends Model
     {
         $products = json_decode($value, true);
         return $products;
+    }
+
+    public function getProductQuantityAttribute()
+    {
+        $quantity = 0;
+        $products = $this->product_detail;
+        foreach($products as $product) {
+            $quantity += $product['quantity'];
+        }
+        return $quantity;
     }
 }

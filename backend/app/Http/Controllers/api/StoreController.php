@@ -765,7 +765,8 @@ class StoreController extends Controller
         try {
             $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total')
                 ->where('store_id', $request->store_id)
-                ->where('status', $request->status);
+                ->where('status', $request->status)
+                ->orderBy('created_at');
 
             if ($request->page) {
                 $limit = $request->limit;
