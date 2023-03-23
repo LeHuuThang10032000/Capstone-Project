@@ -83,11 +83,10 @@ const OrderProcess = ({route}: any) => {
   }, []);
 
   useEffect(() => {
-    // Call only when screen open or when back on screen
-    if (isFocused) {
-      getOrder();
-    }
-  }, [getOrder, isFocused]);
+    const intervalId = setInterval(getOrder, 2000);
+
+    return () => clearInterval(intervalId);
+  }, [getOrder]);
 
   const renderComponent = () => {
     switch (order?.status) {
@@ -122,38 +121,31 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} fontSize={16} color="#000000">
                 Kios số 10: Trà sữa May
               </Text>
-              {isLoading ? (
-                <ActivityIndicator />
-              ) : (
-                <>
-                  {order?.product_detail.map(item => (
-                    <HStack
-                      marginY={1}
-                      alignItems={'center'}
-                      justifyContent="space-between">
-                      <VStack>
-                        <HStack key={item.id} alignItems={'center'}>
-                          <Text
-                            fontSize={16}
-                            fontWeight={'bold'}
-                            color="#000000">
-                            {item.name}
-                          </Text>
-                          <Text paddingLeft={1}>({item.quantity})</Text>
-                        </HStack>
-                        {item.add_ons.map(item => (
-                          <Text key={item.id} color={'#747980'}>
-                            {item.name}
-                          </Text>
-                        ))}
-                      </VStack>
-                      <Text fontWeight={'bold'} fontSize={16}>
-                        {formatCurrency((item?.price ?? 0).toString())}đ
-                      </Text>
-                    </HStack>
-                  ))}
-                </>
-              )}
+              <>
+                {order?.product_detail.map(item => (
+                  <HStack
+                    marginY={1}
+                    alignItems={'center'}
+                    justifyContent="space-between">
+                    <VStack>
+                      <HStack key={item.id} alignItems={'center'}>
+                        <Text fontSize={16} fontWeight={'bold'} color="#000000">
+                          {item.name}
+                        </Text>
+                        <Text paddingLeft={1}>({item.quantity})</Text>
+                      </HStack>
+                      {item.add_ons.map(item => (
+                        <Text key={item.id} color={'#747980'}>
+                          {item.name}
+                        </Text>
+                      ))}
+                    </VStack>
+                    <Text fontWeight={'bold'} fontSize={16}>
+                      {formatCurrency((item?.price ?? 0).toString())}đ
+                    </Text>
+                  </HStack>
+                ))}
+              </>
               <HStack
                 paddingY={3}
                 alignItems={'center'}
@@ -286,38 +278,31 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} fontSize={16} color="#000000">
                 Kios số 10: Trà sữa May
               </Text>
-              {isLoading ? (
-                <ActivityIndicator />
-              ) : (
-                <>
-                  {order?.product_detail.map(item => (
-                    <HStack
-                      marginY={1}
-                      alignItems={'center'}
-                      justifyContent="space-between">
-                      <VStack>
-                        <HStack key={item.id} alignItems={'center'}>
-                          <Text
-                            fontSize={16}
-                            fontWeight={'bold'}
-                            color="#000000">
-                            {item.name}
-                          </Text>
-                          <Text paddingLeft={1}>({item.quantity})</Text>
-                        </HStack>
-                        {item.add_ons.map(item => (
-                          <Text key={item.id} color={'#747980'}>
-                            {item.name}
-                          </Text>
-                        ))}
-                      </VStack>
-                      <Text fontWeight={'bold'} fontSize={16}>
-                        {formatCurrency((item?.price ?? 0).toString())}đ
-                      </Text>
-                    </HStack>
-                  ))}
-                </>
-              )}
+              <>
+                {order?.product_detail.map(item => (
+                  <HStack
+                    marginY={1}
+                    alignItems={'center'}
+                    justifyContent="space-between">
+                    <VStack>
+                      <HStack key={item.id} alignItems={'center'}>
+                        <Text fontSize={16} fontWeight={'bold'} color="#000000">
+                          {item.name}
+                        </Text>
+                        <Text paddingLeft={1}>({item.quantity})</Text>
+                      </HStack>
+                      {item.add_ons.map(item => (
+                        <Text key={item.id} color={'#747980'}>
+                          {item.name}
+                        </Text>
+                      ))}
+                    </VStack>
+                    <Text fontWeight={'bold'} fontSize={16}>
+                      {formatCurrency((item?.price ?? 0).toString())}đ
+                    </Text>
+                  </HStack>
+                ))}
+              </>
               <HStack
                 paddingY={3}
                 alignItems={'center'}
@@ -424,38 +409,31 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} fontSize={16} color="#000000">
                 Kios số 10: Trà sữa May
               </Text>
-              {isLoading ? (
-                <ActivityIndicator />
-              ) : (
-                <>
-                  {order?.product_detail.map(item => (
-                    <HStack
-                      marginY={1}
-                      alignItems={'center'}
-                      justifyContent="space-between">
-                      <VStack>
-                        <HStack key={item.id} alignItems={'center'}>
-                          <Text
-                            fontSize={16}
-                            fontWeight={'bold'}
-                            color="#000000">
-                            {item.name}
-                          </Text>
-                          <Text paddingLeft={1}>({item.quantity})</Text>
-                        </HStack>
-                        {item.add_ons.map(item => (
-                          <Text key={item.id} color={'#747980'}>
-                            {item.name}
-                          </Text>
-                        ))}
-                      </VStack>
-                      <Text fontWeight={'bold'} fontSize={16}>
-                        {formatCurrency((item?.price ?? 0).toString())}đ
-                      </Text>
-                    </HStack>
-                  ))}
-                </>
-              )}
+              <>
+                {order?.product_detail.map(item => (
+                  <HStack
+                    marginY={1}
+                    alignItems={'center'}
+                    justifyContent="space-between">
+                    <VStack>
+                      <HStack key={item.id} alignItems={'center'}>
+                        <Text fontSize={16} fontWeight={'bold'} color="#000000">
+                          {item.name}
+                        </Text>
+                        <Text paddingLeft={1}>({item.quantity})</Text>
+                      </HStack>
+                      {item.add_ons.map(item => (
+                        <Text key={item.id} color={'#747980'}>
+                          {item.name}
+                        </Text>
+                      ))}
+                    </VStack>
+                    <Text fontWeight={'bold'} fontSize={16}>
+                      {formatCurrency((item?.price ?? 0).toString())}đ
+                    </Text>
+                  </HStack>
+                ))}
+              </>
               <HStack
                 paddingY={3}
                 alignItems={'center'}
