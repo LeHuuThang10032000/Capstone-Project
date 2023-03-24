@@ -161,7 +161,7 @@ class UserController extends Controller
         }
     }
 
-    public function findUserById($phone)
+    public function findUserById($phone): JsonResponse
     {
         if(Auth::check()){
             $user = User::where("phone", $phone)->first();
@@ -316,7 +316,7 @@ class UserController extends Controller
         }
     }
 
-    public function getCart()
+    public function getCart(): JsonResponse
     {
         try {
             $user = Auth::user();
@@ -357,7 +357,7 @@ class UserController extends Controller
         }
     }
 
-    public function deleteCart()
+    public function deleteCart(): JsonResponse
     {
         try {
             $user = Auth::user();
@@ -497,7 +497,7 @@ class UserController extends Controller
         }
     }
 
-    public function calcOrderTotal(Request $request)
+    public function calcOrderTotal(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
@@ -545,7 +545,7 @@ class UserController extends Controller
         }
     }
 
-    public function createOrder(Request $request)
+    public function createOrder(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
@@ -716,7 +716,7 @@ class UserController extends Controller
         }
     }
 
-    public function getOrderDetail(Request $request)
+    public function getOrderDetail(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
@@ -742,7 +742,7 @@ class UserController extends Controller
         }
     }
 
-    public function cancelOrder(Request $request)
+    public function cancelOrder(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
@@ -784,7 +784,7 @@ class UserController extends Controller
         }
     }
 
-    public function takenOrder(Request $request)
+    public function takenOrder(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
@@ -821,7 +821,7 @@ class UserController extends Controller
         }
     }
 
-    public function getOrder(Request $request)
+    public function getOrder(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'limit' => 'required|integer',
