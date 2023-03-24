@@ -796,7 +796,6 @@ class StoreController extends Controller
             'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
             'limit' => 'required|integer',
             'page' => 'required|integer',
-            'status' => 'required|in:taken,canceled',
             'date' => 'date_format:Y-m-d'
         ]);
 
@@ -807,25 +806,34 @@ class StoreController extends Controller
         try {
             $date = $request->date ?? now();
 
-            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total', 'discount_amount', 'product_detail')
-                ->whereDate('created_at', $date)
-                ->where('store_id', $request->store_id)
-                ->where('status', $request->status);
+            $orders = Order::whereDate('orders.created_at', $date)
+                ->where('orders.store_id', $request->store_id)
+                ->whereIn('status', ['taken', 'canceled']);
 
             if ($request->page) {
                 $limit = $request->limit;
                 $page = $request->page;
                 $offset = ($page - 1) * $limit;
-                $orders = $orders->offset($offset)->limit($limit);
             }
+
             $totalOrders = $orders->count();
-            $orders = $orders->get();
+            $summary = (clone $orders)
+                ->join('transactions', 'orders.id', '=', 'transactions.order_id')
+                ->selectRaw('SUM(CASE WHEN status = \'taken\' THEN 1 ELSE 0 END) as total_taken_order, 
+                    SUM(CASE WHEN status = \'canceled\' THEN 1 ELSE 0 END) as total_canceled_orders,
+                    SUM(CASE WHEN status = (\'taken\') THEN transactions.amount ELSE 0 END) as total_revenue')->first();
+            
+            $orders = $orders->selectRaw('id, order_code, created_at, user_id, order_total, discount_amount, product_detail')
+                ->offset($offset)->limit($limit)->get();
 
             $data = [
                 'total_size' => $totalOrders,
                 'limit' => $limit,
                 'page' => $page,
-                'orders' => $orders
+                'orders' => $orders,
+                'total_canceled_orders' => $summary->total_canceled_orders,
+                'total_taken_order' => $summary->total_taken_order,
+                'total_revenue' => $summary->total_revenue,
             ];
 
             return ApiResponse::successResponse($data);
