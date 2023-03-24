@@ -67,6 +67,6 @@ class Order extends Model
             }
         }
         
-        return $products;
+        return $quantity;
     }
 }
