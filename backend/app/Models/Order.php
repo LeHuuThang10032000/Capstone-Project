@@ -61,9 +61,12 @@ class Order extends Model
     {
         $quantity = 0;
         $products = $this->product_detail;
-        foreach($products as $product) {
-            $quantity += $product['quantity'];
+        if(isset($products)) {
+            foreach($products as $product) {
+                $quantity += $product['quantity'];
+            }
         }
+        
         return $quantity;
     }
 }
