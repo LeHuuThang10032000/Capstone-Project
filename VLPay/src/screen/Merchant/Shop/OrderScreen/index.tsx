@@ -35,7 +35,8 @@ import {MainStackNavigation} from '../../../../stack/Navigation';
 import {baseUrl} from '../../../../components/apis/baseUrl';
 import {UText} from '../../../../components/UText';
 import DatePicker from 'react-native-date-picker';
-
+import moment from 'moment';
+import 'moment/locale/vi'; // Import the Vietnamese
 interface Order {
   id: number;
   order_code: string;
@@ -84,7 +85,7 @@ const FirstRoute = () => {
 
   const getOrders = useCallback(async () => {
     const result = await axiosClient.get(
-      `/merchant/order?limit=100&page=1&store_id=${storeId}&status=pending`,
+      `merchant/order?limit=100&page=1&store_id=${storeId}&status=pending`,
     );
     const data = result?.data?.data;
     setOrder(data);
@@ -110,6 +111,7 @@ const FirstRoute = () => {
               <TouchableOpacity
                 onPress={() => {
                   item.store_id = storeId;
+                  item.detail = false;
                   navigation.navigate('OrderDetailScreen', {
                     data: item,
                   });
@@ -197,13 +199,19 @@ const ThirdRoute = () => {
 };
 
 const FourthRoute = () => {
+  const navigation = useNavigation<MainStackNavigation>();
   const [refreshing, setRefreshing] = React.useState(false);
   const [date, setDate] = useState(new Date());
   const [dateStr, setDateStr] = useState(new Date().toISOString().slice(0, 10));
   const [open, setOpen] = useState(false);
   const [storeId, setStoreId] = useState(0);
+  const [historyTaken, setHistoryTaken] = useState([]);
+  const [historyCanceled, setHistoryCanceled] = useState([]);
+  const [order, setOrder] = useState([]);
   const [history, setHistory] = useState([]);
+  moment.locale('vi'); // Set the locale to Vietnamese
 
+  const _formattedDate = moment(date).format('LL');
   const getStore = useCallback(async () => {
     const date = new Date(); // Create a new date object with the current date and time
     const isoString = date.toISOString(); // Convert the date to an ISO-formatted string
@@ -211,6 +219,17 @@ const FourthRoute = () => {
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/merchant/store',
     );
+    const _history = await axiosClient.get(
+      baseUrl +
+        'merchant/history-order?page=1&limit=10&store_id=' +
+        result?.data?.data?.id +
+        '&date=' +
+        formattedDate,
+    );
+    setOrder(_history?.data?.data);
+    setHistoryCanceled(_history?.data?.data?.total_canceled_orders);
+    setHistoryTaken(_history?.data?.data?.total_taken_order);
+    setHistory(_history?.data?.data?.orders);
     setStoreId(result?.data?.data?.id);
   }, []);
 
@@ -225,8 +244,10 @@ const FourthRoute = () => {
     }, 2000);
   }, []);
 
+  console.log('hist', history);
+
   return (
-    <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
+    <View style={{flex: 1, marginTop: 20}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -235,36 +256,118 @@ const FourthRoute = () => {
         <VStack>
           <UText style={{alignSelf: 'center'}}>Chọn ngày</UText>
           <TouchableOpacity onPress={() => setOpen(true)}>
-            <Input
-              value={date ? date.toString() : 'Chọn ngày và thời gian'}
-              borderRadius={10}
-              isReadOnly={true}
-            />
+            <UText style={{alignSelf: 'center', fontWeight: '700'}}>
+              {_formattedDate}
+            </UText>
           </TouchableOpacity>
           <DatePicker
             modal
             open={open}
             date={date}
             onConfirm={async _date => {
-              if (date.getTime() > _date.getTime()) {
-                setDate(date);
-                const time = date.toISOString().slice(0, 10);
-                const result = await axiosClient.get(
-                  baseUrl +
-                    'merchant/history-order?page=1&limit=1&status=canceled&store_id=' +
-                    storeId +
-                    '&date=' +
-                    time,
-                );
-                setHistory(result?.data?.data);
-              }
+              const time = _date.toISOString().slice(0, 10);
+
+              const _history = await axiosClient.get(
+                baseUrl +
+                  'merchant/history-order?page=1&limit=10&store_id=' +
+                  storeId +
+                  '&date=' +
+                  time,
+              );
+
+              setHistoryCanceled(_history?.data?.data?.total_canceled_orders);
+              setHistoryTaken(_history?.data?.data?.total_taken_order);
+              setHistory(_history?.data?.data?.orders);
+              setDate(_date);
               setOpen(false);
             }}
             onCancel={() => {
               setOpen(false);
             }}
           />
-          {history && <View></View>}
+          <ScrollView>
+            <VStack
+              alignItems={'center'}
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 20,
+                borderColor: 'rgba(0, 0, 0, 0.13)',
+                borderWidth: 1,
+                marginTop: 10,
+              }}>
+              <UText
+                style={{color: '#FEB7B1', fontWeight: '700', fontSize: 25}}>
+                {(order?.total_revenue ?? 0).toLocaleString()}đ
+              </UText>
+              <UText style={{fontWeight: '700'}}>Tổng doanh thu</UText>
+              <UText style={{textAlign: 'center', color: '#8A8A8A'}}>
+                Đây là doanh thu trước khi được điều {'\n'}chỉnh và khấu trừ
+              </UText>
+            </VStack>
+            <VStack>
+              <View
+                style={{
+                  borderColor: 'rgba(0, 0, 0, 0.13)',
+                  borderWidth: 1,
+                  marginTop: 20,
+                }}>
+                <HStack
+                  justifyContent={'space-between'}
+                  style={{paddingHorizontal: 16, paddingVertical: 10}}>
+                  <VStack alignItems={'center'}>
+                    <UText style={{fontWeight: '700'}}>
+                      {historyTaken ?? 0}
+                    </UText>
+                    <UText>Đơn hàng hoàn tất</UText>
+                  </VStack>
+                  <VStack alignItems={'center'}>
+                    <UText style={{fontWeight: '700'}}>
+                      {historyCanceled ?? 0}
+                    </UText>
+                    <UText>Đơn đã huỷ</UText>
+                  </VStack>
+                </HStack>
+              </View>
+              <VStack style={{paddingHorizontal: 16, marginTop: 10}}>
+                <UText
+                  style={{fontWeight: '700', marginBottom: 10, fontSize: 20}}>
+                  ĐƠN HÀNG
+                </UText>
+                {history.map(item => {
+                  return (
+                    <HStack
+                      alignItems={'center'}
+                      justifyContent={'space-between'}>
+                      <VStack>
+                        <UText style={{fontWeight: '700'}}>
+                          #{item.order_code}
+                        </UText>
+                        <UText>
+                          Đã hoàn tất {item?.created_at.split(' ')[1]}
+                        </UText>
+                      </VStack>
+                      <HStack>
+                        <UText>
+                          {(item?.order_total ?? 0).toLocaleString()}đ
+                        </UText>
+                        <View style={{width: 20}} />
+                        <TouchableOpacity
+                          onPress={() => {
+                            item.store_id = storeId;
+                            item.detail = true;
+                            navigation.navigate('OrderDetailScreen', {
+                              data: item,
+                            });
+                          }}>
+                          <UText>{'>'}</UText>
+                        </TouchableOpacity>
+                      </HStack>
+                    </HStack>
+                  );
+                })}
+              </VStack>
+            </VStack>
+          </ScrollView>
         </VStack>
       </ScrollView>
     </View>

@@ -14,6 +14,7 @@ import {
   MainStackNavigation,
   MainStackParamList,
 } from '../../../../stack/Navigation';
+import Order from '../../../../assets/svg/order.svg';
 
 const OrderDetailScreen = () => {
   const navigation = useNavigation<MainStackNavigation>();
@@ -175,9 +176,6 @@ const OrderDetailScreen = () => {
               }}
               onPress={async () => {
                 setVisibleWarning(true);
-                if (isGetCash) {
-                  UpdateState('finished');
-                }
               }}>
               <UText style={{alignSelf: 'center', fontWeight: '700'}}>
                 Hoàn Thành Món
@@ -332,21 +330,18 @@ const OrderDetailScreen = () => {
       </ScrollView>
       <ButtonCustom />
       <YesNoModal
-        icon={<Icons.SuccessIcon />}
+        icon={<Order />}
         visible={visibleWarning}
         btnLeftStyle={{
-          backgroundColor: Colors.primary,
-          width: 200,
+          backgroundColor: '#BEC2CE',
         }}
-        hideRight={true}
-        hideLeft={true}
         btnRightStyle={{
-          backgroundColor: '#909192',
-          width: 200,
-          display: 'none',
+          backgroundColor: '#B5EAD8',
         }}
+        hideRight={false}
+        hideLeft={false}
         message={
-          'Quán đã chuẩn bị xong đơn thu số tiền là' +
+          'Quán đã chuẩn bị xong đơn thu số tiền là ' +
           (
             orderDetail?.order_total - orderDetail?.discount_amount ?? 0
           ).toLocaleString() +
@@ -358,10 +353,13 @@ const OrderDetailScreen = () => {
         }}
         onActionRight={() => {
           setGetCash(true);
+          if (isGetCash) {
+            UpdateState('finished');
+          }
           setVisibleWarning(false);
         }}
-        btnTextLeft={'Xác nhận'}
-        style={{flexDirection: 'column'}}
+        btnTextLeft={'Chưa Nhận'}
+        btnTextRight={'Xác nhận'}
       />
     </View>
   );
