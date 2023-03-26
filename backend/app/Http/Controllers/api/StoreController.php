@@ -607,12 +607,12 @@ class StoreController extends Controller
             'discount' => 'required|integer|min:100',
             'discount_type' => 'required|in:amount,percentage',
             'max_discount' => 'numeric|min:100',
-            'min_purchase' => 'numeric|min:100',
+            'min_purchase' => 'numeric|min:0',
             'limit' => 'numeric|min:0',
             'store_id' => 'required|numeric',
         ],[
-            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0',
-            'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 100',
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 100',
+            'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 0',
             'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100',
         ]);
         if ($validate->fails()) {
@@ -683,12 +683,12 @@ class StoreController extends Controller
             'discount' => 'required|integer|min:100',
             'discount_type' => 'required|in:amount,percentage',
             'max_discount' => 'numeric|min:100',
-            'min_purchase' => 'numeric|min:100',
+            'min_purchase' => 'numeric|min:0',
             'limit' => 'numeric|min:0',
             'store_id' => 'required|numeric',
         ],[
-            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0',
-            'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 100',
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 100',
+            'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 0',
             'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100',
         ]);
 
