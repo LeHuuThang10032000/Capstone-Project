@@ -41,9 +41,9 @@ class Order extends Model
         return $this->belongsTo(Store::class, 'store_id', 'id');
     }
 
-    public function transaction()
+    public function transactions()
     {
-        return $this->hasOne(Transaction::class);
+        return $this->hasMany(Transaction::class);
     }
 
     protected function serializeDate(DateTimeInterface $date)
