@@ -11,8 +11,12 @@ use App\Models\ProductCategory;
 use App\Models\Promocode;
 use App\Models\Store;
 use App\Models\StoreSchedule;
+use App\Models\Transaction;
+use App\Models\TransactionDetail;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -600,14 +604,16 @@ class StoreController extends Controller
             'end_date' => 'required|date_format:Y-m-d',
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s',
-            'discount' => 'required|integer',
+            'discount' => 'required|integer|min:100',
             'discount_type' => 'required|in:amount,percentage',
-            'max_discount' => 'numeric',
+            'max_discount' => 'numeric|min:100',
             'min_purchase' => 'numeric|min:0',
-            'limit' => 'numeric',
+            'limit' => 'numeric|min:0',
             'store_id' => 'required|numeric',
         ],[
-            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 100',
+            'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 0',
+            'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100',
         ]);
         if ($validate->fails()) {
             return APIResponse::FailureResponse($validate->messages()->first());
@@ -620,8 +626,16 @@ class StoreController extends Controller
             $startTime = Carbon::createFromFormat('H:i:s', $request->start_time);
             $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
 
-            if($startDate > $endDate){
-                return APIResponse::FailureResponse('Ngày bắt đầu phải trước ngày kết thúc');
+            if($startDate >= now()) {
+                return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
+            }
+
+            if($startDate > $endDate) {
+                return APIResponse::FailureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
+            }
+
+            if($endDate <= now() && $endTime <= now()){
+                return APIResponse::FailureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
             }
 
             if($request->discount_type == 'percentage' && $request->discount > 100) {
@@ -666,14 +680,16 @@ class StoreController extends Controller
             'end_date' => 'required|date_format:Y-m-d',
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s',
-            'discount' => 'required|integer',
+            'discount' => 'required|integer|min:100',
             'discount_type' => 'required|in:amount,percentage',
-            'max_discount' => 'numeric',
+            'max_discount' => 'numeric|min:100',
             'min_purchase' => 'numeric|min:0',
-            'limit' => 'numeric',
+            'limit' => 'numeric|min:0',
             'store_id' => 'required|numeric',
         ],[
-            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 100',
+            'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 0',
+            'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100',
         ]);
 
         if ($validate->fails()) {
@@ -690,8 +706,13 @@ class StoreController extends Controller
             if($startDate >= now()) {
                 return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
+
             if($startDate > $endDate) {
-                return APIResponse::FailureResponse('Ngày bắt đầu phải trước ngày kết thúc');
+                return APIResponse::FailureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
+            }
+
+            if($endDate <= now() && $endTime <= now()){
+                return APIResponse::FailureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
             }
 
             if($request->discount_type == 'percentage' && $request->discount > 100) {
@@ -899,6 +920,49 @@ class StoreController extends Controller
                 $order->status = 'canceled';
                 $order->canceled_at = now();
                 $order->cancel_reason = $request->cancel_reason;
+
+                $amount = $order->transactions->first()->amount;
+                $merchant = Auth::user();
+                $transaction = Transaction::create([
+                    'code' => Helper::generateNumber(),
+                    'amount' => $amount,
+                    'from_id' => $merchant->id,
+                    'to_id' => $order->user_id,
+                    'order_id' => $order->id,
+                    'type' => 'R',
+                    'title' => 'Hoàn tiền đơn hàng ' . $order->order_code,
+                    'message' => 'Hoàn ' . $amount . 'đ vào ví do đơn hàng ' . $order->order_code . ' đã bị hủy'
+                ]);
+
+                // hoàn tiền vào ví của user
+                $user = User::where('id', $order->user_id)->first();
+                $userWallet = $user->wallet;
+                $userOpenBalance = $userWallet->balance;
+                $userWallet->balance = $userWallet->balance + $amount;
+                $userCloseBalance = $userWallet->balance;
+
+                TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'user_id' => $user->id,
+                    'open_balance' => $userOpenBalance,
+                    'close_balance' => $userCloseBalance,
+                ]);
+
+                // Trừ tiền từ ví của merchant
+                $merchantWallet = $merchant->wallet;
+                $merchantOpenBalance = $merchantWallet->balance;
+                $merchantWallet->balance = $merchantWallet->balance - $amount;
+                $merchantCloseBalance = $merchantWallet->balance;
+
+                TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'user_id' => $user->id,
+                    'open_balance' => $merchantOpenBalance,
+                    'close_balance' => $merchantCloseBalance,
+                ]);
+
+                $merchantWallet->save();
+                $userWallet->save();
             } else if($request->status == 'accepted') {
                 if($order->status != 'pending') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi tiếp nhận đơn hàng');
                 $order->status = 'accepted';

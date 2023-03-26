@@ -533,10 +533,11 @@ class UserController extends Controller
                 $discount = Helper::calcPromocodeDiscount($promocode, $cartPrice);
             }
 
+            $total = $cartPrice - $discount;
             $data = [
                 'products_total' => $cartPrice,
                 'discount' => $discount,
-                'total' => $cartPrice - $discount,
+                'total' => ($total < 0) ? 0 : $total,
             ];
             return APIResponse::SuccessResponse($data);
         } catch(\Exception $e) {
@@ -659,7 +660,9 @@ class UserController extends Controller
                 'from_id' => $user->id,
                 'to_id' => $merchant->id,
                 'order_id' => $order->id,
-                'type' => 'T'
+                'type' => 'O',
+                'title' => 'Thanh toán đơn hàng',
+                'message' => 'Thanh toán ' . $total . 'đ cho đơn hàng ' . $order->order_code,
             ]);
 
             $userWallet = $user->wallet;

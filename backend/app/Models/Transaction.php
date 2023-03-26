@@ -22,7 +22,8 @@ class Transaction extends Model
         "code",
         "title",
         "created_at",
-        "order_id"
+        "order_id",
+        "type"
     ];
 
     protected $hidden = [
