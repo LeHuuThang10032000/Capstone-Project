@@ -604,7 +604,7 @@ class StoreController extends Controller
             'end_date' => 'required|date_format:Y-m-d',
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s',
-            'discount' => 'required|integer|min:100',
+            'discount' => 'required|integer|min:0',
             'discount_type' => 'required|in:amount,percentage',
             'max_discount' => 'numeric|min:100',
             'min_purchase' => 'numeric|min:100',
@@ -626,11 +626,15 @@ class StoreController extends Controller
             $startTime = Carbon::createFromFormat('H:i:s', $request->start_time);
             $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
 
-            if($startDate > $endDate) {
-                return APIResponse::FailureResponse('Ngày bắt đầu phải trước ngày kết thúc');
+            if($startDate >= now()) {
+                return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
 
-            if($endDate <= now()){
+            if($startDate > $endDate) {
+                return APIResponse::FailureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
+            }
+
+            if($endDate <= now() && $endTime <= now()){
                 return APIResponse::FailureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
             }
 
@@ -676,14 +680,16 @@ class StoreController extends Controller
             'end_date' => 'required|date_format:Y-m-d',
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s',
-            'discount' => 'required|integer',
+            'discount' => 'required|integer|min:0',
             'discount_type' => 'required|in:amount,percentage',
-            'max_discount' => 'numeric',
-            'min_purchase' => 'numeric|min:0',
-            'limit' => 'numeric',
+            'max_discount' => 'numeric|min:100',
+            'min_purchase' => 'numeric|min:100',
+            'limit' => 'numeric|min:0',
             'store_id' => 'required|numeric',
         ],[
-            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
+            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0',
+            'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 100',
+            'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100',
         ]);
 
         if ($validate->fails()) {
@@ -700,8 +706,13 @@ class StoreController extends Controller
             if($startDate >= now()) {
                 return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
+
             if($startDate > $endDate) {
-                return APIResponse::FailureResponse('Ngày bắt đầu phải trước ngày kết thúc');
+                return APIResponse::FailureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
+            }
+
+            if($endDate <= now() && $endTime <= now()){
+                return APIResponse::FailureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
             }
 
             if($request->discount_type == 'percentage' && $request->discount > 100) {
