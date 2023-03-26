@@ -565,9 +565,9 @@ class UserController extends Controller
         $user = Auth::user();
         $store = Store::select('id', 'user_id')->where('id', $request->store_id)->first();
 
-        // if($store->user_id == $user->id) {
-        //     return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
-        // }
+        if($store->user_id == $user->id) {
+            return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
+        }
 
         $carts = $user->carts;
         $cartPrice = 0;
