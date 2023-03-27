@@ -199,11 +199,13 @@ const InfoShop = (props: Props) => {
               alt="image-shop"
             />
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('PromoType', {
-                  data,
-                })
-              }>
+              onPress={() => {
+                if (data) {
+                  navigation.navigate('PromoType', {
+                    data,
+                  });
+                }
+              }}>
               <VStack pl={2}>
                 <Text style={[styles.text, {fontSize: 14}]}>
                   Chương trình quảng cáo

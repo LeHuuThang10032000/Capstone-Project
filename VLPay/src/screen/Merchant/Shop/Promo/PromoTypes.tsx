@@ -13,7 +13,7 @@ import {
 const PromoTypes = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
-  console.log(data.id);
+  console.log(data);
 
   const Element = ({icon, title, desc, onPress}) => {
     return (

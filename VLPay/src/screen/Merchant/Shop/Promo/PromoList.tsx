@@ -15,6 +15,8 @@ import {
 const PromoList = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
+  console.log('data', data);
+
   const [state, setState] = useState('RUNNING');
   const [items, setItems] = useState([]);
 
@@ -127,9 +129,8 @@ const PromoList = () => {
           </UText>
         </TouchableOpacity>
       </HStack>
-      <VStack style={{marginBottom: 20}}>
-        <View style={{height: 20}} />
-        <ScrollView>
+      <VStack>
+        <ScrollView style={{paddingBottom: 150}}>
           {items &&
             items.map(item => {
               return (
@@ -165,6 +166,7 @@ const PromoList = () => {
               );
             })}
         </ScrollView>
+        <View style={{height: 200}} />
       </VStack>
       <View
         style={{
