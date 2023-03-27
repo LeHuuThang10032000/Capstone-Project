@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import {
   Center,
   Container,
@@ -11,14 +12,17 @@ import {
 } from 'native-base';
 import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {axiosClient} from '../../components/apis/axiosClient';
 import HeaderComp from '../../components/HeaderComp';
+import {MainStackNavigation} from '../../stack/Navigation';
 import HeaderDivider from './HeaderDivider';
 
 type Props = {};
 
 const Index = (props: Props) => {
   const [data, setData] = useState([]);
+  const navigation = useNavigation<MainStackNavigation>();
 
   const fetchData = useCallback(async () => {
     setInterval(async () => {
@@ -45,20 +49,23 @@ const Index = (props: Props) => {
 
             return (
               <View marginX={3} marginBottom={3}>
-                <View
-                  p={3}
-                  w={'100%'}
-                  borderRadius={10}
-                  backgroundColor="#C7CEEA"
-                  justifyContent={'center'}>
-                  <VStack justifyContent="space-between">
-                    <Text style={styles.text}>
-                      {item.title} ({item.tag_model})
-                    </Text>
-                    <Text>{item.created_at}</Text>
-                    <Text style={styles.titleText}>{item.body}</Text>
-                  </VStack>
-                </View>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('NotiShareBill')}>
+                  <View
+                    p={3}
+                    w={'100%'}
+                    borderRadius={10}
+                    backgroundColor="#C7CEEA"
+                    justifyContent={'center'}>
+                    <VStack justifyContent="space-between">
+                      <Text style={styles.text}>
+                        {item.title} ({item.tag_model})
+                      </Text>
+                      <Text>{item.created_at}</Text>
+                      <Text style={styles.titleText}>{item.body}</Text>
+                    </VStack>
+                  </View>
+                </TouchableOpacity>
               </View>
             );
           }}

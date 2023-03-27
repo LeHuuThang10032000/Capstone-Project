@@ -118,6 +118,11 @@ export type MainStackParamList = {
   PaymentOrder: {total_price: string; store_id: number};
   OrderProcess: {order_id: number; store_id: number};
   MyDetailOrder: {id: number};
+  ShareBill: undefined;
+  ChooseSharer: undefined;
+  DetailBill: undefined;
+  SendRequestShare: undefined;
+  NotiShareBill: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

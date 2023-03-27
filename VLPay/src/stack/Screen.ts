@@ -50,6 +50,11 @@ import PromoList from '../screen/Merchant/Shop/Promo/PromoList';
 import OrderDetailScreen from '../screen/Merchant/Shop/OrderScreen/OrderDetailScreen';
 import OrderDetailCancel from '../screen/Merchant/Shop/OrderScreen/OrderDetailCancel';
 import MyDetailOrder from '../screen/MyOrder/MyDetailOrder';
+import ShareBill from '../screen/ShareBill';
+import ChooseSharer from '../screen/ShareBill/ChooseSharer';
+import DetailBill from '../screen/ShareBill/DetailBill';
+import SendRequestShare from '../screen/ShareBill/SendRequestShare';
+import NotiShareBill from '../screen/Notification/NotiShareBill';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -231,5 +236,25 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'MyDetailOrder',
     component: MyDetailOrder,
+  },
+  {
+    name: 'ShareBill',
+    component: ShareBill,
+  },
+  {
+    name: 'ChooseSharer',
+    component: ChooseSharer,
+  },
+  {
+    name: 'DetailBill',
+    component: DetailBill,
+  },
+  {
+    name: 'SendRequestShare',
+    component: SendRequestShare,
+  },
+  {
+    name: 'NotiShareBill',
+    component: NotiShareBill,
   },
 ];
