@@ -3,6 +3,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -25,12 +26,15 @@ import {TabView, SceneMap, NavigationState} from 'react-native-tab-view';
 import TText from '../Transfer/TText';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {formatCurrency} from '../../components/helper';
+import {MainStackNavigation} from '../../stack/Navigation';
+import {useNavigation} from '@react-navigation/native';
 
 const FirstRoute = () => {
   const [history, setHistory] = useState([]);
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const navigation = useNavigation<MainStackNavigation>();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -87,26 +91,32 @@ const FirstRoute = () => {
                 </View>
                 {item.data.map((item: any) => {
                   return (
-                    <HStack p={3} key={item.id} justifyContent="space-between">
-                      <VStack>
-                        <Text
-                          style={styles.title}
-                          ellipsizeMode="tail"
-                          numberOfLines={1}>
-                          {item.title}
-                        </Text>
-                        <Text style={styles.textDate}>{item.created_at}</Text>
-                      </VStack>
-                      {item.from_id !== profile ? (
-                        <Text style={styles.text}>
-                          {formatCurrency(`${item.amount}`)}đ
-                        </Text>
-                      ) : (
-                        <Text style={styles.text}>
-                          -{formatCurrency(`${item.amount}`)}đ
-                        </Text>
-                      )}
-                    </HStack>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('ShareBill')}>
+                      <HStack
+                        p={3}
+                        key={item.id}
+                        justifyContent="space-between">
+                        <VStack>
+                          <Text
+                            style={styles.title}
+                            ellipsizeMode="tail"
+                            numberOfLines={1}>
+                            {item.title}
+                          </Text>
+                          <Text style={styles.textDate}>{item.created_at}</Text>
+                        </VStack>
+                        {item.from_id !== profile ? (
+                          <Text style={styles.text}>
+                            {formatCurrency(`${item.amount}`)}đ
+                          </Text>
+                        ) : (
+                          <Text style={styles.text}>
+                            -{formatCurrency(`${item.amount}`)}đ
+                          </Text>
+                        )}
+                      </HStack>
+                    </TouchableOpacity>
                   );
                 })}
               </View>
@@ -123,6 +133,7 @@ const SecondRoute = () => {
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const navigation = useNavigation<MainStackNavigation>();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -179,26 +190,32 @@ const SecondRoute = () => {
                 </View>
                 {item.data.map((item: any) => {
                   return (
-                    <HStack p={3} key={item.id} justifyContent="space-between">
-                      <VStack>
-                        <Text
-                          ellipsizeMode="tail"
-                          numberOfLines={1}
-                          style={styles.title}>
-                          {item.title}
-                        </Text>
-                        <Text style={styles.textDate}>{item.created_at}</Text>
-                      </VStack>
-                      {item.from_id !== profile ? (
-                        <Text style={styles.text}>
-                          {formatCurrency(`${item.amount}`)}đ
-                        </Text>
-                      ) : (
-                        <Text style={styles.text}>
-                          -{formatCurrency(`${item.amount}`)}đ
-                        </Text>
-                      )}
-                    </HStack>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('ShareBill')}>
+                      <HStack
+                        p={3}
+                        key={item.id}
+                        justifyContent="space-between">
+                        <VStack>
+                          <Text
+                            ellipsizeMode="tail"
+                            numberOfLines={1}
+                            style={styles.title}>
+                            {item.title}
+                          </Text>
+                          <Text style={styles.textDate}>{item.created_at}</Text>
+                        </VStack>
+                        {item.from_id !== profile ? (
+                          <Text style={styles.text}>
+                            {formatCurrency(`${item.amount}`)}đ
+                          </Text>
+                        ) : (
+                          <Text style={styles.text}>
+                            -{formatCurrency(`${item.amount}`)}đ
+                          </Text>
+                        )}
+                      </HStack>
+                    </TouchableOpacity>
                   );
                 })}
               </View>
@@ -215,6 +232,7 @@ const ThirdRoute = () => {
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const navigation = useNavigation<MainStackNavigation>();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -271,26 +289,30 @@ const ThirdRoute = () => {
                 </View>
                 {item.data.map((item: any) => {
                   return (
-                    <HStack p={3} key={item.id} justifyContent="space-between">
-                      <VStack>
-                        <Text
-                          ellipsizeMode="tail"
-                          numberOfLines={1}
-                          style={styles.title}>
-                          {item.title}
-                        </Text>
-                        <Text style={styles.textDate}>{item.created_at}</Text>
-                      </VStack>
-                      {item.from_id !== profile ? (
-                        <Text style={styles.text}>
-                          {formatCurrency(`${item.amount}`)}đ
-                        </Text>
-                      ) : (
-                        <Text style={styles.text}>
-                          -{formatCurrency(`${item.amount}`)}đ
-                        </Text>
-                      )}
-                    </HStack>
+                    <TouchableOpacity
+                      key={item.id}
+                      onPress={() => navigation.navigate('ShareBill')}>
+                      <HStack p={3} justifyContent="space-between">
+                        <VStack>
+                          <Text
+                            ellipsizeMode="tail"
+                            numberOfLines={1}
+                            style={styles.title}>
+                            {item.title}
+                          </Text>
+                          <Text style={styles.textDate}>{item.created_at}</Text>
+                        </VStack>
+                        {item.from_id !== profile ? (
+                          <Text style={styles.text}>
+                            {formatCurrency(`${item.amount}`)}đ
+                          </Text>
+                        ) : (
+                          <Text style={styles.text}>
+                            -{formatCurrency(`${item.amount}`)}đ
+                          </Text>
+                        )}
+                      </HStack>
+                    </TouchableOpacity>
                   );
                 })}
               </View>
