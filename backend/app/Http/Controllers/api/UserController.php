@@ -33,7 +33,7 @@ class UserController extends Controller
         $userCurr = Auth::user()->id;
         $friends = Friends::where('user_id', $userCurr)->get();
         $arrFriends = [];
-        foreach($friends as $person){
+        foreach ($friends as $person) {
             array_push($arrFriends, $person['friend_id']);
         }
         array_push($arrFriends, $userCurr);
@@ -45,14 +45,14 @@ class UserController extends Controller
     {
         $user = User::find($request->id);
 
-        if($user == null){
-             return response(
+        if ($user == null) {
+            return response(
                 "User with id {$request->id} not found",
                 Response::HTTP_NOT_FOUND
-             );
+            );
         }
 
-        if($user->update($request->all()) === false){
+        if ($user->update($request->all()) === false) {
             return response(
                 "Could not update the user with id {$request->id}",
                 Response::HTTP_BAD_REQUEST
@@ -64,7 +64,7 @@ class UserController extends Controller
 
     public function getProfile(): JsonResponse
     {
-        if(auth::check()){
+        if (auth::check()) {
             $user = auth()->user();
             auth()->user()->media->all();
 
@@ -77,15 +77,15 @@ class UserController extends Controller
     public function profileUpdate(Request $request): JsonResponse
     {
         $request->validate([
-            'full_name'=>'required|min:3',
+            'full_name' => 'required|min:3',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $user = User::find(auth()->user()->id);
         $user->f_name = $request['full_name'];
-        if($request->hasFile('image') && $request->file('image')->isValid()){
-            if($user->media->all()){
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            if ($user->media->all()) {
                 $file_path = Storage::path($user->media->all()[0]->id);
-                $image_path = str_replace('storage/app','public/storage',$file_path);
+                $image_path = str_replace('storage/app', 'public/storage', $file_path);
                 \File::deleteDirectory($image_path);
                 $user->media()->delete();
             }
@@ -98,8 +98,8 @@ class UserController extends Controller
     public function checkUserSendRequestCreateStore(): JsonResponse
     {
         $user = Auth::user()->id;
-        $request = Store::where('user_id',$user)->where('status', 'approved')->select('status')->first();
-        if($request){
+        $request = Store::where('user_id', $user)->where('status', 'approved')->select('status')->first();
+        if ($request) {
             return ApiResponse::successResponse([
                 'status' => 1,
                 'request' => $request
@@ -109,7 +109,6 @@ class UserController extends Controller
         return ApiResponse::successResponse([
             'status' => 0
         ]);
-
     }
 
     public function createStoreRequest(Request $request): JsonResponse
@@ -134,7 +133,7 @@ class UserController extends Controller
             return ApiResponse::failureResponse($validate->messages()->first());
         }
 
-        try{
+        try {
             DB::beginTransaction();
 
             $store = Store::create([
@@ -149,25 +148,25 @@ class UserController extends Controller
                 'wallet_balance' => 0,
             ]);
 
-            if($request->hasFile('image') && $request->file('image')->isValid()) {
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $store->addMediaFromRequest('image')->toMediaCollection('images');
             }
 
             DB::commit();
             return ApiResponse::successResponse(null);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
 
-    public function findUserById($phone): JsonResponse
+    public function findUserById($phone)
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             $user = User::where("phone", $phone)->first();
             return response([
                 'user' => $user
-            ],200);
+            ], 200);
         }
     }
 
@@ -188,12 +187,11 @@ class UserController extends Controller
             'mssv.required' => 'Vui lòng nhập mã số sinh viên',
         ]);
 
-        if ($validate->fails())
-        {
+        if ($validate->fails()) {
             return APIResponse::failureResponse($validate->messages()->first());
         }
 
-        try{
+        try {
             DB::beginTransaction();
 
             $req = CreditRequest::create([
@@ -208,7 +206,7 @@ class UserController extends Controller
 
             DB::commit();
             return ApiResponse::successResponse(null);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -238,9 +236,9 @@ class UserController extends Controller
             }
 
             $stores = $stores->get();
-            
+
             return ApiResponse::successResponse($stores);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -272,9 +270,9 @@ class UserController extends Controller
                 'stores' => $stores,
                 'users' => $users
             ];
-            
+
             return ApiResponse::successResponse($data);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -289,16 +287,16 @@ class UserController extends Controller
                 ->get();
 
             $productCategories = ProductCategory::where('store_id', $id)
-                ->with(['products' => function($query) {
-                    $query->select('id','name','price','image','category_id')->where('status', '!=', 'unavailable');
+                ->with(['products' => function ($query) {
+                    $query->select('id', 'name', 'price', 'image', 'category_id')->where('status', '!=', 'unavailable');
                 }])
                 ->has('products')
                 ->get();
 
             $store[0]['categories'] = $productCategories;
-            
+
             return ApiResponse::successResponse($store);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -308,9 +306,9 @@ class UserController extends Controller
     {
         try {
             $product = Product::where('id', $id)->first();
-            
+
             return ApiResponse::successResponse($product);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -329,7 +327,7 @@ class UserController extends Controller
                 $products = $carts->map(function ($item, $key) use (&$totalPrice, &$totalQuantity) {
                     $totalPrice += $item->total_price;
                     $totalQuantity += $item->quantity;
-                                
+
                     return [
                         'id' => $item->product_id ?? '',
                         'name' => $item->product->name ?? '',
@@ -349,9 +347,9 @@ class UserController extends Controller
                 'total_price' => $totalPrice,
                 'store_id' => $carts->first()->store_id ?? '',
             ];
-            
+
             return ApiResponse::successResponse($data);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -362,9 +360,9 @@ class UserController extends Controller
         try {
             $user = Auth::user();
             $user->carts()->delete();
-            
+
             return ApiResponse::successResponse(null);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
@@ -372,38 +370,37 @@ class UserController extends Controller
     public function addToCart(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
-            'product_id' => 'required|exists:'.app(Product::class)->getTable().',id',
+            'store_id' => 'required|exists:' . app(Store::class)->getTable() . ',id',
+            'product_id' => 'required|exists:' . app(Product::class)->getTable() . ',id',
             'quantity' => 'required|numeric',
             'add_ons' => 'array',
         ], [
             'product_id.exists' => 'Sản phẩm không tồn tại'
         ]);
-        
-        if ($validate->fails())
-        {
+
+        if ($validate->fails()) {
             return APIResponse::FailureResponse($validate->messages()->first());
         }
         $user = Auth::user();
 
         $cart = $user->carts()->first();
-        if($cart) {
-            if($request->store_id != $cart->store_id) {
+        if ($cart) {
+            if ($request->store_id != $cart->store_id) {
                 return APIResponse::FailureResponse('Bạn đang có giỏ hàng ở cửa hàng');
             }
         }
-        
+
         try {
             DB::beginTransaction();
-            
+
             $addOns = json_encode($request->add_ons);
             $product = DB::table('carts')->where('user_id', $user->id)
-                            ->where('product_id', $request->product_id)
-                            ->where('add_ons', $addOns)
-                            ->where('store_id', $request->store_id)
-                            ->first();
+                ->where('product_id', $request->product_id)
+                ->where('add_ons', $addOns)
+                ->where('store_id', $request->store_id)
+                ->first();
 
-            if($product) {
+            if ($product) {
                 $quantity = $product->quantity + $request->quantity;
 
                 DB::table('carts')->where('user_id', $user->id)
@@ -411,7 +408,7 @@ class UserController extends Controller
                     ->where('add_ons', $addOns)
                     ->where('store_id', $request->store_id)
                     ->update(['quantity' => $quantity]);
-                
+
                 DB::commit();
                 return APIResponse::SuccessResponse(null);
             }
@@ -427,7 +424,7 @@ class UserController extends Controller
 
             DB::commit();
             return APIResponse::SuccessResponse(null);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -436,33 +433,32 @@ class UserController extends Controller
     public function updateCart(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'product_id' => 'required|exists:'.app(Product::class)->getTable().',id',
+            'product_id' => 'required|exists:' . app(Product::class)->getTable() . ',id',
             'quantity' => 'required|numeric',
             'add_ons' => 'array',
         ], [
             'product_id.exists' => 'Sản phẩm không tồn tại'
         ]);
 
-        if ($validate->fails())
-        {
+        if ($validate->fails()) {
             return APIResponse::FailureResponse($validate->messages()->first());
         }
         $user = Auth::user();
         try {
             DB::beginTransaction();
-            
+
             $addOns = json_encode($request->add_ons);
             $product = DB::table('carts')->where('user_id', $user->id)
-                            ->where('product_id', $request->product_id)
-                            ->where('add_ons', $addOns)
-                            ->where('store_id', $request->store_id)
-                            ->update([
-                                'quantity' => $request->quantity
-                            ]);
+                ->where('product_id', $request->product_id)
+                ->where('add_ons', $addOns)
+                ->where('store_id', $request->store_id)
+                ->update([
+                    'quantity' => $request->quantity
+                ]);
 
             DB::commit();
             return APIResponse::SuccessResponse($user->carts);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -471,13 +467,12 @@ class UserController extends Controller
     public function getStorePromocode(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+            'store_id' => 'required|exists:' . app(Store::class)->getTable() . ',id',
         ], [
             'store_id.exists' => 'Sản phẩm không tồn tại'
         ]);
 
-        if ($validate->fails())
-        {
+        if ($validate->fails()) {
             return APIResponse::FailureResponse($validate->messages()->first());
         }
 
@@ -491,7 +486,7 @@ class UserController extends Controller
                 ->get();
 
             return APIResponse::SuccessResponse($promocodes);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -500,8 +495,8 @@ class UserController extends Controller
     public function calcOrderTotal(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
-            'promocode_id' => 'nullable|integer|exists:'.app(Promocode::class)->getTable().',id',
+            'store_id' => 'required|exists:' . app(Store::class)->getTable() . ',id',
+            'promocode_id' => 'nullable|integer|exists:' . app(Promocode::class)->getTable() . ',id',
         ], [
             'store_id.exists' => 'Cửa hàng không tồn tại',
             'promocode_id.exists' => 'Mã giảm giá không tồn tại'
@@ -510,21 +505,21 @@ class UserController extends Controller
         if ($validate->fails()) {
             return APIResponse::FailureResponse($validate->messages()->first());
         }
-        
+
         $user = Auth::user();
 
         try {
             $carts = $user->carts;
             $cartPrice = 0;
-            foreach($carts as $item) {
-                if($item->store_id != $request->store_id) {
+            foreach ($carts as $item) {
+                if ($item->store_id != $request->store_id) {
                     return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
                 }
                 $cartPrice += $item->total_price;
             }
 
             $discount = 0;
-            if(isset($request->promocode_id)) {
+            if (isset($request->promocode_id)) {
                 $promocode = DB::table('promocodes')
                     ->where('store_id', $request->store_id)
                     ->where('id', $request->promocode_id)
@@ -540,7 +535,7 @@ class UserController extends Controller
                 'total' => ($total < 0) ? 0 : $total,
             ];
             return APIResponse::SuccessResponse($data);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -549,9 +544,9 @@ class UserController extends Controller
     public function createOrder(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+            'store_id' => 'required|exists:' . app(Store::class)->getTable() . ',id',
             'note' => 'nullable',
-            'promocode_id' => 'nullable|integer|exists:'.app(Promocode::class)->getTable().',id',
+            'promocode_id' => 'nullable|integer|exists:' . app(Promocode::class)->getTable() . ',id',
             'message' => 'nullable'
         ], [
             'store_id.exists' => 'Cửa hàng không tồn tại',
@@ -563,51 +558,51 @@ class UserController extends Controller
         }
 
         $user = Auth::user();
-        $store = Store::select('id', 'user_id')->where('id', $request->store_id)->first();
+        $store = Store::select('id', 'user_id', 'name')->where('id', $request->store_id)->first();
 
-        if($store->user_id == $user->id) {
+        if ($store->user_id == $user->id) {
             return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
         }
 
         $carts = $user->carts;
         $cartPrice = 0;
-        foreach($carts as $item) {
-            if($item->store_id != $request->store_id) {
+        foreach ($carts as $item) {
+            if ($item->store_id != $request->store_id) {
                 return APIResponse::FailureResponse('Đã có lỗi NGHIÊM TRỌNG xảy ra vui lòng thử lại sau');
             }
             $cartPrice += $item->total_price;
         }
 
-        if(!count($carts)) {
+        if (!count($carts)) {
             return APIResponse::FailureResponse('Giỏ hàng của bạn đang trống');
         }
 
-        if(($user->wallet->balance + $user->wallet->credit_limit) < $cartPrice) {
+        if (($user->wallet->balance + $user->wallet->credit_limit) < $cartPrice) {
             return APIResponse::FailureResponse('Số dư trong ví không đủ');
         }
 
         $promocode = null;
-        if($request->promocode_id != null || $request->promocode_id != '') {
+        if ($request->promocode_id != null || $request->promocode_id != '') {
             $promocode = Promocode::where('id', $request->promocode_id)->first();
-            if($promocode->limit > 0) {
-                if($promocode->limit = $promocode->total_used) {
+            if ($promocode->limit > 0) {
+                if ($promocode->limit = $promocode->total_used) {
                     return APIResponse::FailureResponse('Mã giảm giá đã hết lượt sử dụng');
-                } 
+                }
             }
-            if($promocode->end_date < now() || $promocode->end_time < now()) {
+            if ($promocode->end_date < now() || $promocode->end_time < now()) {
                 return APIResponse::FailureResponse('Mã giảm giá đã hết hạn sử dụng');
             }
-            if($promocode->min_purchase > $cartPrice) {
+            if ($promocode->min_purchase > $cartPrice) {
                 return APIResponse::FailureResponse('Yêu cầu giá trị đơn hàng của bạn tối thiểu phải là ' . number_format($promocode->min_purchase) . 'đ để có thể áp dụng mã giảm giá này');
             }
-            if(DB::table('promocode_used')->where('user_id', $user->id)->where('promocode_id', $request->promocode_id)->count() > 0) {
+            if (DB::table('promocode_used')->where('user_id', $user->id)->where('promocode_id', $request->promocode_id)->count() > 0) {
                 return APIResponse::FailureResponse('Bạn đã sử dụng mã giảm giá này rồi');
             }
         }
 
         try {
             DB::beginTransaction();
-            
+
             $orderDetails = [];
             $order = new Order;
             $order->order_code = Helper::generateOrderCode();
@@ -619,7 +614,7 @@ class UserController extends Controller
             $order->status = 'pending';
             $order->note = $request->note ?? null;
 
-            foreach($carts as $cart) {
+            foreach ($carts as $cart) {
                 $orderDetails[] = [
                     'product_id' => $cart->product_id,
                     'name' => $cart->product->name,
@@ -635,10 +630,10 @@ class UserController extends Controller
             $order->created_at = now();
             $order->updated_at = now();
             $order->save();
-            
+
             $user->carts()->delete();
-            
-            if(isset($promocode)) {
+
+            if (isset($promocode)) {
                 DB::table('promocode_used')->insert([
                     'user_id' => $user->id,
                     'order_id' => $order->id,
@@ -652,7 +647,7 @@ class UserController extends Controller
             }
 
             $total = $order->order_total - $order->discount_amount;
-            
+
             $merchant = $store->user;
             $transaction = Transaction::create([
                 'code' => Helper::generateNumber(),
@@ -661,13 +656,13 @@ class UserController extends Controller
                 'to_id' => $merchant->id,
                 'order_id' => $order->id,
                 'type' => 'O',
-                'title' => 'Thanh toán đơn hàng',
-                'message' => 'Thanh toán ' . $total . 'đ cho đơn hàng ' . $order->order_code,
+                'title' => 'Thanh toán đơn hàng ' . $store->name,
+                'message' => 'Thanh toán ' . number_format($total) . 'đ cho đơn hàng ' . $order->order_code,
             ]);
 
             $userWallet = $user->wallet;
             $merchantWallet = $merchant->wallet;
-            if($userWallet->balance < $total) {
+            if ($userWallet->balance < $total) {
                 // trừ tiền vào ví tín dụng của user
                 $userOpenBalance = $userWallet->credit_limit;
                 $userWallet->credit_limit = $userWallet->credit_limit - $total;
@@ -703,7 +698,7 @@ class UserController extends Controller
                 'close_balance' => $merchantCloseBalance,
                 'message' => $request->message
             ]);
-            
+
             $merchantWallet->save();
             $userWallet->save();
 
@@ -713,7 +708,7 @@ class UserController extends Controller
                 'request_id' => $order->id,
             ];
             return APIResponse::SuccessResponse($data);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse('Đặt hàng không thành công. Vui lòng thử lại sau');
         }
@@ -722,7 +717,7 @@ class UserController extends Controller
     public function getOrderDetail(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
+            'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
         ], [
             'order_id.exists' => 'Đơn hàng không tồn tại',
         ]);
@@ -736,11 +731,11 @@ class UserController extends Controller
                 ->where('id', $request->order_id)
                 ->where('user_id', Auth::user()->id)
                 ->first();
-            if(!isset($order)) {
+            if (!isset($order)) {
                 return APIResponse::FailureResponse('Không tìm thấy đơn hàng');
             }
             return APIResponse::SuccessResponse($order);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
@@ -748,8 +743,7 @@ class UserController extends Controller
     public function cancelOrder(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
-            'reason' => 'required',
+            'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
         ], [
             'order_id.exists' => 'Đơn hàng không tồn tại',
         ]);
@@ -759,30 +753,31 @@ class UserController extends Controller
         }
 
         try {
+            DB::beginTransaction();
             $order = Order::where('id', $request->order_id)
                 ->where('user_id', Auth::user()->id)
                 ->firstOrFail();
 
-            if($order->status == 'processing')
-            {
+            if ($order->status == 'processing') {
                 return APIResponse::FailureResponse('Không thể hủy đơn hàng vì cửa hàng đang chuẩn bị cho đơn hàng của bạn');
             }
 
-            if($order->status == 'canceled')
-            {
+            if ($order->status == 'canceled') {
                 return APIResponse::FailureResponse('Đơn hàng đã bị hủy');
             }
 
-            if($order->status == 'finished')
-            {
+            if ($order->status == 'finished') {
                 return APIResponse::FailureResponse('Không thể hủy đơn hàng vì cửa hàng đã chuẩn bị xong đơn hàng và đang chờ bạn đến lấy');
             }
             $order->status = 'canceled';
             $order->canceled_at = now();
             $order->save();
-            
+
+            Helper::refund($order);
+
+            DB::commit();
             return APIResponse::SuccessResponse(null);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::failureResponse('Không thể hủy đơn hàng. Đã có lỗi xảy ra');
         }
     }
@@ -790,7 +785,7 @@ class UserController extends Controller
     public function takenOrder(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
+            'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
         ], [
             'order_id.exists' => 'Đơn hàng không tồn tại',
         ]);
@@ -804,22 +799,20 @@ class UserController extends Controller
                 ->where('user_id', Auth::user()->id)
                 ->firstOrFail();
 
-            if($order->status == 'canceled')
-            {
+            if ($order->status == 'canceled') {
                 return APIResponse::FailureResponse('Đơn hàng đã bị hủy');
             }
 
-            if($order->status != 'finished')
-            {
+            if ($order->status != 'finished') {
                 return APIResponse::FailureResponse('Đơn hàng vẫn chưa được chuẩn bị xong');
             }
 
             $order->status = 'taken';
             $order->taken_at = now();
             $order->save();
-            
+
             return APIResponse::SuccessResponse(null);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::failureResponse('Không thể hủy đơn hàng. Đã có lỗi xảy ra');
         }
     }
@@ -839,7 +832,7 @@ class UserController extends Controller
         try {
             $orders = Order::where('user_id', Auth::user()->id);
 
-            if($request->status == 'taken') {
+            if ($request->status == 'taken') {
                 $orders = $orders->where('status', $request->status);
             } else {
                 $orders = $orders->where('status', '!=', 'taken');
@@ -862,7 +855,50 @@ class UserController extends Controller
             ];
 
             return ApiResponse::successResponse($data);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function createShareBill(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'detail' => 'required',
+            'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
+            'message' => '',
+            'image' => '',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $user = Auth::user();
+            $order = Order::where('id', $request->order_id)->where('status', '!=', 'canceled')->first();
+            if (!isset($order)) {
+                return APIResponse::FailureResponse('Đơn hàng đã bị hủy');
+            }
+
+            $details = json_decode(json_encode($request->detail), true);
+            foreach($details as $detail) {
+                if($detail['user_id'] != $user->id) {
+                    Notification::create([
+                        'user_id' => $detail['user_id'],
+                        'tag' => 'Chia tiền',
+                        'tag_model' => 'share_bill',
+                        'tag_model_id' => 0,
+                        'title' => $user->f_name . ' đang rủ bạn chia tiền',
+                        'body' => $user->f_name . ' đang chờ bạn chuyển ' . number_format($detail['amount']) . 'đ. Chuyển nhanh kẻo bạn ấy chờ lâu nha!',
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return ApiResponse::successResponse(null);
+        } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
     }

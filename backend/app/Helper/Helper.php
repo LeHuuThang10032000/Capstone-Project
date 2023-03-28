@@ -1,7 +1,11 @@
 <?php
 
+use App\Models\Notification;
 use App\Models\Order;
 use App\Models\Transaction;
+use App\Models\TransactionDetail;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class Helper {
     public static function generateNumber()
@@ -30,5 +34,60 @@ class Helper {
             }
         }
         return $promoDiscount;
+    }
+
+    public static function refund($order)
+    {
+        $amount = $order->transactions->first()->amount;
+        $merchant = Auth::user();
+        $user = User::where('id', $order->user_id)->first();
+
+        $transaction = Transaction::create([
+            'code' => Helper::generateNumber(),
+            'amount' => $amount,
+            'from_id' => $merchant->id,
+            'to_id' => $order->user_id,
+            'order_id' => $order->id,
+            'type' => 'R',
+            'title' => 'Hoàn tiền đơn hàng ' . $order->order_code,
+            'message' => 'Hoàn ' . number_format($amount) . 'đ vào ví do đơn hàng ' . $order->order_code . ' đã bị hủy'
+        ]);
+
+        // Trừ tiền từ ví của merchant
+        $merchantWallet = $merchant->wallet;
+        $merchantOpenBalance = $merchantWallet->balance;
+        $merchantWallet->balance = $merchantWallet->balance - $amount;
+        $merchantCloseBalance = $merchantWallet->balance;
+        $merchantWallet->save();
+
+        TransactionDetail::create([
+            'transaction_id' => $transaction->id,
+            'user_id' => $user->id,
+            'open_balance' => $merchantOpenBalance,
+            'close_balance' => $merchantCloseBalance,
+        ]);
+
+        // hoàn tiền vào ví của user
+        $userWallet = $user->wallet;
+        $userOpenBalance = $userWallet->balance;
+        $userWallet->balance = $userWallet->balance + $amount;
+        $userCloseBalance = $userWallet->balance;
+        $userWallet->save();
+
+        TransactionDetail::create([
+            'transaction_id' => $transaction->id,
+            'user_id' => $user->id,
+            'open_balance' => $userOpenBalance,
+            'close_balance' => $userCloseBalance,
+        ]);
+
+        Notification::create([
+            'user_id' => $user->id,
+            'tag' => 'Hoàn tiền',
+            'tag_model' => 'transactions',
+            'tag_model_id' => $transaction->id,
+            'title' => 'Hoàn tiền',
+            'body' => 'Bạn được hoàn số tiền ' . number_format($amount) . ' từ đơn hàng ' . $order->order_code . ' do đơn hàng đã bị hủy',
+        ]);
     }
 }

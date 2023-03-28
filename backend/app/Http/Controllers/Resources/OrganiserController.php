@@ -66,7 +66,7 @@ class OrganiserController extends Controller
         Notification::create([
             'user_id' => $store->user_id,
             'tag' => 'Cửa hàng',
-            'tag_model' => 'STORE',
+            'tag_model' => 'stores',
             'tag_model_id' => $request->store_id,
             'title' => 'Yêu cầu mở cửa hàng VLPAY',
             'body' => 'Yêu cầu mở cửa hàng ' . $store->name . ' của bạn đã được chấp nhận',
@@ -93,7 +93,7 @@ class OrganiserController extends Controller
         Notification::create([
             'user_id' => $store->user_id,
             'tag' => 'Cửa hàng',
-            'tag_model' => 'STORE',
+            'tag_model' => 'stores',
             'tag_model_id' => $request->store_id,
             'title' => 'Yêu cầu mở cửa hàng VLPAY',
             'body' => 'Yêu cầu mở cửa hàng ' . $store->name . ' của bạn đã bị từ chối',
@@ -147,7 +147,7 @@ class OrganiserController extends Controller
         Notification::create([
             'user_id' => $req->user_id,
             'tag' => 'Hỗ trợ tín dụng',
-            'tag_model' => 'CREDIT',
+            'tag_model' => 'credit_requests',
             'tag_model_id' => $req->id,
             'title' => 'Tín dụng sinh viên',
             'body' => 'Tin vui tới. Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã được chấp thuận',
@@ -175,7 +175,7 @@ class OrganiserController extends Controller
         Notification::create([
             'user_id' => $req->user_id,
             'tag' => 'Hỗ trợ tín dụng',
-            'tag_model' => 'CREDIT',
+            'tag_model' => 'credit_requests',
             'tag_model_id' => $req->id,
             'title' => 'Tín dụng sinh viên',
             'body' => 'Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã bị từ chối',
@@ -245,7 +245,7 @@ class OrganiserController extends Controller
             Notification::create([
                 'user_id' => $req->user_id,
                 'tag' => 'Rút tiền',
-                'tag_model' => 'WITHDRAW',
+                'tag_model' => 'withdraw_requests',
                 'tag_model_id' => $req->id,
                 'title' => 'Rút tiền thành công',
                 'body' => 'Bạn đã thành công rút số tiền ' . $req->amount . ' từ ví thành tiền mặt. Mã giao dịch '. $req->transaction_id,
@@ -279,7 +279,7 @@ class OrganiserController extends Controller
         Notification::create([
             'user_id' => $req->user_id,
             'tag' => 'Rút tiền',
-            'tag_model' => 'WITHDRAW',
+            'tag_model' => 'withdraw_requests',
             'tag_model_id' => $req->id,
             'title' => 'Rút tiền thất bại',
             'body' => 'Lệnh rút tiền ' . $req->transaction_id . ' của bạn đã bị từ chối',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\AddOn;
+use App\Models\Notification;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -615,7 +616,7 @@ class StoreController extends Controller
             'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 0',
             'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100',
         ]);
-        
+
         if ($validate->fails()) {
             return APIResponse::FailureResponse($validate->messages()->first());
         }
@@ -803,7 +804,7 @@ class StoreController extends Controller
                 'total_size' => $totalOrders,
                 'limit' => $limit,
                 'page' => $page,
-                'orders' => $orders
+                'orders' => $orders,
             ];
 
             return ApiResponse::successResponse($data);
@@ -922,48 +923,8 @@ class StoreController extends Controller
                 $order->canceled_at = now();
                 $order->cancel_reason = $request->cancel_reason;
 
-                $amount = $order->transactions->first()->amount;
-                $merchant = Auth::user();
-                $transaction = Transaction::create([
-                    'code' => Helper::generateNumber(),
-                    'amount' => $amount,
-                    'from_id' => $merchant->id,
-                    'to_id' => $order->user_id,
-                    'order_id' => $order->id,
-                    'type' => 'R',
-                    'title' => 'Hoàn tiền đơn hàng ' . $order->order_code,
-                    'message' => 'Hoàn ' . $amount . 'đ vào ví do đơn hàng ' . $order->order_code . ' đã bị hủy'
-                ]);
+                Helper::refund($order);
 
-                // hoàn tiền vào ví của user
-                $user = User::where('id', $order->user_id)->first();
-                $userWallet = $user->wallet;
-                $userOpenBalance = $userWallet->balance;
-                $userWallet->balance = $userWallet->balance + $amount;
-                $userCloseBalance = $userWallet->balance;
-
-                TransactionDetail::create([
-                    'transaction_id' => $transaction->id,
-                    'user_id' => $user->id,
-                    'open_balance' => $userOpenBalance,
-                    'close_balance' => $userCloseBalance,
-                ]);
-
-                // Trừ tiền từ ví của merchant
-                $merchantWallet = $merchant->wallet;
-                $merchantOpenBalance = $merchantWallet->balance;
-                $merchantWallet->balance = $merchantWallet->balance - $amount;
-                $merchantCloseBalance = $merchantWallet->balance;
-
-                TransactionDetail::create([
-                    'transaction_id' => $transaction->id,
-                    'user_id' => $user->id,
-                    'open_balance' => $merchantOpenBalance,
-                    'close_balance' => $merchantCloseBalance,
-                ]);
-
-                $merchantWallet->save();
-                $userWallet->save();
             } else if($request->status == 'accepted') {
                 if($order->status != 'pending') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi tiếp nhận đơn hàng');
                 $order->status = 'accepted';

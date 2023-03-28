@@ -110,7 +110,7 @@ class TransactionController extends Controller
             Notification::create([
                 'user_id' => $recipient->id,
                 'tag' => 'Chuyển tiền',
-                'tag_model' => 'TRANSACTION',
+                'tag_model' => 'transactions',
                 'tag_model_id' => $transaction->id,
                 'title' => 'Chuyển tiền',
                 'body' => 'Nhận ' . number_format($transaction->amount) . ' từ ' . $user->f_name,
