@@ -786,7 +786,7 @@ class StoreController extends Controller
         }
 
         try {
-            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total', 'product_detail')
+            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total', 'product_detail', 'status')
                 ->where('store_id', $request->store_id)
                 ->where('status', $request->status)
                 ->orderBy('created_at');
