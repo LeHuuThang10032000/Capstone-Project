@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Resources;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use App\Models\Wallet;
 use Carbon\Carbon;
 use Helper;
@@ -48,21 +50,38 @@ class WalletController extends Controller
             return back()->with('error', $validate->messages()->first());
         }
 
-        $wallet = Wallet::find($id);
-
-        $wallet->balance = $wallet->balance + $request->amount;
-        $wallet->save();
+        $userWallet = Wallet::find($id);
+        $userOpenBalance = $userWallet->balance;
+        $userWallet->balance = $userWallet->balance + $request->amount;
+        $userCloseBalance = $userWallet->balance;
+        $userWallet->save();
 
         $hour = Carbon::now()->hour;
 
-        if($wallet) {
-            Transaction::create([
+        if($userWallet) {
+            $transaction = Transaction::create([
                 'code' => Helper::generateNumber(),
                 'amount' => $request->amount,
                 'from_id' => Auth::user()->id,
-                'to_id' => $wallet->user->id,
+                'to_id' => $userWallet->user->id,
                 'message' => 'Nạp ' . $request->amount . ' vào ví',
                 'title' => 'Nạp tiền vào ví'
+            ]);
+
+            TransactionDetail::create([
+                'transaction_id' => $transaction->id,
+                'user_id' => Auth::user()->id,
+                'open_balance' => $userOpenBalance,
+                'close_balance' => $userCloseBalance,
+            ]);
+    
+            Notification::create([
+                'user_id' => Auth::user()->id,
+                'tag' => 'Nạp tiền',
+                'tag_model' => 'deposits',
+                'tag_model_id' => $transaction->id,
+                'title' => 'Nạp tiền',
+                'body' => 'Bạn đã nạp thành công số tiền ' . number_format($request->amount) . 'đ vào ví',
             ]);
         }
 
