@@ -104,7 +104,7 @@ const Index = () => {
         </View>
       </View>
 
-      <View style={{marginHorizontal: 20, marginVertical: 10}}>
+      {/* <View style={{marginHorizontal: 20, marginVertical: 10}}>
         <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
           Ví của tôi
         </Text>
@@ -121,12 +121,12 @@ const Index = () => {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
 
       <View style={{marginHorizontal: 20, marginVertical: 10}}>
-        <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
+        {/* <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
           Xã hội của tôi
-        </Text>
+        </Text> */}
         <View style={styles.wrapperButton}>
           <TouchableOpacity
             style={styles.button}

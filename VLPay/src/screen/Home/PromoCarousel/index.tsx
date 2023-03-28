@@ -19,7 +19,7 @@ const carouselImages = [
 
 export default function PromoCarousel() {
   return (
-    <View style={{flex: 1, paddingTop: 48}}>
+    <View style={{flex: 1}}>
       <Text
         style={{
           paddingHorizontal: 16,

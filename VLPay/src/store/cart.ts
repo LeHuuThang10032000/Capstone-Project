@@ -100,6 +100,7 @@ export interface myOrder {
   updated_at: string;
   taken_at: string;
   cancel_reason: string;
+  store_name: string;
   product_quantity: number;
   product_detail: Product[];
 }

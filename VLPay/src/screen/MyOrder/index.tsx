@@ -79,7 +79,7 @@ const FirstRoute = () => {
               <HStack justifyContent={'space-between'}>
                 <VStack>
                   <Text fontSize={18} fontWeight={'bold'} color="#000000">
-                    Trà sữa Cô Mười
+                    {item.store_name}
                   </Text>
                   <Text color={'#919191'}>Mã Đơn: {item.order_code}</Text>
                 </VStack>
@@ -154,7 +154,7 @@ const SecondRoute = () => {
               <HStack justifyContent={'space-between'}>
                 <VStack>
                   <Text fontSize={18} fontWeight={'bold'} color="#000000">
-                    Trà sữa Cô Mười
+                    {item.store_name}
                   </Text>
                   <Text color={'#919191'}>Mã Đơn: {item.order_code}</Text>
                 </VStack>
@@ -258,7 +258,7 @@ const MyOrder = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComp title="Lịch sử giao dịch" />
+      <HeaderComp title="Lịch sử đơn hàng" />
       <TabView
         navigationState={{index, routes}}
         renderScene={renderScene}

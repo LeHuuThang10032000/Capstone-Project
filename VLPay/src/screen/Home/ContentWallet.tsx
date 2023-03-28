@@ -113,8 +113,7 @@ const ContentWallet = () => {
 
       <View
         style={{
-          padding: 16,
-          marginTop: 24,
+          padding: 0,
         }}>
         <Flex
           flexDirection={'row'}
