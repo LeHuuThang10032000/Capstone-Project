@@ -830,7 +830,7 @@ class UserController extends Controller
         }
 
         try {
-            $orders = Order::where('user_id', Auth::user()->id);
+            $orders = Order::where('user_id', Auth::user()->id)->with('store:id,name');
 
             if ($request->status == 'taken') {
                 $orders = $orders->where('status', $request->status);
@@ -846,6 +846,11 @@ class UserController extends Controller
             }
             $totalOrders = $orders->count();
             $orders = $orders->get();
+
+            foreach($orders as $order) {
+                $order['store_name'] = $order->store->name;
+                unset($order['store']);
+            }
 
             $data = [
                 'total_size' => $totalOrders,
