@@ -24,7 +24,7 @@ class Order extends Model
 
     ];
 
-    protected $appends = ['product_quantity', 'store_name'];
+    protected $appends = ['product_quantity'];
 
     public function user()
     {
@@ -55,12 +55,6 @@ class Order extends Model
     {
         $products = json_decode($value, true);
         return $products;
-    }
-
-    public function getStoreNameAttribute()
-    {
-        $storeName = $this->store->name;
-        return $storeName;
     }
 
     public function getProductQuantityAttribute()
