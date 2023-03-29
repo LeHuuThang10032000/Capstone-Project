@@ -110,63 +110,65 @@ const MenuScreen = (props: Props) => {
   const DataList = ({data}) => {
     return (
       <ScrollView style={{paddingHorizontal: 16}}>
-        {data.map(
-          ({id, category_name, products: _products, products_count}) => (
-            <View key={id}>
-              <HStack
-                alignItems={'center'}
-                justifyContent={'space-between'}
-                style={{marginTop: 16, marginBottom: 8}}>
-                <Text style={styles.category}>{category_name}</Text>
-                <Text>{products_count} món</Text>
-              </HStack>
-              {_products.map(
-                (
-                  {id: productId, name, price, image, category_id, add_ons},
-                  index,
-                ) => (
-                  <>
-                    <TouchableOpacity
-                      onPress={() => {
-                        const item = {
-                          products: products,
-                          addons: addons,
-                          store_id: store_di,
-                          product: {
-                            id: productId,
-                            name,
-                            price,
-                            image,
-                            category_id,
-                            add_ons,
-                          },
-                          isUpdated: true,
-                        };
-                        handleUpdatePress(item);
-                      }}>
-                      <View key={productId} style={styles.productContainer}>
-                        <HStack flex={1} alignItems={'center'}>
-                          <Image
-                            source={{uri: image}}
-                            width={50}
-                            height={50}
-                            style={{marginRight: 10}}
-                          />
-                          <VStack>
-                            <Text style={styles.productName}>{name}</Text>
-                            <Text style={styles.price}>
-                              {price.toLocaleString()}đ
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </View>
-                    </TouchableOpacity>
-                  </>
-                ),
-              )}
-            </View>
-          ),
-        )}
+        <View style={{paddingBottom: 200}}>
+          {data.map(
+            ({id, category_name, products: _products, products_count}) => (
+              <View key={id}>
+                <HStack
+                  alignItems={'center'}
+                  justifyContent={'space-between'}
+                  style={{marginTop: 16, marginBottom: 8}}>
+                  <Text style={styles.category}>{category_name}</Text>
+                  <Text>{products_count} món</Text>
+                </HStack>
+                {_products.map(
+                  (
+                    {id: productId, name, price, image, category_id, add_ons},
+                    index,
+                  ) => (
+                    <>
+                      <TouchableOpacity
+                        onPress={() => {
+                          const item = {
+                            products: products,
+                            addons: addons,
+                            store_id: store_di,
+                            product: {
+                              id: productId,
+                              name,
+                              price,
+                              image,
+                              category_id,
+                              add_ons,
+                            },
+                            isUpdated: true,
+                          };
+                          handleUpdatePress(item);
+                        }}>
+                        <View key={productId} style={styles.productContainer}>
+                          <HStack flex={1} alignItems={'center'}>
+                            <Image
+                              source={{uri: image}}
+                              width={50}
+                              height={50}
+                              style={{marginRight: 10}}
+                            />
+                            <VStack>
+                              <Text style={styles.productName}>{name}</Text>
+                              <Text style={styles.price}>
+                                {price.toLocaleString()}đ
+                              </Text>
+                            </VStack>
+                          </HStack>
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  ),
+                )}
+              </View>
+            ),
+          )}
+        </View>
       </ScrollView>
     );
   };
@@ -183,7 +185,6 @@ const MenuScreen = (props: Props) => {
         />
         <Text style={styles.titles}>{storeInfo.name}</Text>
         {products[0] && <DataList data={products} />}
-        <View style={{height: 50}}></View>
         <View style={styles.btnWrapper}>
           <TouchableOpacity
             style={styles.buttons}

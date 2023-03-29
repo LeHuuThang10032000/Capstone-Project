@@ -479,21 +479,8 @@ const Index = () => {
             marginHorizontal: 20,
           }}>
           <View style={styles.wrapperButton}>
-            <TouchableOpacity onPress={() => console.log('nothing')}>
-              <View style={styles.buttonTranfer}>
-                <Image
-                  source={require('../../../../assets/img/withdrawMerchant.png')}
-                  style={{width: 52, height: 52}}
-                  alt={'just image'}
-                />
-              </View>
-            </TouchableOpacity>
-            <Text style={styles.textButton}>RÚT TIỀN</Text>
-          </View>
-
-          <View style={styles.wrapperButton}>
             <TouchableOpacity onPress={() => navigation.navigate('QR')}>
-              <View style={styles.button}>
+              <View style={styles.buttonTranfer}>
                 <Image
                   source={require('../../../../assets/img/QRmerchant.png')}
                   style={{width: 52, height: 52}}
