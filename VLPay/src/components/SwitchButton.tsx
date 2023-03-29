@@ -35,6 +35,7 @@ const SwitchButton: React.FC<SwitchButtonProps> = ({
         backgroundInactive={'gray'}
         circleActiveColor={'white'}
         circleInActiveColor={'white'}
+        switchWidthMultiplier={2.8}
       />
     </>
   );
