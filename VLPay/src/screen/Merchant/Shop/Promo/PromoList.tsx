@@ -188,7 +188,8 @@ const PromoList = () => {
             paddingVertical: 10,
             borderRadius: 10,
           }}>
-          <UText style={{alignSelf: 'center', color: '#ACB1C0'}}>
+          <UText
+            style={{alignSelf: 'center', color: 'black', fontWeight: 'bold'}}>
             Tạo mã giảm giá
           </UText>
         </TouchableOpacity>

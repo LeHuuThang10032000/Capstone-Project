@@ -52,8 +52,7 @@ axiosClient.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     const axiosErr = error as AxiosError;
-    console.error(`AxiosError: ${JSON.stringify(axiosErr)}`);
-    return Promise.reject(axiosErr);
+    return Promise.reject(axiosErr?.response?.data);
   },
 );
 
