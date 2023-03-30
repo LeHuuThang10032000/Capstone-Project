@@ -37,16 +37,14 @@ const NotiShareBill = (props: Props) => {
       <HeaderBack title="Chia tiền" />
       <ScrollView flex={1}>
         <Center padding={5}>
-          <View borderBottomWidth={1}>
-            <Heading>300.000đ</Heading>
-          </View>
-
-          <Center w="100%" paddingY={5}>
-            <Text paddingLeft={3}>
-              Tổng tiền thanh toán cho đơn hàng tại kios 10 là 300.000. Cùng
-              chia bill nha mọi người
-            </Text>
-          </Center>
+          <HStack w="100%" justifyContent="flex-start" paddingBottom={5}>
+            <VStack>
+              <Heading>Thông tin đơn hàng.</Heading>
+              <Text textDecorationLine="underline" color="#4285F4">
+                Bấm vào đây để xem chi tiết
+              </Text>
+            </VStack>
+          </HStack>
 
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize={16} fontWeight="bold">
