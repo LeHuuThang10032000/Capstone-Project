@@ -55,45 +55,14 @@ const DetailBill = () => {
       <HeaderBack title="Chia tiền" />
       <ScrollView flex={1}>
         <Center padding={5}>
-          <View borderBottomWidth={1}>
-            <Heading>300.000đ</Heading>
-          </View>
-          <TextArea
-            value={text}
-            // onBlur={onBlur}
-            w="100%"
-            onChangeText={onChangeText}
-            keyboardType="email-address"
-            placeholder="Nhập nội dung"
-            marginTop={5}
-            marginX={3}
-            style={{
-              fontFamily: 'Poppins-Regular',
-              fontSize: 14,
-              padding: 0,
-              flex: 1,
-            }}
-            autoCompleteType={undefined}
-            rightElement={
-              <MessageIcon style={{marginRight: 3, marginBottom: 40}} />
-            }
-          />
-          <Heading paddingTop={5} size="sm">
-            Hình ảnh đính kèm
-          </Heading>
-          <TouchableOpacity onPress={ChoosePhotoFromLibrary}>
-            <Image
-              source={
-                image?.path
-                  ? {uri: image?.path}
-                  : require('../../../assets/img/user_default.png')
-              }
-              width={150}
-              height={150}
-              alt="bill"
-              marginY={3}
-            />
-          </TouchableOpacity>
+          <HStack w="100%" justifyContent="flex-start" paddingBottom={20}>
+            <VStack>
+              <Heading>Thông tin đơn hàng.</Heading>
+              <Text textDecorationLine="underline" color="#4285F4">
+                Bấm vào đây để xem chi tiết
+              </Text>
+            </VStack>
+          </HStack>
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize={16} fontWeight="bold">
               Danh sách chia tiền(3)

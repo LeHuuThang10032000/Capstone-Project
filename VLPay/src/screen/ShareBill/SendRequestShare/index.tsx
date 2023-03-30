@@ -33,12 +33,17 @@ const SendRequestShare = (props: Props) => {
   }, []);
   return (
     <View flex={1} backgroundColor="#ffffff">
-      <HeaderBack title="Chia tiền" />
+      <HeaderBack title="Chi tiết" />
       <ScrollView flex={1}>
         <Center padding={5}>
-          <View borderBottomWidth={1}>
-            <Heading>300.000đ</Heading>
-          </View>
+          <HStack w="100%" justifyContent="flex-start">
+            <VStack>
+              <Heading>Thông tin đơn hàng.</Heading>
+              <Text textDecorationLine="underline" color="#4285F4">
+                Bấm vào đây để xem chi tiết
+              </Text>
+            </VStack>
+          </HStack>
 
           <Center>
             <HStack
@@ -60,9 +65,9 @@ const SendRequestShare = (props: Props) => {
             <Text fontSize={16} fontWeight="bold">
               Danh sách chia tiền(3)
             </Text>
-            <Text fontSize={16} fontWeight="bold" color="#FF0000">
+            {/* <Text fontSize={16} fontWeight="bold" color="#FF0000">
               Thêm người
-            </Text>
+            </Text> */}
           </HStack>
 
           {masterDataSource.map(item => (

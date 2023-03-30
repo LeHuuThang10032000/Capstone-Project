@@ -16,6 +16,7 @@ import ExtendIcon from '../../../../assets/svg/extend.svg';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../../../stack/Navigation';
 import {axiosClient} from '../../../../components/apis/axiosClient';
+import SwitchButtonSmall from '../../../../components/SwitchButtonSmall';
 
 type Props = {
   id: string;
@@ -29,6 +30,16 @@ const InfoShop = (props: Props) => {
   const [data, setData] = useState(props);
   const [isLoading, setIsLoading] = useState(false);
   const isFocused = useIsFocused();
+  const [switchValue, setSwitchValue] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(switchValue);
+
+  const handleSwitchValueChange = (value: boolean) => {
+    setSwitchValue(value);
+  };
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled);
+  };
+
   console.log('myDAta:', data);
 
   const getStore = useCallback(async () => {
@@ -90,12 +101,23 @@ const InfoShop = (props: Props) => {
         borderWidth={1}
         borderColor="#EFEFF4"
         backgroundColor={'#C7CEEA4A'}>
-        <HStack justifyContent={'space-between'} width="100%" py={3} px={2}>
+        <HStack
+          alignItems="center"
+          justifyContent={'space-between'}
+          width="100%"
+          py={3}
+          px={2}>
           <VStack>
             <Text style={styles.textButton}>Tình trạng quán</Text>
             <Text>Tắt để tạm dừng nhận đơn hàng đến</Text>
           </VStack>
-          <Switch size={'md'} />
+          {/* <Switch size={'md'} /> */}
+          <SwitchButtonSmall
+            label1={'Mở'}
+            label2={'Tắt'}
+            value={switchValue}
+            onValueChange={handleSwitchValueChange}
+          />
         </HStack>
       </Center>
 
