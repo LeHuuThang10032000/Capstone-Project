@@ -68,9 +68,19 @@ const CreatePromo = () => {
   const [limit, setLimit] = useState(data ? data.limit : 0);
   const [amount, setAmount] = useState(0);
   const [limitError, setLimitError] = useState('');
-
+  const [previous, setPrevious] = useState('');
   const [generalError, setGeneralError] = useState('');
   const [visibleWarning, setVisibleWarning] = useState(false);
+
+  let previousPage = () => {
+    if (!previous) {
+      navigation.goBack();
+    } else {
+      console.log(previous);
+
+      setPage(previous);
+    }
+  };
 
   const dropdownOptions = [
     {key: '1', value: 'Không giới hạn (mặc định)'},
@@ -79,33 +89,41 @@ const CreatePromo = () => {
 
   const Element = ({icon, title, desc, onPress}) => {
     return (
-      <TouchableOpacity
-        style={{
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 20,
-        }}
-        onPress={onPress}>
-        <HStack
-          alignItems={'center'}
-          width={'95%'}
-          justifyContent={'space-between'}>
-          <HStack alignItems={'center'}>
-            {icon}
-            <VStack style={{marginLeft: 10}}>
-              <UText>{title}</UText>
-              <UText style={{fontSize: 11}}>{desc}</UText>
-            </VStack>
+      <>
+        <TouchableOpacity
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={onPress}>
+          <HStack
+            alignItems={'center'}
+            width={'95%'}
+            justifyContent={'space-between'}>
+            <HStack alignItems={'center'}>
+              {icon}
+              <VStack style={{marginLeft: 10}}>
+                <UText>{title}</UText>
+                <UText style={{fontSize: 11}}>{desc}</UText>
+              </VStack>
+            </HStack>
+            <Icons.RightArrow />
           </HStack>
-          <Icons.RightArrow />
-        </HStack>
-      </TouchableOpacity>
+        </TouchableOpacity>
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: '#E4E9F2',
+            width: '95%',
+            marginVertical: 20,
+          }}
+        />
+      </>
     );
   };
 
   const Case = useMemo(() => {
-    console.info('RUN');
     switch (page) {
       case PROMOS[0]:
         setStartDate('');
@@ -113,6 +131,7 @@ const CreatePromo = () => {
         setDiscount(0);
         setMaxDiscount(0);
         setMinPurchase(0);
+        setPrevious('');
         return (
           <>
             <UText style={{marginLeft: 10, marginVertical: 10}}>
@@ -146,6 +165,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[1]:
+        setPrevious(PROMOS[0]);
         setDiscountType('percentage');
         return (
           <>
@@ -337,12 +357,7 @@ const CreatePromo = () => {
                 bottom: 20,
               }}
               onPress={() => {
-                if (maxDiscount && minPurchase && discount) {
-                  setPage(PROMOS[2]);
-                } else {
-                  setVisibleWarning(true);
-                  setGeneralError('Vui lòng nhập đầy đủ trường dữ liệu');
-                }
+                setPage(PROMOS[2]);
               }}>
               <UText>Tiếp theo</UText>
             </TouchableOpacity>
@@ -351,7 +366,7 @@ const CreatePromo = () => {
       case PROMOS[2]:
         const currentTime = new Date();
         const time = currentTime.getTime();
-
+        setPrevious(PROMOS[1]);
         return (
           <>
             <ScrollView
@@ -552,6 +567,8 @@ const CreatePromo = () => {
                   } else {
                     formData.append('limit', 0);
                   }
+                  console.log(formData);
+
                   try {
                     if (data) {
                       if (data?.id) {
@@ -592,6 +609,7 @@ const CreatePromo = () => {
         );
       case PROMOS[3]:
         const _time = new Date();
+        setPrevious('');
         return (
           <>
             <ScrollView style={{height: '100%', marginBottom: 100}}>
@@ -723,6 +741,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[4]:
+        setPrevious(PROMOS[0]);
         return (
           <>
             <VStack alignItems={'center'} height={'100%'}>
@@ -805,18 +824,14 @@ const CreatePromo = () => {
                 bottom: 20,
               }}
               onPress={() => {
-                if (discount && minPurchase) {
-                  setPage(PROMOS[5]);
-                } else {
-                  setVisibleWarning(true);
-                  setGeneralError('Vui lòng nhập đầy đủ trường dữ liệu');
-                }
+                setPage(PROMOS[5]);
               }}>
               <UText>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
       case PROMOS[5]:
+        setPrevious(PROMOS[4]);
         return (
           <>
             <ScrollView style={{height: '100%', marginBottom: 100}}>
@@ -848,8 +863,6 @@ const CreatePromo = () => {
                       isReadOnly={true}
                     />
                   </TouchableOpacity>
-                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
-                  {console.log('openDateStart 123:', openDateStart)}
 
                   <DatePicker
                     modal
@@ -1004,18 +1017,17 @@ const CreatePromo = () => {
                     if (data) {
                       if (data?.id) {
                         formData.append('promo_id', data.id);
-                        const result = await axiosClient.post(
+                        await axiosClient.post(
                           baseUrl + 'merchant/promocode/update',
                           formData,
                           {
                             headers: {'content-type': 'multipart/form-data'},
                           },
                         );
-                        console.log(result);
                         setPage(PROMOS[6]);
                       }
                     } else {
-                      const result = await axiosClient.post(
+                      await axiosClient.post(
                         baseUrl + 'merchant/promocode/create',
                         formData,
                         {
@@ -1036,7 +1048,7 @@ const CreatePromo = () => {
         );
       case PROMOS[6]:
         const __time = new Date();
-
+        setPrevious('');
         return (
           <>
             <VStack backgroundColor={'white'} height={'100%'}>
@@ -1163,6 +1175,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[7]:
+        setPrevious(PROMOS[0]);
         return (
           <>
             <VStack alignItems={'center'}>
@@ -1261,6 +1274,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[8]:
+        setPrevious(PROMOS[7]);
         return (
           <>
             <VStack alignItems={'center'}>
@@ -1296,6 +1310,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[9]:
+        setPrevious(PROMOS[8]);
         return (
           <>
             <VStack alignItems={'center'}>
@@ -1455,6 +1470,8 @@ const CreatePromo = () => {
     setGeneralError,
     visibleWarning,
     setVisibleWarning,
+    previous,
+    setPrevious,
   ]);
 
   return (
@@ -1465,7 +1482,7 @@ const CreatePromo = () => {
             ? 'Xem trước mã giảm giá'
             : 'Chương trình quảng cáo'
         }
-        onPressBack={() => navigation.goBack()}
+        onPressBack={previousPage}
       />
       {Case}
       <YesNoModal

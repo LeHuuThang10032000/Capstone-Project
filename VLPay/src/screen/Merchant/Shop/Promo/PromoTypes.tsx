@@ -17,23 +17,37 @@ const PromoTypes = () => {
 
   const Element = ({icon, title, desc, onPress}) => {
     return (
-      <TouchableOpacity
-        style={{width: '100%', alignItems: 'center', justifyContent: 'center'}}
-        onPress={onPress}>
-        <HStack
-          alignItems={'center'}
-          width={'95%'}
-          justifyContent={'space-between'}>
-          <HStack alignItems={'center'}>
-            {icon}
-            <VStack style={{marginLeft: 10}}>
-              <UText>{title}</UText>
-              <UText style={{fontSize: 11}}>{desc}</UText>
-            </VStack>
+      <>
+        <TouchableOpacity
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={onPress}>
+          <HStack
+            alignItems={'center'}
+            width={'95%'}
+            justifyContent={'space-between'}>
+            <HStack alignItems={'center'}>
+              {icon}
+              <VStack style={{marginLeft: 10}}>
+                <UText>{title}</UText>
+                <UText style={{fontSize: 11}}>{desc}</UText>
+              </VStack>
+            </HStack>
+            <Icons.RightArrow />
           </HStack>
-          <Icons.RightArrow />
-        </HStack>
-      </TouchableOpacity>
+        </TouchableOpacity>
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: '#E4E9F2',
+            width: '95%',
+            marginVertical: 20,
+          }}
+        />
+      </>
     );
   };
 
@@ -57,7 +71,6 @@ const PromoTypes = () => {
           title={'Chương trình giảm giá'}
           desc={'Tạo và quản lý các mã giảm giá của quán'}
         />
-        <View style={{height: 30}} />
         <Element
           onPress={() => {
             navigation.navigate('PromoList', {
