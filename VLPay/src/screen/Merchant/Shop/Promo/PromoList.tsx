@@ -29,6 +29,7 @@ const PromoList = () => {
         'RUNNING',
     );
     setItems(result.data.data);
+    setState('RUNNING');
     console.log('result', result);
   };
 
@@ -60,6 +61,7 @@ const PromoList = () => {
                 '&page=1&limit=10&status=RUNNING',
             );
             setItems(result.data.data);
+            console.info(result.data.data);
           }}
           style={[
             state === 'RUNNING'
@@ -86,6 +88,7 @@ const PromoList = () => {
                 '&page=1&limit=10&status=UPCOMING',
             );
             setItems(result.data.data);
+            console.warn(result.data.data);
           }}
           style={[
             state === 'UPCOMING'
