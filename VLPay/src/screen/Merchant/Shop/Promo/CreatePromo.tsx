@@ -1,6 +1,6 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {HStack, Input, VStack} from 'native-base';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import HeaderComp from '../../../../components/HeaderComp';
 import StagePromo from '../../../../components/helpers/StagePromo';
@@ -42,9 +42,12 @@ const CreatePromo = () => {
         : PROMOS[4]
       : PROMOS[0],
   );
+  var today = new Date();
   const [dropdownOptionSelect, setDropdownOptionSelect] = useState('');
   const [dateStart, setDateStart] = useState(new Date());
-  const [dateEnd, setDateEnd] = useState(new Date());
+  const [dateEnd, setDateEnd] = useState(
+    new Date(today.getTime() + 24 * 60 * 60 * 1000),
+  );
   const [openDateStart, setOpenDateStart] = useState(false);
   const [openDateEnd, setOpenDateEnd] = useState(false);
 
@@ -55,6 +58,8 @@ const CreatePromo = () => {
   const [endDateError, setEndDateError] = useState('');
   const [startTime, setStartTime] = useState('01:00:00');
   const [endTime, setEndTime] = useState('23:59:59');
+  const [openStartTime, setOpenStartTime] = useState(false);
+  const [openEndTime, setOpenEndTime] = useState(false);
   const [discount, setDiscount] = useState(data ? data.discount : 0);
   const [discountError, setDiscountError] = useState('');
   const [discountType, setDiscountType] = useState(
@@ -72,6 +77,7 @@ const CreatePromo = () => {
   const [generalError, setGeneralError] = useState('');
   const [visibleWarning, setVisibleWarning] = useState(false);
 
+  const [title, setTitle] = useState('Tạo mã giảm giá');
   let previousPage = () => {
     if (!previous) {
       navigation.goBack();
@@ -187,17 +193,24 @@ const CreatePromo = () => {
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
                   <UText>Mã giảm giá</UText>
-                  <UText>{code}</UText>
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      padding: 5,
+                      borderColor: '#4285F4',
+                    }}>
+                    <UText>{code}</UText>
+                  </View>
                 </HStack>
                 <VStack
                   width={'100%'}
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
                   <UText>Nhập giá trị giảm giá trên tổng đơn hàng</UText>
-
                   <Input
-                    defaultValue={discount.toString() + '%'}
+                    defaultValue={discount.toString()}
                     borderRadius={10}
+                    rightElement={<UText style={{marginRight: 10}}>%</UText>}
                     keyboardType={'decimal-pad'}
                     onSubmitEditing={event => {
                       if (event.nativeEvent.text.length > 0) {
@@ -298,6 +311,7 @@ const CreatePromo = () => {
                   style={{padding: 16}}>
                   <UText>Trị giá đơn hàng tối thiểu</UText>
                   <Input
+                    rightElement={<UText style={{marginRight: 10}}>đ</UText>}
                     defaultValue={minPurchase.toLocaleString()}
                     borderRadius={10}
                     keyboardType={'decimal-pad'}
@@ -326,6 +340,7 @@ const CreatePromo = () => {
                   <UText>Nhập giá trị giảm tối đa</UText>
                   <Input
                     defaultValue={maxDiscount.toLocaleString()}
+                    rightElement={<UText style={{marginRight: 10}}>đ</UText>}
                     borderRadius={10}
                     keyboardType={'decimal-pad'}
                     onSubmitEditing={event => {
@@ -359,7 +374,7 @@ const CreatePromo = () => {
               onPress={() => {
                 setPage(PROMOS[2]);
               }}>
-              <UText>Tiếp theo</UText>
+              <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
@@ -407,14 +422,6 @@ const CreatePromo = () => {
                     open={openDateStart}
                     date={dateStart}
                     onConfirm={date => {
-                      setStartDateError('');
-                      if (dateEnd) {
-                        if (date.getTime() < dateEnd?.getTime()) {
-                          setEndDateError('');
-                        } else {
-                          setEndDateError('Thời gian không hợp lệ');
-                        }
-                      }
                       setDateStart(date);
                       setStartDate(date.toISOString().slice(0, 10));
                       setOpenDateStart(false);
@@ -450,19 +457,8 @@ const CreatePromo = () => {
                     open={openDateEnd}
                     date={dateEnd}
                     onConfirm={date => {
-                      console.log('time', time);
-
-                      if (
-                        time < date.getTime() &&
-                        dateStart.getTime() < date.getTime()
-                      ) {
-                        setEndDateError('');
-                        setDateEnd(date);
-                        setEndDate(date.toISOString().slice(0, 10));
-                      } else {
-                        // setEndDateError('Thời gian không hợp lệ');
-                      }
-
+                      setDateEnd(date);
+                      setEndDate(date.toISOString().slice(0, 10));
                       setOpenDateEnd(false);
                     }}
                     onCancel={() => {
@@ -473,19 +469,73 @@ const CreatePromo = () => {
                     <UText style={{color: 'red'}}>{endDateError}</UText>
                   )}
                 </VStack>
-                <HStack
+
+                <UText style={{alignSelf: 'flex-start', marginLeft: 16}}>
+                  Thời gian áp dụng
+                </UText>
+                <VStack
                   width={'100%'}
                   justifyContent={'space-between'}
-                  style={{padding: 16}}
-                  borderBottomColor={'#E4E9F2'}
-                  borderBottomWidth={1}
-                  paddingBottom={2}
-                  marginBottom={0}>
-                  <VStack>
-                    <UText>Thời gian áp dụng</UText>
-                    <UText>Vào khung giờ mở cửa bán</UText>
-                  </VStack>
-                </HStack>
+                  style={{padding: 16}}>
+                  <UText>Giờ bắt đầu</UText>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setOpenStartTime(true);
+                    }}>
+                    <Input
+                      value={startTime ? startTime : 'Chọn ngày và thời gian'}
+                      borderRadius={10}
+                      isReadOnly={true}
+                    />
+                  </TouchableOpacity>
+
+                  <DatePicker
+                    modal
+                    mode="time"
+                    open={openStartTime}
+                    date={new Date()}
+                    onConfirm={date => {
+                      setStartTime(date.toTimeString().split(' ')[0]);
+                      setOpenStartTime(false);
+                    }}
+                    onCancel={() => {
+                      setOpenStartTime(false);
+                    }}
+                  />
+                  {startDateError && (
+                    <UText style={{color: 'red'}}>{startDateError}</UText>
+                  )}
+                </VStack>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Giờ kết thúc</UText>
+                  <TouchableOpacity onPress={() => setOpenEndTime(true)}>
+                    <Input
+                      value={endTime ? endTime : 'Chọn ngày và thời gian'}
+                      borderRadius={10}
+                      isReadOnly={true}
+                    />
+                  </TouchableOpacity>
+                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                  <DatePicker
+                    modal
+                    mode="time"
+                    open={openEndTime}
+                    date={new Date()}
+                    onConfirm={date => {
+                      setEndTime(date.toTimeString().split(' ')[0]);
+                      setOpenStartTime(false);
+                    }}
+                    onCancel={() => {
+                      setOpenEndTime(false);
+                    }}
+                  />
+                  {endDateError && (
+                    <UText style={{color: 'red'}}>{endDateError}</UText>
+                  )}
+                </VStack>
 
                 <VStack
                   width={'100%'}
@@ -580,12 +630,9 @@ const CreatePromo = () => {
                             headers: {'content-type': 'multipart/form-data'},
                           },
                         );
-                        console.log(result);
                         setPage(PROMOS[3]);
                       }
                     } else {
-                      console.log('hehll');
-
                       const result = await axiosClient.post(
                         baseUrl + 'merchant/promocode/create',
                         formData,
@@ -596,18 +643,17 @@ const CreatePromo = () => {
                       setPage(PROMOS[3]);
                     }
                   } catch (e) {
-                    console.log('result', e);
-
                     setGeneralError(e?.error);
                     setVisibleWarning(true);
                   }
                 }
               }}>
-              <UText>Tiếp theo</UText>
+              <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
       case PROMOS[3]:
+        setTitle('Mã giảm giá');
         const _time = new Date();
         setPrevious('');
         return (
@@ -741,6 +787,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[4]:
+        setTitle('Tạo mã giảm giá ');
         setPrevious(PROMOS[0]);
         return (
           <>
@@ -762,6 +809,7 @@ const CreatePromo = () => {
                 style={{padding: 16}}>
                 <UText>Nhập giá trị giảm giá</UText>
                 <Input
+                  rightElement={<UText style={{marginRight: 10}}>đ</UText>}
                   defaultValue={discount.toLocaleString()}
                   borderRadius={10}
                   keyboardType={'decimal-pad'}
@@ -789,26 +837,15 @@ const CreatePromo = () => {
                 style={{padding: 16}}>
                 <UText>Trị giá đơn hàng tối thiểu</UText>
                 <Input
+                  rightElement={<UText style={{marginRight: 10}}>đ</UText>}
                   defaultValue={minPurchase.toLocaleString()}
                   borderRadius={10}
                   keyboardType={'decimal-pad'}
                   onSubmitEditing={event => {
-                    if (event.nativeEvent.text.length > 0) {
-                      if (parseInt(event.nativeEvent.text) > 0) {
-                        setMinPurchaseError('');
-                        const result = parseInt(event.nativeEvent.text);
-                        setMinPurchase(result);
-                      } else {
-                        setMinPurchaseError('Không được dưới 0đ');
-                      }
-                    } else {
-                      setMinPurchase(0);
-                    }
+                    const result = parseInt(event.nativeEvent.text);
+                    setMinPurchase(result);
                   }}
                 />
-                {minPurchaseError && (
-                  <UText style={{color: 'red'}}>{minPurchaseError}</UText>
-                )}
               </VStack>
             </VStack>
             <TouchableOpacity
@@ -826,7 +863,7 @@ const CreatePromo = () => {
               onPress={() => {
                 setPage(PROMOS[5]);
               }}>
-              <UText>Tiếp theo</UText>
+              <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
@@ -1042,11 +1079,12 @@ const CreatePromo = () => {
                   }
                 }
               }}>
-              <UText>Tiếp theo</UText>
+              <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
       case PROMOS[6]:
+        setTitle('Xem trước mã giảm giá');
         const __time = new Date();
         setPrevious('');
         return (
@@ -1175,6 +1213,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[7]:
+        setTitle('Tạo chương trình ưu đãi');
         setPrevious(PROMOS[0]);
         return (
           <>
@@ -1269,7 +1308,7 @@ const CreatePromo = () => {
               onPress={() => {
                 setPage(PROMOS[8]);
               }}>
-              <UText>Tiếp theo</UText>
+              <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
@@ -1305,7 +1344,7 @@ const CreatePromo = () => {
               onPress={() => {
                 setPage(PROMOS[9]);
               }}>
-              <UText>Tiếp theo</UText>
+              <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
           </>
         );
@@ -1419,6 +1458,12 @@ const CreatePromo = () => {
         );
     }
   }, [
+    openEndTime,
+    setOpenEndTime,
+    openStartTime,
+    setOpenStartTime,
+    title,
+    setTitle,
     page,
     dropdownOptionSelect,
     dateStart,
@@ -1476,14 +1521,7 @@ const CreatePromo = () => {
 
   return (
     <View style={{height: '100%', backgroundColor: 'white'}}>
-      <HeaderComp
-        title={
-          page === PROMOS[3]
-            ? 'Xem trước mã giảm giá'
-            : 'Chương trình quảng cáo'
-        }
-        onPressBack={previousPage}
-      />
+      <HeaderComp title={title} onPressBack={previousPage} />
       {Case}
       <YesNoModal
         icon={<Icons.WarningIcon />}
@@ -1498,7 +1536,7 @@ const CreatePromo = () => {
           display: 'none',
         }}
         message={generalError}
-        title={'Lỗi đăng nhập'}
+        title={'Lỗi'}
         onActionLeft={() => {
           setVisibleWarning(false);
         }}
