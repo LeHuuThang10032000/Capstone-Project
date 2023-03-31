@@ -52,9 +52,18 @@ const CreatePromo = () => {
   const [openDateEnd, setOpenDateEnd] = useState(false);
 
   const [code, setCode] = useState(Math.random().toString(36));
-  const [startDate, setStartDate] = useState(data ? data.start_date : '');
+  const [startDate, setStartDate] = useState(
+    data ? data.start_date : new Date().toISOString().slice(0, 10),
+  );
   const [startDateError, setStartDateError] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [endDate, setEndDate] = useState(
+    data?.end_date
+      ? data.end_date
+      : new Date(today.getTime() + 24 * 60 * 60 * 1000)
+          .toISOString()
+          .slice(0, 10),
+  );
+
   const [endDateError, setEndDateError] = useState('');
   const [startTime, setStartTime] = useState('01:00:00');
   const [endTime, setEndTime] = useState('23:59:59');
@@ -603,7 +612,11 @@ const CreatePromo = () => {
                   );
                   formData.append(
                     'end_date',
-                    endDate ? endDate : time.toISOString().slice(0, 10),
+                    endDate
+                      ? endDate
+                      : new Date(today.getTime() + 24 * 60 * 60 * 1000)
+                          .toISOString()
+                          .slice(0, 10),
                   );
                   formData.append('start_time', startTime);
                   formData.append('end_time', endTime);
@@ -1034,7 +1047,11 @@ const CreatePromo = () => {
                   );
                   formData.append(
                     'end_date',
-                    endDate ? endDate : time.toISOString().slice(0, 10),
+                    endDate
+                      ? endDate
+                      : new Date(today.getTime() + 24 * 60 * 60 * 1000)
+                          .toISOString()
+                          .slice(0, 10),
                   );
                   formData.append('start_time', startTime);
                   formData.append('end_time', endTime);
