@@ -573,13 +573,27 @@ class StoreController extends Controller
             $promocodes = Promocode::where('store_id', $request->store_id)
                 ->orderBy('created_at','desc');
 
-            $today = Carbon::now();
             if ($request->status == 'RUNNING') {
-                $promocodes = $promocodes->where('start_date', '<=', $today)->where('end_date', '>=', $today);          
+                $promocodes = $promocodes->where(function ($query) {
+                    $query->whereDate('start_date', '<=', now())
+                        ->whereDate('end_date', '>=', now())
+                        ->whereTime('start_time', '<=', now())
+                        ->whereTime('end_time', '>=', now());
+                });
             } else if($request->status == 'UPCOMING') {
-                $promocodes = $promocodes->where('start_date', '>', $today);
+                $promocodes = $promocodes->where(function ($query) {
+                    $query->whereDate('start_date', '=', now())
+                        ->whereTime('start_time', '>', now());
+                })->orWhere(function ($query) {
+                    $query->whereDate('start_date', '>', now());
+                });
             } else {
-                $promocodes = $promocodes->where('end_date','<', $today);
+                $promocodes = $promocodes->where(function ($query) {
+                    $query->whereDate('end_date', '=', now())
+                        ->whereTime('end_time', '<', now());
+                })->orWhere(function ($query) {
+                    $query->whereDate('end_date', '<', now());
+                });
             }
 
             if($request->limit && $request->page){
@@ -614,7 +628,7 @@ class StoreController extends Controller
         ], [
             'discount.gt' => 'Số tiền giảm giá không được nhỏ hơn hoặc bằng 0',
             'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 0',
-            'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100',
+            'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100đ',
         ]);
 
         if ($validate->fails()) {
@@ -628,7 +642,7 @@ class StoreController extends Controller
             $startTime = Carbon::createFromFormat('H:i:s', $request->start_time);
             $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
 
-            if($startDate >= now()) {
+            if($startDate < now()) {
                 return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
 
@@ -691,7 +705,7 @@ class StoreController extends Controller
         ],[
             'discount.gt' => 'Số tiền giảm giá không được nhỏ hơn hoặc bằng 0',
             'min_purchase.min' => 'Số tiền tối thiểu không được nhỏ hơn 0',
-            'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100',
+            'max_discount.min' => 'Số tiền giảm tối đa không được nhỏ hơn 100đ',
         ]);
 
         if ($validate->fails()) {
@@ -705,7 +719,7 @@ class StoreController extends Controller
             $startTime = Carbon::createFromFormat('H:i:s', $request->start_time);
             $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
 
-            if($startDate >= now()) {
+            if($startDate < now()) {
                 return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
 

@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Promocode;
+use App\Models\ShareBill;
 use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
@@ -547,7 +548,7 @@ class UserController extends Controller
             'store_id' => 'required|exists:' . app(Store::class)->getTable() . ',id',
             'note' => 'nullable',
             'promocode_id' => 'nullable|integer|exists:' . app(Promocode::class)->getTable() . ',id',
-            'message' => 'nullable'
+            'message' => 'nullable',
         ], [
             'store_id.exists' => 'Cửa hàng không tồn tại',
             'promocode_id.exists' => 'Mã giảm giá không tồn tại'
@@ -865,7 +866,7 @@ class UserController extends Controller
         }
     }
 
-    public function createShareBill(Request $request)
+    public function createShareBill(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'detail' => 'required',
@@ -882,9 +883,9 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $user = Auth::user();
-            $order = Order::where('id', $request->order_id)->where('status', '!=', 'canceled')->first();
+            $order = Order::where('id', $request->order_id)->where('status', 'taken')->first();
             if (!isset($order)) {
-                return APIResponse::FailureResponse('Đơn hàng đã bị hủy');
+                return APIResponse::FailureResponse('Đơn hàng của bạn chưa hoàn thành');
             }
 
             $details = json_decode(json_encode($request->detail), true);
@@ -893,16 +894,70 @@ class UserController extends Controller
                     Notification::create([
                         'user_id' => $detail['user_id'],
                         'tag' => 'Chia tiền',
-                        'tag_model' => 'share_bill',
+                        'tag_model' => 'share_bills',
                         'tag_model_id' => 0,
                         'title' => $user->f_name . ' đang rủ bạn chia tiền',
                         'body' => $user->f_name . ' đang chờ bạn chuyển ' . number_format($detail['amount']) . 'đ. Chuyển nhanh kẻo bạn ấy chờ lâu nha!',
                     ]);
                 }
+
+                ShareBill::create([
+                    'order_id' => $order->id,
+                    'shared_id' => $detail['user_id'],
+                    'amount' => $detail['amount'],
+                    'status' => ($detail['user_id'] == $user->id) ? null : 'pending',
+                    'payment_type' => null,
+                ]);
             }
 
             DB::commit();
             return ApiResponse::successResponse(null);
+        } catch (\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getShareBillDetail(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $bills = ShareBill::where('order_id', $request->order_id)->get();
+
+            DB::commit();
+            return ApiResponse::successResponse($bills);
+        } catch (\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function payShareBill(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $bills = ShareBill::where('order_id', $request->order_id)->get();
+
+            
+
+            DB::commit();
+            return ApiResponse::successResponse($bills);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
