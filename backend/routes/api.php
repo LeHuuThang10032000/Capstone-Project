@@ -123,6 +123,11 @@ Route::group(['middleware' => ['auth:api']], function(){
         Route::delete('', [UserController::class, 'deleteCart']);
     });
 
+    Route::group(['prefix' => 'share-bill'], function() {
+        Route::get('detail', [UserController::class, 'getShareBillDetail']);
+        Route::post('', [UserController::class, 'createShareBill']);
+    });
+
     Route::get('/promocode', [UserController::class, 'getStorePromocode']);
     Route::post('/share-bill', [UserController::class, 'createShareBill']);
 });

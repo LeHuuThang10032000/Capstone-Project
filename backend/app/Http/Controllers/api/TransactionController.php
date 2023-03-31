@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\Notification;
+use App\Models\ShareBill;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
@@ -45,7 +46,9 @@ class TransactionController extends Controller
         $validate = Validator::make($request->all(), [
             'phone' => 'required|phone',
             'cash' => 'required|integer|min:100',
-            'message' => 'max:255'
+            'message' => 'max:255',
+            'payment_type' => 'required|in:T,S',
+            'share_id' => 'required_with:payment_type|exists:' . app(ShareBill::class)->getTable() . ',id'
         ], [
             'phone.phone' => 'Số điện thoại không đúng định dạng'
         ]);
@@ -90,6 +93,7 @@ class TransactionController extends Controller
                     'to_id' => $recipient->id,
                     'amount' => $request->cash,
                     'code' => Helper::generateNumber(),
+                    'type' => 'T'
                 ]
             );
 
