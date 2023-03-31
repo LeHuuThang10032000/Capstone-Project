@@ -642,7 +642,7 @@ class StoreController extends Controller
             $startTime = Carbon::createFromFormat('H:i:s', $request->start_time);
             $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
 
-            if($startDate < now()) {
+            if($startDate < now()->format('Y-m-d')) {
                 return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
 
@@ -650,7 +650,7 @@ class StoreController extends Controller
                 return APIResponse::FailureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
             }
 
-            if($endDate <= now() && $endTime <= now()){
+            if($endDate <= now()->format('Y-m-d') && $endTime <= now()->format('H:i:s')) {
                 return APIResponse::FailureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
             }
 
@@ -719,7 +719,7 @@ class StoreController extends Controller
             $startTime = Carbon::createFromFormat('H:i:s', $request->start_time);
             $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
 
-            if($startDate < now()) {
+            if($startDate < now()->format('Y-m-d')) {
                 return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
 
@@ -727,7 +727,7 @@ class StoreController extends Controller
                 return APIResponse::FailureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
             }
 
-            if($endDate <= now() && $endTime <= now()){
+            if($endDate <= now()->format('Y-m-d') && $endTime <= now()->format('H:i:s')){
                 return APIResponse::FailureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
             }
 
