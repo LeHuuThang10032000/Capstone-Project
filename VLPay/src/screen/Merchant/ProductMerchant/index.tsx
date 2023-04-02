@@ -481,7 +481,10 @@ const ProductMerchant = () => {
                 navigation.goBack();
               }
             }}>
-            <Text> {data?.isUpdated ? 'Chỉnh sửa món' : 'Tạo món mới'}</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000000'}}>
+              {' '}
+              {data?.isUpdated ? 'Chỉnh sửa món' : 'Tạo món mới'}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

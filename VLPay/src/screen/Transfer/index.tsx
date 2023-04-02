@@ -288,7 +288,7 @@ const Index = (props: any) => {
 
             <Controller
               control={control}
-              rules={{required: 'Vui lòng nhập số tiền'}}
+              rules={{required: 'Chưa nhập số tiền'}}
               render={({field: {onChange, onBlur, value}}) => (
                 <FormControl isInvalid={errors.money !== undefined}>
                   <FormControl.Label

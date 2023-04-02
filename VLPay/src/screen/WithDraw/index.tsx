@@ -32,7 +32,7 @@ const WithDraw = () => {
               paddingHorizontal: 10,
               paddingVertical: 15,
               justifyContent: 'space-between',
-              backgroundColor: '#82CAEE',
+              backgroundColor: '#B5EAD8',
               borderRadius: 8,
               alignItems: 'center',
             }}>
@@ -57,7 +57,7 @@ const WithDraw = () => {
               paddingHorizontal: 10,
               paddingVertical: 15,
               justifyContent: 'space-between',
-              backgroundColor: '#82CAEE',
+              backgroundColor: '#B5EAD8',
               borderRadius: 8,
               alignItems: 'center',
             }}>

@@ -71,7 +71,7 @@ const PaymentOrder = ({route}: any) => {
           style={{
             fontFamily: 'Poppins-Regular',
             fontSize: 14,
-            padding: 0,
+            padding: 3,
             flex: 1,
           }}
           autoCompleteType={undefined}
@@ -79,6 +79,9 @@ const PaymentOrder = ({route}: any) => {
             <MessageIcon style={{marginRight: 3, marginBottom: 40}} />
           }
         />
+        <View position={'absolute'} top={210} background="#ffffff" left={5}>
+          <Text color="#99A3A4">Message</Text>
+        </View>
         <Divider marginTop={200} />
       </Center>
       <View paddingY={5} paddingX={3}>

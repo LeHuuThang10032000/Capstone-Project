@@ -200,7 +200,7 @@ const DetailStore = ({route}: any) => {
               justifyContent="center"
               alignItems={'center'}
               style={{
-                width: 250,
+                width: 290,
                 padding: 19,
                 backgroundColor: '#B5EAD8',
                 borderRadius: 10,

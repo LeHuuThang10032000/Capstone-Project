@@ -23,6 +23,7 @@ import {axiosClient} from '../../../components/apis/axiosClient';
 import YesNoModal from '../../../components/YesNoModal';
 import Icons from '../../../components/Icons';
 import axios from 'axios';
+import {formatCurrency} from '../../../components/helper';
 
 type Props = {};
 
@@ -89,7 +90,9 @@ const Index = (props: Props) => {
             </HStack>
             <HStack justifyContent={'space-between'} pb="10">
               <Text style={styles.textTitle}>Số tiền</Text>
-              <Text style={styles.text}>{data.money}</Text>
+              <Text style={styles.text}>
+                {formatCurrency(data?.money ?? 0)}đ
+              </Text>
             </HStack>
             <HStack justifyContent={'space-between'} pb="10">
               <Text style={styles.textTitle}>Tin nhắn</Text>

@@ -122,7 +122,7 @@ const UpdateShop = ({route}: any) => {
           </TouchableOpacity>
         </View>
         <Divider my={3} backgroundColor="#333333" />
-        <Text style={styles.textTitle}>Ảnh bìa</Text>
+        <Text style={styles.textTitle}>Ảnh đại diện</Text>
         <Text style={styles.text}>Ảnh sẽ hiển thị cùng doanh nghiệp khác</Text>
         <View py={5}>
           <Image
