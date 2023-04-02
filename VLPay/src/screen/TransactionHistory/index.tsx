@@ -28,6 +28,7 @@ import {axiosClient} from '../../components/apis/axiosClient';
 import {formatCurrency} from '../../components/helper';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
 
 const FirstRoute = () => {
   const [history, setHistory] = useState([]);
@@ -87,7 +88,9 @@ const FirstRoute = () => {
             return (
               <View key={index}>
                 <View style={styles.containerMonth}>
-                  <Text style={styles.titleText}>{item.date}</Text>
+                  <Text style={styles.titleText}>
+                    {moment(item.date).format('DD/MM/YYYY')}
+                  </Text>
                 </View>
                 {item.data.map((item: any) => {
                   return (
@@ -186,7 +189,10 @@ const SecondRoute = () => {
             return (
               <View key={index}>
                 <View style={styles.containerMonth}>
-                  <Text style={styles.titleText}>{item.date}</Text>
+                  {/* <Text style={styles.titleText}>{item.date}</Text> */}
+                  <Text style={styles.titleText}>
+                    {moment(item.date).format('MM/YYYY')}
+                  </Text>
                 </View>
                 {item.data.map((item: any) => {
                   return (
@@ -450,9 +456,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   containerMonth: {
-    backgroundColor: '#C7CEEA4A',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     padding: 20,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#99A3A4',
+    borderRadius: 8,
   },
   tabTextSelected: {
     color: '#FFFFFF',

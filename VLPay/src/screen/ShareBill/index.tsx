@@ -24,7 +24,9 @@ const ShareBill = (props: Props) => {
         <Text fontSize={16} fontWeight="bold">
           300.000đ
         </Text>
-        <Text fontSize={16}>Mã giao dịch: 123456</Text>
+        <Text fontSize={16}>
+          Mã giao dịch: <Text color="#0088CC">123456</Text>
+        </Text>
         <HStack
           marginY={5}
           alignItems="center"
@@ -38,7 +40,7 @@ const ShareBill = (props: Props) => {
             style={{width: 30, height: 30}}
             alt="img"
           />
-          <Text fontSize={16}>Thanh toán thành công</Text>
+          <Text fontSize={16}>Giao dịch thành công</Text>
           <View></View>
         </HStack>
         <VStack w="100%">

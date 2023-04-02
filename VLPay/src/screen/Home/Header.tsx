@@ -1,8 +1,10 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-import SearchIcon from '../../assets/svg/search.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
+// import SearchIcon from '../../assets/svg/search.svg';
+import {SearchIcon} from 'native-base';
+import {Image} from 'native-base';
 
 type Props = {};
 
@@ -13,8 +15,16 @@ const Header = (props: Props) => {
       <TouchableOpacity
         style={styles.searchBtn}
         onPress={() => navigation.navigate('Search')}>
-        <Text style={styles.text}>Tìm kiếm...</Text>
-        <SearchIcon />
+        <View
+          style={{
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            width: '100%',
+            alignItems: 'center',
+          }}>
+          <Text style={styles.text}>Tìm kiếm...</Text>
+          <SearchIcon />
+        </View>
       </TouchableOpacity>
     </View>
   );

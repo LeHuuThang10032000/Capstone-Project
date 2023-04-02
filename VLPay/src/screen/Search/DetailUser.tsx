@@ -1,21 +1,20 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
-import { Button, Center, HStack, Image, Input } from 'native-base';
+import {Button, Center, HStack, Image, Input} from 'native-base';
 import AddFriendIcon from '../../assets/svg/add-friend.svg';
 import AddFriend from '../../assets/svg/add-friend.svg';
 import DeleteFriend from '../../assets/svg/delete-friend.svg';
-import { useNavigation } from '@react-navigation/native';
-import { MainStackNavigation } from '../../stack/Navigation';
-import { axiosClient } from '../../components/apis/axiosClient';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
+import {axiosClient} from '../../components/apis/axiosClient';
 import Toast from 'react-native-toast-message';
 
-const DetailUser = ({ route }: any) => {
+const DetailUser = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const { f_name, phone, id } = route.params;
+  const {f_name, phone, id} = route.params;
   const [myId, setMyId] = useState([]);
   const [isFriend, setFriend] = useState(false);
-
 
   useEffect(() => {
     axiosClient
@@ -36,10 +35,10 @@ const DetailUser = ({ route }: any) => {
           'https://zennoshop.cf/api/user/friends',
           formData,
           {
-            headers: { 'content-type': 'multipart/form-data' },
+            headers: {'content-type': 'multipart/form-data'},
           },
         );
-        setFriend(true)
+        setFriend(true);
         Toast.show({
           type: 'success',
           text1: 'Thành công',
@@ -47,7 +46,7 @@ const DetailUser = ({ route }: any) => {
         });
       } catch (e) {
         console.log(e);
-        setFriend(false)
+        setFriend(false);
         Toast.show({
           type: 'error',
           text1: 'Kết bạn thất bại',
@@ -61,10 +60,10 @@ const DetailUser = ({ route }: any) => {
           'https://zennoshop.cf/api/user/unfriend',
           formData,
           {
-            headers: { 'content-type': 'multipart/form-data' },
+            headers: {'content-type': 'multipart/form-data'},
           },
         );
-        setFriend(false)
+        setFriend(false);
         Toast.show({
           type: 'success',
           text1: 'Thành công',
@@ -72,7 +71,7 @@ const DetailUser = ({ route }: any) => {
         });
       } catch (e) {
         console.log(e);
-        setFriend(true)
+        setFriend(true);
         Toast.show({
           type: 'error',
           text1: 'Kết bạn thất bại',
@@ -85,27 +84,31 @@ const DetailUser = ({ route }: any) => {
   return (
     <View>
       <HeaderBack title="Hồ sơ người dùng" />
-      <Center style={{ paddingVertical: 40 }}>
+      <Center style={{paddingTop: 40}}>
         <Image
-          source={{ uri: 'https://picsum.photos/200/150' }}
+          source={{uri: 'https://picsum.photos/200/150'}}
           alt="img"
           borderRadius={100}
           width={150}
           height={150}
         />
       </Center>
-      <Center>
+      <Center marginTop={3}>
         <Text style={styles.titleText}>{f_name}</Text>
-        <Text style={styles.text}>{phone}</Text>
       </Center>
-      <Center pt={160}>
+      <Center>
         <Button
-          width={'90%'}
-          background={'#B5EAD8'}
+          width={'30%'}
+          background={'#FEB7B1'}
           onPress={handAddFr}
-          leftIcon={!isFriend ? <AddFriend color="#514545" width={30} height={30} /> :
-            <DeleteFriend color="#514545" width={30} height={30} />}>
-          <Text style={styles.button}>{!isFriend ? 'Kết bạn' : 'Huỷ kết bạn'}</Text>
+          leftIcon={
+            !isFriend ? (
+              <AddFriend color="#514545" />
+            ) : (
+              <DeleteFriend color="#514545" />
+            )
+          }>
+          <Text style={styles.button}>{!isFriend ? 'Kết bạn' : 'Huỷ kb'}</Text>
         </Button>
       </Center>
     </View>
@@ -124,13 +127,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
   },
   button: {
-    color: '#514545',
+    color: '#000000',
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
   },
   homeButton: {
     width: '90%',
-    backgroundColor: '#B5EAD8',
+    backgroundColor: '#FEB7B1',
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',

@@ -27,9 +27,10 @@ const PaymentDetails = () => {
     });
   }, []);
   return (
-    <>
+    <View style={{flex: 1, paddingBottom: 10, backgroundColor: '#ffffff'}}>
       <HeaderBack title="Xác nhận giao dịch" isReset={true} />
       <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{
           flex: 1,
         }}>
@@ -170,7 +171,7 @@ const PaymentDetails = () => {
           </HStack>
         </VStack>
       </ScrollView>
-    </>
+    </View>
   );
 };
 

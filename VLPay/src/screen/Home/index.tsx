@@ -20,6 +20,7 @@ import ListStore from './ListStore';
 import {Heading, HStack, Image, VStack} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
+import ShareBillComp from './ShareBillComp';
 
 interface Post {
   id: number;
@@ -66,6 +67,7 @@ const Index = () => {
           <Banner wallet={userWallet} />
           <ManageCash wallet={userWallet} credit={credit} loading={isloading} />
           <ContentWallet />
+          <ShareBillComp />
           <PromoCarousel />
           <ListStore />
         </ScrollView>

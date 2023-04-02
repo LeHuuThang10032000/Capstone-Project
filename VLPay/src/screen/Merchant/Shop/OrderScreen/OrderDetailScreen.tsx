@@ -2,7 +2,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {Input} from '@rneui/base';
 import {HStack, ScrollView, TextArea, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {TextInput, TouchableOpacity, View} from 'react-native';
+import {TextInput, TouchableOpacity, View, Linking} from 'react-native';
 import {axiosClient} from '../../../../components/apis/axiosClient';
 import {baseUrl} from '../../../../components/apis/baseUrl';
 import HeaderComp from '../../../../components/HeaderComp';
@@ -15,6 +15,7 @@ import {
   MainStackParamList,
 } from '../../../../stack/Navigation';
 import Order from '../../../../assets/svg/order.svg';
+import Call from '../../../../assets/svg/call-user.svg';
 
 const OrderDetailScreen = () => {
   const navigation = useNavigation<MainStackNavigation>();
@@ -210,7 +211,7 @@ const OrderDetailScreen = () => {
   };
 
   return (
-    <View style={{height: '100%'}}>
+    <View style={{flex: 1, backgroundColor: '#ffffff'}}>
       <HeaderComp
         title={'Chi tiết đơn hàng'}
         onPressBack={() => navigation.goBack()}
@@ -240,8 +241,14 @@ const OrderDetailScreen = () => {
               style={{width: '100%', height: 1, backgroundColor: '#E4E9F2'}}
             />
           </View>
-          <HStack>
+          <HStack justifyContent="space-between">
             <UText>{orderDetail?.user?.f_name}</UText>
+            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(`tel:${orderDetail?.user?.phone}`)
+              }>
+              <Call />
+            </TouchableOpacity>
           </HStack>
           <VStack>
             <UText style={{fontWeight: '700', marginVertical: 10}}>
@@ -279,7 +286,7 @@ const OrderDetailScreen = () => {
                           </VStack>
                         </HStack>
                       </HStack>
-                      <UText>{(item?.price ?? 0).toLocaleString()}</UText>
+                      <UText>{(item?.price ?? 0).toLocaleString()}đ</UText>
                     </HStack>
                     <View
                       style={{

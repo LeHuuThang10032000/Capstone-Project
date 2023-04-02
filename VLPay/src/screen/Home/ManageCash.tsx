@@ -23,7 +23,7 @@ const ManageCash = (props: {
         {props.loading ? (
           <View>
             <Text style={styles.price}>
-              {formatCurrency((props.wallet ?? 0).toString())} VND
+              {formatCurrency((props.wallet ?? 0).toString())}đ
             </Text>
           </View>
         ) : (
@@ -40,7 +40,7 @@ const ManageCash = (props: {
         {props.loading ? (
           <View>
             <Text style={styles.price}>
-              {formatCurrency((props.credit ?? 0).toString())} VND
+              {formatCurrency((props.credit ?? 0).toString())}đ
             </Text>
           </View>
         ) : (
