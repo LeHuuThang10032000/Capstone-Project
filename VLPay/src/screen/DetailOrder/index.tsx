@@ -59,9 +59,11 @@ const DetailOrder = ({route}: any) => {
   const [visible, setVisible] = useState(false);
   const [promoCode, setPromoCode] = useState([]);
   const [radioBox, setRadioBox] = useState(null);
-  const [promo_name, setPromoName] = useState('');
+  const [promo_name, setPromoName] = useState('Mã giảm giá');
   const [visibleWarning, setVisibleWarning] = useState(false);
+  const [finalMoney, setFinalMoney] = useState(0);
   const [generalError, setGeneralError] = useState('');
+  const [discount_money, setDiscount] = useState(0);
   //Get Cart
   const getCart = useCallback(async () => {
     setLoading(true);
@@ -83,7 +85,11 @@ const DetailOrder = ({route}: any) => {
     console.log('_array', _array);
 
     setCart(result?.data?.data);
+    setFinalMoney(result?.data?.data?.total_price);
     setPromoCode(_array);
+    setPromoName('Mã giảm giá');
+    setRadioBox(null);
+    setDiscount(0);
     setTotalPrice(result?.data?.data?.total_price);
     setTotalItem(result?.data?.data?.total_quantity);
     setLoading(false);
@@ -100,15 +106,45 @@ const DetailOrder = ({route}: any) => {
     setVisible(!visible);
   };
 
-  const handleChoose = (id, title) => {
+  const handleChoose = ({
+    id,
+    title,
+    max_discount,
+    min_purchase,
+    discount_type,
+    discount,
+  }) => {
     if (radioBox !== id) {
-      setRadioBox(id);
-      setPromoName(title);
+      if (parseInt(cart?.total_price) > parseInt(min_purchase)) {
+        setRadioBox(id);
+        setPromoName(title);
+        if (discount_type == 'percentage') {
+          setCart({...cart, total_price: finalMoney});
+          const item = parseInt(cart?.total_price) * (parseInt(discount) / 100);
+          if (item <= max_discount) {
+            setCart({...cart, total_price: parseInt(finalMoney) - item});
+            setDiscount(item);
+          } else {
+            setCart({
+              ...cart,
+              total_price: parseInt(finalMoney) - parseInt(max_discount),
+            });
+            setDiscount(max_discount);
+          }
+        }
+      } else {
+        setGeneralError('Đơn hàng không đủ điều kiên');
+        setVisibleWarning(true);
+      }
     } else {
       setRadioBox(null);
-      setPromoName('');
+      setPromoName('Mã giảm giá');
+      setCart({...cart, total_price: finalMoney});
+      setDiscount(0);
     }
   };
+
+  console.log(cart);
 
   return (
     <View flex={1} backgroundColor="#FFFFFF">
@@ -220,7 +256,7 @@ const DetailOrder = ({route}: any) => {
               </HStack>
               <HStack justifyContent={'space-between'}>
                 <Text>Giảm giá</Text>
-                <Text>0đ</Text>
+                <Text>{discount_money}đ</Text>
               </HStack>
 
               {/* <Controller
@@ -292,8 +328,9 @@ const DetailOrder = ({route}: any) => {
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('PaymentOrder', {
-                  total_price: totalPrice,
+                  total_price: cart?.total_price,
                   store_id: store_id,
+                  promo_id: radioBox,
                 })
               }>
               <View
@@ -337,18 +374,7 @@ const DetailOrder = ({route}: any) => {
                       <UText>Hạn sd đến {item.end_date}</UText>
                     </View>
                     <View style={{position: 'absolute', bottom: 20, right: 16}}>
-                      <TouchableOpacity
-                        // onPress={() => {
-                        // promoCode[key].isChoose = true;
-                        // const promoCodeArr = promoCode;
-                        // setPromoCode(promoCodeArr);
-                        // console.log('promoCode', promoCode);
-                        // const updatedPromoCodeArr = [...promoCode, {}];
-                        // updatedPromoCodeArr[key].isChoose =
-                        //   !updatedPromoCodeArr[key].isChoose;
-                        // setPromoCode(updatedPromoCodeArr);
-                        // }}
-                        onPress={() => handleChoose(item.id, item.title)}>
+                      <TouchableOpacity onPress={() => handleChoose(item)}>
                         <Image
                           source={require('../../assets/img/check_promo.png')}
                           style={radioBox === item?.id ? {} : {display: 'none'}}
