@@ -1,4 +1,4 @@
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   Center,
@@ -7,6 +7,7 @@ import {
   FormControl,
   Heading,
   HStack,
+  Image,
   Input,
   ScrollView,
   Text,
@@ -23,6 +24,11 @@ import {formatCurrency} from '../../components/helper';
 import PromoOder from '../../assets/svg/promo_order.svg';
 import ContactIcon from '../../assets/svg/contact.svg';
 import {MainStackNavigation} from '../../stack/Navigation';
+import {UText} from '../../components/UText';
+import HeaderComp from '../../components/HeaderComp';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/Icons';
+import Colors from '../../components/helpers/Colors';
 
 interface DetailOrder {
   phone: string;
@@ -50,14 +56,34 @@ const DetailOrder = ({route}: any) => {
   const [text, onChangeText] = React.useState('');
   const [totalPrice, setTotalPrice] = useState('');
   const isFocused = useIsFocused();
-
-  console.log('======>', store_id);
-
+  const [visible, setVisible] = useState(false);
+  const [promoCode, setPromoCode] = useState([]);
+  const [radioBox, setRadioBox] = useState(null);
+  const [promo_name, setPromoName] = useState('');
+  const [visibleWarning, setVisibleWarning] = useState(false);
+  const [generalError, setGeneralError] = useState('');
   //Get Cart
   const getCart = useCallback(async () => {
     setLoading(true);
     const result = await axiosClient.get('/cart');
+    const promocode = await axiosClient.get(
+      '/merchant/promocode?store_id=' +
+        store_id +
+        '&page=1&limit=10&status=RUNNING',
+    );
+
+    const _array = [];
+    const promocodes = promocode?.data?.data;
+    promocodes.forEach((item, key) => {
+      const _item = promocodes[key];
+      _item.isChoose = false;
+      _array.push(_item);
+    });
+
+    console.log('_array', _array);
+
     setCart(result?.data?.data);
+    setPromoCode(_array);
     setTotalPrice(result?.data?.data?.total_price);
     setTotalItem(result?.data?.data?.total_quantity);
     setLoading(false);
@@ -69,6 +95,20 @@ const DetailOrder = ({route}: any) => {
       getCart();
     }
   }, [getCart, isFocused]);
+
+  const toggleModal = () => {
+    setVisible(!visible);
+  };
+
+  const handleChoose = (id, title) => {
+    if (radioBox !== id) {
+      setRadioBox(id);
+      setPromoName(title);
+    } else {
+      setRadioBox(null);
+      setPromoName('');
+    }
+  };
 
   return (
     <View flex={1} backgroundColor="#FFFFFF">
@@ -221,14 +261,16 @@ const DetailOrder = ({route}: any) => {
               </FormControl>
               {/* )}
             /> */}
-              <TouchableOpacity>
+              <TouchableOpacity onPress={toggleModal}>
                 <HStack
                   marginBottom={5}
                   justifyContent={'space-between'}
                   alignItems="center">
                   <HStack alignItems={'center'}>
                     <PromoOder />
-                    <Text paddingLeft={3}>Ưu đãi 35k</Text>
+                    <Text paddingLeft={3} width={250} numberOfLines={1}>
+                      {promo_name}
+                    </Text>
                   </HStack>
                   <ChevronRightIcon />
                 </HStack>
@@ -271,10 +313,122 @@ const DetailOrder = ({route}: any) => {
           </View>
         </View>
       </ScrollView>
+      <Modal visible={visible} animationType="slide">
+        <HeaderComp title="Mã ưu đãi" onPressBack={toggleModal} />
+        <View style={styles.modalContainer}>
+          <VStack
+            height={'100%'}
+            width={'100%'}
+            alignItems={'center'}
+            style={{marginTop: 100, paddingHorizontal: 16}}>
+            <ScrollView>
+              {promoCode?.[0]?.id &&
+                promoCode.map((item, key) => (
+                  <View key={item.id}>
+                    <Image
+                      source={require('../../assets/img/promo_code.png')}
+                      resizeMode="contain"
+                    />
+                    <View style={{position: 'absolute', top: 16, right: 10}}>
+                      <UText
+                        style={{fontWeight: '700', fontSize: 16, width: 230}}>
+                        {item.title}
+                      </UText>
+                      <UText>Hạn sd đến {item.end_date}</UText>
+                    </View>
+                    <View style={{position: 'absolute', bottom: 20, right: 16}}>
+                      <TouchableOpacity
+                        // onPress={() => {
+                        // promoCode[key].isChoose = true;
+                        // const promoCodeArr = promoCode;
+                        // setPromoCode(promoCodeArr);
+                        // console.log('promoCode', promoCode);
+                        // const updatedPromoCodeArr = [...promoCode, {}];
+                        // updatedPromoCodeArr[key].isChoose =
+                        //   !updatedPromoCodeArr[key].isChoose;
+                        // setPromoCode(updatedPromoCodeArr);
+                        // }}
+                        onPress={() => handleChoose(item.id, item.title)}>
+                        <Image
+                          source={require('../../assets/img/check_promo.png')}
+                          style={radioBox === item?.id ? {} : {display: 'none'}}
+                        />
+                        <Image
+                          source={require('../../assets/img/uncheck_promo.png')}
+                          style={radioBox !== item?.id ? {} : {display: 'none'}}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))}
+            </ScrollView>
+          </VStack>
+        </View>
+        <View
+          paddingY={5}
+          paddingX={5}
+          backgroundColor={'#F7F9FC'}
+          style={{position: 'absolute', bottom: 20, width: '100%'}}>
+          <TouchableOpacity onPress={toggleModal}>
+            <View
+              justifyContent="center"
+              alignItems={'center'}
+              style={{
+                width: '100%',
+                padding: 20,
+                backgroundColor: '#B5EAD8',
+                borderRadius: 10,
+              }}>
+              <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+                Áp dụng
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <YesNoModal
+          icon={<Icons.WarningIcon />}
+          visible={visibleWarning}
+          btnLeftStyle={{
+            backgroundColor: Colors.primary,
+            width: 200,
+          }}
+          btnRightStyle={{
+            backgroundColor: '#909192',
+            width: 200,
+            display: 'none',
+          }}
+          message={generalError}
+          title={'Lỗi'}
+          onActionLeft={() => {
+            setVisibleWarning(false);
+          }}
+          onActionRight={() => {
+            setVisibleWarning(false);
+          }}
+          btnTextLeft={'Xác nhận'}
+          style={{flexDirection: 'column'}}
+        />
+      </Modal>
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F7F9FC',
+    width: '100%',
+    height: '100%',
+  },
+  modalText: {
+    fontSize: 24,
+    color: '#fff',
+  },
+});
 export default DetailOrder;
-
-const styles = StyleSheet.create({});
