@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {
   Center,
   HStack,
@@ -22,16 +22,21 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {MainStackNavigation} from '../../../stack/Navigation';
+import {
+  MainStackNavigation,
+  MainStackParamList,
+} from '../../../stack/Navigation';
 import {UserChoose, UserData} from '../../../model/UserData';
 import Lottie from 'lottie-react-native';
 import {Checkbox} from 'react-native-paper';
 import HeaderBack from '../../../components/HeaderBack';
+import {axiosClient} from '../../../components/apis/axiosClient';
 
 type Props = {
   text: string;
 };
 const ChooseSharer = () => {
+  const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
@@ -67,18 +72,22 @@ const ChooseSharer = () => {
     navigation.goBack();
   };
 
+  const fetchData = async () => {
+    try {
+      const responseJson = await axiosClient.get('/friends');
+      console.log('responseJson', responseJson);
+
+      setFilteredDataSource(responseJson.data.data);
+      setMasterDataSource(responseJson.data.data);
+      setLoading(false);
+    } catch (error) {
+      Alert.alert(error.error);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
-    fetch('https://randomuser.me/api/?results=50')
-      .then(response => response.json())
-      .then(responseJson => {
-        setFilteredDataSource(responseJson.results);
-        setMasterDataSource(responseJson.results);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    fetchData();
   }, []);
 
   const searchFilterFunction = (text: string) => {
@@ -106,16 +115,14 @@ const ChooseSharer = () => {
       <HStack alignItems="center" justifyContent="space-between" p="5">
         <HStack alignItems="center">
           <Image
-            source={{uri: `${item.picture.large}`}}
+            source={{uri: `${item?.picture?.large}`}}
             alt="rduser"
             size="sm"
             borderRadius="50"
           />
           <VStack>
-            <Text style={styles.itemStyle}>
-              {item.name.title} {item.name.first} {item.name.last}
-            </Text>
-            <Text style={styles.itemStyle}>{item.email}</Text>
+            <Text style={styles.itemStyle}>{item.f_name}</Text>
+            <Text style={styles.itemStyle}>{item.phone}</Text>
           </VStack>
         </HStack>
         <Checkbox
@@ -195,7 +202,13 @@ const ChooseSharer = () => {
         ListEmptyComponent={EmptyComponent}
       />
       <View padding={5}>
-        <TouchableOpacity onPress={() => navigation.navigate('DetailBill')}>
+        <TouchableOpacity
+          onPress={() => {
+            data.checkedItems = checkedItems;
+            navigation.navigate('DetailBill', {
+              data: data,
+            });
+          }}>
           <Center backgroundColor="#B5EAD8" padding={5} borderRadius={10}>
             <Text fontSize={16} fontWeight="bold">
               Tiếp tục
