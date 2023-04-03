@@ -1,15 +1,26 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
 import {Center, Divider, HStack, Image, Text, View, VStack} from 'native-base';
 import CallMe from '../../assets/svg/call-me.svg';
 import {TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {MainStackNavigation} from '../../stack/Navigation';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
+import {axiosClient} from '../../components/apis/axiosClient';
 
 type Props = {};
 
-const ShareBill = (props: Props) => {
+const ShareBill = () => {
+  const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
+  const [userWallet, setUserWallet] = useState(0);
+  const fetchData = async () => {
+    const result = await axiosClient.get('/user-wallet');
+    setUserWallet(result?.data?.data?.balance);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   const navigation = useNavigation<MainStackNavigation>();
+  console.log(data);
 
   return (
     <View flex={1} backgroundColor="#ffffff">
@@ -22,9 +33,9 @@ const ShareBill = (props: Props) => {
         borderColor="#E0E0E0">
         <Text fontSize={16}>Thanh toán đơn hàng</Text>
         <Text fontSize={16} fontWeight="bold">
-          300.000đ
+          {data?.amount.toLocaleString()}đ
         </Text>
-        <Text fontSize={16}>Mã giao dịch: 123456</Text>
+        <Text fontSize={16}>Mã giao dịch: {data?.code}</Text>
         <HStack
           marginY={5}
           alignItems="center"
@@ -45,7 +56,7 @@ const ShareBill = (props: Props) => {
           <HStack justifyContent="space-between">
             <Text fontSize={16}>Thời gian thành toán</Text>
             <Text fontSize={16} fontWeight="bold">
-              12:29 - 23/10/2022
+              {data?.created_at}
             </Text>
           </HStack>
           <Divider marginY={3} />
@@ -86,11 +97,16 @@ const ShareBill = (props: Props) => {
         <HStack w="100%" justifyContent="space-between">
           <Text fontSize={16}>Số dư ví</Text>
           <Text fontSize={16} fontWeight="bold">
-            1.000.000đ
+            {(userWallet ?? 0).toLocaleString()}đ
           </Text>
         </HStack>
       </Center>
-      <TouchableOpacity onPress={() => navigation.navigate('ChooseSharer')}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('ChooseSharer', {
+            data: data,
+          })
+        }>
         <Center
           borderRadius={8}
           backgroundColor="#B5EAD8"

@@ -92,7 +92,11 @@ const FirstRoute = () => {
                 {item.data.map((item: any) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('ShareBill')}>
+                      onPress={() => {
+                        navigation.navigate('ShareBill', {
+                          data: item,
+                        });
+                      }}>
                       <HStack
                         p={3}
                         key={item.id}
@@ -191,7 +195,9 @@ const SecondRoute = () => {
                 {item.data.map((item: any) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('ShareBill')}>
+                      onPress={() => {
+                        navigation.navigate('ShareBill');
+                      }}>
                       <HStack
                         p={3}
                         key={item.id}
@@ -291,7 +297,11 @@ const ThirdRoute = () => {
                   return (
                     <TouchableOpacity
                       key={item.id}
-                      onPress={() => navigation.navigate('ShareBill')}>
+                      onPress={() =>
+                        navigation.navigate('ShareBill', {
+                          data: item,
+                        })
+                      }>
                       <HStack p={3} justifyContent="space-between">
                         <VStack>
                           <Text

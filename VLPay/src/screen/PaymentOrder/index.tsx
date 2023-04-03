@@ -14,9 +14,6 @@ const PaymentOrder = ({route}: any) => {
   const [text, onChangeText] = React.useState('');
   const [orderId, setOrderId] = useState(0);
 
-  console.log('STORE ID:', store_id);
-  console.log('ORDER ID:', orderId);
-
   const handleOrder = useCallback(async () => {
     const formData = new FormData();
     formData.append('store_id', store_id);
@@ -40,7 +37,7 @@ const PaymentOrder = ({route}: any) => {
 
   // useEffect(() => {
   //   handleOrder();
-  // }, []);
+  // }, []);n
 
   return (
     <View flex={1} backgroundColor="#FFFFFF">
