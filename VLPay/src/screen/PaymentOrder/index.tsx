@@ -10,7 +10,7 @@ import {axiosClient} from '../../components/apis/axiosClient';
 
 const PaymentOrder = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {total_price, store_id} = route.params;
+  const {total_price, store_id, promo_id} = route.params;
   const [text, onChangeText] = React.useState('');
   const [orderId, setOrderId] = useState(0);
 
@@ -20,6 +20,9 @@ const PaymentOrder = ({route}: any) => {
   const handleOrder = useCallback(async () => {
     const formData = new FormData();
     formData.append('store_id', store_id);
+    if (promo_id) {
+      formData.append('promocode_id', promo_id);
+    }
     try {
       const result = await axiosClient.post('/order/create-order', formData, {
         headers: {'content-type': 'multipart/form-data'},
@@ -31,7 +34,7 @@ const PaymentOrder = ({route}: any) => {
         store_id: store_id,
       });
     } catch (error) {
-      Alert.alert('Lỗi hệ thống', 'Có lỗi xảy ra vui lòng thử lại sau!');
+      Alert.alert(error.error);
     }
   }, [orderId]);
 
