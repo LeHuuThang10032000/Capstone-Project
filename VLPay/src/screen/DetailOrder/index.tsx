@@ -216,10 +216,12 @@ const DetailOrder = ({route}: any) => {
                 justifyContent="space-between">
                 <VStack>
                   <HStack alignItems={'center'}>
+                    <Text fontSize={16} fontWeight={'bold'} paddingLeft={1}>
+                      {item.quantity} x{' '}
+                    </Text>
                     <Text fontSize={16} fontWeight={'bold'} color="#000000">
                       {item.name}
                     </Text>
-                    <Text paddingLeft={1}>({item.quantity})</Text>
                   </HStack>
                   {item.add_ons.map(item => (
                     <Text key={item.id} color={'#747980'}>

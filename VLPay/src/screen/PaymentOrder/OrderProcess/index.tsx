@@ -23,6 +23,7 @@ import ModalProvider from '../../../context/ModalProvider';
 import HeaderModal from '../../../components/CustomCancelOrder/HeaderModal';
 import BodyModal from '../../../components/CustomCancelOrder/BodyModal';
 import Toast from 'react-native-toast-message';
+import moment from 'moment';
 
 type State = 'pending' | 'accepted' | 'processing' | 'finished';
 
@@ -94,8 +95,15 @@ const OrderProcess = ({route}: any) => {
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={5}>Đã đặt đơn</Heading>
+              <Heading paddingBottom={10}>Đã đặt đơn</Heading>
               <OrderIcon />
+              <View
+                justifyContent="flex-start"
+                w="100%"
+                paddingX={12}
+                marginLeft={3}>
+                <Text>{moment(order.created_at).format('h:mm')}</Text>
+              </View>
             </Center>
             <Divider />
             <Text padding={5}>
@@ -129,10 +137,12 @@ const OrderProcess = ({route}: any) => {
                     justifyContent="space-between">
                     <VStack>
                       <HStack key={item.id} alignItems={'center'}>
+                        <Text paddingLeft={1} fontWeight={'bold'}>
+                          {item.quantity} x{' '}
+                        </Text>
                         <Text fontSize={16} fontWeight={'bold'} color="#000000">
                           {item.name}
                         </Text>
-                        <Text paddingLeft={1}>({item.quantity})</Text>
                       </HStack>
                       {item.add_ons.map(item => (
                         <Text key={item.id} color={'#747980'}>
@@ -253,6 +263,9 @@ const OrderProcess = ({route}: any) => {
             <Center marginY={5}>
               <Heading paddingBottom={5}>Đã đặt đơn</Heading>
               <PrepareIcon />
+              <Text paddingBottom={3}>
+                {moment(order.accepted_at).format('h:mm')}
+              </Text>
             </Center>
             <Divider />
             <Text padding={5}>
@@ -385,6 +398,14 @@ const OrderProcess = ({route}: any) => {
             <Center marginY={5}>
               <Heading paddingBottom={5}>Đã đặt đơn</Heading>
               <DoneIcon />
+              <View
+                flexDirection="row"
+                justifyContent="flex-end"
+                w="100%"
+                paddingX={12}
+                marginRight={5}>
+                <Text>{moment(order.finished_at).format('h:mm')}</Text>
+              </View>
             </Center>
             <Divider />
             <Text padding={5}>

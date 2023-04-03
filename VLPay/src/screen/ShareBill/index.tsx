@@ -49,7 +49,7 @@ const ShareBill = () => {
             style={{width: 30, height: 30}}
             alt="img"
           />
-          <Text fontSize={16}>Thanh toán thành công</Text>
+          <Text fontSize={16}>Giao dịch thành công</Text>
           <View></View>
         </HStack>
         <VStack w="100%">

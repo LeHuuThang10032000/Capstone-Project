@@ -133,7 +133,7 @@ const DetailProduct = ({route, productId}: any) => {
             ]}></AnimatedImageBackground>
           <View marginY={5} paddingX={3}>
             <Heading>{product?.name}</Heading>
-            <Heading paddingTop={5} size={'md'} color="#4285F4">
+            <Heading paddingTop={5} size={'md'} color="#000000">
               {formatCurrency((product?.price ?? 0).toString())}đ
             </Heading>
           </View>
@@ -178,25 +178,9 @@ const DetailProduct = ({route, productId}: any) => {
               </HStack>
             ))}
           </View>
-
-          <Center paddingY={10}>
-            <HStack alignItems={'center'}>
-              <TouchableOpacity
-                onPress={() => setQuantity(quantity - 1)}
-                disabled={quantity === 1}>
-                <DecreaseIcon />
-              </TouchableOpacity>
-              <Text paddingX={5} fontSize={18} fontWeight={'bold'}>
-                {quantity}
-              </Text>
-              <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
-                <IncreaseIcon />
-              </TouchableOpacity>
-            </HStack>
-          </Center>
         </View>
       </ScrollView>
-      <View
+      <Center
         zIndex={99}
         position={'absolute'}
         width={width}
@@ -204,6 +188,22 @@ const DetailProduct = ({route, productId}: any) => {
         paddingY={3}
         paddingX={3}
         backgroundColor={'#FFFFFF'}>
+        <Center paddingY={3}>
+          <HStack alignItems={'center'}>
+            <TouchableOpacity
+              onPress={() => setQuantity(quantity - 1)}
+              disabled={quantity === 1}>
+              <DecreaseIcon />
+            </TouchableOpacity>
+            <Text paddingX={5} fontSize={18} fontWeight={'bold'}>
+              {quantity}
+            </Text>
+            <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
+              <IncreaseIcon />
+            </TouchableOpacity>
+          </HStack>
+        </Center>
+
         <TouchableOpacity onPress={addCart}>
           <View
             justifyContent="center"
@@ -221,7 +221,7 @@ const DetailProduct = ({route, productId}: any) => {
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </Center>
     </View>
   );
 };

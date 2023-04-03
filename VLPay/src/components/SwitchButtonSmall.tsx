@@ -27,6 +27,7 @@ const SwitchButtonSmall: React.FC<SwitchButtonProps> = ({
         value={isEnabled}
         onValueChange={toggleSwitch}
         activeText={label1}
+        activeTextStyle={{color: '#000000'}}
         inActiveText={label2}
         circleSize={20}
         barHeight={20}

@@ -7,6 +7,7 @@ import {Provider} from 'react-redux';
 import {store} from './src/redux/store';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
+import {AppProvider} from './src/context/GlobalContext';
 
 const theme = {
   ...DefaultTheme,
@@ -24,14 +25,16 @@ const App = () => {
   }, []);
 
   return (
-    <NativeBaseProvider>
-      <Provider store={store}>
-        <PaperProvider>
-          <AppRouter />
-        </PaperProvider>
-      </Provider>
-      <Toast position="top" bottomOffset={20} />
-    </NativeBaseProvider>
+    <AppProvider>
+      <NativeBaseProvider>
+        <Provider store={store}>
+          <PaperProvider>
+            <AppRouter />
+          </PaperProvider>
+        </Provider>
+        <Toast position="top" bottomOffset={20} />
+      </NativeBaseProvider>
+    </AppProvider>
   );
 };
 

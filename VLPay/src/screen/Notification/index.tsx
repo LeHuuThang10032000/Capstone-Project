@@ -5,6 +5,7 @@ import {
   Divider,
   Heading,
   HStack,
+  Pressable,
   ScrollView,
   Text,
   View,
@@ -49,14 +50,16 @@ const Index = (props: Props) => {
 
             return (
               <View marginX={3} marginBottom={3}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('NotiShareBill')}>
+                <Pressable onPress={() => navigation.navigate('NotiShareBill')}>
                   <View
                     p={3}
                     w={'100%'}
+                    marginY={1}
                     borderRadius={10}
-                    backgroundColor="#C7CEEA"
-                    justifyContent={'center'}>
+                    backgroundColor="#ffffff"
+                    justifyContent={'center'}
+                    borderWidth={1}
+                    style={{elevation: 5}}>
                     <VStack justifyContent="space-between">
                       <Text style={styles.text}>
                         {item.title} ({item.tag_model})
@@ -65,7 +68,7 @@ const Index = (props: Props) => {
                       <Text style={styles.titleText}>{item.body}</Text>
                     </VStack>
                   </View>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             );
           }}

@@ -135,25 +135,25 @@ const InfoShop = (props: Props) => {
           px={2}>
           <HStack alignItems={'center'}>
             <Image
-              source={require('../../../../assets/img/balance_wallet.png')}
+              source={require('../../../../assets/img/account_balance_wallet.png')}
               style={styles.image}
               alt="image-shop"
             />
             <VStack>
-              <Text style={[styles.text, {color: '#FFFFFF', fontSize: 14}]}>
+              <Text style={[styles.text, {color: '#000000', fontSize: 14}]}>
                 Doanh thu hôm nay
               </Text>
               <Text
-                style={[styles.textButton, {color: '#FFFFFF', fontSize: 16}]}>
+                style={[styles.textButton, {color: '#000000', fontSize: 16}]}>
                 3.654.000đ
               </Text>
             </VStack>
           </HStack>
           <VStack>
-            <Text style={[styles.text, {color: '#FFFFFF', fontSize: 11}]}>
+            <Text style={[styles.text, {color: '#000000', fontSize: 11}]}>
               Tổng doanh thu
             </Text>
-            <Text style={[styles.textButton, {color: '#FFFFFF', fontSize: 11}]}>
+            <Text style={[styles.textButton, {color: '#000000', fontSize: 11}]}>
               3.654.000đ
             </Text>
           </VStack>
