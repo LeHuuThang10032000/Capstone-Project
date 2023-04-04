@@ -26,7 +26,7 @@ class FriendsController extends Controller
         }
         $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
         foreach($users as $user) {
-            $user['image'] = $user->media->first()->getFullUrl();
+            $user['image'] = $user->media->first()->getFullUrl() ?? null;
             unset($user['media']);
         }
 //        return $users;
