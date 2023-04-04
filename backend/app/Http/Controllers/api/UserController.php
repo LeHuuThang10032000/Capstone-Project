@@ -997,7 +997,7 @@ class UserController extends Controller
                 ->where('status', 'pending')
                 ->get();
 
-            return ApiResponse::successResponse(null);
+            return ApiResponse::successResponse($bills);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
