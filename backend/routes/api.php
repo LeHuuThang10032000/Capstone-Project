@@ -130,5 +130,6 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     Route::get('/promocode', [UserController::class, 'getStorePromocode']);
     Route::post('/share-bill', [UserController::class, 'createShareBill']);
+    Route::post('/pay-bill', [UserController::class, 'payShareBill']);
 });
 

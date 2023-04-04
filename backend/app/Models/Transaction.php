@@ -23,7 +23,8 @@ class Transaction extends Model
         "title",
         "created_at",
         "order_id",
-        "type"
+        "type",
+        "share_id",
     ];
 
     protected $hidden = [
@@ -38,6 +39,11 @@ class Transaction extends Model
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
+
+    public function shareBill()
+    {
+        return $this->belongsTo(ShareBill::class, 'share_id', 'id');
     }
 
     public function toUser()

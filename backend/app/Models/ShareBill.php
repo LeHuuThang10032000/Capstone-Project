@@ -15,6 +15,8 @@ class ShareBill extends Model
         'status',
     ];
 
+    protected $appends = ['shared_name'];
+
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
@@ -23,6 +25,11 @@ class ShareBill extends Model
     public function sharedUser()
     {
         return $this->belongsTo(User::class, 'shared_id', 'id');
+    }
+
+    public function getSharedNameAttribute()
+    {
+        return $this->sharedUser->f_name;
     }
 
     protected function serializeDate(DateTimeInterface $date)
