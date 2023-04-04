@@ -98,7 +98,7 @@ const App = () => {
           //Background Color of the QR Code (Optional)
           backgroundColor="white"
           //Logo of in the center of QR Code (Optional)
-          logo={{uri: profile?.data?.media[0].original_url}}
+          logo={{uri: profile?.data?.image}}
           //Center Logo size  (Optional)
           logoSize={30}
           //Center Logo margin (Optional)

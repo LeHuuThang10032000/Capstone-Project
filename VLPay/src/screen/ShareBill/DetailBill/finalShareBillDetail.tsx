@@ -24,7 +24,7 @@ interface Image {
   path: string;
 }
 
-const DetailBill = ({route}: any) => {
+const FinalShareBillDetail = ({route}: any) => {
   const {data} = route.params;
   console.log(data);
 
@@ -61,37 +61,51 @@ const DetailBill = ({route}: any) => {
     setImage(image);
   };
 
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Thông báo!', 'Bạn sẽ thoát ra trang chủ', [
+        {
+          text: 'Huỷ',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'Đồng ý',
+          onPress: () => RNRestart.Restart(),
+        },
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <View flex={1} backgroundColor="#ffffff">
-      <HeaderBack title="Chia tiền" />
+      <HeaderBack
+        title="Chia tiền"
+        hideLeft={!data?.isFinal ? false : true}
+        style={data?.isFinal ? {justifyContent: 'center'} : {}}
+      />
       <ScrollView flex={1}>
         <Center padding={5}>
           <HStack w="100%" justifyContent="flex-start" paddingBottom={20}>
             <VStack>
               <Heading>Thông tin đơn hàng.</Heading>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('ShareBill', {
-                    data,
-                  })
-                }>
-                <Text textDecorationLine="underline" color="#4285F4">
-                  Bấm vào đây để xem chi tiết
-                </Text>
-              </TouchableOpacity>
+              <Text textDecorationLine="underline" color="#4285F4">
+                Bấm vào đây để xem chi tiết
+              </Text>
             </VStack>
           </HStack>
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize={16} fontWeight="bold">
               Danh sách chia tiền({masterDataSource?.length ?? 0})
             </Text>
-            {!data?.isFinal && (
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Text fontSize={16} fontWeight="bold" color="#FF0000">
-                  Thêm người
-                </Text>
-              </TouchableOpacity>
-            )}
           </HStack>
           {masterDataSource.map(item => {
             return (
@@ -131,9 +145,18 @@ const DetailBill = ({route}: any) => {
         <TouchableOpacity
           onPress={async () => {
             data.masterDataSource = masterDataSource;
-            navigation.navigate('SendRequestShare', {
-              data,
-            });
+            try {
+              const formData = new FormData();
+              formData.append('bill_id', data?.bill_id);
+              formData.append('message', data?.message.trim());
+              await axiosClient.post('/pay-bill');
+              Alert.alert('Gửi lời nhắn thành công');
+              setTimeout(() => {
+                navigation.navigate('Home');
+              }, 2000);
+            } catch (error) {
+              Alert.alert(error.error);
+            }
           }}>
           <Center backgroundColor="#B5EAD8" padding={5} borderRadius={10}>
             <Text fontSize={16} fontWeight="bold">
@@ -146,4 +169,4 @@ const DetailBill = ({route}: any) => {
   );
 };
 
-export default DetailBill;
+export default FinalShareBillDetail;

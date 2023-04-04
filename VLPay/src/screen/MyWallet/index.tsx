@@ -57,9 +57,9 @@ const Index = () => {
             style={styles.button}
             onPress={() => navigation.navigate('ProfileUser')}>
             <View style={styles.info}>
-              {profile?.data?.data?.media[0]?.original_url ? (
+              {profile?.data?.data?.image ? (
                 <Image
-                  source={{uri: profile.data.data.media[0].original_url}}
+                  source={{uri: profile.data.data?.image}}
                   style={styles.image}
                 />
               ) : (

@@ -176,24 +176,33 @@ const Index = () => {
         <Text style={styles.sectionHeader}>{data?.users && 'Người dùng:'}</Text>
         <View>
           {data?.users &&
-            data?.users.map(user => (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('DetailUser', {
-                    id: user.id,
-                    f_name: user.f_name,
-                    phone: user.phone,
-                  });
-                }}>
-                <HStack key={user.id}>
-                  <Image source={{uri: ''}} alt={''} width={50} height={50} />
-                  <VStack style={{marginLeft: 10, marginBottom: 10}}>
-                    <Text style={styles.item}>{user.f_name}</Text>
-                    <Text style={styles.item}>{user.phone}</Text>
-                  </VStack>
-                </HStack>
-              </TouchableOpacity>
-            ))}
+            data?.users.map(user => {
+              console.log('user', user);
+
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('DetailUser', {
+                      id: user.id,
+                      f_name: user.f_name,
+                      phone: user.phone,
+                    });
+                  }}>
+                  <HStack key={user.id}>
+                    <Image
+                      source={{uri: user?.image}}
+                      alt={''}
+                      width={50}
+                      height={50}
+                    />
+                    <VStack style={{marginLeft: 10, marginBottom: 10}}>
+                      <Text style={styles.item}>{user.f_name}</Text>
+                      <Text style={styles.item}>{user.phone}</Text>
+                    </VStack>
+                  </HStack>
+                </TouchableOpacity>
+              );
+            })}
         </View>
         <View style={{height: 30}} />
       </ScrollView>

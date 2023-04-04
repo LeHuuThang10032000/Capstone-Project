@@ -31,6 +31,9 @@ import Lottie from 'lottie-react-native';
 import {Checkbox} from 'react-native-paper';
 import HeaderBack from '../../../components/HeaderBack';
 import {axiosClient} from '../../../components/apis/axiosClient';
+import YesNoModal from '../../../components/YesNoModal';
+import Icons from '../../../components/Icons';
+import Colors from '../../../components/helpers/Colors';
 
 type Props = {
   text: string;
@@ -43,7 +46,8 @@ const ChooseSharer = () => {
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = React.useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
-
+  const [generalError, setGeneralError] = useState('');
+  const [visibleWarning, setVisibleWarning] = useState(false);
   console.log(checkedItems);
 
   //   const onPress = useCallback(
@@ -97,7 +101,7 @@ const ChooseSharer = () => {
       // Filter the masterDataSource and update FilteredDataSource
       const newData = masterDataSource.filter(function (item: UserChoose) {
         // Applying filter for the inserted text in search bar
-        const itemData = item.name.last ? item.name.last : '';
+        const itemData = item?.f_name ? item.f_name : '';
         const textData = text;
         return itemData.indexOf(textData) > -1;
       });
@@ -115,8 +119,8 @@ const ChooseSharer = () => {
       <HStack alignItems="center" justifyContent="space-between" p="5">
         <HStack alignItems="center">
           <Image
-            source={{uri: `${item?.picture?.large}`}}
-            alt="rduser"
+            source={{uri: `${item?.image}`}}
+            alt="Alt"
             size="sm"
             borderRadius="50"
           />
@@ -204,10 +208,15 @@ const ChooseSharer = () => {
       <View padding={5}>
         <TouchableOpacity
           onPress={() => {
-            data.checkedItems = checkedItems;
-            navigation.navigate('DetailBill', {
-              data: data,
-            });
+            if (checkedItems.length >= 1) {
+              data.checkedItems = checkedItems;
+              navigation.navigate('DetailBill', {
+                data: data,
+              });
+            } else {
+              setGeneralError('Vui lòng chọn bạn bè để chia tiền');
+              setVisibleWarning(true);
+            }
           }}>
           <Center backgroundColor="#B5EAD8" padding={5} borderRadius={10}>
             <Text fontSize={16} fontWeight="bold">
@@ -216,6 +225,29 @@ const ChooseSharer = () => {
           </Center>
         </TouchableOpacity>
       </View>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message={generalError}
+        title={'Lỗi'}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={'Xác nhận'}
+        style={{flexDirection: 'column'}}
+      />
     </SafeAreaView>
   );
 };

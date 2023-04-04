@@ -268,7 +268,11 @@ const ThirdRoute = () => {
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/history-transaction?filter_key=years',
     );
-    setHistory(result.data?.data?.data);
+    const _history = result.data?.data?.data;
+    const _arr = _history.filter(item => {
+      return item?.type === 'O';
+    });
+    setHistory(_arr);
     setLoading(false);
   }, []);
 

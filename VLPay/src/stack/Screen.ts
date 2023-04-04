@@ -56,6 +56,7 @@ import DetailBill from '../screen/ShareBill/DetailBill';
 import SendRequestShare from '../screen/ShareBill/SendRequestShare';
 import NotiShareBill from '../screen/Notification/NotiShareBill';
 import PromoCode from '../screen/DetailOrder/PromoCode';
+import FinalShareBillDetail from '../screen/ShareBill/DetailBill/finalShareBillDetail';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -261,5 +262,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'PromoCode',
     component: PromoCode,
+  },
+  {
+    name: 'FinalShareBillDetail',
+    component: FinalShareBillDetail,
   },
 ];

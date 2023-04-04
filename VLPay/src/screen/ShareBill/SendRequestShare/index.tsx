@@ -21,6 +21,8 @@ import Speaker from '../../../assets/svg/speaker.svg';
 import {UText} from '../../../components/UText';
 import Icons from '../../../components/Icons';
 import {axiosClient} from '../../../components/apis/axiosClient';
+import YesNoModal from '../../../components/YesNoModal';
+import Colors from '../../../components/helpers/Colors';
 
 type Props = {};
 
@@ -30,7 +32,12 @@ const SendRequestShare = (props: Props) => {
   const navigation = useNavigation<MainStackNavigation>();
   const [remind, setRemind] = useState(false);
   const [note, setNote] = useState('');
-  console.log(data);
+  const [generalError, setGeneralError] = useState('');
+  const [visibleWarning, setVisibleWarning] = useState(false);
+
+  useEffect(() => {
+    setRemind(false);
+  }, []);
 
   return (
     <View flex={1} backgroundColor="#ffffff">
@@ -40,9 +47,16 @@ const SendRequestShare = (props: Props) => {
           <HStack w="100%" justifyContent="flex-start">
             <VStack>
               <Heading>Thông tin đơn hàng.</Heading>
-              <Text textDecorationLine="underline" color="#4285F4">
-                Bấm vào đây để xem chi tiết
-              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('ShareBill', {
+                    data,
+                  })
+                }>
+                <Text textDecorationLine="underline" color="#4285F4">
+                  Bấm vào đây để xem chi tiết
+                </Text>
+              </TouchableOpacity>
             </VStack>
           </HStack>
 
@@ -82,7 +96,7 @@ const SendRequestShare = (props: Props) => {
               marginY={3}>
               <HStack alignItems="center">
                 <Image
-                  source={{uri: item?.picture?.large}}
+                  source={{uri: item?.picture}}
                   w={42}
                   height={42}
                   alt="image"
@@ -94,7 +108,7 @@ const SendRequestShare = (props: Props) => {
                 <Text>
                   {(
                     parseInt(data?.amount) /
-                    (masterDataSource?.length + 1)
+                    (data?.masterDataSource?.length + 1)
                   ).toLocaleString()}
                   đ
                 </Text>
@@ -109,101 +123,118 @@ const SendRequestShare = (props: Props) => {
             width: '100%',
             height: 300,
             backgroundColor: 'white',
-            borderWidth: 1,
             position: 'absolute',
             bottom: 0,
             zIndex: 1000,
-            borderRadius: 10,
-            borderColor: 'rgba(0, 0, 0, 0.35)',
+
+            flexDirection: 'row',
+            justifyContent: 'center',
           }}>
-          <HStack
+          <View
             style={{
-              width: '100%',
-              justifyContent: 'center',
-              borderBottomWidth: 1,
-              paddingVertical: 10,
-              borderBottomColor: 'rgba(0, 0, 0, 0.35)',
+              width: '99%',
+              borderRadius: 10,
+              borderColor: 'rgba(0, 0, 0, 0.35)',
+              borderWidth: 1,
             }}>
-            <UText style={{fontWeight: '700'}}>Nhắc bạn</UText>
-            <TouchableOpacity
-              onPress={() => setRemind(false)}
-              style={{position: 'absolute', right: 20, top: 15}}>
-              <UText>
-                <Icons.CloseIcon />
-              </UText>
-            </TouchableOpacity>
-          </HStack>
-          <UText style={{alignSelf: 'center', textAlignVertical: 'center'}}>
-            Nội dung lời nhắc sẽ được gửi đến thông
-          </UText>
-          <UText style={{alignSelf: 'center', textAlignVertical: 'center'}}>
-            báo VLPay của bạn bè
-          </UText>
-          <View style={{marginHorizontal: 16, marginTop: 20}}>
-            <View
+            <HStack
               style={{
-                backgroundColor: 'white',
-                position: 'absolute',
-                top: -18,
-                left: 10,
-                width: 70,
-                height: 20,
-                zIndex: 1000,
-              }}
-            />
+                width: '100%',
+                justifyContent: 'center',
+                borderBottomWidth: 1,
+                paddingVertical: 10,
+                borderBottomColor: 'rgba(0, 0, 0, 0.35)',
+              }}>
+              <UText style={{fontWeight: '700'}}>Nhắc bạn</UText>
+              <TouchableOpacity
+                onPress={() => setRemind(false)}
+                style={{position: 'absolute', right: 20, top: 15}}>
+                <UText>
+                  <Icons.CloseIcon />
+                </UText>
+              </TouchableOpacity>
+            </HStack>
             <UText
               style={{
-                position: 'absolute',
-                top: -12,
-                left: 10,
-                backgroundColor: 'transparent',
-                zIndex: 1000,
+                alignSelf: 'center',
+                textAlignVertical: 'center',
+                marginTop: 10,
               }}>
-              Tin nhắn
+              Nội dung lời nhắc sẽ được gửi đến thông
             </UText>
-            <TextArea
-              value={note}
-              placeholder="Nhập nhắc nhở"
-              onChangeText={text => {
-                setNote(text);
-              }}
-              autoCompleteType={undefined}
-            />
-            <View padding={5}>
-              <TouchableOpacity
-                onPress={async () => {
-                  try {
-                    data.note = note;
-                    const order_id = data?.order_id;
-                    const detail = [];
-                    data?.checkedItems?.map(item => {
-                      detail.push({
-                        user_id: item,
-                        amount:
-                          parseInt(data?.amount) /
-                          (masterDataSource?.length + 1),
-                      });
-                    });
-                    console.log({order_id: order_id, detail: detail});
-
-                    const result = await axiosClient.post('/share-bill', {
-                      order_id,
-                      detail,
-                    });
-                    data.result = result;
-                    navigation.navigate('DetailBill', {
-                      data: data,
-                    });
-                  } catch (error) {
-                    Alert.alert(error?.error);
-                  }
+            <UText style={{alignSelf: 'center', textAlignVertical: 'center'}}>
+              báo VLPay của bạn bè
+            </UText>
+            <View style={{marginHorizontal: 16, marginTop: 20}}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  position: 'absolute',
+                  top: -18,
+                  left: 10,
+                  width: 70,
+                  height: 20,
+                  zIndex: 1000,
+                }}
+              />
+              <UText
+                style={{
+                  position: 'absolute',
+                  top: -12,
+                  left: 10,
+                  backgroundColor: 'transparent',
+                  zIndex: 1000,
                 }}>
-                <Center backgroundColor="#B5EAD8" padding={5} borderRadius={10}>
-                  <Text fontSize={16} fontWeight="700">
-                    Nhắc nhở
-                  </Text>
-                </Center>
-              </TouchableOpacity>
+                Tin nhắn
+              </UText>
+              <TextArea
+                value={note}
+                placeholder="Nhập nhắc nhở"
+                onChangeText={text => {
+                  setNote(text);
+                }}
+                autoCompleteType={undefined}
+              />
+              <View padding={5}>
+                <TouchableOpacity
+                  onPress={async () => {
+                    try {
+                      data.note = note;
+                      const order_id = data?.order_id;
+                      data.isFinal = true;
+                      const detail = [];
+                      data?.checkedItems?.map(item => {
+                        detail.push({
+                          user_id: item,
+                          amount:
+                            parseInt(data?.amount) /
+                            (data?.masterDataSource?.length + 1),
+                        });
+                      });
+
+                      const result = await axiosClient.post('/share-bill', {
+                        order_id,
+                        detail,
+                      });
+                      data.result = result;
+                      navigation.navigate('FinalShareBillDetail', {
+                        data: data,
+                      });
+                    } catch (error) {
+                      setGeneralError(error?.error);
+                      setVisibleWarning(true);
+                    }
+                  }}>
+                  <Center
+                    backgroundColor="#B5EAD8"
+                    padding={5}
+                    borderRadius={10}>
+                    <Text fontSize={16} fontWeight="700">
+                      Nhắc nhở
+                    </Text>
+                  </Center>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -217,6 +248,29 @@ const SendRequestShare = (props: Props) => {
           </Center>
         </TouchableOpacity>
       </View>
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message={generalError}
+        title={'Lỗi'}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={'Xác nhận'}
+        style={{flexDirection: 'column'}}
+      />
     </View>
   );
 };

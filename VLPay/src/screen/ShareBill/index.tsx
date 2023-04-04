@@ -6,12 +6,14 @@ import {TouchableOpacity} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import {axiosClient} from '../../components/apis/axiosClient';
+import Icons from '../../components/Icons';
 
 type Props = {};
 
 const ShareBill = () => {
   const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
   const [userWallet, setUserWallet] = useState(0);
+  const [hide, setHide] = useState(false);
   const fetchData = async () => {
     const result = await axiosClient.get('/user-wallet');
     setUserWallet(result?.data?.data?.balance);
@@ -95,10 +97,20 @@ const ShareBill = () => {
         borderRadius={8}
         borderColor="#E0E0E0">
         <HStack w="100%" justifyContent="space-between">
-          <Text fontSize={16}>Số dư ví</Text>
-          <Text fontSize={16} fontWeight="bold">
-            {(userWallet ?? 0).toLocaleString()}đ
-          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text fontSize={16}>Số dư ví</Text>
+            <View style={{width: 10}} />
+            <TouchableOpacity onPress={() => setHide(!hide)}>
+              {hide ? <Icons.EyeCloseIcon /> : <Icons.EyeOpenIcon />}
+            </TouchableOpacity>
+          </View>
+          {hide ? (
+            <Text fontSize={16} fontWeight="bold">
+              {(userWallet ?? 0).toLocaleString()}đ
+            </Text>
+          ) : (
+            <Text>*****</Text>
+          )}
         </HStack>
       </Center>
       <TouchableOpacity

@@ -43,9 +43,9 @@ const Index = () => {
       <Center style={{paddingVertical: 40}}>
         <Image
           source={
-            profile?.data?.data?.media[0]?.original_url
+            profile?.data?.data?.image
               ? {
-                  uri: profile?.data?.data?.media[0]?.original_url,
+                  uri: profile?.data?.data?.image,
                 }
               : require('../../assets/img/user_default.png')
           }
