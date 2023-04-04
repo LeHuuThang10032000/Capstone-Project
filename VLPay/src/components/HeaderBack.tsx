@@ -15,7 +15,7 @@ type Props = {
   hideRight?: any;
   TrashIcon?: boolean;
   onPress?: () => void;
-  hideLeft?: boolean;
+  hideLeft: boolean;
 };
 
 const HeaderBack: React.FC<Props> = ({

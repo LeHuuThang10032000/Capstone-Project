@@ -69,7 +69,7 @@ const FirstRoute = () => {
     getDays();
   }, []);
   return (
-    <View style={{flex: 1, marginTop: 20}}>
+    <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
       {loading ? (
         <Center>
           <Lottie
@@ -87,7 +87,7 @@ const FirstRoute = () => {
           {history.map((item: any, index: any) => {
             return (
               <View key={index}>
-                <View px={3} style={styles.containerMonth}>
+                <View style={styles.containerMonth}>
                   <Text style={styles.titleText}>
                     {moment(item.date).format('DD/MM/YYYY')}
                   </Text>
@@ -103,7 +103,6 @@ const FirstRoute = () => {
                       }}>
                       <HStack
                         my={3}
-                        mx={3}
                         key={item.id}
                         justifyContent="space-between">
                         <VStack>
@@ -176,7 +175,7 @@ const SecondRoute = () => {
     getMonths();
   }, []);
   return (
-    <View style={{flex: 1, marginTop: 20}}>
+    <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
       {loading ? (
         <Center>
           <Lottie
@@ -194,24 +193,19 @@ const SecondRoute = () => {
           {history.map((item: any, index: any) => {
             return (
               <View key={index}>
-                <View px={3} style={styles.containerMonth}>
+                <View style={styles.containerMonth}>
                   {/* <Text style={styles.titleText}>{item.date}</Text> */}
                   <Text style={styles.titleText}>
-                    {moment(item.date).format('[Tháng] MM/YYYY')}
+                    {moment(item.date).format('MM/YYYY')}
                   </Text>
                 </View>
                 {item.data.map((item: any) => {
                   return (
                     <TouchableOpacity
                       key={item.id}
-                      onPress={() => {
-                        navigation.navigate('ShareBill', {
-                          data: item,
-                        });
-                      }}>
+                      onPress={() => navigation.navigate('ShareBill')}>
                       <HStack
                         my={3}
-                        mx={3}
                         key={item.id}
                         justifyContent="space-between">
                         <VStack>
@@ -274,7 +268,11 @@ const ThirdRoute = () => {
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/history-transaction?filter_key=years',
     );
-    setHistory(result.data?.data?.data);
+    const _history = result.data?.data?.data;
+    const _arr = _history.filter(item => {
+      return item?.type === 'O';
+    });
+    setHistory(_arr);
     setLoading(false);
   }, []);
 
@@ -284,7 +282,7 @@ const ThirdRoute = () => {
     getYears();
   }, []);
   return (
-    <View style={{flex: 1, marginTop: 20}}>
+    <View style={{paddingHorizontal: 15, flex: 1, marginTop: 20}}>
       {loading ? (
         <Center>
           <Lottie
@@ -302,11 +300,8 @@ const ThirdRoute = () => {
           {history.map((item: any, index: any) => {
             return (
               <View key={index}>
-                <View px={3} style={styles.containerMonth}>
-                  <Text style={styles.titleText}>
-                    {' '}
-                    {moment(item.date).format('[Năm] YYYY')}
-                  </Text>
+                <View style={styles.containerMonth}>
+                  <Text style={styles.titleText}>{item.date}</Text>
                 </View>
                 {item.data.map((item: any) => {
                   return (
@@ -317,9 +312,9 @@ const ThirdRoute = () => {
 
                         navigation.navigate('ShareBill', {
                           data: item,
-                        })
-                      }>
-                      <HStack my={3} mx={3} justifyContent="space-between">
+                        });
+                      }}>
+                      <HStack my={3} justifyContent="space-between">
                         <VStack>
                           <Text
                             ellipsizeMode="tail"
@@ -458,16 +453,16 @@ const styles = StyleSheet.create({
   title: {
     width: 200,
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 14,
+    fontSize: 16,
     color: '#312E49',
   },
   text: {
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 14,
+    fontSize: 16,
     color: '#312E49',
   },
   textDate: {
-    fontSize: 12,
+    fontSize: 14,
     color: 'rgba(49, 46, 73, 0.5)',
     fontWeight: '600',
   },
@@ -477,10 +472,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   containerMonth: {
-    backgroundColor: '#F1F2F6',
-    alignItems: 'flex-start',
-    padding: 15,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    padding: 20,
+    elevation: 5,
+    borderWidth: 1,
     borderColor: '#99A3A4',
+    borderRadius: 8,
   },
   tabTextSelected: {
     color: '#FFFFFF',
