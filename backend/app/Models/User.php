@@ -37,8 +37,11 @@ class User extends Authenticatable implements HasMedia
         'created_at',
         'updated_at',
         'pending_withdraw_request',
-        'pending_credit_request'
+        'pending_credit_request',
+        'media'
     ];
+
+    protected $appends = ['image'];
 
     public function stores()
     {
@@ -74,6 +77,16 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasOne(CreditRequest::class)->where('status', 'pending');
     }
+
+    public function getImageAttribute()
+    {
+        $image = $this->getMedia('images')->first();
+        if($image) {
+            return $image->getFullUrl();
+        }
+        return null;
+    }
+
 
     // /**
     //  * The attributes that should be cast.
