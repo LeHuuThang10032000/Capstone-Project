@@ -317,8 +317,8 @@ const ThirdRoute = () => {
 
                         navigation.navigate('ShareBill', {
                           data: item,
-                        })
-                      }>
+                        });
+                      }}>
                       <HStack my={3} mx={3} justifyContent="space-between">
                         <VStack>
                           <Text
