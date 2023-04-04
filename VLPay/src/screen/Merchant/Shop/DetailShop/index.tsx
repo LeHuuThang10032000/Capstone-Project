@@ -22,6 +22,8 @@ type Props = {
   name: string;
   image: string;
   cover_photo: string;
+  phone: string;
+  email: string;
 };
 
 const DetailShop = ({route}: any, props: Props) => {
@@ -153,9 +155,9 @@ const DetailShop = ({route}: any, props: Props) => {
               <Text style={styles.textButton}>Liên hệ</Text>
               <Text
                 style={[styles.textButton, {color: '#7A7A7A', fontSize: 14}]}>
-                +24 328323
+                {data?.phone}
               </Text>
-              <Text>Bahaiauco@gmail.com</Text>
+              <Text>{data?.email}</Text>
             </VStack>
           </HStack>
         </TouchableOpacity>

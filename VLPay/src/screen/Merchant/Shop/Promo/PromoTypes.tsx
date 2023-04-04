@@ -52,12 +52,12 @@ const PromoTypes = () => {
   };
 
   return (
-    <View>
+    <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
       <HeaderComp
         title="Chương trình quảng cáo"
         onPressBack={() => navigation.goBack()}
       />
-      <UText style={{marginLeft: 10, marginVertical: 10}}>
+      <UText style={{marginLeft: 10, marginBottom: 10, marginTop: 30}}>
         Tổng quan chương trình
       </UText>
       <View style={{flexDirection: 'column', alignItems: 'center'}}>

@@ -50,7 +50,7 @@ const PromoList = () => {
       <HeaderComp title="Mã giảm giá" onPressBack={() => navigation.goBack()} />
       <HStack
         justifyContent={'space-between'}
-        style={{paddingHorizontal: 16, backgroundColor: '#FEB7B1'}}>
+        style={{backgroundColor: '#FEB7B1'}}>
         <TouchableOpacity
           onPress={async () => {
             setState('RUNNING');
@@ -65,15 +65,17 @@ const PromoList = () => {
           }}
           style={[
             state === 'RUNNING'
-              ? {borderBottomColor: 'black', borderBottomWidth: 1}
+              ? {borderBottomColor: 'black', borderBottomWidth: 4}
               : {},
-            {width: 90},
+            {width: 130},
           ]}>
           <UText
             style={{
               alignSelf: 'center',
               color: state === 'RUNNING' ? 'black' : '#ACB1C0',
               fontWeight: '700',
+              padding: 5,
+              paddingVertical: 10,
             }}>
             Đang chạy
           </UText>
@@ -92,15 +94,17 @@ const PromoList = () => {
           }}
           style={[
             state === 'UPCOMING'
-              ? {borderBottomColor: 'black', borderBottomWidth: 1}
+              ? {borderBottomColor: 'black', borderBottomWidth: 4}
               : {},
-            {width: 90},
+            {width: 130},
           ]}>
           <UText
             style={{
               alignSelf: 'center',
               color: state === 'UPCOMING' ? 'black' : '#ACB1C0',
               fontWeight: '700',
+              padding: 5,
+              paddingVertical: 10,
             }}>
             Sắp chạy
           </UText>
@@ -118,66 +122,70 @@ const PromoList = () => {
           }}
           style={[
             state === 'FINISHED'
-              ? {borderBottomColor: 'black', borderBottomWidth: 1}
+              ? {borderBottomColor: 'black', borderBottomWidth: 4}
               : {},
-            {width: 90},
+            {width: 130},
           ]}>
           <UText
             style={{
               alignSelf: 'center',
               color: state === 'FINISHED' ? 'black' : '#ACB1C0',
               fontWeight: '700',
+              padding: 5,
+              paddingVertical: 10,
             }}>
             Lịch sử
           </UText>
         </TouchableOpacity>
       </HStack>
-      <VStack>
-        <ScrollView style={{paddingBottom: 150}}>
-          {items &&
-            items.map(item => {
-              return (
-                <TouchableOpacity
+      <ScrollView style={{flex: 1}}>
+        {items &&
+          items.map(item => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('CreatePromo', {
+                    id: item.store_id,
+                    data: item,
+                  });
+                }}>
+                <HStack
+                  alignItems={'center'}
                   style={{
-                    marginBottom: 10,
-                    backgroundColor: 'white',
-                    marginHorizontal: 5,
+                    backgroundColor: '#ffffff',
+                    marginHorizontal: 10,
+                    marginVertical: 10,
                     paddingVertical: 10,
-                  }}
-                  onPress={() => {
-                    navigation.navigate('CreatePromo', {
-                      id: item.store_id,
-                      data: item,
-                    });
+                    borderRadius: 10,
                   }}>
-                  <HStack alignItems={'center'}>
-                    <View style={{width: 20}} />
-                    <Icons.DollarsIcon />
-                    <View style={{width: 20}} />
-                    <VStack>
-                      <View style={{width: '100%'}}>
-                        <UText style={{fontSize: 16, maxWidth: '90%'}}>
-                          {item.title}
-                        </UText>
-                      </View>
-                      <UText style={{fontSize: 14, color: '#818181'}}>
-                        {item.start_date} - {item.end_date}
+                  <View style={{width: 20}} />
+                  <Icons.DollarsIcon />
+                  <View style={{width: 20}} />
+                  <VStack>
+                    <View style={{width: '100%'}}>
+                      <UText style={{fontSize: 16, maxWidth: '90%'}}>
+                        {item.title}
                       </UText>
-                    </VStack>
-                  </HStack>
-                </TouchableOpacity>
-              );
-            })}
-        </ScrollView>
-        <View style={{height: 200}} />
-      </VStack>
+                    </View>
+                    <UText style={{fontSize: 14, color: '#818181'}}>
+                      {item.start_date} - {item.end_date}
+                    </UText>
+                  </VStack>
+                </HStack>
+              </TouchableOpacity>
+            );
+          })}
+        <View style={{height: 100}} />
+      </ScrollView>
       <View
         style={{
+          backgroundColor: '#ffffff',
           width: '100%',
           position: 'absolute',
-          bottom: 20,
+          bottom: 0,
           flexDirection: 'row',
           justifyContent: 'center',
+          padding: 20,
         }}>
         <TouchableOpacity
           onPress={() => {
@@ -187,7 +195,7 @@ const PromoList = () => {
           }}
           style={{
             backgroundColor: '#B5EAD8',
-            width: '90%',
+            width: '100%',
             paddingVertical: 10,
             borderRadius: 10,
           }}>
