@@ -238,7 +238,7 @@ const MyOrder = () => {
     }) => {
       const routesData = props.navigationState.routes;
       return (
-        <Row backgroundColor={'#F1F2F6'} mx={'10'} borderRadius={4} p={1}>
+        <Row backgroundColor={'#F1F2F6'} borderRadius={4} mx={3}>
           {routesData.map((v, i) => {
             return (
               <TabButton
