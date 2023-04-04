@@ -48,7 +48,8 @@ class TransactionController extends Controller
             'cash' => 'required|integer|min:100',
             'message' => 'max:255',
             'payment_type' => 'required|in:T,S',
-            'share_id' => 'required_with:payment_type|exists:' . app(ShareBill::class)->getTable() . ',id'
+            'share_id' => 'required_if:payment_type,==,S|integer',
+            'wallet_type' => 'in:credit,debit',
         ], [
             'phone.phone' => 'Số điện thoại không đúng định dạng'
         ]);
@@ -93,7 +94,8 @@ class TransactionController extends Controller
                     'to_id' => $recipient->id,
                     'amount' => $request->cash,
                     'code' => Helper::generateNumber(),
-                    'type' => 'T'
+                    'type' => 'T',
+                    'message' => $request->message ?? null,
                 ]
             );
 
@@ -111,14 +113,33 @@ class TransactionController extends Controller
                 'close_balance' => $recipientCloseBalance,
             ]);
 
-            Notification::create([
-                'user_id' => $recipient->id,
-                'tag' => 'Chuyển tiền',
-                'tag_model' => 'transactions',
-                'tag_model_id' => $transaction->id,
-                'title' => 'Chuyển tiền',
-                'body' => 'Nhận ' . number_format($transaction->amount) . ' từ ' . $user->f_name,
-            ]);
+            if($request->payment_type == 'S') {
+                $message = ($request->message != null || $request->message != '') ? $user->f_name . ' đã trả bạn ' . number_format($transaction->amount) . 'đ với lời nhắn "' . $request->message . '"' : $user->f_name . ' đã trả bạn ' . number_format($transaction->amount) . 'đ';
+                Notification::create([
+                    'user_id' => $recipient->id,
+                    'tag' => 'Chia tiền',
+                    'tag_model' => 'share_bills',
+                    'tag_model_id' => $transaction->id,
+                    'title' => $user->f_name . ' vừa trả tiền cho bạn',
+                    'body' => $message,
+                ]);
+
+                $bill = ShareBill::where('id', $request->share_id)->where('shared_id', Auth::user()->id)->first();
+                $bill->payment_type = $request->wallet_type;
+                $bill->status = 'paid';
+                $bill->message = $message;
+                $bill->transaction_id = $transaction->id;
+                $bill->save();
+            } else {
+                Notification::create([
+                    'user_id' => $recipient->id,
+                    'tag' => 'Chuyển tiền',
+                    'tag_model' => 'transactions',
+                    'tag_model_id' => $transaction->id,
+                    'title' => 'Chuyển tiền',
+                    'body' => 'Nhận ' . number_format($transaction->amount) . ' từ ' . $user->f_name,
+                ]);
+            }
 
             DB::commit();
             return ApiResponse::successResponse($transaction->id);

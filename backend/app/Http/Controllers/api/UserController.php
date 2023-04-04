@@ -590,7 +590,7 @@ class UserController extends Controller
                     return APIResponse::FailureResponse('Mã giảm giá đã hết lượt sử dụng');
                 }
             }
-            if ($promocode->end_date < now() || $promocode->end_time < now()) {
+            if ($promocode->end_date <= now() || $promocode->end_time <= now()) {
                 return APIResponse::FailureResponse('Mã giảm giá đã hết hạn sử dụng');
             }
             if ($promocode->min_purchase > $cartPrice) {
@@ -890,24 +890,25 @@ class UserController extends Controller
 
             $details = json_decode(json_encode($request->detail), true);
             foreach($details as $detail) {
+                $bill = ShareBill::updateOrCreate([
+                    'order_id' => $order->id,
+                    'shared_id' => $detail['user_id'],
+                ],[
+                    'amount' => $detail['amount'],
+                    'status' => ($detail['user_id'] == $user->id) ? null : 'pending',
+                    'payment_type' => null,
+                ]);
+
                 if($detail['user_id'] != $user->id) {
                     Notification::create([
                         'user_id' => $detail['user_id'],
                         'tag' => 'Chia tiền',
                         'tag_model' => 'share_bills',
-                        'tag_model_id' => 0,
+                        'tag_model_id' => $order->id,
                         'title' => $user->f_name . ' đang rủ bạn chia tiền',
                         'body' => $user->f_name . ' đang chờ bạn chuyển ' . number_format($detail['amount']) . 'đ. Chuyển nhanh kẻo bạn ấy chờ lâu nha!',
                     ]);
                 }
-
-                ShareBill::create([
-                    'order_id' => $order->id,
-                    'shared_id' => $detail['user_id'],
-                    'amount' => $detail['amount'],
-                    'status' => ($detail['user_id'] == $user->id) ? null : 'pending',
-                    'payment_type' => null,
-                ]);
             }
 
             DB::commit();
@@ -935,6 +936,7 @@ class UserController extends Controller
             DB::commit();
             return ApiResponse::successResponse($bills);
         } catch (\Exception $e) {
+            DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
@@ -942,7 +944,10 @@ class UserController extends Controller
     public function payShareBill(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
-            'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
+            'bill_id' => 'required|exists:' . app(ShareBill::class)->getTable() . ',id',
+            'message' => 'required',
+        ], [
+            'message' => 'Vui lòng nhập lời nhắn xác nhận trả tiền',
         ]);
 
         if ($validate->fails()) {
@@ -952,11 +957,46 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
 
-            $bills = ShareBill::where('order_id', $request->order_id)->get();
+            $user = Auth::user();
 
-            
+            $bill = ShareBill::where('id', $request->bill_id)->where('shared_id', $user->id)->first();
+            $bill->status = 'paid';
+            $bill->payment_type = 'other';
+            $bill->save();
+
+            $message = null;
+            if(isset($request->message)) {
+                $message = $request->message;
+            } else {
+                $message = $user->f_name . ' đã trả cho bạn ' . number_format($bill->amount) . 'đ qua hình thức khác';
+            }
+
+            Notification::create([
+                'user_id' => $bill->order->user_id,
+                'tag' => 'Chia tiền',
+                'tag_model' => 'share_bills',
+                'tag_model_id' => $bill->order->id,
+                'title' => $user->f_name . ' báo đã trả tiền cho bạn',
+                'body' => $message,
+            ]);
 
             DB::commit();
+            return ApiResponse::successResponse(null);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getShareBill()
+    {
+        try {
+            $user = Auth::user();
+
+            $bills = ShareBill::where('user_id', $user->id)
+                ->where('status', 'pending')
+                ->get();
+
             return ApiResponse::successResponse($bills);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
