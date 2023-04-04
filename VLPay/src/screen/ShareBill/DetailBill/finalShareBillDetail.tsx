@@ -181,19 +181,7 @@ const FinalShareBillDetail = ({route}: any) => {
           onPress={async () => {
             navigation.navigate('Home');
             data.masterDataSource = masterDataSource;
-            // try {
-            //   const formData = new FormData();
-            //   console.log(data);
-            //   formData.append('bill_id', data?.bill_id);
-            //   formData.append('message', data?.message.trim());
-            //   await axiosClient.post('/pay-bill');
-            //   Alert.alert('Gửi lời nhắn thành công');
-            //   setTimeout(() => {
             navigation.navigate('Home');
-            //   }, 2000);
-            // } catch (error) {
-            //   Alert.alert(error.error);
-            // }
           }}>
           <Center backgroundColor="#B5EAD8" padding={5} borderRadius={10}>
             <Text fontSize={16} fontWeight="bold">

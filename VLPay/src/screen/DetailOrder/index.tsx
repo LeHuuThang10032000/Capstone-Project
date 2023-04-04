@@ -26,6 +26,7 @@ import ContactIcon from '../../assets/svg/contact.svg';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {UText} from '../../components/UText';
 import HeaderComp from '../../components/HeaderComp';
+import Lottie from 'lottie-react-native';
 import YesNoModal from '../../components/YesNoModal';
 import Icons from '../../components/Icons';
 import Colors from '../../components/helpers/Colors';
@@ -64,6 +65,21 @@ const DetailOrder = ({route}: any) => {
   const [finalMoney, setFinalMoney] = useState(0);
   const [generalError, setGeneralError] = useState('');
   const [discount_money, setDiscount] = useState(0);
+  const [search, setSearch] = useState('');
+  const [profile, setProfile] = useState({});
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result?.data?.data);
+  }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    fetchData();
+  }, [fetchData]);
   //Get Cart
   const getCart = useCallback(async () => {
     setLoading(true);
@@ -85,19 +101,38 @@ const DetailOrder = ({route}: any) => {
     setCart(result?.data?.data);
     setFinalMoney(result?.data?.data?.total_price);
     setPromoCode(_array);
-    setRadioBox(null);
-    setDiscount(0);
+    setFilteredDataSource(_array);
     setTotalPrice(result?.data?.data?.total_price);
     setTotalItem(result?.data?.data?.total_quantity);
     setLoading(false);
   }, []);
 
+  const searchFilterFunction = (text: string) => {
+    // Check if searched text is not blank
+    if (text !== '') {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const item = promoCode.filter(function (item) {
+        // Applying filter for the inserted text in search bar
+        const itemData = item?.title ? item.title : '';
+        const textData = text;
+        return itemData.indexOf(textData) > -1;
+      });
+
+      setFilteredDataSource(item);
+      setSearch(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setFilteredDataSource(promoCode);
+      setSearch(text);
+    }
+  };
+
   useEffect(() => {
     // Call only when screen open or when back on screen
-    if (isFocused) {
-      getCart();
-    }
-  }, [getCart, isFocused]);
+    getCart();
+  }, []);
 
   const toggleModal = () => {
     setVisible(!visible);
@@ -141,214 +176,223 @@ const DetailOrder = ({route}: any) => {
     }
   };
 
-  console.log(cart);
-
   return (
     <View flex={1} backgroundColor="#FFFFFF">
       <HeaderBack title="Chi tiết đơn hàng" />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View flex={1} paddingTop={10} paddingBottom={'5'}>
-          <Center paddingBottom={3}>
-            <Text>THÔNG TIN NGƯỜI NHẬN</Text>
-            <VStack space={3}>
-              <FormControl isDisabled>
-                <FormControl.Label
-                  _disabled={{
-                    _text: {
-                      color: '#312E49',
-                      fontWeight: 'bold',
-                      fontSize: 16,
-                    },
-                  }}>
-                  Số điện thoại
-                </FormControl.Label>
-                <Input
-                  w="90%"
-                  value="0123456789"
-                  style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
-                  rightElement={
-                    <TouchableOpacity style={{paddingRight: 10}}>
-                      <ContactIcon />
-                    </TouchableOpacity>
-                  }
-                />
-              </FormControl>
-
-              <FormControl isDisabled>
-                <FormControl.Label
-                  _disabled={{
-                    _text: {
-                      color: '#312E49',
-                      fontWeight: 'bold',
-                      fontSize: 16,
-                    },
-                  }}>
-                  Họ tên
-                </FormControl.Label>
-                <Input
-                  w="90%"
-                  value="Đặng Thị Minh Ngọc"
-                  style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
-                />
-              </FormControl>
-            </VStack>
+        {isLoading ? (
+          <Center>
+            <Lottie
+              source={require('../../assets/lottie-file/loading.json')}
+              autoPlay={true}
+              style={{width: 100, height: 100}}
+            />
           </Center>
-          <Divider
-            my="2"
-            _light={{
-              bg: 'muted.300',
-            }}
-            _dark={{
-              bg: 'muted.50',
-            }}
-          />
-          <View paddingTop={3} marginX={5}>
-            <Heading paddingBottom={10} size={'sm'}>
-              Nội dung đơn hàng
-            </Heading>
-            {cart?.products.map(item => (
-              <HStack
-                marginY={1}
-                alignItems={'center'}
-                justifyContent="space-between">
-                <VStack>
-                  <HStack alignItems={'center'}>
-                    <Text fontSize={16} fontWeight={'bold'} paddingLeft={1}>
-                      {item.quantity} x{' '}
-                    </Text>
-                    <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                      {item.name}
-                    </Text>
-                  </HStack>
-                  {item.add_ons.map(item => (
-                    <Text key={item.id} color={'#747980'}>
-                      {item.name}
-                    </Text>
-                  ))}
-                </VStack>
-                <VStack>
-                  <Text fontWeight={'bold'} fontSize={16}>
-                    {formatCurrency((item?.price ?? 0).toString())}đ
-                  </Text>
-                  {item.add_ons.map(item => (
-                    <Text key={item.id} color={'#747980'}>
+        ) : (
+          <View flex={1} paddingTop={10} paddingBottom={'5'}>
+            <Center paddingBottom={3}>
+              <Text>THÔNG TIN NGƯỜI NHẬN</Text>
+              <VStack space={3}>
+                <FormControl isDisabled>
+                  <FormControl.Label
+                    _disabled={{
+                      _text: {
+                        color: '#312E49',
+                        fontWeight: 'bold',
+                        fontSize: 16,
+                      },
+                    }}>
+                    Số điện thoại
+                  </FormControl.Label>
+                  <Input
+                    w="90%"
+                    value={profile?.phone}
+                    style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
+                    rightElement={
+                      <TouchableOpacity style={{paddingRight: 10}}>
+                        <ContactIcon />
+                      </TouchableOpacity>
+                    }
+                  />
+                </FormControl>
+
+                <FormControl isDisabled>
+                  <FormControl.Label
+                    _disabled={{
+                      _text: {
+                        color: '#312E49',
+                        fontWeight: 'bold',
+                        fontSize: 16,
+                      },
+                    }}>
+                    Họ tên
+                  </FormControl.Label>
+                  <Input
+                    w="90%"
+                    value={profile?.f_name}
+                    style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
+                  />
+                </FormControl>
+              </VStack>
+            </Center>
+            <Divider
+              my="2"
+              _light={{
+                bg: 'muted.300',
+              }}
+              _dark={{
+                bg: 'muted.50',
+              }}
+            />
+            <View paddingTop={3} marginX={5}>
+              <Heading paddingBottom={10} size={'sm'}>
+                Nội dung đơn hàng
+              </Heading>
+              {cart?.products.map(item => (
+                <HStack
+                  marginY={1}
+                  alignItems={'center'}
+                  justifyContent="space-between">
+                  <VStack>
+                    <HStack alignItems={'center'}>
+                      <Text fontSize={16} fontWeight={'bold'} paddingLeft={1}>
+                        {item.quantity} x{' '}
+                      </Text>
+                      <Text fontSize={16} fontWeight={'bold'} color="#000000">
+                        {item.name}
+                      </Text>
+                    </HStack>
+                    {item.add_ons.map(item => (
+                      <Text key={item.id} color={'#747980'}>
+                        {item.name}
+                      </Text>
+                    ))}
+                  </VStack>
+                  <VStack>
+                    <Text fontWeight={'bold'} fontSize={16}>
                       {formatCurrency((item?.price ?? 0).toString())}đ
                     </Text>
-                  ))}
-                </VStack>
-              </HStack>
-            ))}
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('DetailCart', {store_id: store_id})
-              }>
-              <Text fontSize={16} fontWeight="bold" color={'#0088CC'}>
-                Chỉnh sửa
-              </Text>
-            </TouchableOpacity>
-            <VStack marginTop={5}>
-              <HStack paddingBottom={3} justifyContent={'space-between'}>
-                <Text>Tổng tạm tính</Text>
-                <Text>
-                  {formatCurrency((cart?.total_price ?? 0).toString())}đ
+                    {item.add_ons.map(item => (
+                      <Text key={item.id} color={'#747980'}>
+                        {formatCurrency((item?.price ?? 0).toString())}đ
+                      </Text>
+                    ))}
+                  </VStack>
+                </HStack>
+              ))}
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('DetailCart', {store_id: store_id})
+                }>
+                <Text fontSize={16} fontWeight="bold" color={'#0088CC'}>
+                  Chỉnh sửa
                 </Text>
-              </HStack>
-              <HStack justifyContent={'space-between'}>
-                <Text>Giảm giá</Text>
-                <Text>{discount_money}đ</Text>
-              </HStack>
+              </TouchableOpacity>
+              <VStack marginTop={5}>
+                <HStack paddingBottom={3} justifyContent={'space-between'}>
+                  <Text>Tổng tạm tính</Text>
+                  <Text>
+                    {formatCurrency((cart?.total_price ?? 0).toString())}đ
+                  </Text>
+                </HStack>
+                <HStack justifyContent={'space-between'}>
+                  <Text>Giảm giá</Text>
+                  <Text>{discount_money}đ</Text>
+                </HStack>
 
-              {/* <Controller
+                {/* <Controller
               control={control}
             //   rules={{
             //     required: 'Lí do không được để trống',
             //   }}
               render={({field: {onChange, onBlur, value}}) => ( */}
-              <FormControl my={5}>
-                <FormControl.Label
-                  _text={{
-                    color: '#000',
-                    fontWeight: 'bold',
-                    fontSize: 16,
-                  }}>
-                  Ghi chú:
-                </FormControl.Label>
-                <TextArea
-                  value={text}
-                  // onBlur={onBlur}
-                  onChangeText={onChangeText}
-                  keyboardType="email-address"
-                  placeholder="Nhập nội dung"
-                  style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 14,
-                    padding: 0,
-                    paddingLeft: 10,
-                    marginLeft: 10,
-                    flex: 1,
-                  }}
-                  autoCompleteType={undefined}
-                />
+                <FormControl my={5}>
+                  <FormControl.Label
+                    _text={{
+                      color: '#000',
+                      fontWeight: 'bold',
+                      fontSize: 16,
+                    }}>
+                    Ghi chú:
+                  </FormControl.Label>
+                  <TextArea
+                    value={text}
+                    // onBlur={onBlur}
+                    onChangeText={onChangeText}
+                    keyboardType="email-address"
+                    placeholder="Nhập nội dung"
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 14,
+                      padding: 0,
+                      paddingLeft: 10,
+                      marginLeft: 10,
+                      flex: 1,
+                    }}
+                    autoCompleteType={undefined}
+                  />
 
-                {/* <FormControl.ErrorMessage>
+                  {/* <FormControl.ErrorMessage>
                     {errors.reason?.message}
                   </FormControl.ErrorMessage> */}
-              </FormControl>
-              {/* )}
+                </FormControl>
+                {/* )}
             /> */}
-              <TouchableOpacity onPress={toggleModal}>
-                <HStack
-                  marginBottom={5}
-                  justifyContent={'space-between'}
-                  alignItems="center">
-                  <HStack alignItems={'center'}>
-                    <PromoOder />
-                    <Text paddingLeft={3} width={250} numberOfLines={1}>
-                      {promo_name}
-                    </Text>
+                <TouchableOpacity onPress={toggleModal}>
+                  <HStack
+                    marginBottom={5}
+                    justifyContent={'space-between'}
+                    alignItems="center">
+                    <HStack alignItems={'center'}>
+                      <PromoOder />
+                      <Text paddingLeft={3} width={250} numberOfLines={1}>
+                        {promo_name}
+                      </Text>
+                    </HStack>
+                    <ChevronRightIcon />
                   </HStack>
-                  <ChevronRightIcon />
-                </HStack>
+                </TouchableOpacity>
+              </VStack>
+            </View>
+            <Divider />
+            <HStack
+              marginTop={5}
+              marginX={5}
+              alignItems={'center'}
+              justifyContent="space-between">
+              <Text fontSize={20}>Tổng cộng</Text>
+              <Text fontSize={20} fontWeight="bold">
+                {formatCurrency((cart?.total_price ?? 0).toString())}đ
+              </Text>
+            </HStack>
+            <View paddingY={5} paddingX={5}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('PaymentOrder', {
+                    total_price: cart?.total_price,
+                    store_id: store_id,
+                    promo_id: radioBox,
+                  })
+                }>
+                <View
+                  justifyContent="center"
+                  alignItems={'center'}
+                  style={{
+                    width: '100%',
+                    padding: 20,
+                    backgroundColor: '#B5EAD8',
+                    borderRadius: 10,
+                  }}>
+                  <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+                    Thanh Toán
+                  </Text>
+                </View>
               </TouchableOpacity>
-            </VStack>
+            </View>
           </View>
-          <Divider />
-          <HStack
-            marginTop={5}
-            marginX={5}
-            alignItems={'center'}
-            justifyContent="space-between">
-            <Text fontSize={20}>Tổng cộng</Text>
-            <Text fontSize={20} fontWeight="bold">
-              {formatCurrency((cart?.total_price ?? 0).toString())}đ
-            </Text>
-          </HStack>
-          <View paddingY={5} paddingX={5}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('PaymentOrder', {
-                  total_price: cart?.total_price,
-                  store_id: store_id,
-                  promo_id: radioBox,
-                })
-              }>
-              <View
-                justifyContent="center"
-                alignItems={'center'}
-                style={{
-                  width: '100%',
-                  padding: 20,
-                  backgroundColor: '#B5EAD8',
-                  borderRadius: 10,
-                }}>
-                <Text color={'#000000'} fontWeight="bold" fontSize={16}>
-                  Thanh Toán
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+        )}
       </ScrollView>
+
       <Modal visible={visible} animationType="slide">
         <HeaderComp title="Mã ưu đãi" onPressBack={toggleModal} />
         <View
@@ -369,7 +413,9 @@ const DetailOrder = ({route}: any) => {
             fontWeight={'700'}
             borderRadius={10}
             fontSize={16}
+            onChangeText={text => searchFilterFunction(text)}
             color={'rgba(143, 155, 179, 1)'}
+            value={search}
             borderWidth={0}
             placeholderTextColor={'rgba(143, 155, 179, 1)'}
           />
@@ -393,8 +439,8 @@ const DetailOrder = ({route}: any) => {
             alignItems={'center'}
             style={{paddingHorizontal: 16}}>
             <ScrollView>
-              {promoCode?.[0]?.id &&
-                promoCode.map((item, key) => (
+              {filteredDataSource?.[0]?.id &&
+                filteredDataSource.map((item, key) => (
                   <View key={item.id}>
                     <Image
                       source={require('../../assets/img/promo_code.png')}
