@@ -45,8 +45,8 @@ const FirstRoute = () => {
     }, 2000);
   }, []);
 
-  // console.log('===>', history);
-  console.log('MyID:', profile);
+  console.log('===>', history);
+  // console.log('MyID:', profile);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
@@ -95,9 +95,10 @@ const FirstRoute = () => {
                 {item.data.map((item: any) => {
                   return (
                     <TouchableOpacity
+                      key={item.id}
                       onPress={() => navigation.navigate('ShareBill')}>
                       <HStack
-                        p={3}
+                        my={3}
                         key={item.id}
                         justifyContent="space-between">
                         <VStack>
@@ -197,9 +198,10 @@ const SecondRoute = () => {
                 {item.data.map((item: any) => {
                   return (
                     <TouchableOpacity
+                      key={item.id}
                       onPress={() => navigation.navigate('ShareBill')}>
                       <HStack
-                        p={3}
+                        my={3}
                         key={item.id}
                         justifyContent="space-between">
                         <VStack>
@@ -298,7 +300,7 @@ const ThirdRoute = () => {
                     <TouchableOpacity
                       key={item.id}
                       onPress={() => navigation.navigate('ShareBill')}>
-                      <HStack p={3} justifyContent="space-between">
+                      <HStack my={3} justifyContent="space-between">
                         <VStack>
                           <Text
                             ellipsizeMode="tail"
@@ -435,7 +437,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 15,
   },
   title: {
-    width: 250,
+    width: 200,
     fontFamily: 'Poppins-SemiBold',
     fontSize: 16,
     color: '#312E49',

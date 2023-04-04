@@ -149,7 +149,7 @@ const CreatePromo = () => {
         setPrevious('');
         return (
           <>
-            <UText style={{marginLeft: 10, marginVertical: 10}}>
+            <UText style={{marginLeft: 10, marginBottom: 10, marginTop: 30}}>
               Chọn loại mã
             </UText>
             <View style={{flexDirection: 'column', alignItems: 'center'}}>
@@ -667,8 +667,15 @@ const CreatePromo = () => {
                     justifyContent={'space-between'}
                     backgroundColor={'#F7F9FC'}
                     style={{padding: 16}}>
-                    <UText>Giá trị của mã giảm giá</UText>
-                    <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
+                    <UText
+                      style={{
+                        fontSize: 20,
+                        color: '#818181',
+                        fontWeight: 'bold',
+                      }}>
+                      Giá trị của mã giảm giá
+                    </UText>
+                    <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
                   </HStack>
                   <VStack
                     justifyContent={'space-between'}
@@ -688,7 +695,7 @@ const CreatePromo = () => {
                       }}>
                       Điều kiện giảm giá
                     </UText>
-                    <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
+                    <UText style={{color: '#4285F4'}}>Chỉnh sửa </UText>
                   </HStack>
                   <VStack style={{paddingHorizontal: 16}}>
                     <VStack style={{paddingVertical: 16}}>
@@ -1101,8 +1108,15 @@ const CreatePromo = () => {
                   justifyContent={'space-between'}
                   backgroundColor={'#F7F9FC'}
                   style={{padding: 16}}>
-                  <UText>Giá trị của mã giảm giá</UText>
-                  <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
+                  <UText
+                    style={{
+                      fontSize: 20,
+                      color: '#818181',
+                      fontWeight: 'bold',
+                    }}>
+                    Giá trị của mã giảm giá
+                  </UText>
+                  <UText style={{color: '#4285F4'}}>Chỉnh sửa </UText>
                 </HStack>
                 <VStack justifyContent={'space-between'} style={{padding: 16}}>
                   <UText>Giá trị của mã giảm giá</UText>
@@ -1120,7 +1134,7 @@ const CreatePromo = () => {
                     }}>
                     Điều kiện giảm giá
                   </UText>
-                  <UText style={{color: '#B5EAD8'}}>Chỉnh sửa </UText>
+                  <UText style={{color: '#4285F4'}}>Chỉnh sửa </UText>
                 </HStack>
                 <VStack style={{paddingHorizontal: 16}}>
                   <VStack style={{paddingVertical: 16}}>
