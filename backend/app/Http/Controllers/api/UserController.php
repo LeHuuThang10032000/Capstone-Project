@@ -897,6 +897,7 @@ class UserController extends Controller
                     'amount' => $detail['amount'],
                     'status' => ($detail['user_id'] == $user->id) ? null : 'pending',
                     'payment_type' => null,
+                    'is_owner' => ($detail['user_id'] == $user->id) ? true : false,
                 ]);
 
                 if($detail['user_id'] != $user->id) {
@@ -988,14 +989,31 @@ class UserController extends Controller
         }
     }
 
-    public function getShareBill()
+    public function getShareBill(Request $request)
     {
+        $validate = Validator::make($request->all(), [
+            'limit' => 'required|integer',
+            'page' => 'required|integer',
+            'status' => ''
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
         try {
             $user = Auth::user();
 
-            $bills = ShareBill::where('user_id', $user->id)
+            $bills = ShareBill::select('id', 'created_at', 'order_id', 'shared_id')
+                ->with('order.user:id,f_name')
+                ->where('shared_id', $user->id)
                 ->where('status', 'pending')
+                ->where('is_owner', false)
                 ->get();
+
+            foreach($bills as $bill) {
+                $bill['title'] = 'Hóa đơn chia tiền từ ' . $bill->order->user->f_name;
+            }
 
             return ApiResponse::successResponse($bills);
         } catch (\Exception $e) {
