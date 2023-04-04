@@ -67,7 +67,6 @@ class UserController extends Controller
     {
         if (auth::check()) {
             $user = auth()->user();
-            auth()->user()->media->all();
 
             $user['withdraw_request'] = $user->pending_withdraw_request;
             $user['credit_request'] = $user->pending_credit_request;
