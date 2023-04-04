@@ -13,6 +13,7 @@ class ShareBill extends Model
         'amount',
         'payment_type',
         'status',
+        'is_owner'
     ];
 
     protected $appends = ['shared_name'];
@@ -29,7 +30,7 @@ class ShareBill extends Model
 
     public function getSharedNameAttribute()
     {
-        return $this->sharedUser->f_name;
+        return $this->sharedUser->f_name ?? null;
     }
 
     protected function serializeDate(DateTimeInterface $date)

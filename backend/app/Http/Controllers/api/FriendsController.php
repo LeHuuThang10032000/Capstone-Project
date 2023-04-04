@@ -24,7 +24,11 @@ class FriendsController extends Controller
         foreach ($friends as $friend) {
             array_push($id, $friend->friend_id);
         }
-        $users = User::whereIn('id', $id)->get();
+        $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
+        foreach($users as $user) {
+            $user['image'] = $user->media->first()->getFullUrl();
+            unset($user['media']);
+        }
 //        return $users;
         return FriendsResource::collection($users);
     }
