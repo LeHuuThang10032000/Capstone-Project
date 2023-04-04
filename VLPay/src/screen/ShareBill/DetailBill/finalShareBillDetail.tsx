@@ -32,6 +32,7 @@ const FinalShareBillDetail = ({route}: any) => {
   const [image, setImage] = useState<Image>();
   const [masterDataSource, setMasterDataSource] = useState([]);
   const navigation = useNavigation<MainStackNavigation>();
+  const [profile, setProfile] = useState([]);
 
   const fetchData = async () => {
     try {
@@ -41,6 +42,10 @@ const FinalShareBillDetail = ({route}: any) => {
           return item;
         }
       });
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/get-profile',
+      );
+      setProfile(result?.data?.data);
 
       setMasterDataSource(friends);
     } catch (error) {
@@ -104,8 +109,38 @@ const FinalShareBillDetail = ({route}: any) => {
           </HStack>
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize={16} fontWeight="bold">
-              Danh sách chia tiền({masterDataSource?.length ?? 0})
+              Danh sách chia tiền({masterDataSource?.length + 1 ?? 0})
             </Text>
+          </HStack>
+          <HStack
+            w="100%"
+            alignItems="center"
+            justifyContent="space-between"
+            borderWidth={1}
+            padding={3}
+            borderRadius={8}
+            marginY={3}>
+            <HStack alignItems="center">
+              <Image
+                source={{uri: profile?.image}}
+                w={42}
+                height={42}
+                alt="image"
+                borderRadius={50}
+              />
+              <Text paddingLeft={3} fontWeight={'700'}>
+                {profile.f_name} (Me)
+              </Text>
+            </HStack>
+            <VStack>
+              <Text>
+                {(
+                  parseInt(data?.amount) /
+                  (masterDataSource?.length + 1)
+                ).toLocaleString()}
+                đ
+              </Text>
+            </VStack>
           </HStack>
           {masterDataSource.map(item => {
             return (
@@ -144,19 +179,9 @@ const FinalShareBillDetail = ({route}: any) => {
       <View padding={5}>
         <TouchableOpacity
           onPress={async () => {
+            navigation.navigate('Home');
             data.masterDataSource = masterDataSource;
-            try {
-              const formData = new FormData();
-              formData.append('bill_id', data?.bill_id);
-              formData.append('message', data?.message.trim());
-              await axiosClient.post('/pay-bill');
-              Alert.alert('Gửi lời nhắn thành công');
-              setTimeout(() => {
-                navigation.navigate('Home');
-              }, 2000);
-            } catch (error) {
-              Alert.alert(error.error);
-            }
+            navigation.navigate('Home');
           }}>
           <Center backgroundColor="#B5EAD8" padding={5} borderRadius={10}>
             <Text fontSize={16} fontWeight="bold">

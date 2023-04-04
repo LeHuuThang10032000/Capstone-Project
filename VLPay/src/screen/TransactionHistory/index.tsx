@@ -312,7 +312,9 @@ const ThirdRoute = () => {
                   return (
                     <TouchableOpacity
                       key={item.id}
-                      onPress={() =>
+                      onPress={() => {
+                        console.log(item);
+
                         navigation.navigate('ShareBill', {
                           data: item,
                         })

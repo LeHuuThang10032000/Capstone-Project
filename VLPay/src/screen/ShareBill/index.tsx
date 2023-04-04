@@ -12,8 +12,10 @@ type Props = {};
 
 const ShareBill = () => {
   const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
+
   const [userWallet, setUserWallet] = useState(0);
   const [hide, setHide] = useState(false);
+  const [status, setStatus] = useState('');
   const fetchData = async () => {
     const result = await axiosClient.get('/user-wallet');
     setUserWallet(result?.data?.data?.balance);
@@ -24,6 +26,15 @@ const ShareBill = () => {
   const navigation = useNavigation<MainStackNavigation>();
   console.log(data);
 
+  const statusState = key => {
+    switch (key) {
+      case 'canceled':
+        return 'bị huỷ';
+
+      case 'taken':
+        return 'hoàn thành';
+    }
+  };
   return (
     <View flex={1} backgroundColor="#ffffff">
       <HeaderBack title="Chi tiết giao dịch" />
@@ -51,7 +62,9 @@ const ShareBill = () => {
             style={{width: 30, height: 30}}
             alt="img"
           />
-          <Text fontSize={16}>Giao dịch thành công</Text>
+          <Text fontSize={16}>
+            Giao dịch {statusState(data?.order?.status)}
+          </Text>
           <View></View>
         </HStack>
         <VStack w="100%">

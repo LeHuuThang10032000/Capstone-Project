@@ -60,6 +60,8 @@ const OrderProcess = ({route}: any) => {
     setLoading(true);
     const result = await axiosClient.get(`/order/detail?order_id=${order_id}`);
     setOrder(result.data.data);
+    console.log(result.data.data);
+
     setLoading(false);
   }, []);
 
@@ -167,7 +169,7 @@ const OrderProcess = ({route}: any) => {
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
                 <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                  {`Tổng (${totalItem} món)`}
+                  {`Tổng (${order?.product_detail?.length} món)`}
                 </Text>
                 <Text
                   fontSize={16}

@@ -32,10 +32,15 @@ const DetailBill = ({route}: any) => {
   const [image, setImage] = useState<Image>();
   const [masterDataSource, setMasterDataSource] = useState([]);
   const navigation = useNavigation<MainStackNavigation>();
+  const [profile, setProfile] = useState([]);
 
   const fetchData = async () => {
     try {
       const responseJson = await axiosClient.get('/friends');
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/get-profile',
+      );
+      setProfile(result?.data?.data);
       const friends = responseJson?.data?.data.filter(item => {
         if (data?.checkedItems.includes(item?.id)) {
           return item;
@@ -83,7 +88,7 @@ const DetailBill = ({route}: any) => {
           </HStack>
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize={16} fontWeight="bold">
-              Danh sách chia tiền({masterDataSource?.length ?? 0})
+              Danh sách chia tiền({masterDataSource?.length + 1 ?? 0})
             </Text>
             {!data?.isFinal && (
               <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -92,6 +97,36 @@ const DetailBill = ({route}: any) => {
                 </Text>
               </TouchableOpacity>
             )}
+          </HStack>
+          <HStack
+            w="100%"
+            alignItems="center"
+            justifyContent="space-between"
+            borderWidth={1}
+            padding={3}
+            borderRadius={8}
+            marginY={3}>
+            <HStack alignItems="center">
+              <Image
+                source={{uri: profile?.image}}
+                w={42}
+                height={42}
+                alt="image"
+                borderRadius={50}
+              />
+              <Text paddingLeft={3} fontWeight={'700'}>
+                {profile.f_name} (Me)
+              </Text>
+            </HStack>
+            <VStack>
+              <Text>
+                {(
+                  parseInt(data?.amount) /
+                  (masterDataSource?.length + 1)
+                ).toLocaleString()}
+                đ
+              </Text>
+            </VStack>
           </HStack>
           {masterDataSource.map(item => {
             return (
@@ -105,7 +140,7 @@ const DetailBill = ({route}: any) => {
                 marginY={3}>
                 <HStack alignItems="center">
                   <Image
-                    source={{uri: item?.picture}}
+                    source={{uri: item?.image}}
                     w={42}
                     height={42}
                     alt="image"
@@ -130,7 +165,26 @@ const DetailBill = ({route}: any) => {
       <View padding={5}>
         <TouchableOpacity
           onPress={async () => {
+            if (!data.checkedItems.includes(profile?.id)) {
+              data.checkedItems.push(profile?.id);
+            }
             data.masterDataSource = masterDataSource;
+            const order_id = data?.order_id;
+            data.isFinal = true;
+            const detail = [];
+            data?.checkedItems?.map(item => {
+              detail.push({
+                user_id: item,
+                amount:
+                  parseInt(data?.amount) / (data?.masterDataSource?.length + 1),
+              });
+            });
+
+            const result = await axiosClient.post('/share-bill', {
+              order_id,
+              detail,
+            });
+            data.result = result?.data?.data;
             navigation.navigate('SendRequestShare', {
               data,
             });
