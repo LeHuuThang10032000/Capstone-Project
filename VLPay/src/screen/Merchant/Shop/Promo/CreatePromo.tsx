@@ -16,6 +16,7 @@ import {axiosClient} from '../../../../components/apis/axiosClient';
 import {baseUrl} from '../../../../components/apis/baseUrl';
 import YesNoModal from '../../../../components/YesNoModal';
 import Colors from '../../../../components/helpers/Colors';
+import moment from 'moment';
 
 const CreatePromo = () => {
   const PROMOS = [
@@ -405,7 +406,9 @@ const CreatePromo = () => {
                     <Input
                       value={
                         dateStart
-                          ? dateStart.toDateString()
+                          ? moment(dateStart).format(
+                              'DD/MM/YYYY, ddd [lúc] h:mm',
+                            )
                           : 'Chọn ngày và thời gian'
                       }
                       borderRadius={10}
@@ -442,7 +445,7 @@ const CreatePromo = () => {
                     <Input
                       value={
                         dateEnd
-                          ? dateEnd.toDateString()
+                          ? moment(dateEnd).format('DD/MM/YYYY, ddd [lúc] h:mm')
                           : 'Chọn ngày và thời gian'
                       }
                       borderRadius={10}
@@ -719,7 +722,7 @@ const CreatePromo = () => {
 
                     <VStack style={{paddingVertical: 16}}>
                       <UText style={{fontSize: 14, color: '#818181'}}>
-                        Ngày và thời gian bắt đầu{' '}
+                        Ngày và thời gian kết thúc{' '}
                       </UText>
                       <UText>
                         {endDate ? endDate : _time.toISOString().slice(0, 10)}{' '}
@@ -902,7 +905,9 @@ const CreatePromo = () => {
                     <Input
                       value={
                         dateStart
-                          ? dateStart.toDateString()
+                          ? moment(dateStart).format(
+                              'DD/MM/YYYY, ddd [lúc] HH:mm',
+                            )
                           : 'Chọn ngày và thời gian'
                       }
                       borderRadius={10}
@@ -938,7 +943,9 @@ const CreatePromo = () => {
                     <Input
                       value={
                         dateEnd
-                          ? dateEnd.toDateString()
+                          ? moment(dateEnd).format(
+                              'DD/MM/YYYY, ddd [lúc] HH:mm',
+                            )
                           : 'Chọn ngày và thời gian'
                       }
                       borderRadius={10}
@@ -974,7 +981,9 @@ const CreatePromo = () => {
                   marginBottom={0}>
                   <VStack>
                     <UText>Thời gian áp dụng</UText>
-                    <UText>Vào khung giờ mở cửa bán</UText>
+                    <UText style={{fontSize: 12, color: '#818181'}}>
+                      Vào khung giờ mở cửa bán
+                    </UText>
                   </VStack>
                 </HStack>
                 <VStack
@@ -1143,7 +1152,9 @@ const CreatePromo = () => {
                     </UText>
                     <UText>
                       {startDate
-                        ? startDate
+                        ? moment(startDate).format(
+                            'DD/MM/YYYY, ddd [lúc] HH:mm',
+                          )
                         : __time.toISOString().slice(0, 10)}{' '}
                       {startTime}
                     </UText>
@@ -1158,10 +1169,12 @@ const CreatePromo = () => {
 
                   <VStack style={{paddingVertical: 16}}>
                     <UText style={{fontSize: 14, color: '#818181'}}>
-                      Ngày và thời gian bắt đầu{' '}
+                      Ngày và thời gian kết thúc{' '}
                     </UText>
                     <UText>
-                      {endDate ? endDate : __time.toISOString().slice(0, 10)}{' '}
+                      {endDate
+                        ? moment(endDate).format('DD/MM/YYYY, ddd [lúc] HH:mm')
+                        : __time.toISOString().slice(0, 10)}{' '}
                       {endTime}
                     </UText>
                     <View
@@ -1256,7 +1269,9 @@ const CreatePromo = () => {
                   <Input
                     value={
                       dateStart
-                        ? dateStart.toDateString()
+                        ? moment(dateStart).format(
+                            'DD/MM/YYYY, ddd [lúc] HH:mm',
+                          )
                         : 'Chọn ngày và thời gian'
                     }
                     borderRadius={10}
@@ -1286,7 +1301,7 @@ const CreatePromo = () => {
                   <Input
                     value={
                       dateEnd
-                        ? dateEnd.toDateString()
+                        ? moment(dateEnd).format('DD/MM/YYYY, ddd [lúc] HH:mm')
                         : 'Chọn ngày và thời gian'
                     }
                     borderRadius={10}
