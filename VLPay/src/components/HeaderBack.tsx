@@ -15,6 +15,7 @@ type Props = {
   hideRight?: any;
   TrashIcon?: boolean;
   onPress?: () => void;
+  hideLeft: boolean;
 };
 
 const HeaderBack: React.FC<Props> = ({
@@ -25,6 +26,7 @@ const HeaderBack: React.FC<Props> = ({
   hideRight,
   TrashIcon,
   onPress,
+  hideLeft,
 }) => {
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
@@ -41,11 +43,13 @@ const HeaderBack: React.FC<Props> = ({
   };
   return (
     <View style={[styles.header, style]}>
-      <View>
-        <TouchableOpacity onPress={handleBack}>
-          <BackIcon />
-        </TouchableOpacity>
-      </View>
+      {!hideLeft && (
+        <View>
+          <TouchableOpacity onPress={handleBack}>
+            <BackIcon />
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <Text style={styles.text}>{title}</Text>
       </View>
