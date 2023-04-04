@@ -10,7 +10,7 @@ import {
   VStack,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, useWindowDimensions} from 'react-native';
 import HeaderBack from '../../../components/HeaderBack';
 import {MainStackNavigation} from '../../../stack/Navigation';
 
@@ -19,6 +19,7 @@ type Props = {};
 const NotiShareBill = (props: Props) => {
   const [masterDataSource, setMasterDataSource] = useState([]);
   const navigation = useNavigation<MainStackNavigation>();
+  const {width} = useWindowDimensions();
 
   console.log(masterDataSource);
 
@@ -83,12 +84,12 @@ const NotiShareBill = (props: Props) => {
       </ScrollView>
       <HStack
         padding={5}
-        w="100%"
+        w={width}
         backgroundColor="yellow"
         justifyContent="space-between">
         <TouchableOpacity>
           <Center
-            w={170}
+            w={160}
             backgroundColor="#ffffff"
             borderWidth={1}
             padding={5}
@@ -101,7 +102,7 @@ const NotiShareBill = (props: Props) => {
 
         <TouchableOpacity>
           <Center
-            w={170}
+            w={160}
             backgroundColor="#B5EAD8"
             borderWidth={1}
             padding={5}
