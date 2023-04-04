@@ -162,7 +162,8 @@ class TransactionController extends Controller
         }
 
         $userId = Auth::user()->id;
-        $historyGets = Transaction::where('from_id', $userId)
+        $historyGets = Transaction::with('order:id,status')
+            ->where('from_id', $userId)
             ->orWhere('to_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
