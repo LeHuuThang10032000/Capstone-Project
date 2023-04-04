@@ -82,12 +82,9 @@ const DetailOrder = ({route}: any) => {
       _array.push(_item);
     });
 
-    console.log('_array', _array);
-
     setCart(result?.data?.data);
     setFinalMoney(result?.data?.data?.total_price);
     setPromoCode(_array);
-    setPromoName('Mã giảm giá');
     setRadioBox(null);
     setDiscount(0);
     setTotalPrice(result?.data?.data?.total_price);
@@ -354,12 +351,47 @@ const DetailOrder = ({route}: any) => {
       </ScrollView>
       <Modal visible={visible} animationType="slide">
         <HeaderComp title="Mã ưu đãi" onPressBack={toggleModal} />
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: 'white',
+            height: 100,
+            paddingHorizontal: 30,
+            paddingTop: 20,
+          }}>
+          <Input
+            placeholder="Nhập mã giảm giá ở đây"
+            width={'75%'}
+            backgroundColor={'#EDF1F7'}
+            fontWeight={'700'}
+            borderRadius={10}
+            fontSize={16}
+            color={'rgba(143, 155, 179, 1)'}
+            borderWidth={0}
+            placeholderTextColor={'rgba(143, 155, 179, 1)'}
+          />
+          <TouchableOpacity
+            style={{
+              borderRadius: 10,
+              borderWidth: 1,
+              padding: 8,
+              borderColor: 'rgba(172, 177, 192, 1)',
+            }}
+            onPress={toggleModal}>
+            <UText style={{color: 'rgba(172, 177, 192, 1)', fontWeight: '700'}}>
+              Áp dụng
+            </UText>
+          </TouchableOpacity>
+        </View>
         <View style={styles.modalContainer}>
           <VStack
             height={'100%'}
             width={'100%'}
             alignItems={'center'}
-            style={{marginTop: 100, paddingHorizontal: 16}}>
+            style={{paddingHorizontal: 16}}>
             <ScrollView>
               {promoCode?.[0]?.id &&
                 promoCode.map((item, key) => (
@@ -453,6 +485,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F9FC',
     width: '100%',
     height: '100%',
+    paddingTop: 20,
   },
   modalText: {
     fontSize: 24,

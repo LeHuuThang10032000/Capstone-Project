@@ -34,11 +34,25 @@ const SendRequestShare = (props: Props) => {
   const [note, setNote] = useState('');
   const [generalError, setGeneralError] = useState('');
   const [visibleWarning, setVisibleWarning] = useState(false);
+  const [profile, setProfile] = useState([]);
 
   useEffect(() => {
     setRemind(false);
   }, []);
+  const fetchData = async () => {
+    try {
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/get-profile',
+      );
+      setProfile(result?.data?.data);
+    } catch (error) {
+      Alert.alert(error.error);
+    }
+  };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <View flex={1} backgroundColor="#ffffff">
       <HeaderBack title="Chi tiết" />
@@ -78,13 +92,42 @@ const SendRequestShare = (props: Props) => {
 
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize={16} fontWeight="bold">
-              Danh sách chia tiền({data?.masterDataSource.length ?? 0})
+              Danh sách chia tiền({data?.masterDataSource.length + 1 ?? 0})
             </Text>
             {/* <Text fontSize={16} fontWeight="bold" color="#FF0000">
               Thêm người
             </Text> */}
           </HStack>
-
+          <HStack
+            w="100%"
+            alignItems="center"
+            justifyContent="space-between"
+            borderWidth={1}
+            padding={3}
+            borderRadius={8}
+            marginY={3}>
+            <HStack alignItems="center">
+              <Image
+                source={{uri: profile?.image}}
+                w={42}
+                height={42}
+                alt="image"
+                borderRadius={50}
+              />
+              <Text paddingLeft={3} fontWeight={'700'}>
+                {profile.f_name} (Me)
+              </Text>
+            </HStack>
+            <VStack>
+              <Text>
+                {(
+                  parseInt(data?.amount) /
+                  (data?.masterDataSource?.length + 1)
+                ).toLocaleString()}
+                đ
+              </Text>
+            </VStack>
+          </HStack>
           {data?.masterDataSource.map(item => (
             <HStack
               w="100%"
@@ -200,23 +243,6 @@ const SendRequestShare = (props: Props) => {
                   onPress={async () => {
                     try {
                       data.note = note;
-                      const order_id = data?.order_id;
-                      data.isFinal = true;
-                      const detail = [];
-                      data?.checkedItems?.map(item => {
-                        detail.push({
-                          user_id: item,
-                          amount:
-                            parseInt(data?.amount) /
-                            (data?.masterDataSource?.length + 1),
-                        });
-                      });
-
-                      const result = await axiosClient.post('/share-bill', {
-                        order_id,
-                        detail,
-                      });
-                      data.result = result;
                       navigation.navigate('FinalShareBillDetail', {
                         data: data,
                       });
@@ -243,7 +269,7 @@ const SendRequestShare = (props: Props) => {
         <TouchableOpacity onPress={() => setRemind(true)}>
           <Center backgroundColor="#B5EAD8" padding={5} borderRadius={10}>
             <Text fontSize={16} fontWeight="700">
-              Nhắc nhở
+              Chia tiền
             </Text>
           </Center>
         </TouchableOpacity>
