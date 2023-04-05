@@ -38,6 +38,8 @@ const Index = (props: Props) => {
     fetchData();
   }, []);
 
+  console.log(data);
+
   return (
     <View style={styles.bgColor}>
       <HeaderComp title="Thông báo" TrashIcon />
@@ -50,7 +52,12 @@ const Index = (props: Props) => {
 
             return (
               <View marginX={3} marginBottom={3}>
-                <Pressable onPress={() => navigation.navigate('NotiShareBill')}>
+                <Pressable
+                  onPress={() => {
+                    if (item?.tag_model === 'share_bills') {
+                      navigation.navigate('NotiShareBill');
+                    }
+                  }}>
                   <View
                     p={3}
                     w={'100%'}

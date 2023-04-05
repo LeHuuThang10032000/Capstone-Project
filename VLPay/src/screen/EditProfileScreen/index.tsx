@@ -116,19 +116,6 @@ const Index = ({route}: any) => {
     setImage(image);
   };
 
-  // const openGallery = async () => {
-  //   launchImageLibrary(options, response => {
-  //     console.log(response);
-  //     if (response.didCancel) {
-  //       console.log('User cancelled image picker');
-  //     } else if (response.errorMessage) {
-  //       console.log('Error');
-  //     } else {
-  //       const source = {uri: response.uri};
-  //     }
-  //   });
-  // };
-
   return (
     <View>
       <HeaderBack title="Hồ sơ của bạn" />

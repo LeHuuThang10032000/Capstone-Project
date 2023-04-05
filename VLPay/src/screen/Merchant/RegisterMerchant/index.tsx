@@ -61,7 +61,6 @@ const RegisterMerchant = () => {
     setImage(image);
   };
   const onSubmit = async (data: any) => {
-    console.log(data);
     setLoading(true);
     const {email, location, name, products} = data;
     const formData = new FormData();
@@ -107,10 +106,6 @@ const RegisterMerchant = () => {
   const [store, setStore] = useState(null);
   const [noti, setNoti] = useState('');
   const [isLoading, setLoading] = useState(false);
-  console.log('===>', store);
-  console.log('status ===>', noti);
-
-  console.log(profile);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient

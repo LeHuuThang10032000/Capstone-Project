@@ -46,7 +46,6 @@ const DetailCart = ({route}: any) => {
   //Delete Cart
   const deleteCart = useCallback(async () => {
     const result = await axiosClient.delete('/cart');
-    console.log(result.data);
     getCart();
   }, []);
 
@@ -80,8 +79,6 @@ const DetailCart = ({route}: any) => {
             {/* Render list cart */}
             {totalItem > 0 ? (
               cart?.products.map(item => {
-                console.log(item);
-
                 return (
                   <HStack
                     justifyContent={'space-between'}
@@ -147,8 +144,6 @@ const DetailCart = ({route}: any) => {
                             array.push(element.id);
                           });
                           formData.append('add_ons[]', array);
-                          console.log('so dem', 1);
-
                           await axiosClient.post('/cart', formData, {
                             headers: {'content-type': 'multipart/form-data'},
                           });

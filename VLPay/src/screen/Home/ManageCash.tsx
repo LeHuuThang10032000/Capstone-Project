@@ -9,8 +9,6 @@ const ManageCash = (props: {
   credit: number;
   loading: boolean;
 }) => {
-  console.log(props);
-
   return (
     <VStack
       alignItems={'center'}

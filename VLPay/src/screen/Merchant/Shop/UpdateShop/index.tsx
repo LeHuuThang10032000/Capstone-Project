@@ -18,8 +18,6 @@ const UpdateShop = ({route}: any) => {
   const [isLoading, setLoading] = useState(false);
   const {store_id, image, cover_photo} = route.params;
 
-  console.log('MyStoreId', store_id);
-
   const {
     control,
     handleSubmit,

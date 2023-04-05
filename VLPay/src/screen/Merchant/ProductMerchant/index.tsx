@@ -39,7 +39,6 @@ const ProductMerchant = () => {
   const scrollViewRef = React.useRef<ScrollView>(null);
   const openGalleryRef = React.useRef<ActionSheetRef>(null);
   const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
-  console.log('data', data?.product);
 
   const navigation = useNavigation<MainStackNavigation>();
 
@@ -104,7 +103,6 @@ const ProductMerchant = () => {
   const handlePriceChange = (index, newPrice) => {
     const newAddons = [...addOns];
     let array = [];
-    console.log('newPrice', newPrice);
 
     newAddons.map(item => {
       if (item.id == index) {
@@ -119,7 +117,6 @@ const ProductMerchant = () => {
     });
 
     setAddons(array);
-    console.log('newAddons', newAddons);
   };
 
   const validatePrice = price => {
@@ -467,7 +464,6 @@ const ProductMerchant = () => {
                 formData.append('add_ons', JSON.stringify(_addOns));
               }
 
-              console.log(formData);
               const url = data?.isUpdated ? 'update' : 'create';
               const result = await axiosClient.post(
                 baseUrl + 'merchant/product/' + url,

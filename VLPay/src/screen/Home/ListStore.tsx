@@ -38,8 +38,6 @@ const ListStore = () => {
     }, 2000);
   }, []);
 
-  console.log(page);
-
   const fetchPosts = async () => {
     setIsLoading(true);
     const response = await axiosClient.get(

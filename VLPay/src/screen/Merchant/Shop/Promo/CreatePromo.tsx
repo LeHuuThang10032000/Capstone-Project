@@ -92,8 +92,6 @@ const CreatePromo = () => {
     if (!previous) {
       navigation.goBack();
     } else {
-      console.log(previous);
-
       setPage(previous);
     }
   };
@@ -102,6 +100,40 @@ const CreatePromo = () => {
     {key: '1', value: 'Không giới hạn (mặc định)'},
     {key: '2', value: 'Có giới hạn'},
   ];
+
+  const days = [
+    'Thứ Hai',
+    'Thứ Ba',
+    'Thứ Tư',
+    'Thứ Năm',
+    'Thứ Sáu',
+    'Thứ Bảy',
+    'Chủ Nhật',
+  ];
+  const months = [
+    'Tháng một',
+    'Tháng hai',
+    'Tháng ba',
+    'Tháng tư',
+    'Tháng năm',
+    'Tháng sáu',
+    'Tháng bảy',
+    'Tháng tám',
+    'Tháng chín',
+    'Tháng mười',
+    'Tháng mười một',
+    'Tháng mười hai',
+  ];
+
+  const locale = {
+    localize: {
+      day: n => days[n],
+      month: n => months[n],
+    },
+    formatLong: {
+      date: () => 'mm/dd/yyyy',
+    },
+  };
 
   const Element = ({icon, title, desc, onPress}) => {
     return (
@@ -416,7 +448,6 @@ const CreatePromo = () => {
                     />
                   </TouchableOpacity>
                   {/* <DatePicker date={date} onDateChange={setDate} /> */}
-                  {console.log('openDateStart 123:', openDateStart)}
 
                   <DatePicker
                     modal
@@ -426,7 +457,6 @@ const CreatePromo = () => {
                       setDateStart(date);
                       setStartDate(date.toISOString().slice(0, 10));
                       setOpenDateStart(false);
-                      // console.log('openDateStart', startDate);
                     }}
                     onCancel={() => {
                       setOpenDateStart(false);
@@ -622,7 +652,6 @@ const CreatePromo = () => {
                   } else {
                     formData.append('limit', 0);
                   }
-                  console.log(formData);
 
                   try {
                     if (data) {
@@ -924,7 +953,6 @@ const CreatePromo = () => {
                       setDateStart(date);
                       setStartDate(date.toISOString().slice(0, 10));
                       setOpenDateStart(false);
-                      // console.log('openDateStart', startDate);
                     }}
                     onCancel={() => {
                       setOpenDateStart(false);
@@ -956,6 +984,7 @@ const CreatePromo = () => {
                   <DatePicker
                     modal
                     open={openDateEnd}
+                    locale=""
                     date={dateEnd}
                     onConfirm={date => {
                       setEndDateError('');
@@ -971,21 +1000,72 @@ const CreatePromo = () => {
                     <UText style={{color: 'red'}}>{endDateError}</UText>
                   )}
                 </VStack>
-                <HStack
+                <UText style={{alignSelf: 'flex-start', marginLeft: 16}}>
+                  Thời gian áp dụng
+                </UText>
+                <VStack
                   width={'100%'}
                   justifyContent={'space-between'}
-                  style={{padding: 16}}
-                  borderBottomColor={'#E4E9F2'}
-                  borderBottomWidth={1}
-                  paddingBottom={2}
-                  marginBottom={0}>
-                  <VStack>
-                    <UText>Thời gian áp dụng</UText>
-                    <UText style={{fontSize: 12, color: '#818181'}}>
-                      Vào khung giờ mở cửa bán
-                    </UText>
-                  </VStack>
-                </HStack>
+                  style={{padding: 16}}>
+                  <UText>Giờ bắt đầu</UText>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setOpenStartTime(true);
+                    }}>
+                    <Input
+                      value={startTime ? startTime : 'Chọn ngày và thời gian'}
+                      borderRadius={10}
+                      isReadOnly={true}
+                    />
+                  </TouchableOpacity>
+
+                  <DatePicker
+                    modal
+                    mode="time"
+                    open={openStartTime}
+                    date={new Date()}
+                    onConfirm={date => {
+                      setStartTime(date.toTimeString().split(' ')[0]);
+                      setOpenStartTime(false);
+                    }}
+                    onCancel={() => {
+                      setOpenStartTime(false);
+                    }}
+                  />
+                  {startDateError && (
+                    <UText style={{color: 'red'}}>{startDateError}</UText>
+                  )}
+                </VStack>
+                <VStack
+                  width={'100%'}
+                  justifyContent={'space-between'}
+                  style={{padding: 16}}>
+                  <UText>Giờ kết thúc</UText>
+                  <TouchableOpacity onPress={() => setOpenEndTime(true)}>
+                    <Input
+                      value={endTime ? endTime : 'Chọn ngày và thời gian'}
+                      borderRadius={10}
+                      isReadOnly={true}
+                    />
+                  </TouchableOpacity>
+                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
+                  <DatePicker
+                    modal
+                    mode="time"
+                    open={openEndTime}
+                    date={new Date()}
+                    onConfirm={date => {
+                      setEndTime(date.toTimeString().split(' ')[0]);
+                      setOpenStartTime(false);
+                    }}
+                    onCancel={() => {
+                      setOpenEndTime(false);
+                    }}
+                  />
+                  {endDateError && (
+                    <UText style={{color: 'red'}}>{endDateError}</UText>
+                  )}
+                </VStack>
                 <VStack
                   width={'100%'}
                   justifyContent={'space-between'}
@@ -1070,7 +1150,6 @@ const CreatePromo = () => {
                   } else {
                     formData.append('limit', 0);
                   }
-                  console.log(formData);
 
                   try {
                     if (data) {

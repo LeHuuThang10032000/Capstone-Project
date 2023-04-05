@@ -81,6 +81,8 @@ const ChooseSharer = () => {
       const responseJson = await axiosClient.get('/friends');
       console.log('responseJson', responseJson);
 
+      console.log(responseJson.data.data);
+
       setFilteredDataSource(responseJson.data.data);
       setMasterDataSource(responseJson.data.data);
       setLoading(false);

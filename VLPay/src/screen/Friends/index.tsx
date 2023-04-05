@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-search-bar-filter-on-listview/
 
 // import React in our code
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {
   Center,
   Heading,
@@ -13,7 +13,7 @@ import {
   Skeleton,
   VStack,
 } from 'native-base';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import BackIcon from '../../assets/svg/left-arrow.svg';
 import SearchIcon from '../../assets/svg/search.svg';
 
@@ -29,10 +29,10 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import { MainStackNavigation } from '../../stack/Navigation';
-import { UserData } from '../../model/UserData';
+import {MainStackNavigation} from '../../stack/Navigation';
+import {UserData} from '../../model/UserData';
 import Lottie from 'lottie-react-native';
-import { axiosClient } from '../../components/apis/axiosClient';
+import {axiosClient} from '../../components/apis/axiosClient';
 import HeaderBack from '../../components/HeaderBack';
 
 type Props = {
@@ -69,7 +69,7 @@ const Index = () => {
         setLoading(false);
       })
       .catch(e => console.log(e));
-  }
+  };
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -114,8 +114,7 @@ const Index = () => {
     }
   };
 
-  const ItemView = ({ item }: any) => {
-
+  const ItemView = ({item}: any) => {
     return (
       // Flat List Item
 
@@ -125,7 +124,7 @@ const Index = () => {
         }}>
         <HStack alignItems="center" p="5" backgroundColor={'white'} marginY={1}>
           <Image
-            source={{ uri: 'https://picsum.photos/200/150' }}
+            source={{uri: item?.image}}
             alt="rduser"
             size="sm"
             borderRadius="50"
@@ -154,11 +153,11 @@ const Index = () => {
 
   const EmptyComponent = () => {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Lottie
           source={require('../../assets/lottie-file/not-found.json')}
           autoPlay={true}
-          style={{ width: 200, height: 200 }}
+          style={{width: 200, height: 200}}
         />
         <Heading size={'md'}>Không tìm thấy bạn bè nào.</Heading>
       </View>
@@ -171,7 +170,7 @@ const Index = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <HeaderBack title="Bạn bè trên VLPay" />
       <Center marginY={5}>
         <Input
@@ -202,7 +201,7 @@ const Index = () => {
           <Lottie
             source={require('../../assets/lottie-file/loading.json')}
             autoPlay={true}
-            style={{ width: 100, height: 100 }}
+            style={{width: 100, height: 100}}
           />
         </Center>
       ) : (

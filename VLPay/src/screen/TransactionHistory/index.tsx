@@ -60,6 +60,8 @@ const FirstRoute = () => {
       'https://zennoshop.cf/api/user/history-transaction?filter_key=days',
     );
     setHistory(result.data?.data?.data);
+    console.log(result.data?.data?.data);
+
     setLoading(false);
   }, []);
 
@@ -97,9 +99,11 @@ const FirstRoute = () => {
                     <TouchableOpacity
                       key={item.id}
                       onPress={() => {
-                        navigation.navigate('ShareBill', {
-                          data: item,
-                        });
+                        if (item?.type === 'R') {
+                          navigation.navigate('ShareBill', {
+                            data: item,
+                          });
+                        }
                       }}>
                       <HStack
                         my={3}

@@ -15,7 +15,6 @@ import {
 const PromoList = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
-  console.log('data', data);
 
   const [state, setState] = useState('RUNNING');
   const [items, setItems] = useState([]);
@@ -30,7 +29,6 @@ const PromoList = () => {
     );
     setItems(result.data.data);
     setState('RUNNING');
-    console.log('result', result);
   };
 
   useEffect(() => {

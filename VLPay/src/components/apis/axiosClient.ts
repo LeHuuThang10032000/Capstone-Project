@@ -22,7 +22,6 @@ axiosClient.interceptors.request.use(
       config.headers = {};
     }
 
-    // console.log('token:', token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -57,6 +56,5 @@ axiosClient.interceptors.response.use(
 );
 
 axiosClient.interceptors.request.use(request => {
-  // console.log('Starting Request', JSON.stringify(request, null, 2));
   return request;
 });

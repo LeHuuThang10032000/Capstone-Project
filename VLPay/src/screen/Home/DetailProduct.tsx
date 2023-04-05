@@ -46,15 +46,6 @@ const DetailProduct = ({route, productId}: any) => {
   const [totalItem, setTotalItem] = useState(0);
   const [isLoading, setLoading] = useState(false);
 
-  console.log('TOTAL', totalItem);
-
-  console.log(checkedItems);
-  console.log('QUANTITY: ', quantity);
-  console.log('Price: ', price);
-  console.log('Product ID:', id);
-  console.log('Store ID:', store_id);
-  console.log('Current Cart:', cart);
-
   //Get detail product
   const getDetailProduct = useCallback(async () => {
     setLoading(true);
@@ -95,7 +86,6 @@ const DetailProduct = ({route, productId}: any) => {
     const result = await axiosClient.post('/cart', formData, {
       headers: {'content-type': 'multipart/form-data'},
     });
-    console.log(result.data);
     navigation.goBack();
   }, [quantity, checkedItems]);
 

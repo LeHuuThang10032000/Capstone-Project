@@ -45,7 +45,6 @@ const FirstRoute = () => {
     }, 2000);
   }, []);
 
-  // console.log('===>', history);
   console.log('History order:', history);
 
   const getOrder = useCallback(async () => {

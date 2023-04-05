@@ -164,7 +164,7 @@ const Index = (props: Props) => {
                       formData.append('cash', data.money);
                       formData.append('phone', data.phone);
                       formData.append('message', data.message);
-
+                      formData.append('payment_type', 'T');
                       await axios.post(
                         'https://zennoshop.cf/api/user/checkPassword',
                         {phone: data.current_user, password: value},
