@@ -49,7 +49,6 @@ class TransactionController extends Controller
             'message' => 'max:255',
             'payment_type' => 'required|in:T,S',
             'share_id' => 'required_if:payment_type,==,S|integer',
-            'wallet_type' => 'in:credit,debit',
         ], [
             'phone.phone' => 'Số điện thoại không đúng định dạng'
         ]);
@@ -63,6 +62,10 @@ class TransactionController extends Controller
 
             $user = Auth::user();
             $userWallet = $user->wallet;
+
+            if($request->phone == $user->phone) {
+                return ApiResponse::failureResponse('Bạn không thể tự chuyển tiền cho bản thân');
+            }
 
             if($userWallet->balance < $request->cash) {
                 return ApiResponse::failureResponse('Vượt quá số dư trong ví');
@@ -125,7 +128,7 @@ class TransactionController extends Controller
                 ]);
 
                 $bill = ShareBill::where('id', $request->share_id)->where('shared_id', Auth::user()->id)->first();
-                $bill->payment_type = $request->wallet_type;
+                $bill->payment_type = 'wallet';
                 $bill->status = 'paid';
                 $bill->message = $message;
                 $bill->transaction_id = $transaction->id;

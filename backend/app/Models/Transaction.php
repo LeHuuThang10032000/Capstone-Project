@@ -25,6 +25,7 @@ class Transaction extends Model
         "order_id",
         "type",
         "share_id",
+        "wallet_type"
     ];
 
     protected $hidden = [
