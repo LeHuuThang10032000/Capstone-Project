@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import HeaderBack from '../../../components/HeaderBack';
 import {Center, Heading, HStack, VStack, View} from 'native-base';
 import {
@@ -36,6 +36,21 @@ const Index = (props: Props) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [phoneError, setPhoneError] = useState('');
   const [isLoading, setLoading] = useState(false);
+
+  const [profile, setProfile] = useState({});
+
+  console.log(profile.data?.phone);
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(result.data);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const navigation = useNavigation<MainStackNavigation>();
   useEffect(() => {
@@ -134,7 +149,7 @@ const Index = (props: Props) => {
         }>
         <View style={{backgroundColor: 'white'}}>
           <VStack alignItems={'center'}>
-            <UText style={{marginBottom: 5, marginTop: 15}}>
+            <UText style={{marginBottom: 3, marginTop: 15}}>
               Nhập mật khẩu
             </UText>
             <View
@@ -199,11 +214,16 @@ const Index = (props: Props) => {
                 //   onCodeChanged={() => setIsError(false)}
               />
             </View>
-            {/* <TouchableOpacity>
-              <UText style={{color: '#3495CB', fontSize: 14, marginTop: 5}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ChangePassword', {
+                  phone: profile.data?.phone,
+                });
+              }}>
+              <UText style={{color: '#3495CB', fontSize: 14, paddingTop: 10}}>
                 Quên mật khẩu
               </UText>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </VStack>
         </View>
       </View>
