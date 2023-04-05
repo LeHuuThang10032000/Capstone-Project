@@ -57,6 +57,7 @@ import SendRequestShare from '../screen/ShareBill/SendRequestShare';
 import NotiShareBill from '../screen/Notification/NotiShareBill';
 import PromoCode from '../screen/DetailOrder/PromoCode';
 import FinalShareBillDetail from '../screen/ShareBill/DetailBill/finalShareBillDetail';
+import PaymentTypes from '../screen/PaymentOrder/PaymentTypes';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -266,5 +267,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'FinalShareBillDetail',
     component: FinalShareBillDetail,
+  },
+  {
+    name: 'PaymentTypes',
+    component: PaymentTypes,
   },
 ];

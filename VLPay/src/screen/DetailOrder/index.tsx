@@ -368,7 +368,7 @@ const DetailOrder = ({route}: any) => {
             <View paddingY={5} paddingX={5}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('PaymentOrder', {
+                  navigation.navigate('PaymentTypes', {
                     total_price: cart?.total_price,
                     store_id: store_id,
                     promo_id: radioBox,

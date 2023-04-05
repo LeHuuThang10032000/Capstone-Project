@@ -99,7 +99,9 @@ const FirstRoute = () => {
                     <TouchableOpacity
                       key={item.id}
                       onPress={() => {
-                        if (item?.type === 'R') {
+                        console.log(item?.type);
+
+                        if (item?.type === 'O') {
                           navigation.navigate('ShareBill', {
                             data: item,
                           });

@@ -33,8 +33,15 @@ const ShareBill = () => {
 
       case 'taken':
         return 'hoàn thành';
+
+      case 'pending':
+        return 'đang chờ được hoàn thành';
+
+      case 'pending':
+        return 'đang chờ được hoàn thành';
     }
   };
+
   return (
     <View flex={1} backgroundColor="#ffffff">
       <HeaderBack title="Chi tiết giao dịch" />
@@ -127,6 +134,10 @@ const ShareBill = () => {
         </HStack>
       </Center>
       <TouchableOpacity
+        disabled={
+          data?.order?.status === 'canceled' ||
+          data?.order?.status === 'pending'
+        }
         onPress={() =>
           navigation.navigate('ChooseSharer', {
             data: data,
@@ -136,6 +147,12 @@ const ShareBill = () => {
           borderRadius={8}
           backgroundColor="#B5EAD8"
           margin={5}
+          style={
+            data?.order?.status === 'canceled' ||
+            data?.order?.status === 'pending'
+              ? {backgroundColor: '#D1D1D1'}
+              : {}
+          }
           padding={5}>
           <Text fontSize={16} fontWeight="bold">
             Chia tiền
