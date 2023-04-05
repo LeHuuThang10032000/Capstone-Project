@@ -124,9 +124,14 @@ const Index = () => {
       </View> */}
 
       <View style={{marginHorizontal: 20, marginVertical: 10}}>
-        {/* <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
-          Xã hội của tôi
-        </Text> */}
+        <Text
+          style={{
+            marginVertical: 3,
+            fontFamily: 'Poppins-Regular',
+            color: '#000',
+          }}>
+          My social
+        </Text>
         <View style={styles.wrapperButton}>
           <TouchableOpacity
             style={styles.button}
@@ -145,6 +150,14 @@ const Index = () => {
       </View>
 
       <View style={{marginHorizontal: 20, marginVertical: 20}}>
+        <Text
+          style={{
+            marginVertical: 3,
+            fontFamily: 'Poppins-Regular',
+            color: '#000',
+          }}>
+          Other
+        </Text>
         <View style={styles.wrapperButton}>
           <TouchableOpacity
             style={styles.button}

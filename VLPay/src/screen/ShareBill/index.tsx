@@ -76,7 +76,7 @@ const ShareBill = () => {
         </HStack>
         <VStack w="100%">
           <HStack justifyContent="space-between">
-            <Text fontSize={16}>Thời gian thành toán</Text>
+            <Text fontSize={16}>Thời gian thanh toán</Text>
             <Text fontSize={16} fontWeight="bold">
               {data?.created_at}
             </Text>
