@@ -925,7 +925,7 @@ class UserController extends Controller
             }
 
             DB::commit();
-            return ApiResponse::successResponse($bill);
+            return ApiResponse::successResponse(null);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
