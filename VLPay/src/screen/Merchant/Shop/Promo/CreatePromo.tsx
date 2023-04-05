@@ -52,7 +52,7 @@ const CreatePromo = () => {
   const [openDateStart, setOpenDateStart] = useState(false);
   const [openDateEnd, setOpenDateEnd] = useState(false);
 
-  const [code, setCode] = useState(Math.random().toString(36));
+  const [code, setCode] = useState(Math.random().toString(36).substring(2, 9));
   const [startDate, setStartDate] = useState(
     data ? data.start_date : new Date().toISOString().slice(0, 10),
   );
