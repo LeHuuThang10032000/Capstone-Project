@@ -20,6 +20,7 @@ export interface Order {
   taken_at: string;
   cancel_reason: string;
   product_count: number;
+  product_quantity: number;
   user: {
     id: number;
     f_name: string;

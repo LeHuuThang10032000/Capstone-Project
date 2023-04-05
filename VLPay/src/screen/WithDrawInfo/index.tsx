@@ -18,6 +18,7 @@ import {formatCurrency} from '../../components/helpers/formatNum';
 import {UText} from '../../components/UText';
 import {axiosClient} from '../../components/apis/axiosClient';
 import Toast from 'react-native-toast-message';
+import moment from 'moment';
 
 interface WithDraw {
   amount: string;
@@ -155,7 +156,9 @@ const WithDrawInfo = (props: any) => {
             width={'100%'}
             marginBottom={5}>
             <TText style={{fontSize: 18}}>Ngày giao dịch:</TText>
-            <TText style={{fontSize: 18, opacity: 0.31}}>{day}</TText>
+            <TText style={{fontSize: 18, opacity: 0.31}}>
+              {moment(day).format('h:mm [-] DD/MM/YYYY')}
+            </TText>
           </HStack>
           <View
             style={{
@@ -177,7 +180,7 @@ const WithDrawInfo = (props: any) => {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 backgroundColor: '#B5EAD8',
-                paddingVertical: 10,
+                padding: 20,
                 borderRadius: 8,
               }}>
               <TText style={{fontWeight: '700'}}>Xong</TText>
@@ -195,7 +198,7 @@ const WithDrawInfo = (props: any) => {
             paddingY={3}
             style={{elevation: 2}}>
             <TText style={{fontSize: 24, fontWeight: '700'}}>Ví của bạn</TText>
-            <TText style={{fontWeight: '700', color: '#8C8C8C'}}>
+            <TText style={{fontWeight: '700', color: '#8C8C8C', fontSize: 16}}>
               Số tiền: 10.000.000đ
             </TText>
           </VStack>
@@ -278,7 +281,7 @@ const WithDrawInfo = (props: any) => {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 backgroundColor: '#B5EAD8',
-                paddingVertical: 10,
+                padding: 20,
                 borderRadius: 8,
               }}>
               <TText style={{fontWeight: '700'}}>Gửi yêu cầu</TText>
