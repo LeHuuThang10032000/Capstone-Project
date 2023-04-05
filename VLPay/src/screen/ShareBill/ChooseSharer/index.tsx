@@ -48,28 +48,7 @@ const ChooseSharer = () => {
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [generalError, setGeneralError] = useState('');
   const [visibleWarning, setVisibleWarning] = useState(false);
-  console.log(checkedItems);
-
-  //   const onPress = useCallback(
-  //     (
-  //       email: string,
-  //       picture: string,
-  //       title: string,
-  //       first: string,
-  //       last: string,
-  //       phone: string,
-  //     ) => {
-  //       navigation.navigate('DetailFriend', {
-  //         email: email,
-  //         picture: picture,
-  //         title: title,
-  //         first: first,
-  //         last: last,
-  //         phone: phone,
-  //       });
-  //     },
-  //     [],
-  //   );
+  const [profile, setProfile] = useState({});
 
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
@@ -79,12 +58,15 @@ const ChooseSharer = () => {
   const fetchData = async () => {
     try {
       const responseJson = await axiosClient.get('/friends');
-      console.log('responseJson', responseJson);
-
-      console.log(responseJson.data.data);
-
-      setFilteredDataSource(responseJson.data.data);
-      setMasterDataSource(responseJson.data.data);
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/get-profile',
+      );
+      const _array = responseJson.data.data.filter(item => {
+        return item?.id != result?.data?.data?.id;
+      });
+      setProfile(result?.data?.data);
+      setFilteredDataSource(_array);
+      setMasterDataSource(_array);
       setLoading(false);
     } catch (error) {
       Alert.alert(error.error);
@@ -211,6 +193,10 @@ const ChooseSharer = () => {
         <TouchableOpacity
           onPress={() => {
             if (checkedItems.length >= 1) {
+              if (!checkedItems.includes(profile?.id)) {
+                checkedItems.push(profile?.id);
+              }
+
               data.checkedItems = checkedItems;
               navigation.navigate('DetailBill', {
                 data: data,
