@@ -19,6 +19,7 @@ use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
 use Helper;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -548,6 +549,7 @@ class UserController extends Controller
             'note' => 'nullable',
             'promocode_id' => 'nullable|integer|exists:' . app(Promocode::class)->getTable() . ',id',
             'message' => 'nullable',
+            'wallet_type' => 'in:credit,debit'
         ], [
             'store_id.exists' => 'Cửa hàng không tồn tại',
             'promocode_id.exists' => 'Mã giảm giá không tồn tại'
@@ -649,6 +651,17 @@ class UserController extends Controller
             $total = $order->order_total - $order->discount_amount;
 
             $merchant = $store->user;
+            $userWallet = $user->wallet;
+            $merchantWallet = $merchant->wallet;
+
+            if($request->wallet_type == 'debit') {
+                if($total > $userWallet->balance)
+                    return ApiResponse::failureResponse('Số dư trong ví không đủ để thanh toán đơn hàng');
+            } else {
+                if($total > $userWallet->credit_limit)
+                    return ApiResponse::failureResponse('Số dư trong ví tín dụng không đủ để thanh toán đơn hàng');
+            }
+
             $transaction = Transaction::create([
                 'code' => Helper::generateNumber(),
                 'amount' => $total,
@@ -658,23 +671,10 @@ class UserController extends Controller
                 'type' => 'O',
                 'title' => 'Thanh toán đơn hàng ' . $store->name,
                 'message' => 'Thanh toán ' . number_format($total) . 'đ cho đơn hàng ' . $order->order_code,
+                'wallet_type' => $request->wallet_type
             ]);
 
-            $userWallet = $user->wallet;
-            $merchantWallet = $merchant->wallet;
-            if ($userWallet->balance < $total) {
-                // trừ tiền vào ví tín dụng của user
-                $userOpenBalance = $userWallet->credit_limit;
-                $userWallet->credit_limit = $userWallet->credit_limit - $total;
-                $userCloseBalance = $userWallet->credit_limit;
-
-                TransactionDetail::create([
-                    'transaction_id' => $transaction->id,
-                    'user_id' => $user->id,
-                    'open_balance' => $userOpenBalance,
-                    'close_balance' => $userCloseBalance,
-                ]);
-            } else {
+            if($request->wallet_type == 'debit') {
                 // trừ tiền vào ví của user
                 $userOpenBalance = $userWallet->balance;
                 $userWallet->balance = $userWallet->balance - $total;
@@ -686,7 +686,20 @@ class UserController extends Controller
                     'open_balance' => $userOpenBalance,
                     'close_balance' => $userCloseBalance,
                 ]);
+            } else {
+                // trừ tiền vào ví tín dụng của user
+                $userOpenBalance = $userWallet->credit_limit;
+                $userWallet->credit_limit = $userWallet->credit_limit - $total;
+                $userCloseBalance = $userWallet->credit_limit;
+
+                TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'user_id' => $user->id,
+                    'open_balance' => $userOpenBalance,
+                    'close_balance' => $userCloseBalance,
+                ]);
             }
+
             $merchantOpenBalance = $merchantWallet->balance;
             $merchantWallet->balance = $merchantWallet->balance + $total;
             $merchantCloseBalance = $merchantWallet->balance;
@@ -845,7 +858,7 @@ class UserController extends Controller
                 $orders = $orders->offset($offset)->limit($limit);
             }
             $totalOrders = $orders->count();
-            $orders = $orders->get();
+            $orders = $orders->orderBy('created_at', 'desc')->get();
 
             foreach($orders as $order) {
                 $order['store_name'] = $order->store->name;
@@ -988,12 +1001,11 @@ class UserController extends Controller
         }
     }
 
-    public function getShareBill(Request $request)
+    public function getShareBill(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'limit' => 'required|integer',
             'page' => 'required|integer',
-            'status' => ''
         ]);
 
         if ($validate->fails()) {
@@ -1003,16 +1015,46 @@ class UserController extends Controller
         try {
             $user = Auth::user();
 
-            $bills = ShareBill::select('id', 'created_at', 'order_id', 'shared_id')
-                ->with('order.user:id,f_name')
+            $bills = DB::table('share_bills')
+                ->select('share_bills.id', 'share_bills.created_at', 'share_bills.order_id', DB::raw("CONCAT('Hóa đơn chia tiền từ ', users.f_name) AS title"))
+                ->leftJoin('orders', 'orders.id', '=', 'share_bills.order_id')
+                ->leftJoin('users', 'users.id', '=', 'orders.user_id')
                 ->where('shared_id', $user->id)
-                ->where('status', 'pending')
+                ->where('share_bills.status', 'pending')
                 ->where('is_owner', false)
                 ->get();
 
-            foreach($bills as $bill) {
-                $bill['title'] = 'Hóa đơn chia tiền từ ' . $bill->order->user->f_name;
-            }
+            return ApiResponse::successResponse($bills);
+        } catch (\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
+
+    public function getPaidShareBill(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'limit' => 'required|integer',
+            'page' => 'required|integer',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $user = Auth::user();
+
+            $bills = DB::table('share_bills')
+                ->select('share_bills.id', 'transactions.created_at', 'share_bills.transaction_id', DB::raw("CONCAT(users.f_name, ' đã trả ', FORMAT(transactions.amount, 0), 'đ') AS title"))
+                ->leftJoin('transactions', 'transactions.id', '=', 'share_bills.transaction_id')
+                ->leftJoin('users', 'users.id', '=', 'transactions.from_id')
+                ->join('transaction_details', function (JoinClause $join) use ($user) {
+                    $join->on('transaction_details.transaction_id', '=', 'transactions.id')
+                            ->where('user_id', $user->id);
+                })
+                ->where('owner_id', $user->id)
+                ->where('share_bills.status', 'paid')
+                ->get();
 
             return ApiResponse::successResponse($bills);
         } catch (\Exception $e) {
