@@ -656,9 +656,11 @@ class UserController extends Controller
 
             if($request->wallet_type == 'debit') {
                 if($total > $userWallet->balance)
+                    DB::rollBack();
                     return ApiResponse::failureResponse('Số dư trong ví không đủ để thanh toán đơn hàng');
             } else {
                 if($total > $userWallet->credit_limit)
+                    DB::rollBack();
                     return ApiResponse::failureResponse('Số dư trong ví tín dụng không đủ để thanh toán đơn hàng');
             }
 
@@ -910,6 +912,7 @@ class UserController extends Controller
                     'status' => ($detail['user_id'] == $user->id) ? null : 'pending',
                     'payment_type' => null,
                     'is_owner' => ($detail['user_id'] == $user->id) ? true : false,
+                    'owner_id' => $user->id,
                 ]);
 
                 if($detail['user_id'] != $user->id) {

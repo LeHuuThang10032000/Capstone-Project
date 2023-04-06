@@ -55,6 +55,10 @@ Route::group(['middleware' => ['auth', 'role:organiser']], function () {
         Route::post('deny', [OrganiserController::class, 'denyCredit'])->name('deny');
     });
 
+    Route::group(['prefix' => 'store', 'as' => 'organiser.store.'], function () {
+        Route::get('', [OrganiserController::class, 'getStores'])->name('index');
+    });
+
     Route::group(['prefix' => 'transaction', 'as' => 'organiser.transaction.'], function () {
         Route::get('', [OrganiserController::class, 'getListTransactions'])->name('index');
     });

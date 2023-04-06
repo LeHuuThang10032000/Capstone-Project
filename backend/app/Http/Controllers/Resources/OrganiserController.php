@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Resources;
 use App\Http\Controllers\Controller;
 use App\Models\CreditRequest;
 use App\Models\Notification;
+use App\Models\Promocode;
 use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
@@ -292,5 +293,11 @@ class OrganiserController extends Controller
     {
         $transactions = Transaction::paginate(10);
         return view('transactions.index', compact('transactions'));
+    }
+
+    public function getStores()
+    {
+        $stores = Store::with('user')->where('status', 'approved')->withCount('orders')->paginate(10);
+        return view('stores.index', compact('stores'));
     }
 }
