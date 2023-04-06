@@ -10,7 +10,10 @@ import {axiosClient} from '../../components/apis/axiosClient';
 
 const PaymentOrder = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {total_price, store_id, promo_id, payment_type} = route.params;
+  const {total_price, store_id, promo_id, payment_type, image, name} =
+    route.params.data;
+  console.log(route.params);
+
   console.log(total_price);
 
   const [text, onChangeText] = React.useState('');
@@ -24,6 +27,8 @@ const PaymentOrder = ({route}: any) => {
       formData.append('promocode_id', promo_id);
     }
     try {
+      console.log(formData);
+
       const result = await axiosClient.post('/order/create-order', formData, {
         headers: {'content-type': 'multipart/form-data'},
       });
@@ -45,14 +50,14 @@ const PaymentOrder = ({route}: any) => {
         <Divider position={'absolute'} top={90} />
         <Image
           source={{
-            uri: 'https://spoonacular.com/recipeImages/579247-556x370.jpg',
+            uri: image,
           }}
           width={100}
           height={100}
           borderRadius={50}
           alt="food"
         />
-        <Text style={{marginTop: 10, fontSize: 16}}>Kios Số 10</Text>
+        <Text style={{marginTop: 10, fontSize: 16}}>{name}</Text>
         <Text
           borderBottomWidth={1}
           borderBottomColor="#FFA0A7"

@@ -43,6 +43,7 @@ const DetailBill = ({route}: any) => {
   const [generalError, setGeneralError] = useState('');
   const [isSuccess, setSuccess] = useState(false);
   const [friends, setFriends] = useState(data?.checkedItems);
+  console.log(data);
 
   const fetchData = async () => {
     try {
@@ -56,7 +57,11 @@ const DetailBill = ({route}: any) => {
         if (item.id !== result?.data?.data?.id) return item;
       });
 
-      setMasterDataSource(_friends);
+      const __friends = _friends.filter(item =>
+        data.checkedItems.includes(item.id),
+      );
+
+      setMasterDataSource(__friends);
       setLoading(false);
     } catch (error) {
       Alert.alert(error.error);
@@ -131,39 +136,6 @@ const DetailBill = ({route}: any) => {
                     {profile.f_name} (Me)
                   </Text>
                 </HStack>
-                <HStack alignItems={'center'}>
-                  <Input
-                    width={100}
-                    style={{borderWidth: 0, color: 'black'}}
-                    borderColor={'transparent'}
-                    keyboardType="number-pad"
-                    onChangeText={text => {
-                      friends.map((item, key) => {
-                        if (item?.user_id) {
-                          if (item.user_id === profile.id) {
-                            const _item = friends;
-                            _item[key] = {
-                              user_id: profile.id,
-                              amount: text,
-                            };
-                            setFriends(_item);
-                          }
-                        } else {
-                          if (item === profile.id) {
-                            const _item = friends;
-                            _item[key] = {
-                              user_id: item,
-                              amount: text,
-                            };
-                            setFriends(_item);
-                          }
-                        }
-                      });
-                      console.log(friends);
-                    }}
-                  />
-                  <UText>đ</UText>
-                </HStack>
               </HStack>
               {masterDataSource.map(item => {
                 return (
@@ -196,27 +168,40 @@ const DetailBill = ({route}: any) => {
                         ).toLocaleString()}
                         keyboardType="number-pad"
                         onChangeText={text => {
-                          friends.map((__item, key) => {
-                            if (__item?.user_id) {
-                              if (__item.user_id === item.id) {
-                                const _item = friends;
-                                _item[key] = {
-                                  user_id: item.id,
-                                  amount: text,
-                                };
-                                setFriends(_item);
+                          if (parseInt(text) > 0 || text === '') {
+                            let money = 0;
+                            friends.map((__item, key) => {
+                              if (__item?.user_id) {
+                                if (__item.user_id === item.id) {
+                                  const _item = friends;
+                                  _item[key] = {
+                                    user_id: item.id,
+                                    amount: text,
+                                  };
+                                  money += parseInt(text);
+                                  setFriends(_item);
+                                }
+                              } else {
+                                if (__item === item.id) {
+                                  const _item = friends;
+                                  _item[key] = {
+                                    user_id: __item,
+                                    amount: text,
+                                  };
+                                  setFriends(_item);
+                                  money += parseInt(text);
+                                }
                               }
-                            } else {
-                              if (__item === item.id) {
-                                const _item = friends;
-                                _item[key] = {
-                                  user_id: __item,
-                                  amount: text,
-                                };
-                                setFriends(_item);
+
+                              if (money > data.amount) {
+                                Alert.alert(
+                                  'Số tiền chia không được vượt quá số tiền trong hoá đơn',
+                                );
                               }
-                            }
-                          });
+                            });
+                          } else {
+                            Alert.alert('Số tiền chia không không hợp lệ');
+                          }
                         }}
                       />
                       <UText>đ</UText>

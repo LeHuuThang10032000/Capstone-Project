@@ -174,9 +174,14 @@ const DetailCart = ({route}: any) => {
           {totalItem > 0 ? (
             <View paddingY={5} paddingX={5}>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('DetailOrder', {store_id: store_id})
-                }>
+                onPress={() => {
+                  navigation.navigate('DetailOrder', {
+                    store_id: store_id,
+                    phone: cart?.store.phone,
+                    name: cart?.store.name,
+                    image: cart?.store.image,
+                  });
+                }}>
                 <View
                   justifyContent="center"
                   alignItems={'center'}

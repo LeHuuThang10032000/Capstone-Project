@@ -46,7 +46,23 @@ const OrderProcess = ({route}: any) => {
   console.log(order?.order_code);
 
   //Taken
-  const takenOrder = () => {
+  const takenOrder = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('order_id', order_id);
+      const result = await axiosClient.post('/order/taken-order', formData, {
+        headers: {'content-type': 'multipart/form-data'},
+      });
+      console.log(result.data);
+      Toast.show({
+        type: 'success',
+        text1: 'Thành công',
+        text2: 'Bạn đã hủy đơn hàng thành công!',
+      });
+      navigation.navigate('Home');
+    } catch (error) {
+      console.log(error);
+    }
     Toast.show({
       type: 'success',
       text1: 'Thành công',

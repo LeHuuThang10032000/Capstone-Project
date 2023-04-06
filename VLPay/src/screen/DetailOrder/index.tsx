@@ -50,7 +50,7 @@ const DetailOrder = ({route}: any) => {
 
   const {store_id, phone, name, image} = route.params;
 
-  console.log(name);
+  console.log(route.params);
 
   const navigation = useNavigation<MainStackNavigation>();
   const [cart, setCart] = useState<myCart>();
@@ -374,6 +374,8 @@ const DetailOrder = ({route}: any) => {
                     total_price: cart?.total_price,
                     store_id: store_id,
                     promo_id: radioBox,
+                    image: image,
+                    name: name,
                   })
                 }>
                 <View
