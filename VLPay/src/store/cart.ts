@@ -77,6 +77,20 @@ export interface myCart {
   products: Product[];
   total_quantity: number;
   total_price: string;
+  store: {
+    id: number;
+    user_id: number;
+    name?: string;
+    phone?: string;
+    status: string;
+    email: string;
+    selling_products: string;
+    location: string;
+    image: string;
+    deny_reason: string;
+    wallet_balance: number;
+    cover_photo: string;
+  };
 }
 
 export interface HistoryOrder {

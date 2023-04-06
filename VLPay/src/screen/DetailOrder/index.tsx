@@ -48,7 +48,9 @@ const DetailOrder = ({route}: any) => {
     },
   });
 
-  const {store_id} = route.params;
+  const {store_id, phone, name, image} = route.params;
+
+  console.log(name);
 
   const navigation = useNavigation<MainStackNavigation>();
   const [cart, setCart] = useState<myCart>();
@@ -206,7 +208,7 @@ const DetailOrder = ({route}: any) => {
                   </FormControl.Label>
                   <Input
                     w="90%"
-                    value={profile?.phone}
+                    value={phone}
                     style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                     rightElement={
                       <TouchableOpacity style={{paddingRight: 10}}>
@@ -229,7 +231,7 @@ const DetailOrder = ({route}: any) => {
                   </FormControl.Label>
                   <Input
                     w="90%"
-                    value={profile?.f_name}
+                    value={name}
                     style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                   />
                 </FormControl>
