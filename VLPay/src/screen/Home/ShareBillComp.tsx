@@ -4,10 +4,18 @@ import {Divider, HStack, VStack} from 'native-base';
 import MustPay from '../../assets/svg/must-pay.svg';
 import Received from '../../assets/svg/received.svg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {formatCurrency} from '../../components/helper';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
-type Props = {};
+type Props = {
+  need_pay: number;
+  paid_bill: number;
+};
 
 const ShareBillComp = (props: Props) => {
+  const navigation = useNavigation<MainStackNavigation>();
+
   return (
     <View
       style={{
@@ -22,10 +30,10 @@ const ShareBillComp = (props: Props) => {
           <MustPay />
           <VStack paddingLeft={3}>
             <Text>Số tiền phải trả:</Text>
-            <Text>100.000đ</Text>
+            <Text>{formatCurrency((props.need_pay ?? 0).toString())}đ</Text>
           </VStack>
         </HStack>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ListShareBill')}>
           <View
             style={{
               backgroundColor: '#FEB7B1',
@@ -46,7 +54,7 @@ const ShareBillComp = (props: Props) => {
           <Received />
           <VStack paddingLeft={3}>
             <Text>Số tiền đã nhận:</Text>
-            <Text>200.000đ</Text>
+            <Text>{formatCurrency((props.paid_bill ?? 0).toString())}đ</Text>
           </VStack>
         </HStack>
         <TouchableOpacity>

@@ -59,6 +59,7 @@ import PromoCode from '../screen/DetailOrder/PromoCode';
 import FinalShareBillDetail from '../screen/ShareBill/DetailBill/finalShareBillDetail';
 import PaymentTypes from '../screen/PaymentOrder/PaymentTypes';
 import DetailTransaction from '../screen/DetailTransaction';
+import ListShareBill from '../screen/ListShareBill';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -276,5 +277,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'DetailTransaction',
     component: DetailTransaction,
+  },
+  {
+    name: 'ListShareBill',
+    component: ListShareBill,
   },
 ];

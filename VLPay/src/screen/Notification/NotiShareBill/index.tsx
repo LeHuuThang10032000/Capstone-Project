@@ -1,6 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {
   Center,
+  FormControl,
   Heading,
   HStack,
   Image,
@@ -21,11 +22,14 @@ import {axiosClient} from '../../../components/apis/axiosClient';
 import {baseUrl} from '../../../components/apis/baseUrl';
 import {UText} from '../../../components/UText';
 import Icons from '../../../components/Icons';
+import {Controller, useForm} from 'react-hook-form';
 
-type Props = {};
+interface Share {
+  message: string;
+}
 
-const NotiShareBill = (props: Props) => {
-  const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
+const NotiShareBill = ({route}: any) => {
+  const {order_id} = route.params;
   const [masterDataSource, setMasterDataSource] = useState([]);
   const navigation = useNavigation<MainStackNavigation>();
   const {width} = useWindowDimensions();
@@ -33,18 +37,25 @@ const NotiShareBill = (props: Props) => {
   const [DetailBill, setDetailBill] = useState([]);
   const [remind, setRemind] = useState(false);
   const [note, setNote] = useState('');
-  console.log('data', data);
-  console.log(123456789);
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm<Share>({
+    defaultValues: {
+      message: '',
+    },
+  });
 
   const fetchData = async () => {
     try {
       const billDetail = await axiosClient.get(
-        baseUrl + 'share-bill/detail?order_id=' + data.tag_model_id,
+        'share-bill/detail?order_id=' + order_id,
       );
       setDetailBill(billDetail?.data?.data);
       setMasterDataSource(billDetail?.data?.data);
     } catch (error) {
-      Alert.alert(error.error);
+      console.log(error);
     }
   };
 
@@ -139,35 +150,50 @@ const NotiShareBill = (props: Props) => {
               </TouchableOpacity>
             </HStack>
             <View style={{marginHorizontal: 16, marginTop: 20}}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  position: 'absolute',
-                  top: -18,
-                  left: 10,
-                  width: 70,
-                  height: 20,
-                  zIndex: 1000,
+              <Controller
+                control={control}
+                rules={{
+                  required: 'Không được để trống',
                 }}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <FormControl isInvalid={errors.message !== undefined}>
+                    <View
+                      style={{
+                        backgroundColor: 'white',
+                        position: 'absolute',
+                        top: -18,
+                        left: 10,
+                        width: 70,
+                        height: 20,
+                        zIndex: 1000,
+                      }}
+                    />
+                    <UText
+                      style={{
+                        position: 'absolute',
+                        top: -12,
+                        left: 10,
+                        backgroundColor: 'transparent',
+                        zIndex: 1000,
+                      }}>
+                      Tin nhắn
+                    </UText>
+                    <TextArea
+                      value={value}
+                      placeholder="Nhập nhắc nhở"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      autoCompleteType={undefined}
+                      maxLength={50}
+                    />
+                    <FormControl.ErrorMessage>
+                      {errors.message?.message}
+                    </FormControl.ErrorMessage>
+                  </FormControl>
+                )}
+                name="message"
               />
-              <UText
-                style={{
-                  position: 'absolute',
-                  top: -12,
-                  left: 10,
-                  backgroundColor: 'transparent',
-                  zIndex: 1000,
-                }}>
-                Tin nhắn
-              </UText>
-              <TextArea
-                value={note}
-                placeholder="Nhập nhắc nhở"
-                onChangeText={text => {
-                  setNote(text);
-                }}
-                autoCompleteType={undefined}
-              />
+
               <View padding={5}>
                 <TouchableOpacity onPress={async () => {}}>
                   <Center
