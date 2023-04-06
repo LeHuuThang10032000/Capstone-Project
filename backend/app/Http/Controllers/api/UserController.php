@@ -346,7 +346,7 @@ class UserController extends Controller
                 'products' => $products,
                 'total_quantity' => $totalQuantity,
                 'total_price' => $totalPrice,
-                'store_id' => $carts->first()->store_id ?? '',
+                'store' => $carts->first()->store ?? '',
             ];
 
             return ApiResponse::successResponse($data);
