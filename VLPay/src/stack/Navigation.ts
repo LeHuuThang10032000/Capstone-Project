@@ -127,13 +127,14 @@ export type MainStackParamList = {
   ChooseSharer: undefined;
   DetailBill: undefined;
   SendRequestShare: undefined;
-  NotiShareBill: undefined;
+  NotiShareBill: {order_id: number};
   DetailTransaction: {
     title: string;
     amount: number;
     code: number;
     created_at: string;
   };
+  ListShareBill: undefined;
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;
