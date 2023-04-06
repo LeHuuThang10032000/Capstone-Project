@@ -10,8 +10,8 @@ import {axiosClient} from '../../components/apis/axiosClient';
 
 const PaymentOrder = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {total_price, store_id, promo_id, payment_type} = route.params;
-  console.log(total_price);
+  const {total_price, store_id, promo_id, payment_type} = route.params?.data;
+  console.log('route.params', route?.params?.data?.total_price);
 
   const [text, onChangeText] = React.useState('');
   const [orderId, setOrderId] = useState(0);
@@ -52,7 +52,9 @@ const PaymentOrder = ({route}: any) => {
           borderRadius={50}
           alt="food"
         />
-        <Text style={{marginTop: 10, fontSize: 16}}>Kios Số 10</Text>
+        <Text style={{marginTop: 10, fontSize: 16}}>
+          {route?.params?.data.store[0]?.name}
+        </Text>
         <Text
           borderBottomWidth={1}
           borderBottomColor="#FFA0A7"

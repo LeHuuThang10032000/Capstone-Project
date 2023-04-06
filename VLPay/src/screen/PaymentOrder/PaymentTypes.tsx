@@ -108,6 +108,7 @@ const PaymentTypes = ({route}: any) => {
             style={{position: 'absolute', bottom: 20, width: '100%'}}>
             <TouchableOpacity
               onPress={() => {
+                data.payment_type = paymentType;
                 navigation.navigate('PaymentOrder', {
                   data,
                 });
