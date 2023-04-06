@@ -114,7 +114,12 @@ export type MainStackParamList = {
   DetailCart: {store_id: number};
   AddItems: undefined;
   UpdateItem: undefined;
-  DetailOrder: {store_id: number};
+  DetailOrder: {
+    store_id: number;
+    phone: string | undefined;
+    name: string | undefined;
+    image: string | undefined;
+  };
   PaymentOrder: {total_price: string; store_id: number};
   OrderProcess: {order_id: number; store_id: number};
   MyDetailOrder: {id: number};
@@ -123,6 +128,12 @@ export type MainStackParamList = {
   DetailBill: undefined;
   SendRequestShare: undefined;
   NotiShareBill: undefined;
+  DetailTransaction: {
+    title: string;
+    amount: number;
+    code: number;
+    created_at: string;
+  };
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

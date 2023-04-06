@@ -190,7 +190,12 @@ const DetailStore = ({route}: any) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('DetailOrder', {store_id: store_id})
+              navigation.navigate('DetailOrder', {
+                store_id: store_id,
+                phone: cart?.store.phone,
+                name: cart?.store.name,
+                image: cart?.store.image,
+              })
             }>
             <View
               justifyContent="center"

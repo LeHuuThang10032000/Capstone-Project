@@ -11,6 +11,8 @@ import {axiosClient} from '../../components/apis/axiosClient';
 const PaymentOrder = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const {total_price, store_id, promo_id, payment_type} = route.params;
+  console.log(total_price);
+
   const [text, onChangeText] = React.useState('');
   const [orderId, setOrderId] = useState(0);
 

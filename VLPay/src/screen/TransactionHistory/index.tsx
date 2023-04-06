@@ -105,6 +105,13 @@ const FirstRoute = () => {
                           navigation.navigate('ShareBill', {
                             data: item,
                           });
+                        } else {
+                          navigation.navigate('DetailTransaction', {
+                            title: item.title,
+                            amount: item.amount,
+                            code: item.code,
+                            created_at: item.created_at,
+                          });
                         }
                       }}>
                       <HStack
