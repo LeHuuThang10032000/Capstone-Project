@@ -13,7 +13,8 @@ class ShareBill extends Model
         'amount',
         'payment_type',
         'status',
-        'is_owner'
+        'is_owner',
+        'owner_id'
     ];
 
     protected $appends = ['shared_name'];
