@@ -227,6 +227,7 @@ class UserController extends Controller
 
         try {
             $stores = Store::whereNotIn('status', ['pending, denied'])
+                ->where('user_id', '!=', Auth::user()->id)
                 ->select('id', 'name', 'image', 'phone', 'location')
                 ->with('schedules');
 
@@ -479,7 +480,11 @@ class UserController extends Controller
         }
 
         try {
-            $promocodes = Promocode::where('store_id', $request->store_id)
+            $used = DB::table('promocode_used')->where('user_id', Auth::user()->id)->pluck('promocode_id')->toArray();
+
+            $promocodes = DB::table('promocodes')
+                ->where('store_id', $request->store_id)
+                ->whereNotIn('id', $used)
                 ->where('start_date', '<=', now())
                 ->where('end_date', '>=', now())
                 ->whereTime('start_time', '<=', now())
