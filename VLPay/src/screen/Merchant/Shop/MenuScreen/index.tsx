@@ -112,7 +112,7 @@ const MenuScreen = (props: Props) => {
   const DataList = ({data}) => {
     return (
       <ScrollView style={{paddingHorizontal: 16}}>
-        <View style={{paddingBottom: 200}}>
+        <View style={{paddingBottom: 200, backgroundColor: '#ffffff'}}>
           {data.map(
             ({id, category_name, products: _products, products_count}) => (
               <View key={id}>
@@ -148,11 +148,17 @@ const MenuScreen = (props: Props) => {
                           handleUpdatePress(item);
                         }}>
                         <View key={productId} style={styles.productContainer}>
-                          <HStack flex={1} alignItems={'center'}>
+                          <HStack
+                            flex={1}
+                            alignItems={'center'}
+                            borderBottomWidth={1}
+                            borderBottomColor={'#979797'}
+                            paddingBottom={3}>
                             <Image
                               source={{uri: image}}
-                              width={50}
-                              height={50}
+                              width={68}
+                              height={68}
+                              borderRadius={8}
                               style={{marginRight: 10}}
                             />
                             <VStack>
@@ -180,7 +186,7 @@ const MenuScreen = (props: Props) => {
       <BottomSheetModalProvider>
         <HeaderComp title="Quản lý menu" />
         {isLoading ? (
-          <Center>
+          <Center flex={1} backgroundColor="#ffffff">
             <Lottie
               source={require('../../../../assets/lottie-file/loading.json')}
               autoPlay={true}
@@ -188,20 +194,41 @@ const MenuScreen = (props: Props) => {
             />
           </Center>
         ) : (
-          <>
+          <View style={{backgroundColor: '#ffffff', flex: 1}}>
             <Image
               source={{uri: storeInfo.image}}
               style={{width: '100%', height: '25%'}}
-              alt={'hell o'}
+              alt={'img'}
               resizeMode={'cover'}
             />
             <Text style={styles.titles}>{storeInfo.name}</Text>
             {products[0] && <DataList data={products} />}
-            <View style={styles.btnWrapper}>
+            <View
+              style={{
+                backgroundColor: '#ffffff',
+                width: '100%',
+                position: 'absolute',
+                bottom: 0,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                padding: 20,
+              }}>
               <TouchableOpacity
-                style={styles.buttons}
-                onPress={handlePresentModalPress}>
-                <Text style={styles.btnTitle}>Thêm món Mới hoặc danh sách</Text>
+                onPress={handlePresentModalPress}
+                style={{
+                  backgroundColor: '#B5EAD8',
+                  width: '100%',
+                  paddingVertical: 10,
+                  borderRadius: 10,
+                }}>
+                <UText
+                  style={{
+                    alignSelf: 'center',
+                    color: 'black',
+                    fontWeight: 'bold',
+                  }}>
+                  Thêm món Mới hoặc danh sách
+                </UText>
               </TouchableOpacity>
             </View>
             <BottomSheetModal
@@ -263,7 +290,7 @@ const MenuScreen = (props: Props) => {
                 </TouchableOpacity>
               </View>
             </BottomSheetModal>
-          </>
+          </View>
         )}
       </BottomSheetModalProvider>
     </View>

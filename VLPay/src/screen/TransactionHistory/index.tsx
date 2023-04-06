@@ -105,6 +105,13 @@ const FirstRoute = () => {
                           navigation.navigate('ShareBill', {
                             data: item,
                           });
+                        } else {
+                          navigation.navigate('DetailTransaction', {
+                            title: item.title,
+                            amount: item.amount,
+                            code: item.code,
+                            created_at: item.created_at,
+                          });
                         }
                       }}>
                       <HStack
@@ -119,7 +126,11 @@ const FirstRoute = () => {
                             numberOfLines={1}>
                             {item.title}
                           </Text>
-                          <Text style={styles.textDate}>{item.created_at}</Text>
+                          <Text style={styles.textDate}>
+                            {moment(item.created_at).format(
+                              'h:mm [-] DD/MM/YYYY',
+                            )}
+                          </Text>
                         </VStack>
                         {item.from_id !== profile ? (
                           <Text style={styles.text}>
@@ -227,7 +238,11 @@ const SecondRoute = () => {
                             style={styles.title}>
                             {item.title}
                           </Text>
-                          <Text style={styles.textDate}>{item.created_at}</Text>
+                          <Text style={styles.textDate}>
+                            {moment(item.created_at).format(
+                              'h:mm [-] DD/MM/YYYY',
+                            )}
+                          </Text>
                         </VStack>
                         {item.from_id !== profile ? (
                           <Text style={styles.text}>
@@ -333,7 +348,11 @@ const ThirdRoute = () => {
                             style={styles.title}>
                             {item.title}
                           </Text>
-                          <Text style={styles.textDate}>{item.created_at}</Text>
+                          <Text style={styles.textDate}>
+                            {moment(item.created_at).format(
+                              'h:mm [-] DD/MM/YYYY',
+                            )}
+                          </Text>
                         </VStack>
                         {item.from_id !== profile ? (
                           <Text style={styles.text}>

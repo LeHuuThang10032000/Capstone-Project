@@ -15,7 +15,7 @@ const MyDetailOrder = ({route}: any) => {
   const {id} = route.params;
   const [detail, setDetail] = useState<Order>();
 
-  console.log(detail);
+  console.log('Detail Product', detail);
 
   const getOrderDetail = useCallback(async () => {
     const result = await axiosClient.get(`/order/detail?order_id=${id}`);
@@ -45,7 +45,7 @@ const MyDetailOrder = ({route}: any) => {
           <HStack paddingY={5} justifyContent={'space-between'}>
             <VStack>
               <Text fontSize={18} fontWeight="bold">
-                {item.name}({item.quantity})
+                {item.quantity} x {item.name}
               </Text>
               {item.add_ons.map(item => (
                 <Text color="#818181" fontSize={16}>
@@ -60,7 +60,7 @@ const MyDetailOrder = ({route}: any) => {
         ))}
         <HStack justifyContent={'space-between'}>
           <Text fontSize={18} fontWeight="bold">
-            Tạm tính(1 món)
+            Tạm tính({detail?.product_quantity})
           </Text>
           <Text fontSize={18} fontWeight="bold">
             {formatCurrency((detail?.order_total ?? 0).toString())}đ
@@ -68,7 +68,7 @@ const MyDetailOrder = ({route}: any) => {
         </HStack>
         <HStack justifyContent={'space-between'}>
           <Text fontSize={18} fontWeight="bold">
-            Tổng(1 món)
+            Tổng({detail?.product_quantity})
           </Text>
           <Text fontSize={18} fontWeight="bold">
             {formatCurrency((detail?.order_total ?? 0).toString())}đ

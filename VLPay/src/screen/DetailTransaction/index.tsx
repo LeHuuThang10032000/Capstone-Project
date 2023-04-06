@@ -1,18 +1,16 @@
 import React, {useEffect, useState} from 'react';
+import {axiosClient} from '../../components/apis/axiosClient';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
+import {Center, Divider, HStack, Image, Text, VStack, View} from 'native-base';
 import HeaderBack from '../../components/HeaderBack';
-import {Center, Divider, HStack, Image, Text, View, VStack} from 'native-base';
 import CallMe from '../../assets/svg/call-me.svg';
 import {TouchableOpacity} from 'react-native';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
-import {axiosClient} from '../../components/apis/axiosClient';
 import Icons from '../../components/Icons';
+import moment from 'moment';
 
-type Props = {};
-
-const ShareBill = () => {
-  const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
-
+const DetailTransaction = ({route}: any) => {
+  const {title, amount, code, created_at} = route.params;
   const [userWallet, setUserWallet] = useState(0);
   const [hide, setHide] = useState(false);
   const [status, setStatus] = useState('');
@@ -24,23 +22,6 @@ const ShareBill = () => {
     fetchData();
   }, []);
   const navigation = useNavigation<MainStackNavigation>();
-  console.log(data);
-
-  const statusState = key => {
-    switch (key) {
-      case 'canceled':
-        return 'bị huỷ';
-
-      case 'taken':
-        return 'hoàn thành';
-
-      case 'pending':
-        return 'đang chờ được hoàn thành';
-
-      case 'pending':
-        return 'đang chờ được hoàn thành';
-    }
-  };
 
   return (
     <View flex={1} backgroundColor="#ffffff">
@@ -51,11 +32,11 @@ const ShareBill = () => {
         borderWidth={1}
         borderRadius={8}
         borderColor="#E0E0E0">
-        <Text fontSize={16}>Thanh toán đơn hàng</Text>
+        <Text fontSize={16}>{title}</Text>
         <Text fontSize={16} fontWeight="bold">
-          {data?.amount.toLocaleString()}đ
+          {amount.toLocaleString()}đ
         </Text>
-        <Text fontSize={16}>Mã giao dịch: {data?.code}</Text>
+        <Text fontSize={16}>Mã giao dịch: {code}</Text>
         <HStack
           marginY={5}
           alignItems="center"
@@ -69,16 +50,14 @@ const ShareBill = () => {
             style={{width: 30, height: 30}}
             alt="img"
           />
-          <Text fontSize={16}>
-            Giao dịch {statusState(data?.order?.status)}
-          </Text>
+          <Text fontSize={16}>Giao dịch thành công</Text>
           <View></View>
         </HStack>
         <VStack w="100%">
           <HStack justifyContent="space-between">
             <Text fontSize={16}>Thời gian thanh toán</Text>
             <Text fontSize={16} fontWeight="bold">
-              {data?.created_at}
+              {moment(created_at).format('h:mm [-] DD/MM/YYYY')}
             </Text>
           </HStack>
           <Divider marginY={3} />
@@ -133,34 +112,8 @@ const ShareBill = () => {
           )}
         </HStack>
       </Center>
-      <TouchableOpacity
-        disabled={
-          data?.order?.status === 'canceled' ||
-          data?.order?.status === 'pending'
-        }
-        onPress={() =>
-          navigation.navigate('ChooseSharer', {
-            data: data,
-          })
-        }>
-        <Center
-          borderRadius={8}
-          backgroundColor="#B5EAD8"
-          margin={5}
-          style={
-            data?.order?.status === 'canceled' ||
-            data?.order?.status === 'pending'
-              ? {backgroundColor: '#D1D1D1'}
-              : {}
-          }
-          padding={5}>
-          <Text fontSize={16} fontWeight="bold">
-            Chia tiền
-          </Text>
-        </Center>
-      </TouchableOpacity>
     </View>
   );
 };
 
-export default ShareBill;
+export default DetailTransaction;

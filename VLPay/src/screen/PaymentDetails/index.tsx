@@ -69,7 +69,7 @@ const PaymentDetails = () => {
             </HStack>
             <VStack width={'90%'} alignItems={'center'}>
               <HStack style={styles.blockContent}>
-                <UText>Thời gian thành toán</UText>
+                <UText>Thời gian thanh toán</UText>
                 <UText style={styles.leftContent}>{data?.date ?? ''}</UText>
               </HStack>
               <View style={styles.separate} />

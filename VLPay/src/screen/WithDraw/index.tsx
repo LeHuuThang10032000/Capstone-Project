@@ -11,7 +11,7 @@ const WithDraw = () => {
   const {isWithdraw} =
     useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
   return (
-    <View style={{flex: 1}}>
+    <View backgroundColor={'#FFFFFF'} style={{flex: 1}}>
       <HeaderBack title={isWithdraw ? 'Rút tiền' : 'Nạp tiền'} />
       <VStack>
         <View paddingX={10} paddingY={5}>

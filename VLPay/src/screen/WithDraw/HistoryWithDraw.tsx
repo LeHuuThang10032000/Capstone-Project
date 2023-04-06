@@ -12,6 +12,7 @@ import {axiosClient} from '../../components/apis/axiosClient';
 import {Center, HStack, ScrollView, VStack} from 'native-base';
 import {formatCurrency} from '../../components/helper';
 import Lottie from 'lottie-react-native';
+import moment from 'moment';
 
 type Props = {};
 
@@ -73,11 +74,17 @@ const HistoryWithDraw = (props: Props) => {
             return (
               <View key={index}>
                 <View style={styles.containerMonth}>
-                  <Text style={styles.titleText}>{item.date}</Text>
+                  <Text style={styles.titleText}>
+                    {moment(item.date).format('DD/MM/YYYY')}
+                  </Text>
                 </View>
                 {item.data.map((item: any) => {
                   return (
-                    <HStack p={3} key={item.id} justifyContent="space-between">
+                    <HStack
+                      backgroundColor="#FFFFFF"
+                      p={3}
+                      key={item.id}
+                      justifyContent="space-between">
                       <VStack>
                         <Text
                           style={styles.title}
@@ -87,7 +94,11 @@ const HistoryWithDraw = (props: Props) => {
                             ? 'Đang xử lý'
                             : 'Đã duyệt'}
                         </Text>
-                        <Text style={styles.textDate}>{item.created_at}</Text>
+                        <Text style={styles.textDate}>
+                          {moment(item.created_at).format(
+                            'h:mm [-] DD/MM/YYYY',
+                          )}
+                        </Text>
                       </VStack>
                       <Text style={styles.text}>
                         -{formatCurrency(`${item.amount}`)}đ

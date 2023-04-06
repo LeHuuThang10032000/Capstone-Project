@@ -20,6 +20,7 @@ export interface Order {
   taken_at: string;
   cancel_reason: string;
   product_count: number;
+  product_quantity: number;
   user: {
     id: number;
     f_name: string;
@@ -76,6 +77,20 @@ export interface myCart {
   products: Product[];
   total_quantity: number;
   total_price: string;
+  store: {
+    id: number;
+    user_id: number;
+    name?: string;
+    phone?: string;
+    status: string;
+    email: string;
+    selling_products: string;
+    location: string;
+    image: string;
+    deny_reason: string;
+    wallet_balance: number;
+    cover_photo: string;
+  };
 }
 
 export interface HistoryOrder {
