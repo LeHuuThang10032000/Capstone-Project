@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {
   Center,
   Heading,
@@ -6,43 +6,43 @@ import {
   Image,
   ScrollView,
   Text,
+  TextArea,
   View,
   VStack,
 } from 'native-base';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, TouchableOpacity, useWindowDimensions} from 'react-native';
 import HeaderBack from '../../../components/HeaderBack';
-import {MainStackNavigation} from '../../../stack/Navigation';
+import {
+  MainStackNavigation,
+  MainStackParamList,
+} from '../../../stack/Navigation';
 import {axiosClient} from '../../../components/apis/axiosClient';
+import {baseUrl} from '../../../components/apis/baseUrl';
+import {UText} from '../../../components/UText';
+import Icons from '../../../components/Icons';
 
 type Props = {};
 
 const NotiShareBill = (props: Props) => {
+  const {data} = useRoute<RouteProp<MainStackParamList, 'WithDraw'>>()?.params;
   const [masterDataSource, setMasterDataSource] = useState([]);
   const navigation = useNavigation<MainStackNavigation>();
   const {width} = useWindowDimensions();
   const [profile, setProfile] = useState([]);
-
-  console.log(masterDataSource);
-
-  const getDays = useCallback(async () => {
-    const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/history-transaction?filter_key=days',
-    );
-    console.log(result.data?.data);
-
-    // setHistory(result.data?.data?.data);
-    // setLoading(false);
-  }, []);
+  const [DetailBill, setDetailBill] = useState([]);
+  const [remind, setRemind] = useState(false);
+  const [note, setNote] = useState('');
+  console.log('data', data);
+  console.log(123456789);
 
   const fetchData = async () => {
     try {
-      const responseJson = await axiosClient.get('/friends');
-      const result = await axiosClient.get(
-        'https://zennoshop.cf/api/user/get-profile',
+      const billDetail = await axiosClient.get(
+        baseUrl + 'share-bill/detail?order_id=' + data.tag_model_id,
       );
-      setProfile(result?.data?.data);
-      setMasterDataSource(responseJson?.data?.data);
+      setDetailBill(billDetail?.data?.data);
+      setMasterDataSource(billDetail?.data?.data);
     } catch (error) {
       Alert.alert(error.error);
     }
@@ -50,8 +50,9 @@ const NotiShareBill = (props: Props) => {
 
   useEffect(() => {
     fetchData();
-    getDays();
   }, []);
+  console.log('masterDataSource', masterDataSource);
+
   return (
     <View flex={1} backgroundColor="#ffffff">
       <HeaderBack title="Chia tiền" />
@@ -68,64 +69,127 @@ const NotiShareBill = (props: Props) => {
 
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize={16} fontWeight="bold">
-              Danh sách chia tiền(3)
+              Danh sách chia tiền({masterDataSource.length})
             </Text>
             <Text></Text>
           </HStack>
-          <HStack
-            w="100%"
-            alignItems="center"
-            justifyContent="space-between"
-            borderWidth={1}
-            padding={3}
-            borderRadius={8}
-            marginY={3}>
-            <HStack alignItems="center">
-              <Image
-                source={{uri: profile?.image}}
-                w={42}
-                height={42}
-                alt="image"
-                borderRadius={50}
-              />
-              <Text paddingLeft={3}>{profile?.f_name}</Text>
-            </HStack>
-            <VStack>
-              <Text>100.000đ</Text>
-            </VStack>
-          </HStack>
-          {masterDataSource.map(item => (
-            <HStack
-              w="100%"
-              alignItems="center"
-              justifyContent="space-between"
-              borderWidth={1}
-              padding={3}
-              borderRadius={8}
-              marginY={3}>
-              <HStack alignItems="center">
-                <Image
-                  source={{uri: item?.image}}
-                  w={42}
-                  height={42}
-                  alt="image"
-                  borderRadius={50}
-                />
-                <Text paddingLeft={3}>{item?.f_name}</Text>
+          <ScrollView style={{width: '100%'}}>
+            {masterDataSource.map(item => (
+              <HStack
+                w="100%"
+                alignItems="center"
+                justifyContent="space-between"
+                borderWidth={1}
+                padding={3}
+                borderRadius={8}
+                marginY={3}>
+                <HStack alignItems="center">
+                  <Image
+                    source={{uri: item?.shared_user?.image}}
+                    w={42}
+                    height={42}
+                    alt="image"
+                    borderRadius={50}
+                  />
+                  <Text paddingLeft={3}>{item?.shared_user?.f_name}</Text>
+                </HStack>
+                <VStack>
+                  <Text>{item?.amount.toLocaleString()}đ</Text>
+                </VStack>
               </HStack>
-              <VStack>
-                <Text>100.000đ</Text>
-              </VStack>
-            </HStack>
-          ))}
+            ))}
+          </ScrollView>
         </Center>
       </ScrollView>
+      {remind && (
+        <View
+          style={{
+            width: '100%',
+            height: 300,
+            backgroundColor: 'white',
+            position: 'absolute',
+            bottom: 0,
+            zIndex: 1000,
+
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}>
+          <View
+            style={{
+              width: '99%',
+              borderRadius: 10,
+              borderColor: 'rgba(0, 0, 0, 0.35)',
+              borderWidth: 1,
+            }}>
+            <HStack
+              style={{
+                width: '100%',
+                justifyContent: 'center',
+                borderBottomWidth: 1,
+                paddingVertical: 10,
+                borderBottomColor: 'rgba(0, 0, 0, 0.35)',
+              }}>
+              <UText style={{fontWeight: '700'}}>Xác nhận trả tiền</UText>
+              <TouchableOpacity
+                onPress={() => setRemind(false)}
+                style={{position: 'absolute', right: 20, top: 15}}>
+                <UText>
+                  <Icons.CloseIcon />
+                </UText>
+              </TouchableOpacity>
+            </HStack>
+            <View style={{marginHorizontal: 16, marginTop: 20}}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  position: 'absolute',
+                  top: -18,
+                  left: 10,
+                  width: 70,
+                  height: 20,
+                  zIndex: 1000,
+                }}
+              />
+              <UText
+                style={{
+                  position: 'absolute',
+                  top: -12,
+                  left: 10,
+                  backgroundColor: 'transparent',
+                  zIndex: 1000,
+                }}>
+                Tin nhắn
+              </UText>
+              <TextArea
+                value={note}
+                placeholder="Nhập nhắc nhở"
+                onChangeText={text => {
+                  setNote(text);
+                }}
+                autoCompleteType={undefined}
+              />
+              <View padding={5}>
+                <TouchableOpacity onPress={async () => {}}>
+                  <Center
+                    backgroundColor="#B5EAD8"
+                    padding={5}
+                    borderRadius={10}>
+                    <Text fontSize={16} fontWeight="700">
+                      Gửi
+                    </Text>
+                  </Center>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
       <HStack
         padding={5}
         w={width}
         backgroundColor="yellow"
         justifyContent="space-between">
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setRemind(true)}>
           <Center
             w={160}
             backgroundColor="#ffffff"

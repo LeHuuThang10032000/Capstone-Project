@@ -5,6 +5,7 @@ import {
   Heading,
   HStack,
   Image,
+  Input,
   ScrollView,
   Text,
   TextArea,
@@ -23,6 +24,7 @@ import Lottie from 'lottie-react-native';
 import YesNoModal from '../../../components/YesNoModal';
 import Icons from '../../../components/Icons';
 import Colors from '../../../components/helpers/Colors';
+import {UText} from '../../../components/UText';
 
 interface Image {
   path: string;
@@ -40,6 +42,7 @@ const DetailBill = ({route}: any) => {
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [generalError, setGeneralError] = useState('');
   const [isSuccess, setSuccess] = useState(false);
+  const [friends, setFriends] = useState(data?.checkedItems);
 
   const fetchData = async () => {
     try {
@@ -49,13 +52,11 @@ const DetailBill = ({route}: any) => {
         'https://zennoshop.cf/api/user/get-profile',
       );
       setProfile(result?.data?.data);
-      const friends = responseJson?.data?.data.filter(item => {
-        if (data?.checkedItems.includes(item?.id)) {
-          return item;
-        }
+      const _friends = responseJson?.data?.data.filter(item => {
+        if (item.id !== result?.data?.data?.id) return item;
       });
 
-      setMasterDataSource(friends);
+      setMasterDataSource(_friends);
       setLoading(false);
     } catch (error) {
       Alert.alert(error.error);
@@ -65,15 +66,7 @@ const DetailBill = ({route}: any) => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const ChoosePhotoFromLibrary = async () => {
-    const image = await ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    });
-    setImage(image);
-  };
+  console.log(friends);
 
   return (
     <View flex={1} backgroundColor="#ffffff">
@@ -138,15 +131,39 @@ const DetailBill = ({route}: any) => {
                     {profile.f_name} (Me)
                   </Text>
                 </HStack>
-                <VStack>
-                  <Text>
-                    {(
-                      parseInt(data?.amount) /
-                      (masterDataSource?.length + 1)
-                    ).toLocaleString()}
-                    đ
-                  </Text>
-                </VStack>
+                <HStack alignItems={'center'}>
+                  <Input
+                    width={100}
+                    style={{borderWidth: 0, color: 'black'}}
+                    borderColor={'transparent'}
+                    keyboardType="number-pad"
+                    onChangeText={text => {
+                      friends.map((item, key) => {
+                        if (item?.user_id) {
+                          if (item.user_id === profile.id) {
+                            const _item = friends;
+                            _item[key] = {
+                              user_id: profile.id,
+                              amount: text,
+                            };
+                            setFriends(_item);
+                          }
+                        } else {
+                          if (item === profile.id) {
+                            const _item = friends;
+                            _item[key] = {
+                              user_id: item,
+                              amount: text,
+                            };
+                            setFriends(_item);
+                          }
+                        }
+                      });
+                      console.log(friends);
+                    }}
+                  />
+                  <UText>đ</UText>
+                </HStack>
               </HStack>
               {masterDataSource.map(item => {
                 return (
@@ -168,15 +185,42 @@ const DetailBill = ({route}: any) => {
                       />
                       <Text paddingLeft={3}>{item.f_name}</Text>
                     </HStack>
-                    <VStack>
-                      <Text>
-                        {(
+                    <HStack alignItems={'center'}>
+                      <Input
+                        width={100}
+                        style={{borderWidth: 0, color: 'black'}}
+                        borderColor={'transparent'}
+                        placeholder={(
                           parseInt(data?.amount) /
                           (masterDataSource?.length + 1)
                         ).toLocaleString()}
-                        đ
-                      </Text>
-                    </VStack>
+                        keyboardType="number-pad"
+                        onChangeText={text => {
+                          friends.map((__item, key) => {
+                            if (__item?.user_id) {
+                              if (__item.user_id === item.id) {
+                                const _item = friends;
+                                _item[key] = {
+                                  user_id: item.id,
+                                  amount: text,
+                                };
+                                setFriends(_item);
+                              }
+                            } else {
+                              if (__item === item.id) {
+                                const _item = friends;
+                                _item[key] = {
+                                  user_id: __item,
+                                  amount: text,
+                                };
+                                setFriends(_item);
+                              }
+                            }
+                          });
+                        }}
+                      />
+                      <UText>đ</UText>
+                    </HStack>
                   </HStack>
                 );
               })}
@@ -186,28 +230,47 @@ const DetailBill = ({route}: any) => {
             <TouchableOpacity
               onPress={async () => {
                 try {
-                  if (!data.checkedItems.includes(profile?.id)) {
-                    data.checkedItems.push(profile?.id);
-                  }
                   data.masterDataSource = masterDataSource;
                   const order_id = data?.order_id;
                   data.isFinal = true;
+                  let totalMoneyUserSet = 0;
+                  let userSet = 0;
+                  let userUnSet = 0;
                   const detail = [];
-                  data?.checkedItems?.map(item => {
-                    detail.push({
-                      user_id: item,
-                      amount:
-                        parseInt(data?.amount) /
-                        (data?.masterDataSource?.length + 1),
-                    });
+                  friends.map(item => {
+                    if (item?.user_id) {
+                      totalMoneyUserSet += parseInt(item.amount);
+                      userSet++;
+                    } else {
+                      userUnSet++;
+                    }
                   });
+                  const finalMoney = parseInt(data?.amount) - totalMoneyUserSet;
 
-                  await axiosClient.post('/share-bill', {
-                    order_id,
-                    detail,
-                  });
-                  setSuccess(true);
-                  navigation.navigate('Home');
+                  if (finalMoney >= 0) {
+                    friends.map(item => {
+                      if (!item?.user_id) {
+                        detail.push({
+                          user_id: item,
+                          amount: finalMoney / userUnSet,
+                        });
+                      } else {
+                        detail.push(item);
+                      }
+                    });
+                    console.log({order_id, detail});
+                    await axiosClient.post('/share-bill', {
+                      order_id,
+                      detail,
+                    });
+                    setSuccess(true);
+                    navigation.navigate('Home');
+                  } else {
+                    setVisibleWarning(true);
+                    setGeneralError(
+                      'Số tiền chia không được vượt số tiền trong hoá đơn',
+                    );
+                  }
                 } catch (error) {
                   setVisibleWarning(true);
                   setGeneralError(error?.error);

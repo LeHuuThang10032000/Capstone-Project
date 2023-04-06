@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 15,
   },
   title: {
-    width: 200,
+    width: 250,
     fontFamily: 'Poppins-SemiBold',
     fontSize: 14,
     color: '#312E49',

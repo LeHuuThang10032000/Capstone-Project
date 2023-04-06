@@ -55,7 +55,7 @@ const Index = (props: Props) => {
                 <Pressable
                   onPress={() => {
                     if (item?.tag_model === 'share_bills') {
-                      navigation.navigate('NotiShareBill');
+                      navigation.navigate('NotiShareBill', {data: item});
                     }
                   }}>
                   <View
