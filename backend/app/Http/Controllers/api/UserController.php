@@ -18,6 +18,7 @@ use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
+use Exception;
 use Helper;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\JsonResponse;
@@ -656,11 +657,9 @@ class UserController extends Controller
 
             if($request->wallet_type == 'debit') {
                 if($total > $userWallet->balance)
-                    DB::rollBack();
                     return ApiResponse::failureResponse('Số dư trong ví không đủ để thanh toán đơn hàng');
             } else {
                 if($total > $userWallet->credit_limit)
-                    DB::rollBack();
                     return ApiResponse::failureResponse('Số dư trong ví tín dụng không đủ để thanh toán đơn hàng');
             }
 

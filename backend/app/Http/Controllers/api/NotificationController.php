@@ -13,7 +13,7 @@ class NotificationController extends Controller
     public function index()
     {
         try {
-            $data = Notification::where('user_id', Auth::user()->id)->get();
+            $data = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
             return ApiResponse::successResponse($data);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
