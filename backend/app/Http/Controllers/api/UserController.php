@@ -1068,4 +1068,44 @@ class UserController extends Controller
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
+
+    public function remindPayShareBill(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'order_id' => 'required|integer',
+            'message' => 'required|'
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $user = Auth::user();
+
+            $bills = DB::table('share_bills')
+                ->where('order_id', $request->order_id)
+                ->where('owner_id', Auth::user()->id)
+                ->where('status', '!=', 'paid')
+                ->get();
+            
+            foreach($bills as $bill)
+            {
+                if($bill->shared_id != Auth::user()->id) {
+                    Notification::create([
+                        'user_id' => $bill->shared_id,
+                        'tag' => 'Chia tiền',
+                        'tag_model' => 'share_bills',
+                        'tag_model_id' => $bill->order_id,
+                        'title' => $user->f_name . ' đã nhắc bạn trả tiền',
+                        'body' => $request->message,
+                    ]);
+                }
+            }
+
+            return ApiResponse::successResponse(null);
+        } catch (\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
 }
