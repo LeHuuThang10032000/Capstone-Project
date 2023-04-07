@@ -888,7 +888,7 @@ class StoreController extends Controller
                     SUM(CASE WHEN status = \'canceled\' THEN 1 ELSE 0 END) as total_canceled_orders,
                     SUM(CASE WHEN status = (\'taken\') THEN transactions.amount ELSE 0 END) as total_revenue')->first();
             
-            $orders = $orders->selectRaw('id, order_code, created_at, user_id, order_total, discount_amount, product_detail', 'status')
+            $orders = $orders->selectRaw('id, order_code, created_at, user_id, order_total, discount_amount, product_detail, status')
                 ->offset($offset)->limit($limit)->get();
 
             $data = [
@@ -898,7 +898,7 @@ class StoreController extends Controller
                 'orders' => $orders,
                 'total_canceled_orders' => $summary->total_canceled_orders,
                 'total_taken_order' => $summary->total_taken_order,
-                'total_revenue' => $summary->total_revenue,
+                'total_revenue' => number_format($summary->total_revenue),
             ];
 
             return ApiResponse::successResponse($data);
