@@ -951,7 +951,10 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
 
-            $bills = ShareBill::where('order_id', $request->order_id)->get();
+            $bills = ShareBill::select(
+                '*',
+                DB::raw('(CASE WHEN share_bills.shared_id = ' . Auth::user()->id . ' THEN 1 ELSE 0 END) AS is_your')
+            )->where('order_id', $request->order_id)->get();
 
             DB::commit();
             return ApiResponse::successResponse($bills);
