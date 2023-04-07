@@ -763,9 +763,23 @@ class StoreController extends Controller
 
             $promoDescription = "";
             if ($request->discount_type == 'percentage') {
+                if($promocode->max_discount == 0 && $promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."%";
+                if($promocode->max_discount == 0)
+                    $promoDescription = "Giảm ". $request->discount ."% cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
+                if($promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."%, tối đa ". $promocode->max_discount . "đ";
+
                 $promoDescription = "Giảm ". $request->discount ."%, tối đa ". $promocode->max_discount . "đ cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
             } else {
-                $promoDescription = "Giảm ". $request->discount ."đ cho đơn hàng từ ". $promocode->min_total_order."đ trở lên trên";
+                if($promocode->max_discount == 0 && $promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ";
+                if($promocode->max_discount == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
+                if($promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ, tối đa ". $promocode->max_discount . "đ";
+
+                $promoDescription = "Giảm ". $request->discount ."đ, tối đa ". $promocode->max_discount . "đ cho đơn hàng từ ". $promocode->min_total_order."đ trở lên";
             }
             $promocode->title = $promoDescription;
 
