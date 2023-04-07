@@ -227,6 +227,8 @@ const FourthRoute = () => {
         formattedDate,
     );
     setOrder(_history?.data?.data);
+    console.log(_history);
+
     setHistoryCanceled(_history?.data?.data?.total_canceled_orders);
     setHistoryTaken(_history?.data?.data?.total_taken_order);
     setHistory(_history?.data?.data?.orders);
@@ -334,6 +336,8 @@ const FourthRoute = () => {
                   ĐƠN HÀNG
                 </UText>
                 {history.map(item => {
+                  console.log('item', item);
+
                   return (
                     <HStack
                       alignItems={'center'}
@@ -343,7 +347,8 @@ const FourthRoute = () => {
                           #{item.order_code}
                         </UText>
                         <UText>
-                          Đã hoàn tất {item?.created_at.split(' ')[1]}
+                          Đã {item?.status === 'taken' ? 'hoàn tất' : 'huỷ'}{' '}
+                          {item?.created_at.split(' ')[1]}
                         </UText>
                       </VStack>
                       <HStack>

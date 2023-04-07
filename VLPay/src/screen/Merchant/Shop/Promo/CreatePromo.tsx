@@ -984,7 +984,6 @@ const CreatePromo = () => {
                   <DatePicker
                     modal
                     open={openDateEnd}
-                    locale=""
                     date={dateEnd}
                     onConfirm={date => {
                       setEndDateError('');
@@ -1321,115 +1320,6 @@ const CreatePromo = () => {
                   ? 'chỉnh sửa mã giảm giá'
                   : 'Xác nhận tạo Mã giảm giá'}
               </UText>
-            </TouchableOpacity>
-          </>
-        );
-        setPrevious(PROMOS[8]);
-        return (
-          <>
-            <VStack alignItems={'center'}>
-              <View style={{marginVertical: 20}}>
-                <StagePromo.StageTwo />
-              </View>
-              <View
-                style={{
-                  width: '100%',
-                  backgroundColor: '#F7F9FC',
-                  padding: 16,
-                }}>
-                <UText>Thời gian giảm giá</UText>
-              </View>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Bắt đầu</UText>
-                <TouchableOpacity onPress={() => setOpenDateStart(true)}>
-                  <Input
-                    value={
-                      dateStart
-                        ? moment(dateStart).format(
-                            'DD/MM/YYYY, ddd [lúc] HH:mm',
-                          )
-                        : 'Chọn ngày và thời gian'
-                    }
-                    borderRadius={10}
-                    isReadOnly={true}
-                  />
-                </TouchableOpacity>
-                {/* <DatePicker date={date} onDateChange={setDate} /> */}
-                <DatePicker
-                  modal
-                  open={openDateStart}
-                  date={dateStart}
-                  onConfirm={date => {
-                    setOpenDateStart(false);
-                    setDateStart(date);
-                  }}
-                  onCancel={() => {
-                    setOpenDateStart(false);
-                  }}
-                />
-              </VStack>
-              <VStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}>
-                <UText>Kết thúc</UText>
-                <TouchableOpacity onPress={() => setOpenDateEnd(true)}>
-                  <Input
-                    value={
-                      dateEnd
-                        ? moment(dateEnd).format('DD/MM/YYYY, ddd [lúc] HH:mm')
-                        : 'Chọn ngày và thời gian'
-                    }
-                    borderRadius={10}
-                    isReadOnly={true}
-                  />
-                </TouchableOpacity>
-                <DatePicker
-                  modal
-                  open={openDateEnd}
-                  date={dateEnd}
-                  onConfirm={date => {
-                    setOpenDateEnd(false);
-                    setDateEnd(date);
-                  }}
-                  onCancel={() => {
-                    setOpenDateEnd(false);
-                  }}
-                />
-              </VStack>
-              <HStack
-                width={'100%'}
-                justifyContent={'space-between'}
-                style={{padding: 16}}
-                borderBottomColor={'#E4E9F2'}
-                borderBottomWidth={1}
-                paddingBottom={2}
-                marginBottom={0}>
-                <VStack>
-                  <UText>Thời gian áp dụng</UText>
-                  <UText>Vào khung giờ mở cửa bán</UText>
-                </VStack>
-              </HStack>
-            </VStack>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#B5EAD8',
-                width: '90%',
-                marginHorizontal: 16,
-                paddingVertical: 10,
-                borderRadius: 10,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                position: 'absolute',
-                bottom: 20,
-              }}
-              onPress={() => {
-                setPage(PROMOS[0]);
-              }}>
-              <UText>Xác nhận tạo chương trình</UText>
             </TouchableOpacity>
           </>
         );

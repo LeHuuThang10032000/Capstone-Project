@@ -149,6 +149,8 @@ const DetailOrder = ({route}: any) => {
     discount,
   }) => {
     if (radioBox !== id) {
+      console.log(promoCode);
+
       if (parseInt(cart?.total_price) > parseInt(min_purchase)) {
         setRadioBox(id);
         setPromoName(title);
@@ -165,9 +167,17 @@ const DetailOrder = ({route}: any) => {
             });
             setDiscount(max_discount);
           }
+        } else if (discount_type == 'amount') {
+          setCart({...cart, total_price: finalMoney});
+          const item = parseInt(cart?.total_price) - parseInt(discount);
+          setCart({
+            ...cart,
+            total_price: parseInt(cart?.total_price) - parseInt(discount),
+          });
+          setDiscount(item);
         }
       } else {
-        setGeneralError('Đơn hàng không đủ điều kiên');
+        setGeneralError('Không đủ điều kiện để áp mã');
         setVisibleWarning(true);
       }
     } else {
