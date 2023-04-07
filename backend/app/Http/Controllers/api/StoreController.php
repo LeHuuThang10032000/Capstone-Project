@@ -674,9 +674,23 @@ class StoreController extends Controller
 
             $promoDescription = "";
             if ($request->discount_type == 'percentage') {
+                if($promocode->max_discount == 0 && $promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."%";
+                if($promocode->max_discount == 0)
+                    $promoDescription = "Giảm ". $request->discount ."% cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
+                if($promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."%, tối đa ". $promocode->max_discount . "đ";
+
                 $promoDescription = "Giảm ". $request->discount ."%, tối đa ". $promocode->max_discount . "đ cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
             } else {
-                $promoDescription = "Giảm ". $request->discount ."đ cho đơn hàng từ ". $promocode->min_total_order."đ trở lên trên";
+                if($promocode->max_discount == 0 && $promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ";
+                if($promocode->max_discount == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
+                if($promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ, tối đa ". $promocode->max_discount . "đ";
+
+                $promoDescription = "Giảm ". $request->discount ."đ, tối đa ". $promocode->max_discount . "đ cho đơn hàng từ ". $promocode->min_total_order."đ trở lên";
             }
             $promocode->title = $promoDescription;
 
@@ -749,9 +763,23 @@ class StoreController extends Controller
 
             $promoDescription = "";
             if ($request->discount_type == 'percentage') {
+                if($promocode->max_discount == 0 && $promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."%";
+                if($promocode->max_discount == 0)
+                    $promoDescription = "Giảm ". $request->discount ."% cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
+                if($promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."%, tối đa ". $promocode->max_discount . "đ";
+
                 $promoDescription = "Giảm ". $request->discount ."%, tối đa ". $promocode->max_discount . "đ cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
             } else {
-                $promoDescription = "Giảm ". $request->discount ."đ cho đơn hàng từ ". $promocode->min_total_order."đ trở lên trên";
+                if($promocode->max_discount == 0 && $promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ";
+                if($promocode->max_discount == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ cho đơn hàng từ ". $promocode->min_purchase."đ trở lên";
+                if($promocode->min_purchase == 0)
+                    $promoDescription = "Giảm ". $request->discount ."đ, tối đa ". $promocode->max_discount . "đ";
+
+                $promoDescription = "Giảm ". $request->discount ."đ, tối đa ". $promocode->max_discount . "đ cho đơn hàng từ ". $promocode->min_total_order."đ trở lên";
             }
             $promocode->title = $promoDescription;
 
@@ -860,7 +888,7 @@ class StoreController extends Controller
                     SUM(CASE WHEN status = \'canceled\' THEN 1 ELSE 0 END) as total_canceled_orders,
                     SUM(CASE WHEN status = (\'taken\') THEN transactions.amount ELSE 0 END) as total_revenue')->first();
             
-            $orders = $orders->selectRaw('id, order_code, created_at, user_id, order_total, discount_amount, product_detail')
+            $orders = $orders->selectRaw('id, order_code, created_at, user_id, order_total, discount_amount, product_detail', 'status')
                 ->offset($offset)->limit($limit)->get();
 
             $data = [
