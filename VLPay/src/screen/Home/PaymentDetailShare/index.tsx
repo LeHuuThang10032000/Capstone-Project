@@ -36,10 +36,10 @@ const PaymentDetailShare = ({route}: any) => {
             borderRadius={8}
             paddingY={3}
             borderColor={'#E0E0E0'}>
-            <VStack my={3}>
+            <VStack my={3} justifyContent={'center'} alignItems={'center'}>
               <UText>Chuyển tiền qua VLPAY</UText>
               <UText style={{fontSize: 18, fontWeight: '700'}}>
-                {formatCurrency((amount ?? 0).toString())}đ
+                -{formatCurrency((amount ?? 0).toString())}đ
               </UText>
               <UText style={{fontSize: 15}}>
                 Mã giao dịch:{' '}
