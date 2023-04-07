@@ -28,7 +28,7 @@ import {formatCurrency} from '../../../components/helper';
 type Props = {};
 
 const Index = ({route}: any) => {
-  const {data} = useRoute<RouteProp<MainStackParamList, 'Transfer'>>()?.params;
+  // const {data} = useRoute<RouteProp<MainStackParamList, 'Transfer'>>()?.params;
   const [input, setInput] = useState(false);
   const [value, setValue] = useState('');
   const [visibleWarning, setVisibleWarning] = useState(false);
@@ -36,11 +36,13 @@ const Index = ({route}: any) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [phoneError, setPhoneError] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const message = 'Chuyển tiền share bill';
 
   const [profile, setProfile] = useState({});
-  const {payment_type} = route.params;
+  const {payment_type, isYour, phone, amount, shared_name, current_user} =
+    route.params;
 
-  console.log('PAYMENT_TYPE==>', payment_type);
+  console.log({payment_type, isYour, phone, amount, shared_name, current_user});
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
@@ -98,21 +100,21 @@ const Index = ({route}: any) => {
             w={'90%'}>
             <HStack justifyContent={'space-between'} pb="10">
               <Text style={styles.textTitle}>Thanh toán</Text>
-              <Text style={styles.text}>{data.name}</Text>
+              <Text style={styles.text}>{shared_name}</Text>
             </HStack>
             <HStack justifyContent={'space-between'} pb="10">
               <Text style={styles.textTitle}>Số điện thoại</Text>
-              <Text style={styles.text}>{data.phone}</Text>
+              <Text style={styles.text}>{phone}</Text>
             </HStack>
             <HStack justifyContent={'space-between'} pb="10">
               <Text style={styles.textTitle}>Số tiền</Text>
               <Text style={styles.text}>
-                {formatCurrency(data?.money ?? 0)}đ
+                {formatCurrency((amount ?? 0).toString())}đ
               </Text>
             </HStack>
             <HStack justifyContent={'space-between'} pb="10">
               <Text style={styles.textTitle}>Tin nhắn</Text>
-              <Text style={styles.text}>{data.mess}</Text>
+              <Text style={styles.text}>chuyển tiền share bill</Text>
             </HStack>
           </VStack>
         </Center>
@@ -176,14 +178,14 @@ const Index = ({route}: any) => {
                     setLoading(true);
                     try {
                       const formData = new FormData();
-                      formData.append('f_name', data.name);
-                      formData.append('cash', data.money);
-                      formData.append('phone', data.phone);
-                      formData.append('message', data.message);
+                      formData.append('share_id', isYour);
+                      formData.append('cash', amount);
+                      formData.append('phone', phone);
+                      formData.append('message', message);
                       formData.append('payment_type', payment_type);
                       await axios.post(
                         'https://zennoshop.cf/api/user/checkPassword',
-                        {phone: data.current_user, password: value},
+                        {phone: current_user, password: value},
                         {
                           headers: {'content-type': 'multipart/form-data'},
                         },
@@ -196,10 +198,13 @@ const Index = ({route}: any) => {
                           headers: {'content-type': 'multipart/form-data'},
                         },
                       );
-                      data.code = _result?.data?.code;
-                      data.from_user = _result?.data?.from_user;
-                      navigation.replace('PaymentDetails', {
-                        data: data,
+                      // data.code = _result?.data?.code;
+                      // data.from_user = _result?.data?.from_user;
+                      navigation.replace('PaymentDetailShare', {
+                        amount: amount,
+                        shared_name: shared_name,
+                        phone: phone,
+                        message: message,
                       });
                       setLoading(false);
                     } catch (e) {

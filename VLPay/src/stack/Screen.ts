@@ -60,6 +60,9 @@ import FinalShareBillDetail from '../screen/ShareBill/DetailBill/finalShareBillD
 import PaymentTypes from '../screen/PaymentOrder/PaymentTypes';
 import DetailTransaction from '../screen/DetailTransaction';
 import ListShareBill from '../screen/ListShareBill';
+import ListPaidBill from '../screen/ListPaidBill';
+import ConfirmTranferShare from '../screen/Transfer/ConfirmTranferShare';
+import PaymentDetailShare from '../screen/Home/PaymentDetailShare';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -281,5 +284,17 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'ListShareBill',
     component: ListShareBill,
+  },
+  {
+    name: 'ListPaidBill',
+    component: ListPaidBill,
+  },
+  {
+    name: 'ConfirmTranferShare',
+    component: ConfirmTranferShare,
+  },
+  {
+    name: 'PaymentDetailShare',
+    component: PaymentDetailShare,
   },
 ];

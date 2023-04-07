@@ -14,15 +14,13 @@ type Props = {
   title: string;
 };
 
-const ListShareBill = ({route}: any) => {
+const ListPaidBill = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
 
   const [data, setData] = useState<Props[]>([]);
-  const {userWallet} = route.params;
-  console.log('wallet=====>', userWallet);
 
   const fetchData = useCallback(async () => {
-    const result = await axiosClient.get('/share-bill?page=1&limit=1000');
+    const result = await axiosClient.get('/share-bill/paid?limit=100&page=1');
     setData(result?.data?.data);
   }, []);
   useEffect(() => {
@@ -30,17 +28,11 @@ const ListShareBill = ({route}: any) => {
   }, []);
   return (
     <View flex={1} backgroundColor={'#FFFFFF'}>
-      <HeaderBack title="Chi tiết hóa đơn chia tiền" />
+      <HeaderBack title="Thông tin thanh toán chia tiền" />
       <ScrollView width={'100%'}>
         {data.map(item => (
           <View key={item.id} marginX={3} marginY={3}>
-            <Pressable
-              onPress={() =>
-                navigation.navigate('NotiShareBill', {
-                  order_id: item.order_id,
-                  userWallet: userWallet,
-                })
-              }>
+            <Pressable>
               <View
                 p={5}
                 w={'100%'}
@@ -66,7 +58,7 @@ const ListShareBill = ({route}: any) => {
   );
 };
 
-export default ListShareBill;
+export default ListPaidBill;
 
 const styles = StyleSheet.create({
   text: {

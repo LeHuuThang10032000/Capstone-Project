@@ -67,6 +67,7 @@ export type MainStackParamList = {
   };
   Transfer: {
     userWallet: number;
+    payment_type: string;
   };
   EditProfile: {name: string; phone: string};
   ChangePassword: {
@@ -74,6 +75,7 @@ export type MainStackParamList = {
   };
   ConfirmPM: {
     data: any;
+    payment_type: string;
   };
   ScanQR: undefined;
   RegisterMerchant: undefined;
@@ -127,14 +129,29 @@ export type MainStackParamList = {
   ChooseSharer: undefined;
   DetailBill: undefined;
   SendRequestShare: undefined;
-  NotiShareBill: {order_id: number};
+  NotiShareBill: {order_id: number; userWallet: number};
   DetailTransaction: {
     title: string;
     amount: number;
     code: number;
     created_at: string;
   };
-  ListShareBill: undefined;
+  ListShareBill: {userWallet: number};
+  ListPaidBill: undefined;
+  ConfirmTranferShare: {
+    phone: string;
+    isYour: number;
+    payment_type: string;
+    amount: number;
+    shared_name: string;
+    current_user: string;
+  };
+  PaymentDetailShare: {
+    amount: number;
+    shared_name: number;
+    phone: string;
+    message: string;
+  };
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

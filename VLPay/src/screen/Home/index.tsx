@@ -72,7 +72,11 @@ const Index = () => {
           <Banner wallet={userWallet} />
           <ManageCash wallet={userWallet} credit={credit} loading={isloading} />
           <ContentWallet />
-          <ShareBillComp need_pay={needPay} paid_bill={paidBill} />
+          <ShareBillComp
+            need_pay={needPay}
+            paid_bill={paidBill}
+            wallet={userWallet}
+          />
           <PromoCarousel />
           <ListStore />
         </ScrollView>

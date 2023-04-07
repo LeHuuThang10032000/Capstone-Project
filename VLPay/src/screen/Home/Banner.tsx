@@ -20,6 +20,7 @@ type Props = {
 const Banner = (props: Props) => {
   const navigation = useNavigation<MainStackNavigation>();
   const [visibleWarning, setVisibleWarning] = useState(false);
+  const paymentType = 'T';
   return (
     <View>
       <ImageBackground
@@ -35,7 +36,12 @@ const Banner = (props: Props) => {
           }}>
           <View style={styles.wrapperButton}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Transfer', props.wallet)}>
+              onPress={() =>
+                navigation.navigate('Transfer', {
+                  userWallet: props.wallet,
+                  payment_type: paymentType,
+                })
+              }>
               <View style={styles.buttonTranfer}>
                 <Image
                   source={require('../../assets/img/moneytranfer.png')}
