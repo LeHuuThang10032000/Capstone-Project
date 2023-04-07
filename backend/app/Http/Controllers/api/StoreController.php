@@ -310,18 +310,20 @@ class StoreController extends Controller
                 array_push($newAddOns, $value->id);
             }
 
-            $product = Product::where('id', $request->product_id)->update([
-                'name' => $request->name,
-                'price' => $request->price,
-                'status' => 'comingsoon',
-                'add_ons' => json_encode($newAddOns),
-                'category_id' => $request->category_id,
-            ]);
+            $product = Product::where('id', $request->product_id)->first();
+
+            $product->name = $request->name;
+            $product->price = $request->price;
+            $product->status = 'comingsoon';
+            $product->add_ons = json_encode($newAddOns);
+            $product->category_id = $request->category_id;
 
             if($request->hasFile('image')) {
                 $product->clearMediaCollection('images');
                 $product->addMediaFromRequest('image')->toMediaCollection('images');
             }
+            
+            $product->save();
 
             DB::commit();
 			return APIResponse::SuccessResponse(null);
