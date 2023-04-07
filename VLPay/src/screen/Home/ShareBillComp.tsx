@@ -11,6 +11,7 @@ import {MainStackNavigation} from '../../stack/Navigation';
 type Props = {
   need_pay: number;
   paid_bill: number;
+  wallet: any;
 };
 
 const ShareBillComp = (props: Props) => {
@@ -33,7 +34,10 @@ const ShareBillComp = (props: Props) => {
             <Text>{formatCurrency((props.need_pay ?? 0).toString())}đ</Text>
           </VStack>
         </HStack>
-        <TouchableOpacity onPress={() => navigation.navigate('ListShareBill')}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('ListShareBill', {userWallet: props.wallet})
+          }>
           <View
             style={{
               backgroundColor: '#FEB7B1',
@@ -57,7 +61,7 @@ const ShareBillComp = (props: Props) => {
             <Text>{formatCurrency((props.paid_bill ?? 0).toString())}đ</Text>
           </VStack>
         </HStack>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ListPaidBill')}>
           <View
             style={{
               backgroundColor: '#FEB7B1',

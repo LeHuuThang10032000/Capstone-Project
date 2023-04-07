@@ -55,6 +55,10 @@ const Index = (props: any) => {
   const [errorPhone, setErrorPhone] = useState('');
   const [userProfile, setUserProfile] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const {userWallet, payment_type} = props.route.params;
+
+  console.log('PAYMENT_TYPE', payment_type);
+  console.log('USER_WALLET', userWallet);
 
   const validatePhoneNumber = useCallback((phoneNumber: string) => {
     if (!phoneNumber) {
@@ -95,7 +99,10 @@ const Index = (props: any) => {
           });
           console.log('Status code: ', result?.data?.status_code);
           if (result?.data?.status_code == 422) {
-            navigation.navigate('ConfirmPM', {data});
+            navigation.navigate('ConfirmPM', {
+              data,
+              payment_type: payment_type,
+            });
           } else if (result?.data?.status_code == 200) {
             setErroWarning('Số điện thoại không tồn tại');
             setErrorDisplay(true);

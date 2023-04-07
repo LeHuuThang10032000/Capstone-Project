@@ -29,14 +29,22 @@ interface Share {
 }
 
 const NotiShareBill = ({route}: any) => {
-  const {order_id} = route.params;
+  const {order_id, userWallet} = route.params;
+
   const [masterDataSource, setMasterDataSource] = useState([]);
+  console.log('Data ===>', masterDataSource);
   const navigation = useNavigation<MainStackNavigation>();
   const {width} = useWindowDimensions();
   const [profile, setProfile] = useState([]);
   const [DetailBill, setDetailBill] = useState([]);
   const [remind, setRemind] = useState(false);
   const [note, setNote] = useState('');
+  const paymentType = 'S';
+  const [phone, setPhone] = useState('');
+  const [isYour, setIsYour] = useState(0);
+  const [amount, setAmount] = useState(0);
+  const [name, setName] = useState('');
+  const [currentUser, setCurrentUser] = useState('');
   const {
     control,
     handleSubmit,
@@ -54,6 +62,29 @@ const NotiShareBill = ({route}: any) => {
       );
       setDetailBill(billDetail?.data?.data);
       setMasterDataSource(billDetail?.data?.data);
+      if (
+        billDetail.data.data.map(
+          (item: {
+            amount: number;
+            is_your: number;
+            shared_user: any;
+            is_owner: number;
+            id: number;
+            shared_name: string;
+          }) => {
+            if (item.is_owner === 1) {
+              setPhone(item.shared_user.phone);
+              setName(item.shared_name);
+            }
+            if (item.is_your === 1) {
+              setIsYour(item?.id);
+              setAmount(item.amount);
+              setCurrentUser(item.shared_user.phone);
+            }
+          },
+        )
+      )
+        setNote('');
     } catch (error) {
       console.log(error);
     }
@@ -62,7 +93,7 @@ const NotiShareBill = ({route}: any) => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log('masterDataSource', masterDataSource);
+  console.log('phone', currentUser);
 
   return (
     <View flex={1} backgroundColor="#ffffff">
@@ -217,7 +248,7 @@ const NotiShareBill = ({route}: any) => {
         justifyContent="space-between">
         <TouchableOpacity onPress={() => setRemind(true)}>
           <Center
-            w={160}
+            w={150}
             backgroundColor="#ffffff"
             borderWidth={1}
             padding={5}
@@ -228,9 +259,27 @@ const NotiShareBill = ({route}: any) => {
           </Center>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            console.log({
+              phone: phone,
+              payment_type: paymentType,
+              amount: amount,
+              shared_name: name,
+              isYour: isYour,
+            });
+
+            navigation.navigate('ConfirmTranferShare', {
+              phone: phone,
+              payment_type: paymentType,
+              amount: amount,
+              shared_name: name,
+              isYour: isYour,
+              current_user: currentUser,
+            });
+          }}>
           <Center
-            w={160}
+            w={150}
             backgroundColor="#B5EAD8"
             borderWidth={1}
             padding={5}
