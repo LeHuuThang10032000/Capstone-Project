@@ -597,7 +597,7 @@ class UserController extends Controller
                     return APIResponse::FailureResponse('Mã giảm giá đã hết lượt sử dụng');
                 }
             }
-            if ($promocode->end_date <= now() || $promocode->end_time <= now()) {
+            if ($promocode->end_date < now() || $promocode->end_time < now()) {
                 return APIResponse::FailureResponse('Mã giảm giá đã hết hạn sử dụng');
             }
             if ($promocode->min_purchase > $cartPrice) {
