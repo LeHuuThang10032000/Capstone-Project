@@ -25,7 +25,12 @@ class FriendsController extends Controller
             array_push($id, $friend->friend_id);
         }
         $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
-//        return $users;
+        $array = [];
+        foreach($users as $user){
+            $friends = Friends::where('user_id', $user->id)->first();
+            $user->status = $friends->status;
+            array_push($array, $user);
+        }
         return FriendsResource::collection($users);
     }
 
@@ -59,6 +64,14 @@ class FriendsController extends Controller
         $friend->friend_id = Auth::user()->id;
         $friend->save();
 
+        return ApiResponse::successResponse([
+            'message' => 'You are friends now'
+        ]);
+    }
+
+    public function accept(Request $request){
+        Friends::where('user_id', $request->user_id)->where('friend_id',$request->friend_id)->update(['status' => 'active']);
+        Friends::where('user_id', $request->friend_id)->where('friend_id', $request->user_id)->update(['status' => 'active']);
         return ApiResponse::successResponse([
             'message' => 'You are friends now'
         ]);

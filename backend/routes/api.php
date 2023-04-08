@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::get('friends', [FriendsController::class, 'index']);
     Route::post('friends', [FriendsController::class, 'store']);
     Route::post('unfriend', [FriendsController::class, 'destroy']);
+    Route::post('friends/accept', [FriendsController::class, 'accept']);
 
     Route::apiResource('notification', NotificationController::class);
 
@@ -126,7 +127,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::group(['prefix' => 'share-bill'], function() {
         Route::get('', [UserController::class, 'getShareBill']);
         Route::get('paid', [UserController::class, 'getPaidShareBill']);
-        Route::get('detail', [UserController::class, 'getShareBillDetail']);       
+        Route::get('detail', [UserController::class, 'getShareBillDetail']);
         Route::post('', [UserController::class, 'createShareBill']);
         Route::post('pay', [UserController::class, 'payShareBill']);
         Route::post('remind', [UserController::class, 'remindPayShareBill']);
