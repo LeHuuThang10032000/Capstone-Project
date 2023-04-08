@@ -29,6 +29,7 @@ class FriendsController extends Controller
         foreach($users as $user){
             $friends = Friends::where('user_id', $user->id)->first();
             $user->status = $friends->status;
+            $user->type = $friends->type;
             array_push($array, $user);
         }
         return FriendsResource::collection($users);
@@ -57,15 +58,17 @@ class FriendsController extends Controller
         $user = new Friends();
         $user->user_id = Auth::user()->id;
         $user->friend_id = $request->friend_id;
+        $user->type = '0';
         $user->save();
 
         $friend = new Friends();
         $friend->user_id = $request->friend_id;
         $friend->friend_id = Auth::user()->id;
+        $friend->type = '1';
         $friend->save();
 
         return ApiResponse::successResponse([
-            'message' => 'You are friends now'
+            'message' => 'Gửi yêu cầu kết bạn thành công'
         ]);
     }
 
