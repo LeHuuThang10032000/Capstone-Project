@@ -29,10 +29,10 @@ class FriendsController extends Controller
         foreach ($users as $_user) {
             if($request->send_request){ //nguoi gui yc kb
                 $friend = Friends::where('user_id', $user)
-                    ->where('friend_id', $_user->id)->first();
+                    ->where('friend_id', $_user->id)->where('type', '0')->first();
             }else{
-                $friend = Friends::where('user_id', $_user->id)
-                    ->where('friend_id', $user)->first();
+                $friend = Friends::where('user_id', $user)
+                    ->where('friend_id', $_user->id)->where('type', '1')->first();
             }
             if($friend){
                 $_user->status = $friend->status;
