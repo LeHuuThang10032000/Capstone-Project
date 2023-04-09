@@ -27,7 +27,13 @@ class FriendsController extends Controller
         $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
         $array = [];
         foreach ($users as $_user) {
-            $friend = Friends::where('user_id', $_user->id)->where('friend_id', $user)->first();
+            if($request->send_request){ //nguoi gui yc kb
+                $friend = Friends::where('user_id', $user)
+                    ->where('friend_id', $_user->id)->first();
+            }else{
+                $friend = Friends::where('user_id', $_user->id)
+                    ->where('friend_id', $user)->first();
+            }
             if($friend){
                 $_user->status = $friend->status;
                 $_user->type = $friend->type;
@@ -60,13 +66,13 @@ class FriendsController extends Controller
         $user = new Friends();
         $user->user_id = Auth::user()->id;
         $user->friend_id = $request->friend_id;
-        $user->type = '0';
+        $user->type = '0'; // nguoi gui yeu cau kb
         $user->save();
 
         $friend = new Friends();
         $friend->user_id = $request->friend_id;
         $friend->friend_id = Auth::user()->id;
-        $friend->type = '1';
+        $friend->type = '1'; // nguoi nhan yc kb
         $friend->save();
 
         return ApiResponse::successResponse([
