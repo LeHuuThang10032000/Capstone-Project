@@ -27,28 +27,18 @@ class FriendsController extends Controller
         $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
         $array = [];
         switch ($request->request_coming) {
-            case 'send_request':
+            case 'pending':
                 foreach ($users as $_user) {
                     $friend = Friends::where('user_id', $user)
-                        ->where('friend_id', $_user->id)->where('type', '0')->where('status', 'pending')->first();
+                        ->where('friend_id', $_user->id)
+                        ->where('status', 'pending')->first();
                     if ($friend) {
                         $_user->status = $friend->status;
-                        $_user->type = $friend->type;
-                        array_push($array, $_user);
-                    }
-                }
-                break;
-            case 'get_request':
-                foreach ($users as $_user) {
-                    $friend = Friends::where('user_id', $_user->id)
-                        ->where('friend_id', $user)
-                        ->where('type', '1')
-                        ->where('status', 'pending')
-                        ->first();
-                    if ($friend) {
-                        $_user->status = $friend->status;
-                        $_user->type = $friend->type;
-                        array_push($array, $_user);
+                        $_user->type = 'waiting';
+                        $friendNotAcceptYet = clone $_user;
+                        $friendNotAcceptYet->status = $friend->status;
+                        $friendNotAcceptYet->type = 'not_accept_yet';
+                        array_push($array, $_user,$friendNotAcceptYet);
                     }
                 }
                 break;
@@ -80,7 +70,8 @@ class FriendsController extends Controller
             return ApiResponse::failureResponse($validations->messages()->first());
         }
 
-        $hasAlreadyRelationship = Friends::where('user_id', Auth::user()->id)->where('friend_id', $request->friend_id)->first();
+        $hasAlreadyRelationship = Friends::where('user_id', Auth::user()->id)
+            ->where('friend_id', $request->friend_id)->first();
 
         if ($hasAlreadyRelationship) {
             return ApiResponse::failureResponse(
@@ -91,13 +82,13 @@ class FriendsController extends Controller
         $user = new Friends();
         $user->user_id = Auth::user()->id;
         $user->friend_id = $request->friend_id;
-        $user->type = '0'; // nguoi gui yeu cau kb
+        $user->requester_id = Auth::user()->id;
         $user->save();
 
         $friend = new Friends();
         $friend->user_id = $request->friend_id;
         $friend->friend_id = Auth::user()->id;
-        $friend->type = '1'; // nguoi nhan yc kb
+        $friend->requester_id = Auth::user()->id;
         $friend->save();
 
         return ApiResponse::successResponse([
