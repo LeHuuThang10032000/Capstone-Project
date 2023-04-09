@@ -27,7 +27,7 @@ class FriendsController extends Controller
         $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
         $array = [];
         foreach ($users as $_user) {
-            if($request->send_request){ //nguoi gui yc kb
+            if($request->send_request === '0'){ //nguoi gui yc kb
                 $friend = Friends::where('user_id', $user)
                     ->where('friend_id', $_user->id)->where('type', '0')->first();
             }else{
