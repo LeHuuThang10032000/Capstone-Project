@@ -34,8 +34,8 @@ class FriendsController extends Controller
                 $friend = Friends::where('user_id', $user)
                     ->where('friend_id', $_user->id)->where('status', 'active')->first();
             } else { // nguoi nhan yc kb
-                $friend = Friends::where('user_id', $user)
-                    ->where('friend_id', $_user->id)
+                $friend = Friends::where('user_id', $_user->id)
+                    ->where('friend_id', $user)
                     ->where('type', '1')
                     ->where('status', 'pending')
                     ->first();
