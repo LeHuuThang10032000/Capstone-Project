@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import HeaderBack from '../../../components/HeaderBack';
 import {HStack, ScrollView, VStack} from 'native-base';
 import {UText} from '../../../components/UText';
@@ -7,11 +7,23 @@ import Icons from '../../../components/Icons';
 import styles from './styles';
 import moment from 'moment';
 import {formatCurrency} from '../../../components/helper';
+import {axiosClient} from '../../../components/apis/axiosClient';
 
 type Props = {};
 
 const PaymentDetailShare = ({route}: any) => {
   const {amount, shared_name, phone, message} = route.params;
+
+  const [userWallet, setUserWallet] = useState(0);
+  const [credit, setCredit] = useState(0);
+
+  console.log(userWallet, credit);
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get('/user-wallet');
+    setUserWallet(result?.data?.data?.balance);
+    setCredit(result?.data?.data?.credit_limit);
+  }, []);
 
   console.log({
     amount,
@@ -105,7 +117,7 @@ const PaymentDetailShare = ({route}: any) => {
               justifyContent={'center'}>
               <HStack width={'90%'} justifyContent={'space-between'}>
                 <UText>Số dư ví</UText>
-                <UText>0 đ</UText>
+                <UText>{formatCurrency((userWallet ?? 0).toString())}đ</UText>
               </HStack>
             </HStack>
           </VStack>
