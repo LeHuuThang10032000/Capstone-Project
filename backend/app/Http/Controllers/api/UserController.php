@@ -266,7 +266,9 @@ class UserController extends Controller
 
             $users = User::where('status', '!=', 'inactive')
                 ->where('f_name', 'LIKE', '%' . $request->key . '%')
+                ->where('id','<>', Auth::user()->id)
                 ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->where('id','<>', Auth::user()->id)
                 ->get();
 
             $data = [
@@ -1091,7 +1093,7 @@ class UserController extends Controller
                 ->where('owner_id', Auth::user()->id)
                 ->where('status', '!=', 'paid')
                 ->get();
-            
+
             foreach($bills as $bill)
             {
                 if($bill->shared_id != Auth::user()->id) {
