@@ -16,7 +16,7 @@ use function League\Uri\validate;
 
 class FriendsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user()->id;
         $friends = Friends::where('user_id', $user)->get();
@@ -26,13 +26,15 @@ class FriendsController extends Controller
         }
         $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
         $array = [];
-        foreach($users as $_user){
-            $friends = Friends::where('user_id', $_user->id)->where('friend_id', $user)->first();
-            $_user->status = $friends->status;
-            $_user->type = $friends->type;
-            array_push($array, $_user);
+        foreach ($users as $_user) {
+            $friend = Friends::where('user_id', $_user->id)->where('friend_id', $user)->first();
+            if($friend){
+                $_user->status = $friend->status;
+                $_user->type = $friend->type;
+                array_push($array, $_user);
+            }
         }
-        return FriendsResource::collection($users);
+        return FriendsResource::collection($array);
     }
 
     public function store(Request $request)
@@ -72,8 +74,9 @@ class FriendsController extends Controller
         ]);
     }
 
-    public function accept(Request $request){
-        Friends::where('user_id', $request->user_id)->where('friend_id',$request->friend_id)->update(['status' => 'active']);
+    public function accept(Request $request)
+    {
+        Friends::where('user_id', $request->user_id)->where('friend_id', $request->friend_id)->update(['status' => 'active']);
         Friends::where('user_id', $request->friend_id)->where('friend_id', $request->user_id)->update(['status' => 'active']);
         return ApiResponse::successResponse([
             'message' => 'You are friends now'
