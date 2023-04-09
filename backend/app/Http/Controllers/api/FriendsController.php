@@ -36,11 +36,7 @@ class FriendsController extends Controller
                         $_user->status = $friend->status;
                         $_user->type = 'waiting';
                         $_user->requester_id = $friend->requester_id;
-                        $friendNotAcceptYet = clone $_user;
-                        $friendNotAcceptYet->status = $friend->status;
-                        $friendNotAcceptYet->type = 'not_accept_yet';
-                        $friendNotAcceptYet->requester_id = $friend->requester_id;
-                        array_push($array, $_user,$friendNotAcceptYet);
+                        array_push($array, $_user);
                     }
                 }
                 break;
