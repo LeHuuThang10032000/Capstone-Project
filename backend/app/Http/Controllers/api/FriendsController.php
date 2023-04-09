@@ -26,11 +26,11 @@ class FriendsController extends Controller
         }
         $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
         $array = [];
-        foreach($users as $user){
-            $friends = Friends::where('user_id', $user->id)->first();
-            $user->status = $friends->status;
-            $user->type = $friends->type;
-            array_push($array, $user);
+        foreach($users as $_user){
+            $friends = Friends::where('user_id', $_user->id)->where('friend_id', $user)->first();
+            $_user->status = $friends->status;
+            $_user->type = $friends->type;
+            array_push($array, $_user);
         }
         return FriendsResource::collection($users);
     }
