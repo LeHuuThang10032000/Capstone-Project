@@ -27,7 +27,7 @@ class FriendsController extends Controller
         $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
         $array = [];
         foreach ($users as $_user) {
-            if($request->send_request === '0'){ //nguoi gui yc kb
+            if($request->send_request === 0){ //nguoi gui yc kb
                 $friend = Friends::where('user_id', $user)
                     ->where('friend_id', $_user->id)->where('type', '0')->first();
             }else{
@@ -82,8 +82,8 @@ class FriendsController extends Controller
 
     public function accept(Request $request)
     {
-        Friends::where('user_id', $request->user_id)->where('friend_id', $request->friend_id)->update(['status' => 'active']);
-        Friends::where('user_id', $request->friend_id)->where('friend_id', $request->user_id)->update(['status' => 'active']);
+        Friends::where('user_id', Auth::user()->id)->where('friend_id', $request->friend_id)->update(['status' => 'active']);
+        Friends::where('user_id', $request->friend_id)->where('friend_id', Auth::user()->id)->update(['status' => 'active']);
         return ApiResponse::successResponse([
             'message' => 'You are friends now'
         ]);
