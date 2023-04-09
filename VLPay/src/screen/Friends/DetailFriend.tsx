@@ -8,18 +8,23 @@ import DeleteFriend from '../../assets/svg/delete-friend.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 import {axiosClient} from '../../components/apis/axiosClient';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/Icons';
+import Colors from '../../components/helpers/Colors';
 
 const DetailFriend = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {f_name, phone, id} = route.params;
+  const {f_name, phone, id, status, type, image, requester_id} =
+    route.params?.item;
   const [friend, setFriend] = useState(false);
-
+  const [visibleWarning, setVisibleWarning] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
   return (
     <View>
       <HeaderBack title="Hồ sơ bạn bè" />
       <Center style={{paddingVertical: 40}}>
         <Image
-          source={{uri: 'https://picsum.photos/200/150'}}
+          source={{uri: image}}
           alt="img"
           borderRadius={100}
           width={150}
@@ -35,37 +40,113 @@ const DetailFriend = ({route}: any) => {
           width={'90%'}
           background={'#B5EAD8'}
           onPress={async () => {
-            Alert.alert(
-              'Cảnh báo',
-              'Bạn có muốn xóa kết bạn với người dùng này?',
-              [
-                {
-                  text: 'Thoát',
-                  onPress: () => console.log('Cancel Pressed'),
-                  style: 'cancel',
-                },
-                {
-                  text: 'Đồng Ý',
-                  onPress: async () => {
-                    if (!friend) {
-                      const formData = new FormData();
-                      formData.append('friend_id', id);
-                      console.log('Da xoa');
-                      console.log(formData);
-                      await axiosClient.post(
-                        'https://zennoshop.cf/api/user/unfriend',
-                        formData,
-                        {
-                          headers: {'content-type': 'multipart/form-data'},
-                        },
-                      );
-                      navigation.goBack();
-                    }
-                    setFriend(!friend);
+            if (status == 'pending') {
+              if (type == 'waiting') {
+                Alert.alert(
+                  'Cảnh báo',
+                  'Bạn muốn huỷ yêu cầu kết bạn với người này?',
+                  [
+                    {
+                      text: 'Thoát',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'Đồng Ý',
+                      onPress: async () => {
+                        if (!friend) {
+                          const formData = new FormData();
+                          formData.append('friend_id', id);
+                          console.log(id);
+
+                          await axiosClient.post(
+                            'https://zennoshop.cf/api/user/unfriend',
+                            formData,
+                            {
+                              headers: {'content-type': 'multipart/form-data'},
+                            },
+                          );
+                          setVisibleWarning(true);
+                          setPhoneError('huỷ yêu cầu kết bạn thành công');
+                          setTimeout(() => {
+                            setVisibleWarning(false);
+                            navigation.goBack();
+                          }, 2000);
+                        }
+                        setFriend(!friend);
+                      },
+                    },
+                  ],
+                );
+              } else {
+                Alert.alert('Cảnh báo', 'Bạn muốn kết bạn với người này?', [
+                  {
+                    text: 'Thoát',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
                   },
-                },
-              ],
-            );
+                  {
+                    text: 'Đồng Ý',
+                    onPress: async () => {
+                      if (!friend) {
+                        const formData = new FormData();
+                        formData.append('friend_id', id);
+                        await axiosClient.post(
+                          'https://zennoshop.cf/api/user/friends/accept',
+                          formData,
+                          {
+                            headers: {'content-type': 'multipart/form-data'},
+                          },
+                        );
+                        setVisibleWarning(true);
+                        setPhoneError('Kết bạn thành công');
+                        setTimeout(() => {
+                          setVisibleWarning(false);
+                          navigation.goBack();
+                        }, 2000);
+                      }
+                      setFriend(!friend);
+                    },
+                  },
+                ]);
+              }
+            } else {
+              Alert.alert(
+                'Cảnh báo',
+                'Bạn có muốn xóa kết bạn với người dùng này?',
+                [
+                  {
+                    text: 'Thoát',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Đồng Ý',
+                    onPress: async () => {
+                      if (!friend) {
+                        const formData = new FormData();
+                        formData.append('friend_id', id);
+                        console.log('Da xoa');
+                        console.log(formData);
+                        await axiosClient.post(
+                          'https://zennoshop.cf/api/user/unfriend',
+                          formData,
+                          {
+                            headers: {'content-type': 'multipart/form-data'},
+                          },
+                        );
+                        setVisibleWarning(true);
+                        setTimeout(() => {
+                          setVisibleWarning(false);
+                          navigation.goBack();
+                        }, 2000);
+                      }
+                      setFriend(!friend);
+                    },
+                  },
+                ],
+              );
+            }
           }}
           leftIcon={
             friend ? (
@@ -74,13 +155,43 @@ const DetailFriend = ({route}: any) => {
               <AddFriend color="#514545" width={30} height={30} />
             )
           }>
-          {friend ? (
+          {status === 'pending' ? (
+            type !== 'waiting' ? (
+              <Text style={styles.button}>Chấp thuận</Text>
+            ) : (
+              <Text style={styles.button}>Đã gửi yêu cầu</Text>
+            )
+          ) : friend ? (
             <Text style={styles.button}>Add friend</Text>
           ) : (
             <Text style={styles.button}>Delete friend</Text>
           )}
         </Button>
       </Center>
+      <YesNoModal
+        icon={<Icons.SuccessIcon />}
+        visible={visibleWarning}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        hideRight={true}
+        hideLeft={true}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message={phoneError}
+        onActionLeft={() => {
+          setVisibleWarning(false);
+        }}
+        onActionRight={() => {
+          setVisibleWarning(false);
+        }}
+        btnTextLeft={'Xác nhận'}
+        style={{flexDirection: 'column'}}
+      />
     </View>
   );
 };

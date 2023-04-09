@@ -42,7 +42,7 @@ const DetailUser = ({route}: any) => {
         Toast.show({
           type: 'success',
           text1: 'Thành công',
-          text2: 'kết bạn thành công!',
+          text2: 'Yêu cầu kết bạn thành công!',
         });
       } catch (e) {
         console.log(e);
@@ -74,8 +74,8 @@ const DetailUser = ({route}: any) => {
         setFriend(true);
         Toast.show({
           type: 'error',
-          text1: 'Kết bạn thất bại',
-          text2: 'huỷ kết bạn không thành công!',
+          text1: 'Yêu cầu kết bạn thất bại',
+          text2: 'Huỷ yêu cầu kết bạn không thành công!',
         });
       }
     }
@@ -98,7 +98,7 @@ const DetailUser = ({route}: any) => {
       </Center>
       <Center>
         <Button
-          width={'30%'}
+          width={'40%'}
           background={'#FEB7B1'}
           onPress={handAddFr}
           leftIcon={
@@ -108,7 +108,9 @@ const DetailUser = ({route}: any) => {
               <DeleteFriend color="#514545" />
             )
           }>
-          <Text style={styles.button}>{!isFriend ? 'Kết bạn' : 'Huỷ kb'}</Text>
+          <Text style={styles.button}>
+            {!isFriend ? 'Kết bạn' : 'Đã gửi yêu cầu'}
+          </Text>
         </Button>
       </Center>
     </View>

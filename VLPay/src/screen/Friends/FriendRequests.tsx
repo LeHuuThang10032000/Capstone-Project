@@ -39,7 +39,7 @@ type Props = {
   text: string;
 };
 
-const Index = () => {
+const FriendRequests = () => {
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
@@ -57,16 +57,27 @@ const Index = () => {
   };
 
   const loadData = async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
     axiosClient
-      .get('https://zennoshop.cf/api/user/friends?request_coming=active')
+      .get('https://zennoshop.cf/api/user/friends?request_coming=pending')
       .then(res => {
-        console.log(res);
+        const friends = res.data?.data.map(item => {
+          if (item?.requester_id == result.data.data.id) {
+            item.type = 'waiting';
+            return item;
+          } else {
+            item.type = 'has_not_accept';
+            return item;
+          }
+        });
 
-        setMasterDataSource(res.data?.data);
-        setFilteredDataSource(res.data?.data);
+        setMasterDataSource(friends);
+        setFilteredDataSource(friends);
         setLoading(false);
       })
-      .catch(e => console.log(e));
+      .catch(e => console.log(e?.data?.data));
   };
 
   React.useEffect(() => {
@@ -77,18 +88,25 @@ const Index = () => {
     return unsubscribe;
   }, [navigation]);
 
-  useEffect(() => {
-    setLoading(true);
+  const fetchData = async () => {
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
     axiosClient
-      .get('https://zennoshop.cf/api/user/friends?request_coming=active')
+      .get('https://zennoshop.cf/api/user/friends?request_coming=pending')
       .then(res => {
-        console.log(res);
+        // const item = res.data?.data.filter(item => )
 
         setMasterDataSource(res.data?.data);
         setFilteredDataSource(res.data?.data);
         setLoading(false);
       })
       .catch(e => console.log(e));
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
   }, []);
 
   const searchFilterFunction = (text: string) => {
@@ -169,7 +187,7 @@ const Index = () => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <HeaderBack title="Bạn bè trên VLPay" />
+      <HeaderBack title="Yêu cầu bạn bè" />
       <Center marginY={5}>
         <Input
           placeholder="Nhập số điện thoại để tìm bạn bè"
@@ -255,4 +273,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+export default FriendRequests;

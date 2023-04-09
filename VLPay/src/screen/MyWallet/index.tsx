@@ -146,6 +146,20 @@ const Index = () => {
               <ExtendIcon />
             </View>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('FriendRequests')}>
+            <View style={styles.info}>
+              <PersonIcon height={15} width={15} style={{paddingLeft: 30}} />
+              <View style={{paddingLeft: 10, justifyContent: 'center'}}>
+                <Text style={styles.text}>Yêu cầu bạn bè</Text>
+              </View>
+            </View>
+            <View>
+              <ExtendIcon />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
 
