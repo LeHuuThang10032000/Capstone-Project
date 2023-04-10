@@ -70,7 +70,7 @@ const PaymentDetails = () => {
                 Mã giao dịch:
                 <UText style={{color: '#0088CC'}}>
                   {' '}
-                  {code ?? Math.floor(Math.random() * 100000)}
+                  {parseInt(Math.random() * 1000000000, 8).toString()}
                 </UText>
               </UText>
             </VStack>

@@ -17,6 +17,16 @@ const PaymentDetailShare = ({route}: any) => {
   const [userWallet, setUserWallet] = useState(0);
   const [credit, setCredit] = useState(0);
   const phoneNumber = '028 7105 9999';
+  const randomNumbers = Array.from({length: 8}, () =>
+    Math.floor(Math.random() * 100000),
+  );
+  const numList = [];
+  for (let i = 0; i <= 8; i++) {
+    const num = Math.floor(Math.random() * 100) + 1;
+    numList.push('==>', num);
+  }
+
+  console.log(numList);
 
   console.log(userWallet, credit);
 
@@ -61,7 +71,7 @@ const PaymentDetailShare = ({route}: any) => {
               <UText style={{fontSize: 15}}>
                 Mã giao dịch:{' '}
                 <UText style={{color: '#0088CC'}}>
-                  {Math.floor(Math.random() * 100000)}
+                  {parseInt(Math.random() * 1000000000, 8).toString()}
                 </UText>
               </UText>
             </VStack>
