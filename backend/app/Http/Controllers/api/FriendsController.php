@@ -35,7 +35,7 @@ class FriendsController extends Controller
                     if ($friend) {
                         $_user->status = $friend->status;
                         $_user->requester_id = $friend->requester_id;
-                        if($friend->requester_id === $_user->id){
+                        if($friend->requester_id == Auth::user()->id){
                             $_user->type = 'waiting';
                         }else{
                             $_user->type = 'has_not_accept';
