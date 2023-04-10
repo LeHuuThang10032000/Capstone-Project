@@ -20,15 +20,15 @@
                             <p class="m-0">Thông tin người gửi</p>
                             <p class="m-0">Số diện thoại: {{$transaction->fromUser->phone ?? 'Tài khoản đã xóa'}}</p>
                             <p class="m-0">Tên: {{$transaction->fromUser->f_name ?? 'Tài khoản đã xóa'}}</p>
-                            <p class="m-0">Số dư đầu kỳ: {{$transaction->fromDetail->open_balance ?? 'Tài khoản đã xóa'}}</p>
-                            <p class="m-0">Số dư đầu kỳ: {{$transaction->fromDetail->close_balance ?? 'Tài khoản đã xóa'}}</p>
+                            <p class="m-0">Số dư đầu kỳ: {{$transaction->fromDetail->open_balance ? number_format($transaction->fromDetail->open_balance) : null}}</p>
+                            <p class="m-0">Số dư đầu kỳ: {{$transaction->fromDetail->close_balance ? number_format($transaction->fromDetail->close_balance) : null}}</p>
                         </div>
                         <div class="rounded border p-2 my-1">
                             <p class="m-0">Thông tin người nhận</p>
                             <p class="m-0">Số điện thoại: {{$transaction->toUser->phone ?? 'Tài khoản đã xóa'}}</p>
                             <p class="m-0">Tên: {{$transaction->toUser->f_name ?? 'Tài khoản đã xóa'}}</p>
-                            <p class="m-0">Số dư đầu kỳ: {{$transaction->toDetail->open_balance ?? 'Tài khoản đã xóa'}}</p>
-                            <p class="m-0">Số dư đầu kỳ: {{$transaction->toDetail->close_balance ?? 'Tài khoản đã xóa'}}</p>
+                            <p class="m-0">Số dư đầu kỳ: {{$transaction->toDetail->open_balance ? number_format($transaction->toDetail->open_balance) : null}}</p>
+                            <p class="m-0">Số dư đầu kỳ: {{$transaction->toDetail->close_balance ? number_format($transaction->toDetail->open_balance) : null}}</p>
                         </div>
                         <p class="m-0">Thời gian giao dịch: {{$transaction->created_at}}</p>
                     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Resources;
 use App\Http\Controllers\Controller;
 use App\Models\CreditRequest;
 use App\Models\Notification;
+use App\Models\Order;
 use App\Models\Promocode;
 use App\Models\Store;
 use App\Models\Transaction;
@@ -307,7 +308,12 @@ class OrganiserController extends Controller
         $approvedStores = Store::where('status', 'approved')->count();
         $newRegisters = User::whereMonth('created_at', now()->month)->count();
         $monthTransactions = Transaction::whereMonth('created_at', now()->month)->count();
+        $orders = Order::select(
+            '*', 
+            DB::raw('(select count(*) from orders where status = "taken") as taken_count'),
+            DB::raw('(select count(*) from orders where status = "canceled") as canceled_count'))
+            ->get();
 
-        return view('dashboard', compact('pendingStores', 'approvedStores', 'newRegisters', 'monthTransactions'));
+        return view('dashboard', compact('pendingStores', 'approvedStores', 'newRegisters', 'monthTransactions', 'orders'));
     }
 }
