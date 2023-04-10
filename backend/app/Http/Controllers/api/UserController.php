@@ -274,8 +274,8 @@ class UserController extends Controller
             $array = [];
             foreach ($users as $user){
                 $friend = Friends::where('user_id', $cur_user)
-                    ->where('friend_id', $user->id)
-                    ->where('status', 'pending')->first();
+                    ->where('friend_id', $user->id)->first();
+
                 if ($friend) {
                     $user->friend_status = $friend->status;
                     $user->requester_id = $friend->requester_id;
