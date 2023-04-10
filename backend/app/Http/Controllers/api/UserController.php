@@ -277,7 +277,7 @@ class UserController extends Controller
                     ->where('friend_id', $user->id)
                     ->where('status', 'pending')->first();
                 if ($friend) {
-                    $user->friend_status = $friend->friend_status;
+                    $user->friend_status = $friend->status;
                     $user->requester_id = $friend->requester_id;
                     if($friend->requester_id == $cur_user){
                         $user->type = 'waiting';
