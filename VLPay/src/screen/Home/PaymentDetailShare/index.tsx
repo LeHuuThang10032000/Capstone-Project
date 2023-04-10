@@ -1,7 +1,7 @@
-import {View, Text} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import {View, Text, Linking} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
 import HeaderBack from '../../../components/HeaderBack';
-import {HStack, ScrollView, VStack} from 'native-base';
+import {HStack, Pressable, ScrollView, VStack} from 'native-base';
 import {UText} from '../../../components/UText';
 import Icons from '../../../components/Icons';
 import styles from './styles';
@@ -16,6 +16,7 @@ const PaymentDetailShare = ({route}: any) => {
 
   const [userWallet, setUserWallet] = useState(0);
   const [credit, setCredit] = useState(0);
+  const phoneNumber = '028 7105 9999';
 
   console.log(userWallet, credit);
 
@@ -23,6 +24,10 @@ const PaymentDetailShare = ({route}: any) => {
     const result = await axiosClient.get('/user-wallet');
     setUserWallet(result?.data?.data?.balance);
     setCredit(result?.data?.data?.credit_limit);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   console.log({
@@ -89,21 +94,25 @@ const PaymentDetailShare = ({route}: any) => {
                 <UText style={styles.leftContent}>Miễn phí</UText>
               </HStack>
               <View style={styles.separate} />
-              <HStack
-                style={[
-                  {
-                    backgroundColor: '#EEFAF6',
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  },
-                ]}>
-                <Icons.SupportIcon />
-                <View style={{width: 5}} />
-                <UText style={{fontSize: 15, fontWeight: '700'}}>
-                  Liên hệ hỗ trợ
-                </UText>
-              </HStack>
+              <Pressable
+                w={'100%'}
+                onPress={() => Linking.openURL(`tel:${phoneNumber}`)}>
+                <HStack
+                  style={[
+                    {
+                      backgroundColor: '#EEFAF6',
+                      width: '100%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    },
+                  ]}>
+                  <Icons.SupportIcon />
+                  <View style={{width: 5}} />
+                  <UText style={{fontSize: 15, fontWeight: '700'}}>
+                    Liên hệ hỗ trợ
+                  </UText>
+                </HStack>
+              </Pressable>
             </VStack>
           </VStack>
           <VStack width={'90%'} alignItems={'center'}>

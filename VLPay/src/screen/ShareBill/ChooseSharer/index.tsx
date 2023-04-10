@@ -56,8 +56,11 @@ const ChooseSharer = () => {
   };
 
   const fetchData = async () => {
+    setLoading(true);
     try {
-      const responseJson = await axiosClient.get('/friends');
+      const responseJson = await axiosClient.get(
+        '/friends?request_coming=active',
+      );
       const result = await axiosClient.get(
         'https://zennoshop.cf/api/user/get-profile',
       );
@@ -141,11 +144,15 @@ const ChooseSharer = () => {
   const EmptyComponent = () => {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Lottie
-          source={require('../../../assets/lottie-file/loading.json')}
-          autoPlay={true}
-          style={{width: 100, height: 100}}
-        />
+        {loading ? (
+          <Lottie
+            source={require('../../../assets/lottie-file/loading.json')}
+            autoPlay={true}
+            style={{width: 100, height: 100}}
+          />
+        ) : (
+          <Text>Không tìm thấy bạn bè</Text>
+        )}
       </View>
     );
   };
