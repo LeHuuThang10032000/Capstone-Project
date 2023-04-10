@@ -1,14 +1,16 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {HStack, VStack} from 'native-base';
+import {HStack, Pressable, VStack} from 'native-base';
 import {getRandomString} from 'native-base/lib/typescript/theme/tools';
-import React, {useEffect} from 'react';
-import {BackHandler, ScrollView, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {BackHandler, Linking, ScrollView, View} from 'react-native';
 import HeaderBack from '../../components/HeaderBack';
 import {formatCurrency} from '../../components/helper';
 import Icons from '../../components/Icons';
 import {UText} from '../../components/UText';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import styles from '../Login/styles';
+import {axiosClient} from '../../components/apis/axiosClient';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const PaymentDetails = () => {
   const {data} =
@@ -25,6 +27,22 @@ const PaymentDetails = () => {
       navigation.navigate('Home');
       return true;
     });
+  }, []);
+
+  const [userWallet, setUserWallet] = useState(0);
+  const [credit, setCredit] = useState(0);
+  const phoneNumber = '028 7105 9999';
+
+  console.log(userWallet, credit);
+
+  const fetchData = useCallback(async () => {
+    const result = await axiosClient.get('/user-wallet');
+    setUserWallet(result?.data?.data?.balance);
+    setCredit(result?.data?.data?.credit_limit);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
   }, []);
   return (
     <View style={{flex: 1, paddingBottom: 10, backgroundColor: '#ffffff'}}>
@@ -83,21 +101,25 @@ const PaymentDetails = () => {
                 <UText style={styles.leftContent}>Miễn phí</UText>
               </HStack>
               <View style={styles.separate} />
-              <HStack
-                style={[
-                  {
-                    backgroundColor: '#EEFAF6',
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  },
-                ]}>
-                <Icons.SupportIcon />
-                <View style={{width: 5}} />
-                <UText style={{fontSize: 15, fontWeight: '700'}}>
-                  Liên hệ hỗ trợ
-                </UText>
-              </HStack>
+              <Pressable
+                w={'100%'}
+                onPress={() => Linking.openURL(`tel:${phoneNumber}`)}>
+                <HStack
+                  style={[
+                    {
+                      backgroundColor: '#EEFAF6',
+                      width: '100%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    },
+                  ]}>
+                  <Icons.SupportIcon />
+                  <View style={{width: 5}} />
+                  <UText style={{fontSize: 15, fontWeight: '700'}}>
+                    Liên hệ hỗ trợ
+                  </UText>
+                </HStack>
+              </Pressable>
             </VStack>
           </VStack>
           <VStack width={'90%'} alignItems={'center'}>
@@ -111,12 +133,7 @@ const PaymentDetails = () => {
               justifyContent={'center'}>
               <HStack width={'90%'} justifyContent={'space-between'}>
                 <UText>Số dư ví</UText>
-                <UText>
-                  {formatCurrency(
-                    (data?.current_wallet - data?.money ?? 0).toString(),
-                  )}
-                  đ
-                </UText>
+                <UText>{formatCurrency((userWallet ?? 0).toString())}đ</UText>
               </HStack>
             </HStack>
           </VStack>

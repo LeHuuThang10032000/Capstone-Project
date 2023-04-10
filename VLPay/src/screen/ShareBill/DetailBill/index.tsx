@@ -43,12 +43,16 @@ const DetailBill = ({route}: any) => {
   const [generalError, setGeneralError] = useState('');
   const [isSuccess, setSuccess] = useState(false);
   const [friends, setFriends] = useState(data?.checkedItems);
-  console.log(data);
+  console.log(masterDataSource);
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const responseJson = await axiosClient.get('/friends');
+      const responseJson = await axiosClient.get(
+        '/friends?request_coming=active',
+      );
+      console.log(responseJson);
+
       const result = await axiosClient.get(
         'https://zennoshop.cf/api/user/get-profile',
       );
@@ -71,7 +75,7 @@ const DetailBill = ({route}: any) => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(friends);
+  console.log('==>', masterDataSource);
 
   return (
     <View flex={1} backgroundColor="#ffffff">

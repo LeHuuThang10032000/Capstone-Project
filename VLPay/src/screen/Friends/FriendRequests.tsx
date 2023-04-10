@@ -175,7 +175,7 @@ const FriendRequests = () => {
           autoPlay={true}
           style={{width: 200, height: 200}}
         />
-        <Heading size={'md'}>Không tìm thấy bạn bè nào.</Heading>
+        <Heading size={'md'}>Không tìm thấy yêu cầu nào.</Heading>
       </View>
     );
   };

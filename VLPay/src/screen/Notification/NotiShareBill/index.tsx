@@ -95,6 +95,10 @@ const NotiShareBill = ({route}: any) => {
   }, []);
   console.log('phone', currentUser);
 
+  const onSubmit = async (data: any) => {
+    console.log(data);
+  };
+
   return (
     <View flex={1} backgroundColor="#ffffff">
       <HeaderBack title="Chia tiền" />
@@ -226,7 +230,7 @@ const NotiShareBill = ({route}: any) => {
               />
 
               <View padding={5}>
-                <TouchableOpacity onPress={async () => {}}>
+                <TouchableOpacity onPress={handleSubmit(onSubmit)}>
                   <Center
                     backgroundColor="#B5EAD8"
                     padding={5}
