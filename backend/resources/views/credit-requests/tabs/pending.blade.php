@@ -7,16 +7,17 @@
 <div class="{{ ($index == 0) ? 'py-2' : 'pb-2' }} px-3">
     <div class="d-flex justify-content-between rounded border">
         <div class="p-3">
-            <p class="m-0">id tài khoản: {{$request->user->id}}</p>
-            <p class="m-0">Tên: {{$request->name}} - {{$request->mssv}}</p>
-            <p class="m-0">Số điện thoại: {{$request->phone}}</p>
+            <p class="m-0">id tài khoản: {{($request->user->id) ?? 'null'}}</p>
+            <p class="m-0">Tên: {{($request->name) ?? 'null'}} - {{($request->mssv) ?? 'null'}}</p>
+            <p class="m-0">Số điện thoại: {{($request->phone) ?? 'null'}}</p>
             <p class="m-0">Email: {{ ($request->email) ?? 'null' }}</p>
-            <p class="m-0">Lý do: {{ ($request->reason)}}</p>
-            <p class="m-0">Thời gian gửi yêu cầu: {{$request->created_at}}</p>
+            <p class="m-0">Lý do: {{ ($request->reason) ?? 'null'}}</p>
+            <p class="m-0">Thời gian gửi yêu cầu: {{($request->created_at) ?? 'null'}}</p>
             <p class="m-0" style="color: #FF9900">Chờ phê duyệt</p>
         </div>
+        @if($request->user)
         <div class="d-flex flex-column py-3 px-4">
-
+            
             <button type="button" class="btn btn-theme w-full px-4 my-auto" data-bs-toggle="modal" data-bs-target="#approveModal{{$request->id}}">Chấp thuận</button>
 
             <div class="modal fade" id="approveModal{{$request->id}}" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
@@ -61,6 +62,7 @@
                 </form>
             </div>
         </div>
+        @endif
     </div>
 </div>
 @endforeach

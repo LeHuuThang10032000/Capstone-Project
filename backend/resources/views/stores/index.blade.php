@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Yêu cầu mở cửa hàng')
+@section('title', 'Danh sách cửa hàng')
 
 @section('content')
 
@@ -18,7 +18,7 @@
                     </div>
                     <div class="p-3">
                         <b class="m-0">Tên cửa hàng: {{$store->name}}</b>
-                        <p class="m-0">Chủ cửa hàng: {{$store->user->f_name}}</p>
+                        <p class="m-0">Chủ cửa hàng: {{$store->user->f_name ?? 'Tài khoản đã xóa'}}</p>
                         <p class="m-0">Số điện thoại: {{$store->phone}}</p>
                         <p class="m-0">Vị trí: {{$store->location}}</p>
                         <p class="m-0">Tổng đơn hàng: {{$store->orders_count}}</p>
