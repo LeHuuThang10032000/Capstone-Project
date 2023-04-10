@@ -34,8 +34,12 @@ class FriendsController extends Controller
                         ->where('status', 'pending')->first();
                     if ($friend) {
                         $_user->status = $friend->status;
-                        $_user->type = 'waiting';
                         $_user->requester_id = $friend->requester_id;
+                        if($friend->requester_id === $_user->id){
+                            $_user->type = 'waiting';
+                        }else{
+                            $_user->type = 'has_not_accept';
+                        }
                         array_push($array, $_user);
                     }
                 }
