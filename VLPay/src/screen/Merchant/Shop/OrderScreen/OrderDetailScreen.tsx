@@ -24,8 +24,17 @@ const OrderDetailScreen = () => {
   const [status, setStatus] = useState(data?.status);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [isGetCash, setGetCash] = useState(false);
+  console.log('data--', data);
 
   const fetchData = async () => {
+    console.error(
+      baseUrl +
+        'merchant/order/detail?order_id=' +
+        data?.id +
+        '&store_id=' +
+        data?.store_id,
+    );
+
     const result = await axiosClient.get(
       baseUrl +
         'merchant/order/detail?order_id=' +
@@ -36,11 +45,9 @@ const OrderDetailScreen = () => {
     setOrderDetail(result.data.data);
   };
 
-  console.log(data);
-
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [navigation]);
 
   const UpdateState = async state => {
     switch (state) {
@@ -59,6 +66,8 @@ const OrderDetailScreen = () => {
         formData.append('order_id', data?.id);
         formData.append('status', 'accepted');
         formData.append('store_id', data?.store_id);
+        console.error('formData', formData);
+
         const result = await axiosClient.post(
           baseUrl + 'merchant/order/update-status',
           formData,
@@ -228,7 +237,16 @@ const OrderDetailScreen = () => {
               backgroundColor: '#CDD3E6',
               borderRadius: 30,
             }}>
-            <UText style={{fontWeight: '700'}}>{orderDetail?.status}</UText>
+            <UText style={{fontWeight: '700'}}>
+              {orderDetail?.status === 'pending' && <UText>Đơn mới</UText>}
+              {orderDetail?.status === 'accepted' && (
+                <UText>Đơn tiếp nhận</UText>
+              )}
+              {orderDetail?.status === 'processing' && (
+                <UText>Đơn đang chuẩn bị</UText>
+              )}
+              {orderDetail?.status === 'finished' && <UText>Đơn chờ lấy</UText>}
+            </UText>
           </View>
         </HStack>
         <VStack>
@@ -359,10 +377,7 @@ const OrderDetailScreen = () => {
           setVisibleWarning(false);
         }}
         onActionRight={() => {
-          setGetCash(true);
-          if (isGetCash) {
-            UpdateState('finished');
-          }
+          UpdateState('finished');
           setVisibleWarning(false);
         }}
         btnTextLeft={'Chưa Nhận'}

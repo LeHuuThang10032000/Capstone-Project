@@ -72,6 +72,8 @@ const Index = () => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+      setSearch('');
+      setFilteredDataSource([]);
       loadData();
     });
 
@@ -177,15 +179,16 @@ const Index = () => {
         <View>
           {data?.users &&
             data?.users.map(user => {
-              console.log('user', user);
-
               return (
                 <TouchableOpacity
                   onPress={() => {
+                    console.log(user);
                     navigation.navigate('DetailUser', {
                       id: user.id,
                       f_name: user.f_name,
                       phone: user.phone,
+                      type: user?.type,
+                      status: user?.friend_status,
                     });
                   }}>
                   <HStack key={user.id}>
@@ -222,7 +225,11 @@ const Index = () => {
           pl="5"
           fontSize="14"
           bgColor={'white'}
-          onChangeText={text => searchFilterFunction(text)}
+          onChangeText={text => {
+            setSearch(text);
+            searchFilterFunction(text);
+          }}
+          value={search}
           InputRightElement={
             <Icon
               m="2"

@@ -63,15 +63,7 @@ const FriendRequests = () => {
     axiosClient
       .get('https://zennoshop.cf/api/user/friends?request_coming=pending')
       .then(res => {
-        const friends = res.data?.data.map(item => {
-          if (item?.requester_id == result.data.data.id) {
-            item.type = 'waiting';
-            return item;
-          } else {
-            item.type = 'has_not_accept';
-            return item;
-          }
-        });
+        const friends = res.data?.data;
 
         setMasterDataSource(friends);
         setFilteredDataSource(friends);
@@ -96,6 +88,7 @@ const FriendRequests = () => {
       .get('https://zennoshop.cf/api/user/friends?request_coming=pending')
       .then(res => {
         // const item = res.data?.data.filter(item => )
+        console.log('res.data', res.data);
 
         setMasterDataSource(res.data?.data);
         setFilteredDataSource(res.data?.data);

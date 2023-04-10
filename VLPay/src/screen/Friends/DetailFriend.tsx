@@ -16,9 +16,12 @@ const DetailFriend = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const {f_name, phone, id, status, type, image, requester_id} =
     route.params?.item;
+  console.log('route.params?.item', route.params?.item);
+
   const [friend, setFriend] = useState(false);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [phoneError, setPhoneError] = useState('');
+
   return (
     <View>
       <HeaderBack title="Hồ sơ bạn bè" />
@@ -57,8 +60,6 @@ const DetailFriend = ({route}: any) => {
                         if (!friend) {
                           const formData = new FormData();
                           formData.append('friend_id', id);
-                          console.log(id);
-
                           await axiosClient.post(
                             'https://zennoshop.cf/api/user/unfriend',
                             formData,
@@ -67,7 +68,7 @@ const DetailFriend = ({route}: any) => {
                             },
                           );
                           setVisibleWarning(true);
-                          setPhoneError('huỷ yêu cầu kết bạn thành công');
+                          setPhoneError('Huỷ yêu cầu kết bạn thành công');
                           setTimeout(() => {
                             setVisibleWarning(false);
                             navigation.goBack();
@@ -136,6 +137,7 @@ const DetailFriend = ({route}: any) => {
                           },
                         );
                         setVisibleWarning(true);
+                        setPhoneError('Xoa bạn thành công');
                         setTimeout(() => {
                           setVisibleWarning(false);
                           navigation.goBack();
@@ -162,11 +164,55 @@ const DetailFriend = ({route}: any) => {
               <Text style={styles.button}>Đã gửi yêu cầu</Text>
             )
           ) : friend ? (
-            <Text style={styles.button}>Add friend</Text>
+            <Text style={styles.button}>Thêm bạn bè</Text>
           ) : (
-            <Text style={styles.button}>Delete friend</Text>
+            <Text style={styles.button}>Xoá bạn bè</Text>
           )}
         </Button>
+        {status === 'pending' && type !== 'waiting' && (
+          <Button
+            width={'90%'}
+            marginTop={5}
+            background={'#FF0000'}
+            onPress={async () => {
+              Alert.alert(
+                'Cảnh báo',
+                'Bạn muốn huỷ yêu cầu kết bạn với người này?',
+                [
+                  {
+                    text: 'Thoát',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Đồng Ý',
+                    onPress: async () => {
+                      const formData = new FormData();
+                      formData.append('friend_id', id);
+                      await axiosClient.post(
+                        'https://zennoshop.cf/api/user/unfriend',
+                        formData,
+                        {
+                          headers: {
+                            'content-type': 'multipart/form-data',
+                          },
+                        },
+                      );
+                      setVisibleWarning(true);
+                      setPhoneError('huỷ yêu cầu kết bạn thành công');
+                      setTimeout(() => {
+                        setVisibleWarning(false);
+                        navigation.goBack();
+                      }, 2000);
+                    },
+                  },
+                ],
+              );
+            }}
+            leftIcon={<DeleteFriend color="white" width={30} height={30} />}>
+            <Text style={[styles.button, {color: 'white'}]}>Từ chối</Text>
+          </Button>
+        )}
       </Center>
       <YesNoModal
         icon={<Icons.SuccessIcon />}
