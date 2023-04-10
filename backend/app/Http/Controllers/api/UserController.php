@@ -284,8 +284,8 @@ class UserController extends Controller
                     }else{
                         $user->type = 'has_not_accept';
                     }
-                    array_push($array, $user);
                 }
+                array_push($array, $user);
             }
 
             $data = [
