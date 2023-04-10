@@ -300,4 +300,14 @@ class OrganiserController extends Controller
         $stores = Store::with('user')->where('status', 'approved')->withCount('orders')->paginate(10);
         return view('stores.index', compact('stores'));
     }
+
+    public function dashboard()
+    {
+        $pendingStores = Store::where('status', 'pending')->count();
+        $approvedStores = Store::where('status', 'approved')->count();
+        $newRegisters = User::whereMonth('created_at', now()->month)->count();
+        $monthTransactions = Transaction::whereMonth('created_at', now()->month)->count();
+
+        return view('dashboard', compact('pendingStores', 'approvedStores', 'newRegisters', 'monthTransactions'));
+    }
 }

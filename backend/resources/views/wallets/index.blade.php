@@ -26,9 +26,9 @@
                 @foreach($wallets as $key => $wallet)
                 <tr>
                     <th scope="row">{{$key + 1}}</th>
-                    <td>{{$wallet->user->phone}}</td>
-                    <td>{{number_format($wallet->balance)}} VND</td>
-                    <td>{{number_format($wallet->credit_limit)}} VND</td>
+                    <td>{{$wallet->user->phone ?? null}}</td>
+                    <td>{{number_format($wallet->balance ?? null)}} VND</td>
+                    <td>{{number_format($wallet->credit_limit ?? null)}} VND</td>
                     <td>
                         <form action="{{ route('organiser.wallet.activate', $wallet->id) }}" method="POST">
                             @csrf

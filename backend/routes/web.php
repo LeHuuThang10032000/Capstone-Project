@@ -20,9 +20,7 @@ Route::get('/', function () {
     return view('auth.login');
 })->name('login');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [OrganiserController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
 
 require __DIR__ . '/auth.php';
 

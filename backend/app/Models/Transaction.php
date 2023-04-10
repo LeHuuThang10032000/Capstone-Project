@@ -56,6 +56,16 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionDetail::class, 'transaction_id', 'id');
     }
+
+    public function fromDetail()
+    {
+        return $this->hasOne(TransactionDetail::class, 'transaction_id', 'id')->where('user_id', $this->from_id);
+    }
+
+    public function toDetail()
+    {
+        return $this->hasOne(TransactionDetail::class, 'transaction_id', 'id')->where('user_id', $this->to_id);
+    }
     
     protected function serializeDate(DateTimeInterface $date)
     {
