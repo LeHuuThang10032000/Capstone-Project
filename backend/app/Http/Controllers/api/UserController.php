@@ -249,6 +249,7 @@ class UserController extends Controller
 
     public function search(Request $request): JsonResponse
     {
+        $cur_user = Auth::user()->id;
         $validate = Validator::make($request->all(), [
             'key' => 'string'
         ]);
@@ -270,10 +271,26 @@ class UserController extends Controller
                 ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
                 ->where('id','<>', Auth::user()->id)
                 ->get();
+            $array = [];
+            foreach ($users as $user){
+                $friend = Friends::where('user_id', $cur_user)
+                    ->where('friend_id', $user->id)
+                    ->where('status', 'pending')->first();
+                if ($friend) {
+                    $user->status = $friend->status;
+                    $user->requester_id = $friend->requester_id;
+                    if($friend->requester_id == $cur_user){
+                        $user->type = 'waiting';
+                    }else{
+                        $user->type = 'has_not_accept';
+                    }
+                    array_push($array, $user);
+                }
+            }
 
             $data = [
                 'stores' => $stores,
-                'users' => $users
+                'users' => $array
             ];
 
             return ApiResponse::successResponse($data);
