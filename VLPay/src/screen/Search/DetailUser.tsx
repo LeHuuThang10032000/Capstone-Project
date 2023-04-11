@@ -103,7 +103,7 @@ const DetailUser = ({route}: any) => {
                 );
                 setFriend(false);
                 setVisibleWarning(true);
-                setPhoneError('Kết bạn thành công');
+                setPhoneError('Gửi yêu cầu kết bạn thành công');
                 navigation.goBack();
               } catch (e) {
                 console.log('loi do ma', e);
@@ -188,7 +188,7 @@ const DetailUser = ({route}: any) => {
                     const formData = new FormData();
                     formData.append('friend_id', id);
                     await axiosClient.post(
-                      'https://zennoshop.cf/api/user/unfriend',
+                      'https://zennoshop.cf/api/user/friends/accept',
                       formData,
                       {
                         headers: {
