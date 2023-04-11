@@ -152,6 +152,7 @@ export type MainStackParamList = {
     phone: string;
     message: string;
   };
+  DetailBillShare: {order_id: number};
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

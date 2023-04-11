@@ -107,9 +107,14 @@ const NotiShareBill = ({route}: any) => {
           <HStack w="100%" justifyContent="flex-start" paddingBottom={5}>
             <VStack>
               <Heading>Thông tin đơn hàng.</Heading>
-              <Text textDecorationLine="underline" color="#4285F4">
-                Bấm vào đây để xem chi tiết
-              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('DetailBillShare', {order_id: order_id})
+                }>
+                <Text textDecorationLine="underline" color="#4285F4">
+                  Bấm vào đây để xem chi tiết
+                </Text>
+              </TouchableOpacity>
             </VStack>
           </HStack>
 
