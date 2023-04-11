@@ -54,11 +54,15 @@
     <div class="row">
         <div class="col-4 rounded border m-1 p-2 bg-white">
             <p class="h5">Thống kê</p>
-            <div class="border-top d-flex justify-content-between">
+            <div class="border-top d-flex justify-content-between pt-1">
                 <p>Số đơn thành công</p>
                 <p>{{ $orders->first()->taken_count }}</p>
             </div>
-            <div class="border-top d-flex justify-content-between">
+            <div class="border-top d-flex justify-content-between pt-1">
+                <p>Số đơn đã hủy</p>
+                <p>{{ $orders->first()->canceled_count }}</p>
+            </div>
+            <div class="border-top d-flex justify-content-between pt-1">
                 <p>Số đơn đã hủy</p>
                 <p>{{ $orders->first()->canceled_count }}</p>
             </div>
