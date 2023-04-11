@@ -165,7 +165,7 @@ const OrderDetailScreen = () => {
                 UpdateState('processing');
               }}>
               <UText style={{alignSelf: 'center', fontWeight: '700'}}>
-                chuẩn bị đơn
+                Chuẩn bị đơn
               </UText>
             </TouchableOpacity>
           </HStack>
@@ -208,7 +208,7 @@ const OrderDetailScreen = () => {
                 width: '90%',
               }}
               onPress={async () => {
-                navigation.navigate('OrderScreen');
+                navigation.goBack();
               }}>
               <UText style={{alignSelf: 'center', fontWeight: '700'}}>
                 Đóng
