@@ -18,7 +18,6 @@
                     <th scope="col">Số điện thoại</th>
                     <th scope="col">Số dư ví</th>
                     <th scope="col">Hạn mức tín dụng</th>
-                    <th scope="col">Trạng thái</th>
                     <th scope="col">Thao tác</th>
                 </tr>
             </thead>
@@ -29,13 +28,6 @@
                     <td>{{$wallet->user->phone ?? null}}</td>
                     <td>{{number_format($wallet->balance ?? null)}} VND</td>
                     <td>{{number_format($wallet->credit_limit ?? null)}} VND</td>
-                    <td>
-                        <form action="{{ route('organiser.wallet.activate', $wallet->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <button class="px-1 rounded {{ ($wallet->status == 'active') ? 'btn-theme-warning' : 'btn-theme' }}">{{ ($wallet->status == 'active') ? 'Vô hiệu hóa' : 'Hoạt động' }}</button>
-                        </form>
-                    </td>
                     <td>
                         <button type="button" class="px-2 rounded btn-theme" data-bs-toggle="modal" data-bs-target="#modal{{$wallet->id}}">Nạp tiền</button>
 

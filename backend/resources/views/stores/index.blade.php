@@ -8,8 +8,14 @@
     <div class="container-xxl bg-white rounded p-0 overflow-hidden">
         <div class="d-flex justify-content-between" style="background-color: #C7CEEA;">
             <p class="h5 mb-0 p-3">Danh sách cửa hàng</p>
+            <div style="margin: auto 1rem;">
+                <form class="mb-0" action="{{ route('organiser.store.index') }}" method="GET">
+                    <input type="text" name="key" style="border-radius: 5px;" placeholder="Tìm kiếm cửa hàng">
+                </form>
+            </div>
         </div>
         <div class="tab-content" id="myTabContent">
+        @if($stores->count() > 0)
             @foreach($stores as $index => $store)
             <div class="{{ ($index == 0) ? 'py-2' : 'pb-2' }} px-3">
                 <div class="rounded border d-flex">
@@ -30,6 +36,14 @@
         <div class="py-2 px-3">
         {{ $stores->links() }}
         </div>
+        @else
+        <hr>
+        <div class="text-center">
+            <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
+            <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+            <a href="{{ route('organiser.store.index') }}">Quay lại</a>
+        </div>
+        @endif
     </div>
 </div>
 
