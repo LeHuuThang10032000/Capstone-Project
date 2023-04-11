@@ -14,8 +14,6 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Models\WithdrawRequest;
 use Exception;
-use Helper;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -290,14 +288,30 @@ class OrganiserController extends Controller
         return back()->with('success', 'Từ chối yêu cầu rút tiền thành công');
     }
 
-    public function getListTransactions()
+    public function getListTransactions(Request $request)
     {
+        if(isset($request->key)) {
+            $transactions = Transaction::where('code', 'LIKE', '%' . $request->key . '%')
+                ->paginate(10);
+            $key = $request->key;
+            return view('transactions.index', compact('transactions', 'key'));
+        }
         $transactions = Transaction::paginate(10);
         return view('transactions.index', compact('transactions'));
     }
 
-    public function getStores()
+    public function getStores(Request $request)
     {
+        if(isset($request->key)) {
+            $stores = Store::where('name', 'LIKE', '%' . $request->key . '%')
+                ->where('status', 'approved')
+                ->withCount('orders')
+                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->with('user')
+                ->paginate(10);
+            $key = $request->key;
+            return view('stores.index', compact('stores', 'key'));
+        }
         $stores = Store::with('user')->where('status', 'approved')->withCount('orders')->paginate(10);
         return view('stores.index', compact('stores'));
     }
@@ -311,9 +325,23 @@ class OrganiserController extends Controller
         $orders = Order::select(
             '*', 
             DB::raw('(select count(*) from orders where status = "taken") as taken_count'),
-            DB::raw('(select count(*) from orders where status = "canceled") as canceled_count'))
+            DB::raw('(select count(*) from orders where status = "canceled") as canceled_count'),
+            DB::raw('(select sum(order_total - discount_amount) from orders where status = "taken") as total'))
+            ->get();
+        $transactions = Transaction::select(
+            '*',
+            DB::raw('(select sum(amount) from transactions where type = "T") as transaction_total'),
+            DB::raw('(select sum(amount) from transactions where type = "W") as withdraw_total'),
+            DB::raw('(select sum(amount) from transactions where type = "D") as deposit_total'),
+            DB::raw('(select sum(amount) from credit_requests where status = "approved") as credit_total'),
+            DB::raw('(select sum(balance) from user_wallets) as wallet_total'),
+            DB::raw('(select count(*) from users) as user_total'))
+            ->with('fromUser', 'toUser')
+            ->limit(10)
             ->get();
 
-        return view('dashboard', compact('pendingStores', 'approvedStores', 'newRegisters', 'monthTransactions', 'orders'));
+        $admin = User::where('is_organiser', 1)->first();
+
+        return view('dashboard', compact('pendingStores', 'approvedStores', 'newRegisters', 'monthTransactions', 'orders', 'transactions', 'admin'));
     }
 }
