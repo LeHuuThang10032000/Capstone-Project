@@ -623,64 +623,7 @@ const CreatePromo = () => {
                 bottom: 20,
               }}
               onPress={async () => {
-                if (!startDateError && !endDateError) {
-                  const time = new Date();
-                  const formData = new FormData();
-                  formData.append('store_id', id);
-                  formData.append('code', code);
-                  formData.append(
-                    'start_date',
-                    startDate ? startDate : time.toISOString().slice(0, 10),
-                  );
-                  formData.append(
-                    'end_date',
-                    endDate
-                      ? endDate
-                      : new Date(today.getTime() + 24 * 60 * 60 * 1000)
-                          .toISOString()
-                          .slice(0, 10),
-                  );
-                  formData.append('start_time', startTime);
-                  formData.append('end_time', endTime);
-                  formData.append('discount', discount);
-                  formData.append('discount_type', discountType);
-                  formData.append('max_discount', maxDiscount);
-                  formData.append('min_purchase', minPurchase);
-
-                  if (!limit) {
-                    formData.append('limit', amount);
-                  } else {
-                    formData.append('limit', 0);
-                  }
-
-                  try {
-                    if (data) {
-                      if (data?.id) {
-                        formData.append('promo_id', data.id);
-                        const result = await axiosClient.post(
-                          baseUrl + 'merchant/promocode/update',
-                          formData,
-                          {
-                            headers: {'content-type': 'multipart/form-data'},
-                          },
-                        );
-                        setPage(PROMOS[3]);
-                      }
-                    } else {
-                      const result = await axiosClient.post(
-                        baseUrl + 'merchant/promocode/create',
-                        formData,
-                        {
-                          headers: {'content-type': 'multipart/form-data'},
-                        },
-                      );
-                      setPage(PROMOS[3]);
-                    }
-                  } catch (e) {
-                    setGeneralError(e?.error);
-                    setVisibleWarning(true);
-                  }
-                }
+                setPage(PROMOS[3]);
               }}>
               <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
@@ -707,7 +650,12 @@ const CreatePromo = () => {
                       }}>
                       Giá trị của mã giảm giá
                     </UText>
-                    <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setPage(PROMOS[1]);
+                      }}>
+                      <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                    </TouchableOpacity>
                   </HStack>
                   <VStack
                     justifyContent={'space-between'}
@@ -727,7 +675,12 @@ const CreatePromo = () => {
                       }}>
                       Điều kiện giảm giá
                     </UText>
-                    <UText style={{color: '#4285F4'}}>Chỉnh sửa </UText>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setPage(PROMOS[2]);
+                      }}>
+                      <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                    </TouchableOpacity>
                   </HStack>
                   <VStack style={{paddingHorizontal: 16}}>
                     <VStack style={{paddingVertical: 16}}>
@@ -799,7 +752,6 @@ const CreatePromo = () => {
                     setVisibleWarning(true);
                     setGeneralError(error?.error);
                   }
-                  navigation.goBack();
                 }}>
                 <UText style={{color: 'white', fontWeight: 'bold'}}>Xoá</UText>
               </TouchableOpacity>
@@ -816,8 +768,67 @@ const CreatePromo = () => {
                 position: 'absolute',
                 bottom: 20,
               }}
-              onPress={() => {
-                setPage(PROMOS[0]);
+              onPress={async () => {
+                if (!startDateError && !endDateError) {
+                  const time = new Date();
+                  const formData = new FormData();
+                  formData.append('store_id', id);
+                  formData.append('code', code);
+                  formData.append(
+                    'start_date',
+                    startDate ? startDate : time.toISOString().slice(0, 10),
+                  );
+                  formData.append(
+                    'end_date',
+                    endDate
+                      ? endDate
+                      : new Date(today.getTime() + 24 * 60 * 60 * 1000)
+                          .toISOString()
+                          .slice(0, 10),
+                  );
+                  formData.append('start_time', startTime);
+                  formData.append('end_time', endTime);
+                  formData.append('discount', discount);
+                  formData.append('discount_type', discountType);
+                  formData.append('max_discount', maxDiscount);
+                  formData.append('min_purchase', minPurchase);
+
+                  if (!limit) {
+                    formData.append('limit', amount);
+                  } else {
+                    formData.append('limit', 0);
+                  }
+
+                  try {
+                    if (data) {
+                      if (data?.id) {
+                        formData.append('promo_id', data.id);
+                        const result = await axiosClient.post(
+                          baseUrl + 'merchant/promocode/update',
+                          formData,
+                          {
+                            headers: {'content-type': 'multipart/form-data'},
+                          },
+                        );
+                        setPage(PROMOS[3]);
+                      }
+                    } else {
+                      const result = await axiosClient.post(
+                        baseUrl + 'merchant/promocode/create',
+                        formData,
+                        {
+                          headers: {'content-type': 'multipart/form-data'},
+                        },
+                      );
+                      setPage(PROMOS[3]);
+                    }
+                  } catch (e) {
+                    setGeneralError(e?.error);
+                    setVisibleWarning(true);
+                  }
+                }
+
+                navigation.goBack();
               }}>
               <UText style={{fontWeight: 'bold'}}>
                 {data?.id
@@ -1120,64 +1131,7 @@ const CreatePromo = () => {
                 bottom: 20,
               }}
               onPress={async () => {
-                if (!startDateError && !endDateError) {
-                  const time = new Date();
-                  const formData = new FormData();
-                  formData.append('store_id', id);
-                  formData.append('code', code);
-                  formData.append(
-                    'start_date',
-                    startDate ? startDate : time.toISOString().slice(0, 10),
-                  );
-                  formData.append(
-                    'end_date',
-                    endDate
-                      ? endDate
-                      : new Date(today.getTime() + 24 * 60 * 60 * 1000)
-                          .toISOString()
-                          .slice(0, 10),
-                  );
-                  formData.append('start_time', startTime);
-                  formData.append('end_time', endTime);
-                  formData.append('discount', discount);
-                  formData.append('discount_type', 'amount');
-                  formData.append('max_discount', 10000);
-                  formData.append('min_purchase', minPurchase);
-
-                  if (!limit) {
-                    formData.append('limit', amount);
-                  } else {
-                    formData.append('limit', 0);
-                  }
-
-                  try {
-                    if (data) {
-                      if (data?.id) {
-                        formData.append('promo_id', data.id);
-                        await axiosClient.post(
-                          baseUrl + 'merchant/promocode/update',
-                          formData,
-                          {
-                            headers: {'content-type': 'multipart/form-data'},
-                          },
-                        );
-                        setPage(PROMOS[6]);
-                      }
-                    } else {
-                      await axiosClient.post(
-                        baseUrl + 'merchant/promocode/create',
-                        formData,
-                        {
-                          headers: {'content-type': 'multipart/form-data'},
-                        },
-                      );
-                      setPage(PROMOS[6]);
-                    }
-                  } catch (e) {
-                    setGeneralError(e?.error);
-                    setVisibleWarning(true);
-                  }
-                }
+                setPage(PROMOS[6]);
               }}>
               <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
@@ -1203,7 +1157,12 @@ const CreatePromo = () => {
                     }}>
                     Giá trị của mã giảm giá
                   </UText>
-                  <UText style={{color: '#4285F4'}}>Chỉnh sửa </UText>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setPage(PROMOS[4]);
+                    }}>
+                    <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                  </TouchableOpacity>
                 </HStack>
                 <VStack justifyContent={'space-between'} style={{padding: 16}}>
                   <UText>Giá trị của mã giảm giá</UText>
@@ -1221,7 +1180,12 @@ const CreatePromo = () => {
                     }}>
                     Điều kiện giảm giá
                   </UText>
-                  <UText style={{color: '#4285F4'}}>Chỉnh sửa </UText>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setPage(PROMOS[5]);
+                    }}>
+                    <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                  </TouchableOpacity>
                 </HStack>
                 <VStack style={{paddingHorizontal: 16}}>
                   <VStack style={{paddingVertical: 16}}>
@@ -1295,7 +1259,9 @@ const CreatePromo = () => {
                     setVisibleWarning(true);
                     setGeneralError(error?.error);
                   }
-                  navigation.goBack();
+                  navigation.navigate('PromoList', {
+                    data,
+                  });
                 }}>
                 <UText style={{color: 'white', fontWeight: 'bold'}}>Xoá</UText>
               </TouchableOpacity>
@@ -1312,8 +1278,64 @@ const CreatePromo = () => {
                 position: 'absolute',
                 bottom: 20,
               }}
-              onPress={() => {
-                setPage(PROMOS[0]);
+              onPress={async () => {
+                if (!startDateError && !endDateError) {
+                  const time = new Date();
+                  const formData = new FormData();
+                  formData.append('store_id', id);
+                  formData.append('code', code);
+                  formData.append(
+                    'start_date',
+                    startDate ? startDate : time.toISOString().slice(0, 10),
+                  );
+                  formData.append(
+                    'end_date',
+                    endDate
+                      ? endDate
+                      : new Date(today.getTime() + 24 * 60 * 60 * 1000)
+                          .toISOString()
+                          .slice(0, 10),
+                  );
+                  formData.append('start_time', startTime);
+                  formData.append('end_time', endTime);
+                  formData.append('discount', discount);
+                  formData.append('discount_type', 'amount');
+                  formData.append('max_discount', 10000);
+                  formData.append('min_purchase', minPurchase);
+
+                  if (!limit) {
+                    formData.append('limit', amount);
+                  } else {
+                    formData.append('limit', 0);
+                  }
+
+                  try {
+                    if (data) {
+                      if (data?.id) {
+                        formData.append('promo_id', data.id);
+                        await axiosClient.post(
+                          baseUrl + 'merchant/promocode/update',
+                          formData,
+                          {
+                            headers: {'content-type': 'multipart/form-data'},
+                          },
+                        );
+                      }
+                    } else {
+                      await axiosClient.post(
+                        baseUrl + 'merchant/promocode/create',
+                        formData,
+                        {
+                          headers: {'content-type': 'multipart/form-data'},
+                        },
+                      );
+                    }
+                    navigation.goBack();
+                  } catch (e) {
+                    setGeneralError(e?.error);
+                    setVisibleWarning(true);
+                  }
+                }
               }}>
               <UText style={{fontWeight: 'bold'}}>
                 {data?.id
