@@ -15,7 +15,7 @@ import Colors from '../../components/helpers/Colors';
 
 const DetailUser = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-  const {f_name, phone, id, type, status} = route.params;
+  const {f_name, phone, id, type, status, image} = route.params;
   const [myId, setMyId] = useState([]);
   const [isFriend, setFriend] = useState(status === 'active' ? true : false);
   const [visibleWarning, setVisibleWarning] = useState(false);
@@ -35,7 +35,7 @@ const DetailUser = ({route}: any) => {
       <HeaderBack title="Hồ sơ người dùng" />
       <Center style={{paddingTop: 40}}>
         <Image
-          source={{uri: 'https://picsum.photos/200/150'}}
+          source={{uri: image}}
           alt="img"
           borderRadius={100}
           width={150}

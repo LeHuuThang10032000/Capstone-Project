@@ -199,7 +199,7 @@ const DetailFriend = ({route}: any) => {
                         },
                       );
                       setVisibleWarning(true);
-                      setPhoneError('huỷ yêu cầu kết bạn thành công');
+                      setPhoneError('Huỷ yêu cầu kết bạn thành công');
                       setTimeout(() => {
                         setVisibleWarning(false);
                         navigation.goBack();

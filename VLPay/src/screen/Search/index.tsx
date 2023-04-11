@@ -189,6 +189,7 @@ const Index = () => {
                       phone: user.phone,
                       type: user?.type,
                       status: user?.friend_status,
+                      image: user?.image,
                     });
                   }}>
                   <HStack key={user.id}>

@@ -253,7 +253,9 @@ const DetailBill = ({route}: any) => {
                       detail,
                     });
                     setSuccess(true);
-                    navigation.navigate('Home');
+                    setTimeout(() => {
+                      navigation.navigate('Home');
+                    }, 2000);
                   } else {
                     setVisibleWarning(true);
                     setGeneralError(
@@ -287,8 +289,8 @@ const DetailBill = ({route}: any) => {
           width: 200,
           display: 'none',
         }}
-        message={generalError}
-        title={'Thông báo thành công'}
+        message={'Chia tiền thành công'}
+        title={'Thông báo'}
         onActionLeft={() => {
           setSuccess(false);
         }}
