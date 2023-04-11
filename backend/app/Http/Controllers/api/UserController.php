@@ -767,11 +767,8 @@ class UserController extends Controller
         try {
             $order = Order::with('user', 'store')
                 ->where('id', $request->order_id)
-                ->where('user_id', Auth::user()->id)
                 ->first();
-            if (!isset($order)) {
-                return APIResponse::FailureResponse('Không tìm thấy đơn hàng');
-            }
+
             return APIResponse::SuccessResponse($order);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
