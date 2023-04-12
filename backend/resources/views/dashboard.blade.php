@@ -106,7 +106,7 @@
                         <th scope="col">Tên người chuyển</th>
                         <th scope="col">Tên người nhận</th>
                         <th scope="col">Số tiền</th>
-                        <th scope="col">Thời gian phát sinh</th>
+                        <th scope="col">Thời gian giao dịch</th>
                     </tr>
                 </thead>
                 <tbody>

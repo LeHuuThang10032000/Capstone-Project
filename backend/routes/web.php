@@ -29,10 +29,10 @@ Route::group(['middleware' => ['auth', 'role:organiser']], function () {
 
     Route::put('user/activate/{id}', [OrganiserController::class, 'deactivateUser'])->name('organiser.activate-user');
 
-    Route::group(['prefix' => 'store-request'], function () {
-        Route::get('', [OrganiserController::class, 'getStoreRequests'])->name('organiser.store-request');
-        Route::post('approve', [OrganiserController::class, 'approveStore'])->name('organiser.store-request.approve');
-        Route::post('deny', [OrganiserController::class, 'denyStore'])->name('organiser.store-request.deny');
+    Route::group(['prefix' => 'store-request', 'as' => 'organiser.store-request.'], function () {
+        Route::get('', [OrganiserController::class, 'getStoreRequests'])->name('index');
+        Route::post('approve', [OrganiserController::class, 'approveStore'])->name('approve');
+        Route::post('deny', [OrganiserController::class, 'denyStore'])->name('deny');
     });
 
     Route::group(['prefix' => 'withdraw-request', 'as' => 'organiser.withdraw-request.'], function () {

@@ -24,9 +24,22 @@
 
         </div>
         <div class="tab-content" id="myTabContent">
-            @include('store-requests.tabs.approved')
-            @include('store-requests.tabs.pending')
-            @include('store-requests.tabs.denied')
+            <div class="pt-2 px-3">
+                <form action="{{ route('organiser.store-request.index') }}" method="GET">
+                    <input type="text" name="key" style="border-radius: 5px;" placeholder="Tìm kiếm theo tên hay sđt">
+                </form>
+            </div>
+            @if($stores['pending']->count() > 0 || $stores['approved']->count() > 0 || $stores['denied']->count() > 0)
+                @include('store-requests.tabs.approved')
+                @include('store-requests.tabs.pending')
+                @include('store-requests.tabs.denied')
+            @else
+            <div class="text-center">
+                <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
+                <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+                <a href="{{ route('organiser.store-request.index') }}">Quay lại</a>
+            </div>
+            @endif
         </div>
     </div>
 </div>
