@@ -166,9 +166,9 @@ const DetailBill = ({route}: any) => {
                         width={100}
                         style={{borderWidth: 0, color: 'black'}}
                         borderColor={'transparent'}
-                        placeholder={(
+                        placeholder={parseInt(
                           parseInt(data?.amount) /
-                          (masterDataSource?.length + 1)
+                            (masterDataSource?.length + 1),
                         ).toLocaleString()}
                         keyboardType="number-pad"
                         onChangeText={text => {
