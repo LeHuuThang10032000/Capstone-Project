@@ -15,7 +15,7 @@ import {
 import MessageIcon from '../../../assets/svg/message.svg';
 import CloseIcon from '../../../assets/svg/close.svg';
 import ImagePicker from 'react-native-image-crop-picker';
-import {Alert, BackHandler, TouchableOpacity} from 'react-native';
+import {Alert, BackHandler, Modal, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../../stack/Navigation';
 import {axiosClient} from '../../../components/apis/axiosClient';
@@ -34,7 +34,9 @@ const DetailBill = ({route}: any) => {
   const {data} = route.params;
 
   const [text, onChangeText] = useState('');
-  const [image, setImage] = useState<Image>();
+  const [image, setImage] = useState('');
+  const [name, setName] = useState('');
+  const [userMoney, setUserMoney] = useState(0);
   const [masterDataSource, setMasterDataSource] = useState([]);
   const navigation = useNavigation<MainStackNavigation>();
   const [profile, setProfile] = useState([]);
@@ -43,7 +45,9 @@ const DetailBill = ({route}: any) => {
   const [generalError, setGeneralError] = useState('');
   const [isSuccess, setSuccess] = useState(false);
   const [friends, setFriends] = useState(data?.checkedItems);
-  console.log(masterDataSource);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [myMoney, setMyMoney] = useState(0);
+  const [userId, setUserId] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -51,7 +55,6 @@ const DetailBill = ({route}: any) => {
       const responseJson = await axiosClient.get(
         '/friends?request_coming=active',
       );
-      console.log(responseJson);
 
       const result = await axiosClient.get(
         'https://zennoshop.cf/api/user/get-profile',
@@ -65,7 +68,16 @@ const DetailBill = ({route}: any) => {
         data.checkedItems.includes(item.id),
       );
 
-      setMasterDataSource(__friends);
+      const ___friends = __friends.map(item => {
+        item.amount = parseInt(
+          parseInt(data?.amount) / (__friends?.length + 1),
+        );
+
+        item.isSetAmount = false;
+        return item;
+      });
+      setMyMoney(parseInt(parseInt(data?.amount) / (__friends?.length + 1)));
+      setMasterDataSource(___friends);
       setLoading(false);
     } catch (error) {
       Alert.alert(error.error);
@@ -75,7 +87,8 @@ const DetailBill = ({route}: any) => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log('==>', masterDataSource);
+
+  console.log(masterDataSource);
 
   return (
     <View flex={1} backgroundColor="#ffffff">
@@ -140,6 +153,11 @@ const DetailBill = ({route}: any) => {
                     {profile.f_name} (Me)
                   </Text>
                 </HStack>
+                <HStack alignItems="center">
+                  <Text paddingLeft={3} fontWeight={'700'}>
+                    {myMoney.toLocaleString()} đ
+                  </Text>
+                </HStack>
               </HStack>
               {masterDataSource.map(item => {
                 return (
@@ -162,53 +180,16 @@ const DetailBill = ({route}: any) => {
                       <Text paddingLeft={3}>{item.f_name}</Text>
                     </HStack>
                     <HStack alignItems={'center'}>
-                      <Input
-                        width={100}
-                        style={{borderWidth: 0, color: 'black'}}
-                        borderColor={'transparent'}
-                        placeholder={parseInt(
-                          parseInt(data?.amount) /
-                            (masterDataSource?.length + 1),
-                        ).toLocaleString()}
-                        keyboardType="number-pad"
-                        onChangeText={text => {
-                          if (parseInt(text) > 0 || text === '') {
-                            let money = 0;
-                            friends.map((__item, key) => {
-                              if (__item?.user_id) {
-                                if (__item.user_id === item.id) {
-                                  const _item = friends;
-                                  _item[key] = {
-                                    user_id: item.id,
-                                    amount: text,
-                                  };
-                                  money += parseInt(text);
-                                  setFriends(_item);
-                                }
-                              } else {
-                                if (__item === item.id) {
-                                  const _item = friends;
-                                  _item[key] = {
-                                    user_id: __item,
-                                    amount: text,
-                                  };
-                                  setFriends(_item);
-                                  money += parseInt(text);
-                                }
-                              }
-
-                              if (money > data.amount) {
-                                Alert.alert(
-                                  'Số tiền chia không được vượt quá số tiền trong hoá đơn',
-                                );
-                              }
-                            });
-                          } else {
-                            Alert.alert('Số tiền chia không không hợp lệ');
-                          }
-                        }}
-                      />
-                      <UText>đ</UText>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setImage(item?.image);
+                          setName(item?.f_name);
+                          setUserMoney(item?.amount);
+                          setUserId(item?.id);
+                          setModalVisible(true);
+                        }}>
+                        <UText>{item?.amount.toLocaleString()} đ</UText>
+                      </TouchableOpacity>
                     </HStack>
                   </HStack>
                 );
@@ -220,48 +201,29 @@ const DetailBill = ({route}: any) => {
               onPress={async () => {
                 try {
                   data.masterDataSource = masterDataSource;
+                  const masterdata = masterDataSource;
                   const order_id = data?.order_id;
                   data.isFinal = true;
-                  let totalMoneyUserSet = 0;
-                  let userSet = 0;
-                  let userUnSet = 0;
                   const detail = [];
-                  friends.map(item => {
-                    if (item?.user_id) {
-                      totalMoneyUserSet += parseInt(item.amount);
-                      userSet++;
+                  masterdata.push({
+                    user_id: profile.id,
+                    amount: myMoney,
+                  });
+                  masterdata.map(item => {
+                    if (item?.id) {
+                      detail.push({user_id: item.id, amount: item.amount});
                     } else {
-                      userUnSet++;
+                      detail.push({user_id: item.user_id, amount: item.amount});
                     }
                   });
-                  const finalMoney = parseInt(data?.amount) - totalMoneyUserSet;
-
-                  if (finalMoney >= 0) {
-                    friends.map(item => {
-                      if (!item?.user_id) {
-                        detail.push({
-                          user_id: item,
-                          amount: finalMoney / userUnSet,
-                        });
-                      } else {
-                        detail.push(item);
-                      }
-                    });
-                    console.log({order_id, detail});
-                    await axiosClient.post('/share-bill', {
-                      order_id,
-                      detail,
-                    });
-                    setSuccess(true);
-                    setTimeout(() => {
-                      navigation.navigate('Home');
-                    }, 2000);
-                  } else {
-                    setVisibleWarning(true);
-                    setGeneralError(
-                      'Số tiền chia không được vượt số tiền trong hoá đơn',
-                    );
-                  }
+                  await axiosClient.post('/share-bill', {
+                    order_id,
+                    detail,
+                  });
+                  setSuccess(true);
+                  setTimeout(() => {
+                    navigation.navigate('Home');
+                  }, 2000);
                 } catch (error) {
                   setVisibleWarning(true);
                   setGeneralError(error?.error);
@@ -275,6 +237,91 @@ const DetailBill = ({route}: any) => {
             </TouchableOpacity>
           </View>
         </>
+      )}
+      {modalVisible && (
+        <View
+          style={{
+            top: 0,
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'black',
+              opacity: 0.5,
+              position: 'absolute',
+            }}></View>
+          <View
+            style={{
+              backgroundColor: 'white',
+              minWidth: 300,
+              minHeight: 100,
+              justifyContent: 'center',
+              flexDirection: 'row',
+              borderRadius: 10,
+              padding: 16,
+            }}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={{position: 'absolute', top: 10, left: 10}}>
+              <UText>x</UText>
+            </TouchableOpacity>
+            <HStack alignItems={'center'}>
+              <Image
+                source={{uri: image}}
+                w={50}
+                height={50}
+                alt="image"
+                borderRadius={50}
+                style={{marginRight: 10}}
+                borderColor={'#D9D9D9'}
+                borderWidth={1}
+              />
+              <VStack>
+                <UText>{name}</UText>
+                <Input
+                  placeholder={userMoney.toLocaleString()}
+                  style={{color: 'black'}}
+                  keyboardType="number-pad"
+                  onSubmitEditing={({nativeEvent: {text}}) => {
+                    if (!isNaN(parseInt(text))) {
+                      setUserMoney(parseInt(text));
+                      let totalCash = 0;
+                      console.log(parseInt(text));
+                      const updatedDataSource = masterDataSource.map(item => {
+                        if (item.id === userId) {
+                          totalCash += parseInt(text);
+                          return {...item, amount: parseInt(text)};
+                        }
+                        totalCash += parseInt(item.amount);
+                        return item;
+                      });
+                      if (parseInt(data?.amount) - totalCash > 0) {
+                        setMyMoney(parseInt(data?.amount) - totalCash);
+                        setMasterDataSource(updatedDataSource);
+                      } else if (parseInt(data?.amount) - totalCash < 0) {
+                        setGeneralError(
+                          'Không được vượt tổng số tiền trong hoá đơn',
+                        );
+                        setVisibleWarning(true);
+                      }
+                    } else {
+                      setGeneralError('Số tiền không hợp lệ');
+                      setVisibleWarning(true);
+                    }
+                    setModalVisible(false);
+                  }}
+                />
+              </VStack>
+            </HStack>
+          </View>
+        </View>
       )}
       <YesNoModal
         icon={<Icons.SuccessIcon />}

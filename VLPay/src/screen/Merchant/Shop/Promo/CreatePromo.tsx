@@ -87,7 +87,7 @@ const CreatePromo = () => {
   const [generalError, setGeneralError] = useState('');
   const [visibleWarning, setVisibleWarning] = useState(false);
 
-  const [title, setTitle] = useState('Tạo mã giảm giá');
+  const [title, setTitle] = useState('Tạo phiếu giảm giá');
   let previousPage = () => {
     if (!previous) {
       navigation.goBack();
@@ -630,7 +630,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[3]:
-        setTitle('Mã giảm giá');
+        setTitle('Phiếu giảm giá');
         const _time = new Date();
         setPrevious('');
         return (
@@ -839,7 +839,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[4]:
-        setTitle('Tạo mã giảm giá ');
+        setTitle('Tạo phiếu giảm giá ');
         setPrevious(PROMOS[0]);
         return (
           <>
@@ -1138,7 +1138,7 @@ const CreatePromo = () => {
           </>
         );
       case PROMOS[6]:
-        setTitle('Xem trước mã giảm giá');
+        setTitle('Xem trước phiếu giảm giá');
         const __time = new Date();
         setPrevious('');
         return (
