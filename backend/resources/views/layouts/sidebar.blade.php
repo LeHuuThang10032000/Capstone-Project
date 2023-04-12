@@ -22,7 +22,7 @@
                 <div class="collapse" id="collapseExample">
                     <ul class="p-0">
                         <li>
-                            <a class="flex items-center py-3 hover:bg-theme {{ Request::is('store-request') ? 'active' : '' }}" href="{{ route('organiser.store-request') }}" style="padding-left: 2rem;">Mở cửa hàng</a>
+                            <a class="flex items-center py-3 hover:bg-theme {{ Request::is('store-request') ? 'active' : '' }}" href="{{ route('organiser.store-request.index') }}" style="padding-left: 2rem;">Mở cửa hàng</a>
                         </li>
                         <li>
                             <a class="flex items-center py-3 hover:bg-theme {{ Request::is('credit-request') ? 'active' : '' }}" href="{{ route('organiser.credit-request.index') }}" style="padding-left: 2rem;">Mở tín

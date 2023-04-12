@@ -36,8 +36,42 @@ class OrganiserController extends Controller
         return back()->with('success', 'Chấp nhận yêu cầu mở cửa hàng thành công');
     }
 
-    public function getStoreRequests()
+    public function getStoreRequests(Request $request)
     {
+        if(isset($request->key)) {
+            $key = $request->key;
+
+            $pending = Store::where(function ($query) use ($request) {
+                    $query->where('name', 'LIKE', '%' . $request->key . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+                })
+                ->where('status', 'pending')
+                ->paginate(5);
+            $pending->appends (array ('key' => $key));
+
+            $approved = Store::where(function ($query) use ($request) {
+                    $query->where('name', 'LIKE', '%' . $request->key . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+                })
+                ->where('status', 'approved')
+                ->paginate(5);
+            $approved->appends (array ('key' => $key));
+
+            $denied = Store::where(function ($query) use ($request) {
+                    $query->where('name', 'LIKE', '%' . $request->key . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+                })
+                ->where('status', 'denied')
+                ->paginate(5);
+            $denied->appends (array ('key' => $key));
+
+            $stores = [
+                'pending' => $pending ?? [],
+                'approved' => $approved ?? [],
+                'denied' => $denied ?? [],
+            ];
+            return view('store-requests.index', compact('stores', 'key'));
+        }
         $pending = Store::where('status', 'pending')->paginate(5);
         $approved = Store::where('status', 'approved')->paginate(5);
         $denied = Store::where('status', 'denied')->paginate(5);
@@ -102,8 +136,42 @@ class OrganiserController extends Controller
         return back()->with('success', 'Từ chối yêu cầu mở cửa hàng thành công');
     }
 
-    public function getCreditRequests()
+    public function getCreditRequests(Request $request)
     {
+        if(isset($request->key)) {
+            $key = $request->key;
+            $pending = CreditRequest::where(function ($query) use ($request) {
+                    $query->where('name', 'LIKE', '%' . $request->key . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+                })
+                ->where('status', 'pending')
+                ->paginate(5);
+            $pending->appends (array ('key' => $key));
+
+            $approved = CreditRequest::where(function ($query) use ($request) {
+                    $query->where('name', 'LIKE', '%' . $request->key . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+                })
+                ->where('status', 'approved')
+                ->paginate(5);
+            $approved->appends (array ('key' => $key));
+
+            $denied = CreditRequest::where(function ($query) use ($request) {
+                    $query->where('name', 'LIKE', '%' . $request->key . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+                })
+                ->where('status', 'denied')
+                ->paginate(5);
+            $denied->appends (array ('key' => $key));
+
+            $requests = [
+                'pending' => $pending ?? [],
+                'approved' => $approved ?? [],
+                'denied' => $denied ?? [],
+            ];
+            return view('credit-requests.index', compact('requests', 'key'));
+        }
+
         $pending = CreditRequest::where('status', 'pending')->paginate(5);
         $approved = CreditRequest::where('status', 'approved')->paginate(5);
         $denied = CreditRequest::where('status', 'denied')->paginate(5);
@@ -184,8 +252,38 @@ class OrganiserController extends Controller
         return back()->with('success', 'Từ chối yêu cầu cấp hạn mức tín dụng thành công');
     }
 
-    public function getWithdrawRequest()
+    public function getWithdrawRequest(Request $request)
     {
+        if(isset($request->key)) {
+            $key = $request->key;
+            $pending = WithdrawRequest::where('name', 'LIKE', '%' . $request->key . '%')
+                ->with('user.wallet')
+                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->where('status', 'pending')
+                ->paginate(5);
+            $pending->appends (array ('key' => $key));
+
+            $approved = WithdrawRequest::where('name', 'LIKE', '%' . $request->key . '%')
+                ->with('user.wallet')
+                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->where('status', 'approved')
+                ->paginate(5);
+            $approved->appends (array ('key' => $key));
+
+            $denied = WithdrawRequest::where('name', 'LIKE', '%' . $request->key . '%')
+                ->with('user.wallet')
+                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->where('status', 'denied')
+                ->paginate(5);
+            $denied->appends (array ('key' => $key));
+
+            $requests = [
+                'pending' => $pending ?? [],
+                'approved' => $approved ?? [],
+                'denied' => $denied ?? [],
+            ];
+            return view('withdraw-request.index', compact('requests', 'key'));
+        }
         $pending = WithdrawRequest::where('status', 'pending')->with('user.wallet')->paginate(5);
         $approved = WithdrawRequest::where('status', 'approved')->with('user.wallet')->paginate(5);
         $denied = WithdrawRequest::where('status', 'denied')->with('user.wallet')->paginate(5);
@@ -292,7 +390,7 @@ class OrganiserController extends Controller
     {
         if(isset($request->key)) {
             $transactions = Transaction::where('code', 'LIKE', '%' . $request->key . '%')
-                ->paginate(10);
+                ->get();
             $key = $request->key;
             return view('transactions.index', compact('transactions', 'key'));
         }
@@ -308,7 +406,7 @@ class OrganiserController extends Controller
                 ->withCount('orders')
                 ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
                 ->with('user')
-                ->paginate(10);
+                ->get();
             $key = $request->key;
             return view('stores.index', compact('stores', 'key'));
         }

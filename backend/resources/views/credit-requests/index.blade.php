@@ -23,9 +23,22 @@
             </div>
         </div>
         <div class="tab-content" id="myTabContent">
-            @include('credit-requests.tabs.approved')
-            @include('credit-requests.tabs.pending')
-            @include('credit-requests.tabs.denied')
+            <div class="pt-2 px-3">
+                <form action="{{ route('organiser.credit-request.index') }}" method="GET">
+                    <input type="text" name="key" style="border-radius: 5px;" placeholder="Tìm kiếm theo tên hay sđt">
+                </form>
+            </div>
+            @if($requests['pending']->count() > 0 || $requests['approved']->count() > 0 || $requests['denied']->count() > 0)
+                @include('credit-requests.tabs.approved')
+                @include('credit-requests.tabs.pending')
+                @include('credit-requests.tabs.denied')
+            @else
+            <div class="text-center">
+                <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
+                <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+                <a href="{{ route('organiser.credit-request.index') }}">Quay lại</a>
+            </div>
+            @endif
         </div>
     </div>
 </div>

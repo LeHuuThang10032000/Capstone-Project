@@ -34,7 +34,7 @@
                             <p class="m-0">Số điện thoại: {{$transaction->toUser->phone ?? 'Người dùng VLPay'}}</p>
                             <p class="m-0">Tên: {{$transaction->toUser->f_name ?? 'Người dùng VLPay'}}</p>
                             <p class="m-0">Số dư đầu kỳ: {{isset($transaction->toDetail->open_balance) ? number_format($transaction->toDetail->open_balance) : null}}đ</p>
-                            <p class="m-0">Số dư đầu kỳ: {{isset($transaction->toDetail->close_balance) ? number_format($transaction->toDetail->open_balance) : null}}đ</p>
+                            <p class="m-0">Số dư đầu kỳ: {{isset($transaction->toDetail->close_balance) ? number_format($transaction->toDetail->close_balance) : null}}đ</p>
                         </div>
                         <p class="m-0">Thời gian giao dịch: {{$transaction->created_at}}</p>
                     </div>
