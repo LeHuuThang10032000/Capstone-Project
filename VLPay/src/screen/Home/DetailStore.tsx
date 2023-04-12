@@ -6,7 +6,7 @@ import {
   Alert,
   useWindowDimensions,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -64,6 +64,7 @@ const DetailStore = ({route}: any) => {
   const [cart, setCart] = useState<myCart>();
   const [totalItem, setTotalItem] = useState(0);
 
+  console.log(totalItem);
   const getDetailStore = useCallback(async () => {
     const result = await axiosClient.get(`/store/${store_id}`);
     setStore(result.data?.data);
@@ -75,6 +76,34 @@ const DetailStore = ({route}: any) => {
     setTotalItem(result?.data?.data?.total_quantity);
   }, []);
 
+  //Delete Cart
+  const deleteCart = useCallback(async () => {
+    await axiosClient.delete('/cart');
+  }, []);
+
+  const handleGoBack = () => {
+    totalItem > 0
+      ? Alert.alert(
+          'Cảnh báo',
+          'Bạn đang có sản phẩm trong giỏ hàng, có muốn xóa giỏ hàng trước khi rời khỏi cửa hàng này!',
+          [
+            {
+              text: 'Thoát',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'Xóa giỏ hàng',
+              onPress: () => {
+                deleteCart();
+                navigation.goBack();
+              },
+            },
+          ],
+        )
+      : navigation.goBack();
+  };
+
   useEffect(() => {
     // Call only when screen open or when back on screen
     if (isFocused) {
@@ -83,139 +112,152 @@ const DetailStore = ({route}: any) => {
     }
   }, [getDetailStore, getCart, isFocused]);
 
-  return (
-    <View flex={1} backgroundColor="#FFFFFF">
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {store.map(item => (
-          <View key={item.id} paddingBottom={50}>
-            <HStack
-              style={{zIndex: 2, top: insets.top + 20}}
-              paddingX={3}
-              justifyContent="space-between">
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <ChevronLeft />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Detail />
-              </TouchableOpacity>
-            </HStack>
-            <AnimatedImageBackground
-              source={{uri: item.image}}
-              style={[
-                styles.backgroundImage,
-                {
-                  height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_NARROWED,
-                  transform: [
-                    {
-                      scale: scrollY.interpolate({
-                        inputRange: [-200, 0],
-                        outputRange: [3, 1],
-                        extrapolateLeft: 'extend',
-                        extrapolateRight: 'clamp',
-                      }),
-                    },
-                  ],
-                },
-              ]}></AnimatedImageBackground>
-            <View
-              paddingX={5}
-              style={{
-                marginTop: 250,
-                paddingBottom: 50,
-              }}>
-              <Heading pb={5}>{item.name}</Heading>
-              {item.categories.map(item => (
-                <VStack paddingBottom={'5'} key={item.id}>
-                  <Heading size={'lg'}>{item.name}</Heading>
-                  {item.products.map(item => (
-                    <View my={3} key={item.id}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate('DetailProduct', {
-                            id: item.id,
-                            store_id: store_id,
-                          })
-                        }>
-                        <HStack>
-                          <Image
-                            source={{uri: item.image}}
-                            w={100}
-                            h={100}
-                            borderRadius={8}
-                            borderWidth={1}
-                            borderColor="#333"
-                            alt="image-product"
-                          />
-                          <VStack paddingLeft={5}>
-                            <Heading size={'md'}>{item.name}</Heading>
-                            <Text fontWeight={'bold'} color={'#4285F4'}>
-                              {formatCurrency((item.price ?? 0).toString())}đ
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </VStack>
-              ))}
+  return useMemo(
+    () => (
+      <View flex={1} backgroundColor="#FFFFFF">
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {store.map(item => (
+            <View key={item.id} paddingBottom={50}>
+              <HStack
+                style={{zIndex: 2, top: insets.top + 20}}
+                paddingX={3}
+                justifyContent="space-between">
+                <TouchableOpacity onPress={handleGoBack}>
+                  <ChevronLeft />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Detail />
+                </TouchableOpacity>
+              </HStack>
+              <AnimatedImageBackground
+                source={{uri: item.image}}
+                style={[
+                  styles.backgroundImage,
+                  {
+                    height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_NARROWED,
+                    transform: [
+                      {
+                        scale: scrollY.interpolate({
+                          inputRange: [-200, 0],
+                          outputRange: [3, 1],
+                          extrapolateLeft: 'extend',
+                          extrapolateRight: 'clamp',
+                        }),
+                      },
+                    ],
+                  },
+                ]}></AnimatedImageBackground>
+              <View
+                paddingX={5}
+                style={{
+                  marginTop: 250,
+                  paddingBottom: 50,
+                }}>
+                <Heading pb={5}>{item.name}</Heading>
+                {item.categories.map(item => (
+                  <VStack paddingBottom={'5'} key={item.id}>
+                    <Heading size={'lg'}>{item.name}</Heading>
+                    {item.products.map(item => (
+                      <View my={3} key={item.id}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate('DetailProduct', {
+                              id: item.id,
+                              store_id: store_id,
+                            })
+                          }>
+                          <HStack>
+                            <Image
+                              source={{uri: item.image}}
+                              w={100}
+                              h={100}
+                              borderRadius={8}
+                              borderWidth={1}
+                              borderColor="#333"
+                              alt="image-product"
+                            />
+                            <VStack paddingLeft={5}>
+                              <Heading size={'md'}>{item.name}</Heading>
+                              <Text fontWeight={'bold'} color={'#4285F4'}>
+                                {formatCurrency((item.price ?? 0).toString())}đ
+                              </Text>
+                            </VStack>
+                          </HStack>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </VStack>
+                ))}
+              </View>
             </View>
-          </View>
-        ))}
-      </ScrollView>
-      {totalItem > 0 ? (
-        <HStack
-          zIndex={99}
-          position={'absolute'}
-          justifyContent="space-between"
-          width={width}
-          bottom={0}
-          paddingY={3}
-          paddingX={'2.5'}
-          backgroundColor={'#FFFFFF'}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('DetailCart', {store_id: store_id})
-            }>
-            <View
-              borderRadius={10}
-              padding={5}
-              borderWidth={1}
-              borderColor="#B5EAD8"
-              justifyContent="center"
-              alignItems={'center'}
-              flexDirection="row">
-              <CartIcon />
-              <Text>{totalItem}</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('DetailOrder', {
-                store_id: store_id,
-                phone: cart?.store.phone,
-                name: cart?.store.name,
-                image: cart?.store.image,
-              })
-            }>
-            <View
-              justifyContent="center"
-              alignItems={'center'}
-              style={{
-                width: 290,
-                padding: 19,
-                backgroundColor: '#B5EAD8',
-                borderRadius: 10,
-              }}>
-              <Text color={'#000000'} fontWeight="bold" fontSize={16}>
-                {`Xem đơn hàng: ${formatCurrency(
-                  (cart?.total_price ?? 0).toString(),
-                )}đ`}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </HStack>
-      ) : null}
-    </View>
+          ))}
+        </ScrollView>
+        {totalItem > 0 ? (
+          <HStack
+            zIndex={99}
+            position={'absolute'}
+            justifyContent="space-between"
+            width={width}
+            bottom={0}
+            paddingY={3}
+            paddingX={'2.5'}
+            backgroundColor={'#FFFFFF'}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('DetailCart', {store_id: store_id})
+              }>
+              <View
+                borderRadius={10}
+                padding={5}
+                borderWidth={1}
+                borderColor="#B5EAD8"
+                justifyContent="center"
+                alignItems={'center'}
+                flexDirection="row">
+                <CartIcon />
+                <Text>{totalItem}</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('DetailOrder', {
+                  store_id: store_id,
+                  phone: cart?.store.phone,
+                  name: cart?.store.name,
+                  image: cart?.store.image,
+                })
+              }>
+              <View
+                justifyContent="center"
+                alignItems={'center'}
+                style={{
+                  width: 290,
+                  padding: 19,
+                  backgroundColor: '#B5EAD8',
+                  borderRadius: 10,
+                }}>
+                <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+                  {`Xem đơn hàng: ${formatCurrency(
+                    (cart?.total_price ?? 0).toString(),
+                  )}đ`}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </HStack>
+        ) : null}
+      </View>
+    ),
+    [
+      totalItem,
+      store_id,
+      cart,
+      getCart,
+      getDetailStore,
+      isFocused,
+      navigation,
+      handleGoBack,
+      store,
+    ],
   );
 };
 
