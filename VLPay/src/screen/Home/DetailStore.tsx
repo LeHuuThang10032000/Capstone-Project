@@ -85,7 +85,7 @@ const DetailStore = ({route}: any) => {
     totalItem > 0
       ? Alert.alert(
           'Cảnh báo',
-          'Bạn đang có sản phẩm trong giỏ hàng, có muốn xóa giỏ hàng trước khi rời khỏi cửa hàng này!',
+          'Bạn đang có sản phẩm trong giỏ hàng. Vui lòng xóa giỏ hàng trước khi rời khỏi cửa hàng này!',
           [
             {
               text: 'Thoát',
