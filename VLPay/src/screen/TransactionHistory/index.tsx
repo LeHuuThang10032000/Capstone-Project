@@ -35,6 +35,8 @@ const FirstRoute = () => {
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [error, setError] = useState(false);
+
   const navigation = useNavigation<MainStackNavigation>();
 
   const onRefresh = React.useCallback(() => {
@@ -45,7 +47,7 @@ const FirstRoute = () => {
     }, 2000);
   }, []);
 
-  console.log('===>', history);
+  console.log('Error ===>', error);
   // console.log('MyID:', profile);
 
   const fetchData = useCallback(async () => {
@@ -56,23 +58,109 @@ const FirstRoute = () => {
   }, []);
 
   const getDays = useCallback(async () => {
+    setLoading(true);
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/history-transaction?filter_key=days',
     );
     setHistory(result.data?.data?.data);
-    console.log(result.data?.data?.data);
-
+    console.log('Status code:', result.status);
+    if (result.data?.data === null) {
+      setError(true);
+    }
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     fetchData();
     getDays();
   }, []);
   return (
     <View style={{flex: 1, marginTop: 20}}>
-      {loading ? (
+      {loading && (
+        <Center>
+          <Lottie
+            source={require('../../assets/lottie-file/loading.json')}
+            autoPlay={true}
+            style={{width: 100, height: 100}}
+          />
+        </Center>
+      )}
+      {!loading && (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          {history.map((item: any, index: any) => {
+            return (
+              <View key={index}>
+                <View px={3} style={styles.containerMonth}>
+                  <Text style={styles.titleText}>
+                    {moment(item.date).format('DD/MM/YYYY')}
+                  </Text>
+                </View>
+                {item.data.map((item: any) => {
+                  return (
+                    <TouchableOpacity
+                      key={item.id}
+                      onPress={() => {
+                        console.log(item?.type);
+
+                        if (item?.type === 'O') {
+                          navigation.navigate('ShareBill', {
+                            data: item,
+                          });
+                        } else {
+                          navigation.navigate('DetailTransaction', {
+                            title: item.title,
+                            amount: item.amount,
+                            code: item.code,
+                            created_at: item.created_at,
+                          });
+                        }
+                      }}>
+                      <HStack
+                        my={3}
+                        mx={3}
+                        key={item.id}
+                        justifyContent="space-between">
+                        <VStack>
+                          <Text
+                            style={styles.title}
+                            ellipsizeMode="tail"
+                            numberOfLines={1}>
+                            {item.title}
+                          </Text>
+                          <Text style={styles.textDate}>
+                            {moment(item.created_at).format(
+                              'h:mm [-] DD/MM/YYYY',
+                            )}
+                          </Text>
+                        </VStack>
+                        {item.from_id !== profile ? (
+                          <Text style={styles.text}>
+                            {formatCurrency(`${item.amount}`)}đ
+                          </Text>
+                        ) : (
+                          <Text style={styles.text}>
+                            -{formatCurrency(`${item.amount}`)}đ
+                          </Text>
+                        )}
+                      </HStack>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
+      {error && (
+        <Center>
+          <Text>Không có giao dịch nào.</Text>
+        </Center>
+      )}
+      {/* {loading ? (
         <Center>
           <Lottie
             source={require('../../assets/lottie-file/loading.json')}
@@ -149,7 +237,7 @@ const FirstRoute = () => {
             );
           })}
         </ScrollView>
-      )}
+      )} */}
     </View>
   );
 };
@@ -180,6 +268,7 @@ const SecondRoute = () => {
   }, []);
 
   const getMonths = useCallback(async () => {
+    setLoading(true);
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/history-transaction?filter_key=months',
     );
@@ -188,7 +277,6 @@ const SecondRoute = () => {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     fetchData();
     getMonths();
   }, []);
@@ -292,6 +380,7 @@ const ThirdRoute = () => {
   }, []);
 
   const getYears = useCallback(async () => {
+    setLoading(true);
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/history-transaction?filter_key=years',
     );
@@ -300,7 +389,6 @@ const ThirdRoute = () => {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     fetchData();
     getYears();
   }, []);
