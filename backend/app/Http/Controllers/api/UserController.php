@@ -226,9 +226,9 @@ class UserController extends Controller
         }
 
         try {
-            $stores = Store::whereNotIn('status', ['pending, denied'])
+            $stores = Store::whereNotIn('status', ['pending', 'denied'])
                 ->where('user_id', '!=', Auth::user()->id)
-                ->select('id', 'name', 'image', 'phone', 'location')
+                ->select('id', 'name', 'image', 'phone', 'location', 'status')
                 ->with('schedules');
 
             if ($request->page) {
