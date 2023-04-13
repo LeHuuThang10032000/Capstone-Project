@@ -5,6 +5,7 @@ import {
   ScrollView,
   Alert,
   useWindowDimensions,
+  BackHandler,
 } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {axiosClient} from '../../components/apis/axiosClient';
@@ -111,6 +112,21 @@ const DetailStore = ({route}: any) => {
       getCart();
     }
   }, [getDetailStore, getCart, isFocused]);
+
+  const backAction = () => {
+    handleGoBack();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    backAction,
+  );
+
+  useEffect(() => {
+    backHandler;
+    return () => backHandler.remove();
+  }, []);
 
   return useMemo(
     () => (
@@ -231,7 +247,7 @@ const DetailStore = ({route}: any) => {
                 justifyContent="center"
                 alignItems={'center'}
                 style={{
-                  width: 290,
+                  width: 260,
                   padding: 19,
                   backgroundColor: '#B5EAD8',
                   borderRadius: 10,
