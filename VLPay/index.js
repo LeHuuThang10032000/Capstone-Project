@@ -25,27 +25,6 @@ PushNotification.configure({
   requestPermissions: true,
 });
 
-PushNotification.localNotification({
-  message: remoteMessage?.notification?.body || '',
-  title: remoteMessage?.notification?.title,
-  channelId: NOTIFICATION_CHANNEL_ID,
-  largeIcon: NOTIFICATION_ICON,
-  smallIcon: NOTIFICATION_ICON,
-  vibration: 500,
-  vibrate: true,
-  playSound: true,
-  soundName: 'default',
-  autoCancel: true,
-  bigText: remoteMessage?.notification?.title,
-  subText: remoteMessage?.notification?.body,
-  priority: 'high',
-  importance: 'high',
-  userInfo: {
-    id: Date.now(),
-    ...remoteMessage.data,
-  },
-});
-
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   const notification = new firebase.notifications.Notification()
     .setNotificationId(remoteMessage.messageId)
