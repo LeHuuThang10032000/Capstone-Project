@@ -15,6 +15,7 @@ use App\Models\StoreSchedule;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
+use App\Services\SendPushNotification;
 use Carbon\Carbon;
 use Exception;
 use Helper;
@@ -30,7 +31,7 @@ class StoreController extends Controller
     {
         try {
             $store = Store::where('user_id', '=', Auth::user()->id)
-                ->where('status', 'approved')
+                ->whereNotIn('status', ['pending', 'denied'])
                 ->first();
 
             return ApiResponse::successResponse($store);
@@ -996,6 +997,7 @@ class StoreController extends Controller
             }
             $order->save();
 
+            (new SendPushNotification)->merchantFinishedOrder($order->user, $order->store_id, $order->id);
             DB::commit();
             return APIResponse::SuccessResponse($order);
         } catch(\Exception $e) {

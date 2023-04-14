@@ -129,9 +129,15 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
+        $currentToken = $request->user()->tokens();
+
+        if ($currentToken) {
+            // Revoke all tokens except the current one
+            $user->tokens()->delete();
+        }
         $user->device_token = $request->device_token;
         $user->save();
-        $user = $user->refresh();
+        
         $token = $user->createToken('myapptoken')->accessToken;
 
         return ApiResponse::successResponse($token);
