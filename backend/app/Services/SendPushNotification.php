@@ -8,32 +8,32 @@ use Exception;
 
 class SendPushNotification
 {
-    public function merchantNewOrder($merchant, $storeId, $requestId)
+    public function merchantNewOrder($merchant, $storeId, $orderId)
     {
         $messageData = [
             'type' => 'merchant_new_order',
             'text' => 'Bạn có đơn hàng mới',
             'data' => [
                 'store_id' => $storeId,
-                'request_id' => $requestId,
+                'order_id' => $orderId,
             ]
         ];
 
         return $this->sendNotification($merchant, $messageData);
     }
 
-    public function merchantFinishedOrder($merchant, $storeId, $requestId)
+    public function merchantFinishedOrder($user, $storeId, $orderId)
     {
         $messageData = [
             'type' => 'merchant_finished_order',
             'text' => 'Đơn hàng của bạn đã được chuẩn bị xong',
             'data' => [
                 'store_id' => $storeId,
-                'request_id' => $requestId,
+                'order_id' => $orderId,
             ]
         ];
 
-        return $this->sendNotification($merchant, $messageData);
+        return $this->sendNotification($user, $messageData);
     }
 
     public function sendNotification($user, $message)
