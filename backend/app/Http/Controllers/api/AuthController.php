@@ -112,6 +112,7 @@ class AuthController extends Controller
         $validate = Validator::make($request->all(), [
             'phone' => 'required|phone',
             'password' => 'required|min:6',
+            'device_token' => '',
         ], [
             'phone.required' => 'Vui lòng nhập số điện thoại',
             'password.required' => 'Vui lòng nhập mật khẩu',
@@ -128,6 +129,8 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
+        $user->device_token = $request->device_token;
+        $user->save();
         $user = $user->refresh();
         $token = $user->createToken('myapptoken')->accessToken;
 

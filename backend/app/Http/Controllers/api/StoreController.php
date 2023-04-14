@@ -1003,4 +1003,26 @@ class StoreController extends Controller
             return ApiResponse::failureResponse($e->getMessage());
         }
     }
+
+    public function updateStoreStatus(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'status' => 'required|in:opening,closing',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $store = Auth::user()->stores->whereNotIn('status', ['pending', 'denied'])->first();
+            $store->status = $request->status; 
+            $store->save();
+
+            return APIResponse::SuccessResponse(null);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failureResponse($e->getMessage());
+        }
+    }
 }
