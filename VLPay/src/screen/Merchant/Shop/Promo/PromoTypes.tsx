@@ -53,7 +53,7 @@ const PromoTypes = () => {
   return (
     <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
       <HeaderComp
-        title="Chương trình quảng cáo"
+        title="Chương trình giảm giá"
         onPressBack={() => navigation.goBack()}
       />
       <UText style={{marginLeft: 10, marginBottom: 10, marginTop: 30}}>

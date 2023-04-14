@@ -18,6 +18,7 @@ const PromoList = () => {
 
   const [state, setState] = useState('RUNNING');
   const [items, setItems] = useState([]);
+  console.log(data.id);
 
   const fetchData = async () => {
     const result = await axiosClient.get(
@@ -27,7 +28,12 @@ const PromoList = () => {
         '&page=1&limit=10&status=' +
         'RUNNING',
     );
-    setItems(result.data.data);
+    let array_running = [];
+    result.data.data.map(item => {
+      item.type = 'running';
+      array_running.push(item);
+    });
+    setItems(array_running);
     setState('RUNNING');
   };
 
@@ -51,6 +57,8 @@ const PromoList = () => {
         style={{backgroundColor: '#FEB7B1'}}>
         <TouchableOpacity
           onPress={async () => {
+            console.log('data.id', data.id);
+
             setState('RUNNING');
             const result = await axiosClient.get(
               baseUrl +
@@ -58,8 +66,14 @@ const PromoList = () => {
                 data.id +
                 '&page=1&limit=10&status=RUNNING',
             );
-            setItems(result.data.data);
-            console.info(result.data.data);
+            let array_running = [];
+            result.data.data.map(item => {
+              item.type = 'running';
+              array_running.push(item);
+            });
+
+            setItems(array_running);
+            console.log(array_running);
           }}
           style={[
             state === 'RUNNING'
@@ -87,8 +101,13 @@ const PromoList = () => {
                 data.id +
                 '&page=1&limit=10&status=UPCOMING',
             );
-            setItems(result.data.data);
-            console.warn(result.data.data);
+            let array_comming = [];
+            result.data.data.map(item => {
+              item.type = 'upcoming';
+              array_comming.push(item);
+            });
+
+            setItems(array_comming);
           }}
           style={[
             state === 'UPCOMING'
@@ -142,10 +161,21 @@ const PromoList = () => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('CreatePromo', {
-                    id: item.store_id,
-                    data: item,
-                  });
+                  console.log(item);
+
+                  if (item?.type === 'running') {
+                    navigation.navigate('CreatePromo', {
+                      id: item.store_id,
+                      data: item,
+                      type: 'running',
+                    });
+                  } else if (item?.type === 'upcoming') {
+                    navigation.navigate('CreatePromo', {
+                      id: item.store_id,
+                      data: item,
+                      type: 'upcoming',
+                    });
+                  }
                 }}>
                 <HStack
                   alignItems={'center'}
