@@ -70,6 +70,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::group(['prefix' => 'merchant'], function() {
         Route::get('/store', [StoreController::class, 'index']);
         Route::post('/store/update', [StoreController::class, 'update']);
+        Route::post('/store/update/status', [StoreController::class, 'updateStoreStatus']);
 
         Route::get('/menu', [StoreController::class, 'getStoreMenu']);
         Route::post('/product/create', [StoreController::class, 'createProduct']);

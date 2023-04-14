@@ -18,7 +18,7 @@ use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
-use Exception;
+use App\Services\SendPushNotification;
 use Helper;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\JsonResponse;
@@ -740,8 +740,9 @@ class UserController extends Controller
             $merchantWallet->save();
             $userWallet->save();
 
-            DB::commit();
+            (new SendPushNotification)->merchantNewOrder($merchant, $store->id, $order->id);
 
+            DB::commit();
             $data = [
                 'request_id' => $order->id,
             ];
