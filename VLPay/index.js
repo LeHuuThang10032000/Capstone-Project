@@ -25,6 +25,18 @@ PushNotification.configure({
   requestPermissions: true,
 });
 
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  const notification = new firebase.notifications.Notification()
+    .setNotificationId(remoteMessage.messageId)
+    .setTitle(remoteMessage.notification.title)
+    .setBody(remoteMessage.notification.body)
+    .setData(remoteMessage.data);
+
+  console.log('notification', notification);
+
+  firebase.notifications().displayNotification(notification);
+});
+
 async function registerAppWithFCM() {
   await messaging().registerDeviceForRemoteMessages();
 }

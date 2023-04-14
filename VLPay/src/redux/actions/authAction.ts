@@ -2,6 +2,7 @@ import {LOGIN, LOGOUT} from '../constants';
 import * as api from '../../components/apis/api';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {clearToken, getToken, saveToken} from '../../utils/storeUtils';
+import messaging from '@react-native-firebase/messaging';
 
 export const Init = async () => {
   let token = await getToken();
@@ -19,10 +20,13 @@ export const Init = async () => {
 
 export const Login = async (phoneNumber: string, password: string) => {
   const phone = phoneNumber;
+  const deviceToken = await messaging().getToken();
+  console.log('Device Token:', deviceToken);
   try {
     const res = await axiosClient.post(api.LOGIN, {
       phone,
       password,
+      device_token: deviceToken,
     });
     await saveToken(res.data.data);
     return {

@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {NativeBaseProvider} from 'native-base';
 import AppRouter from './src/stack/AppRouter';
@@ -8,6 +8,7 @@ import {store} from './src/redux/store';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {AppProvider} from './src/context/GlobalContext';
+import messaging from '@react-native-firebase/messaging';
 
 const theme = {
   ...DefaultTheme,
@@ -23,6 +24,36 @@ const App = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+        }
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <AppProvider>
