@@ -139,8 +139,7 @@ const Index = ({route}: any) => {
           input
             ? {
                 width: '100%',
-                position: 'absolute',
-                bottom: 0,
+                bottom: 150,
                 height: keyboardHeight,
                 backgroundColor: 'white',
               }
