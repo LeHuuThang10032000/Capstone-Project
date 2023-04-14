@@ -1,10 +1,19 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import HeaderBack from '../../../../components/HeaderBack';
 import {axiosClient} from '../../../../components/apis/axiosClient';
-import {HStack, VStack} from 'native-base';
+import {
+  Center,
+  Divider,
+  HStack,
+  ScrollView,
+  Text,
+  VStack,
+  View,
+} from 'native-base';
 import {formatCurrency} from '../../../../components/helper';
 import moment from 'moment';
+import Lottie from 'lottie-react-native';
 
 export interface AddOns {
   id: number;
@@ -69,11 +78,14 @@ interface DetailBill {
 const DetailBillShare = ({route}: any) => {
   const {order_id} = route.params;
   const [data, setData] = useState<DetailBill>();
+  const [loading, setLoading] = useState(false);
   console.log(order_id);
   console.log(data);
   const getDetailBill = useCallback(async () => {
+    setLoading(true);
     const result = await axiosClient.get(`/order/detail?order_id=${order_id}`);
     setData(result.data.data);
+    setLoading(false);
   }, []);
   useEffect(() => {
     getDetailBill();
@@ -81,123 +93,118 @@ const DetailBillShare = ({route}: any) => {
   return (
     <View style={{backgroundColor: '#ffffff', flex: 1}}>
       <HeaderBack title="Chi tiết hóa đơn" />
-      <View style={{padding: 15}}>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            color: '#000000',
-            fontSize: 16,
-            paddingBottom: 20,
-          }}>
-          {data?.store.name}
-        </Text>
-        <HStack w={'100%'} paddingBottom={5} justifyContent={'space-between'}>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              color: '#000000',
-              fontSize: 16,
-            }}>
-            Mã đơn hàng
-          </Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              color: '#0088CC',
-              fontSize: 16,
-            }}>
-            #{data?.order_code}
-          </Text>
-        </HStack>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            color: '#000000',
-            fontSize: 16,
-            paddingBottom: 10,
-          }}>
-          Sản phẩm
-        </Text>
-        {data?.product_detail.map(item => (
-          <View>
-            <HStack width={'100%'} justifyContent={'space-between'}>
-              <HStack>
-                <Text
-                  style={{
-                    fontWeight: 'bold',
-                    color: '#000000',
-                    fontSize: 16,
-                  }}>
-                  {item.quantity} x{' '}
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: 'bold',
-                    color: '#000000',
-                    fontSize: 16,
-                  }}>
-                  {item.name}
-                </Text>
-              </HStack>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  color: '#000000',
-                  fontSize: 16,
-                }}>
-                {formatCurrency((item?.price ?? 0).toString())}đ
+      <ScrollView>
+        {loading ? (
+          <Center>
+            <Lottie
+              source={require('../../../../assets/lottie-file/loading.json')}
+              autoPlay={true}
+              style={{width: 100, height: 100}}
+            />
+          </Center>
+        ) : (
+          <VStack margin={5}>
+            <HStack>
+              <Text color="#000000">Mã đơn hàng:</Text>
+              <Text color="#000000" fontWeight="bold">
+                #{data?.order_code}
               </Text>
             </HStack>
-            <HStack>
-              {item.add_ons.map(item => (
-                <HStack w={'100%'} justifyContent={'space-between'}>
-                  <Text>{item.name}</Text>
-                  <Text>{formatCurrency((item?.price ?? 0).toString())}đ</Text>
-                </HStack>
-              ))}
-            </HStack>
-          </View>
-        ))}
-        <HStack w={'100%'} paddingY={3} justifyContent={'space-between'}>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              color: '#000000',
-              fontSize: 16,
-            }}>
-            Tổng tiền
-          </Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              color: '#000000',
-              fontSize: 16,
-            }}>
-            {formatCurrency((data?.order_total ?? 0).toString())}đ
-          </Text>
-        </HStack>
-        <VStack>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              color: '#000000',
-              fontSize: 16,
-              paddingBottom: 10,
-            }}>
-            Chi tiết đơn hàng
-          </Text>
-          <HStack w={'100%'} justifyContent={'space-between'}>
-            <Text>Thời gian đặt hàng</Text>
-            <Text>
-              {moment(data?.created_at).format('h:mm [-] DD/MM/YYYY')}
+            <Divider marginTop={5} />
+            <VStack marginTop={5}>
+              <Text fontWeight={'extrabold'}>{data?.store.name}</Text>
+              <HStack>
+                <Text color={'#818181'}>
+                  {formatCurrency((data?.order_total ?? 0).toString())}đ -{' '}
+                </Text>
+                <Text color={'#818181'}>{data?.product_quantity} món - </Text>
+                <Text color={'#818181'}>Ví VLPay</Text>
+              </HStack>
+            </VStack>
+            <Divider marginTop={5} />
+            <Text fontSize={16} marginTop={5} fontWeight={'extrabold'}>
+              {data?.store.name}
             </Text>
-          </HStack>
-          <HStack w={'100%'} justifyContent={'space-between'}>
-            <Text>Thanh toán</Text>
-            <Text>Ví VLPay</Text>
-          </HStack>
-        </VStack>
-      </View>
+            {data?.product_detail.map(item => (
+              <HStack paddingY={5} justifyContent={'space-between'}>
+                <VStack>
+                  <Text fontSize={18} fontWeight="bold">
+                    {item.quantity} x {item.name}
+                  </Text>
+                  {item.add_ons.map(item => (
+                    <Text color="#818181" fontSize={16}>
+                      {item.name}
+                    </Text>
+                  ))}
+                </VStack>
+                <Text fontSize={18} fontWeight="bold">
+                  {formatCurrency((item?.price ?? 0).toString())}đ
+                </Text>
+              </HStack>
+            ))}
+            <HStack justifyContent={'space-between'}>
+              <Text fontSize={18} fontWeight="bold">
+                Tạm tính ({data?.product_quantity} món)
+              </Text>
+              <Text fontSize={18} fontWeight="bold">
+                {formatCurrency((data?.order_total ?? 0).toString())}đ
+              </Text>
+            </HStack>
+            <HStack marginTop={5} justifyContent={'space-between'}>
+              <Text fontSize={14} color={'#818181'}>
+                Giảm giá
+              </Text>
+              <Text fontSize={14} color={'#818181'}>
+                {formatCurrency((data?.discount_amount ?? 0).toString())}đ
+              </Text>
+            </HStack>
+            <HStack justifyContent={'space-between'}>
+              <Text fontSize={18} fontWeight="bold">
+                Tổng ({data?.product_quantity} món)
+              </Text>
+              <Text fontSize={18} fontWeight="bold">
+                {formatCurrency((data?.order_total ?? 0).toString())}đ
+              </Text>
+            </HStack>
+            <Divider marginTop={5} />
+            <Text
+              fontSize={16}
+              paddingTop={5}
+              paddingBottom={3}
+              fontWeight={'bold'}
+              color="#000000">
+              Chi tiết đơn hàng
+            </Text>
+            <HStack
+              paddingY={1}
+              alignItems={'center'}
+              justifyContent="space-between">
+              <Text color="#818181">Mã đơn hàng</Text>
+              <Text fontWeight={'bold'} color="#818181" paddingLeft={1}>
+                #{data?.order_code}
+              </Text>
+            </HStack>
+            <HStack
+              paddingY={1}
+              alignItems={'center'}
+              justifyContent="space-between">
+              <Text color="#818181">Thời gian đặt hàng</Text>
+              <Text color="#818181" paddingLeft={1}>
+                {moment(data?.created_at).format('dd, HH:mm')}
+              </Text>
+            </HStack>
+            <HStack
+              paddingY={1}
+              alignItems={'center'}
+              justifyContent="space-between">
+              <Text color="#818181">Thanh toán</Text>
+              <Text color="#818181" paddingLeft={1}>
+                Ví VLpay
+              </Text>
+            </HStack>
+          </VStack>
+        )}
+      </ScrollView>
     </View>
   );
 };

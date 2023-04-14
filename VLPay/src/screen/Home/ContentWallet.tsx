@@ -49,13 +49,13 @@ const ContentWallet = () => {
           });
         },
       },
-      {
-        source: require('../../assets/img/gift.png'),
-        title: 'Ưu đãi',
-        onPress: () => {
-          console.log('nothing');
-        },
-      },
+      // {
+      //   source: require('../../assets/img/gift.png'),
+      //   title: 'Ưu đãi',
+      //   onPress: () => {
+      //     console.log('nothing');
+      //   },
+      // },
       // {
       //   source: require('../../assets/img/deposit.png'),
       //   title: 'Nạp tiền',

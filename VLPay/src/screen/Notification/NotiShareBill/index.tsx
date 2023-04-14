@@ -152,110 +152,8 @@ const NotiShareBill = ({route}: any) => {
           </ScrollView>
         </Center>
       </ScrollView>
-      {remind && (
-        <View
-          style={{
-            width: '100%',
-            height: 300,
-            backgroundColor: 'white',
-            position: 'absolute',
-            bottom: 0,
-            zIndex: 1000,
-
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
-          <View
-            style={{
-              width: '99%',
-              borderRadius: 10,
-              borderColor: 'rgba(0, 0, 0, 0.35)',
-              borderWidth: 1,
-            }}>
-            <HStack
-              style={{
-                width: '100%',
-                justifyContent: 'center',
-                borderBottomWidth: 1,
-                paddingVertical: 10,
-                borderBottomColor: 'rgba(0, 0, 0, 0.35)',
-              }}>
-              <UText style={{fontWeight: '700'}}>Xác nhận trả tiền</UText>
-              <TouchableOpacity
-                onPress={() => setRemind(false)}
-                style={{position: 'absolute', right: 20, top: 15}}>
-                <UText>
-                  <Icons.CloseIcon />
-                </UText>
-              </TouchableOpacity>
-            </HStack>
-            <View style={{marginHorizontal: 16, marginTop: 20}}>
-              <Controller
-                control={control}
-                rules={{
-                  required: 'Không được để trống',
-                }}
-                render={({field: {onChange, onBlur, value}}) => (
-                  <FormControl isInvalid={errors.message !== undefined}>
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        position: 'absolute',
-                        top: -18,
-                        left: 10,
-                        width: 70,
-                        height: 20,
-                        zIndex: 1000,
-                      }}
-                    />
-                    <UText
-                      style={{
-                        position: 'absolute',
-                        top: -12,
-                        left: 10,
-                        backgroundColor: 'transparent',
-                        zIndex: 1000,
-                      }}>
-                      Tin nhắn
-                    </UText>
-                    <TextArea
-                      value={value}
-                      placeholder="Nhập nhắc nhở"
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      autoCompleteType={undefined}
-                      maxLength={50}
-                    />
-                    <FormControl.ErrorMessage>
-                      {errors.message?.message}
-                    </FormControl.ErrorMessage>
-                  </FormControl>
-                )}
-                name="message"
-              />
-
-              <View padding={5}>
-                <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-                  <Center
-                    backgroundColor="#B5EAD8"
-                    padding={5}
-                    borderRadius={10}>
-                    <Text fontSize={16} fontWeight="700">
-                      Gửi
-                    </Text>
-                  </Center>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
-      )}
-      <HStack
-        padding={5}
-        w={width}
-        backgroundColor="yellow"
-        justifyContent="space-between">
-        <TouchableOpacity onPress={() => setRemind(true)}>
+      <Center w={width}>
+        {/* <TouchableOpacity onPress={() => setRemind(true)}>
           <Center
             w={150}
             backgroundColor="#ffffff"
@@ -266,7 +164,7 @@ const NotiShareBill = ({route}: any) => {
               Trả rồi nha
             </Text>
           </Center>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           onPress={() => {
@@ -287,18 +185,21 @@ const NotiShareBill = ({route}: any) => {
               current_user: currentUser,
             });
           }}>
-          <Center
-            w={150}
+          <View
+            w={350}
+            marginBottom={3}
             backgroundColor="#B5EAD8"
             borderWidth={1}
             padding={5}
+            justifyContent={'center'}
+            alignItems={'center'}
             borderRadius={10}>
             <Text fontSize={16} fontWeight="bold">
               Chuyển tiền
             </Text>
-          </Center>
+          </View>
         </TouchableOpacity>
-      </HStack>
+      </Center>
     </View>
   );
 };
