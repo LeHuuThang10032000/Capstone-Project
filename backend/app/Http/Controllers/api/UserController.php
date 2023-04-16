@@ -587,7 +587,7 @@ class UserController extends Controller
         $user = Auth::user();
         $store = Store::select('id', 'user_id', 'name')->where('id', $request->store_id)->first();
 
-        if($store->status = 'closing') {
+        if($store->status == 'closing') {
             return APIResponse::FailureResponse('Cửa hàng đã đóng cửa');
         }
 
