@@ -32,8 +32,6 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
     .setBody(remoteMessage.notification.body)
     .setData(remoteMessage.data);
 
-  console.log('notification', notification);
-
   firebase.notifications().displayNotification(notification);
 });
 
@@ -41,13 +39,10 @@ async function registerAppWithFCM() {
   await messaging().registerDeviceForRemoteMessages();
 }
 
-messaging().onMessage(async remoteMessage => {
-  console.log('Received a new notification', remoteMessage);
-});
+messaging().onMessage(async remoteMessage => {});
 
 async function getDeviceToken() {
   const deviceToken = await messaging().getToken();
-  console.log('Device Token:', deviceToken);
 }
 
 getDeviceToken();
@@ -55,7 +50,5 @@ getDeviceToken();
 registerAppWithFCM();
 
 // Register background handler
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-});
+messaging().setBackgroundMessageHandler(async remoteMessage => {});
 AppRegistry.registerComponent(appName, () => App);
