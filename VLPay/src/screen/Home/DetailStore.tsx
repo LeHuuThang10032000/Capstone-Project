@@ -51,7 +51,7 @@ const AnimatedImageBackground =
 const DetailStore = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
 
-  const {store_id} = route.params;
+  const {store_id, status} = route.params;
   const [store, setStore] = useState<DetailShop[]>([]);
   const isFocused = useIsFocused();
   const insets = useSafeAreaInsets();
@@ -175,12 +175,22 @@ const DetailStore = ({route}: any) => {
                     {item.products.map(item => (
                       <View my={3} key={item.id}>
                         <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate('DetailProduct', {
-                              id: item.id,
-                              store_id: store_id,
-                            })
-                          }>
+                          onPress={() => {
+                            if (status === 'closing') {
+                              navigation.navigate('DetailProduct', {
+                                id: item.id,
+                                store_id: store_id,
+                              });
+                            } else {
+                              Alert.alert('Cảnh báo', 'Cửa hàng đã đóng cửa!', [
+                                {
+                                  text: 'Thoát',
+                                  onPress: () => console.log('Cancel Pressed'),
+                                  style: 'cancel',
+                                },
+                              ]);
+                            }
+                          }}>
                           <HStack>
                             <Image
                               source={{uri: item.image}}
@@ -191,6 +201,17 @@ const DetailStore = ({route}: any) => {
                               borderColor="#333"
                               alt="image-product"
                             />
+                            {status === 'closing' && (
+                              <View
+                                style={{
+                                  width: 100,
+                                  height: 100,
+                                  backgroundColor: 'black',
+                                  position: 'absolute',
+                                  opacity: 0.5,
+                                  borderRadius: 8,
+                                }}></View>
+                            )}
                             <VStack paddingLeft={5}>
                               <Heading size={'md'}>{item.name}</Heading>
                               <Text fontWeight={'bold'} color={'#4285F4'}>

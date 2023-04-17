@@ -28,8 +28,6 @@ const AppRouter = () => {
     }, 5000);
   });
 
-  console.log('body', body);
-
   return (
     <NavigationContainer>
       <NativeBaseProvider>

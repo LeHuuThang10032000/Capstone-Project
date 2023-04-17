@@ -58,7 +58,12 @@ const ListStore = () => {
 
   const renderItem = ({item}: {item: Post}) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate('DetailStore', {store_id: item.id})}>
+      onPress={() =>
+        navigation.navigate('DetailStore', {
+          store_id: item.id,
+          status: item?.status,
+        })
+      }>
       <HStack
         py={3}
         mx={3}
