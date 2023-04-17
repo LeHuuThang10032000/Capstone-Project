@@ -39,8 +39,6 @@ const Index = () => {
   const [needPay, setNeedPay] = useState(0);
   const [paidBill, setPaidBill] = useState(0);
 
-  console.log('need pay', needPay);
-
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get('/user-wallet');
     setUserWallet(result?.data?.data?.balance);

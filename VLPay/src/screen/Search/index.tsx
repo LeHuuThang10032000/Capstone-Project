@@ -105,8 +105,6 @@ const Index = () => {
       const result = await axiosClient.get(
         'https://zennoshop.cf/api/user/search?key=' + text,
       );
-      console.log(result);
-
       setFilteredDataSource(result.data.data);
       // setSearch(text);
     }

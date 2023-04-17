@@ -32,7 +32,6 @@ const NotiShareBill = ({route}: any) => {
   const {order_id, userWallet} = route.params;
 
   const [masterDataSource, setMasterDataSource] = useState([]);
-  console.log('Data ===>', masterDataSource);
   const navigation = useNavigation<MainStackNavigation>();
   const {width} = useWindowDimensions();
   const [profile, setProfile] = useState([]);
@@ -93,7 +92,6 @@ const NotiShareBill = ({route}: any) => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log('phone', currentUser);
 
   const onSubmit = async (data: any) => {
     console.log(data);

@@ -24,8 +24,6 @@ const OrderDetailScreen = () => {
   const [status, setStatus] = useState(data?.status);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [isGetCash, setGetCash] = useState(false);
-  console.log('data--', data);
-
   const fetchData = async () => {
     console.error(
       baseUrl +

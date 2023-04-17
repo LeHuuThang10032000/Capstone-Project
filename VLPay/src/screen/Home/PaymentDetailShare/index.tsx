@@ -26,10 +26,6 @@ const PaymentDetailShare = ({route}: any) => {
     numList.push('==>', num);
   }
 
-  console.log(numList);
-
-  console.log(userWallet, credit);
-
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get('/user-wallet');
     setUserWallet(result?.data?.data?.balance);
@@ -39,13 +35,6 @@ const PaymentDetailShare = ({route}: any) => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log({
-    amount,
-    shared_name,
-    phone,
-    message,
-  });
   return (
     <View style={{flex: 1, paddingBottom: 10, backgroundColor: '#ffffff'}}>
       <HeaderBack title="Xác nhận giao dịch" isReset={true} />

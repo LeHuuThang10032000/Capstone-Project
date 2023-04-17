@@ -34,10 +34,6 @@ const PaymentOrder = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const {total_price, store_id, promo_id, payment_type, image, name} =
     route.params.data;
-  console.log(route.params);
-
-  console.log(total_price);
-
   const [text, onChangeText] = React.useState('');
   const [orderId, setOrderId] = useState(0);
   const [visibleWarning, setVisibleWarning] = useState(false);
@@ -48,8 +44,6 @@ const PaymentOrder = ({route}: any) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [profile, setProfile] = useState('');
   const [value, setValue] = useState('');
-
-  console.log(profile);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
@@ -98,12 +92,9 @@ const PaymentOrder = ({route}: any) => {
       formData.append('promocode_id', promo_id);
     }
     try {
-      console.log(formData);
-
       const result = await axiosClient.post('/order/create-order', formData, {
         headers: {'content-type': 'multipart/form-data'},
       });
-      console.log(result.data);
       const request_id = result.data.data.request_id;
       navigation.navigate('OrderProcess', {
         order_id: request_id,
@@ -238,7 +229,6 @@ const PaymentOrder = ({route}: any) => {
                           headers: {'content-type': 'multipart/form-data'},
                         },
                       );
-                      console.log('Mật khẩu chính xác');
 
                       const result = await axiosClient.post(
                         '/order/create-order',
@@ -247,7 +237,6 @@ const PaymentOrder = ({route}: any) => {
                           headers: {'content-type': 'multipart/form-data'},
                         },
                       );
-                      console.log(result.data);
                       const request_id = result.data.data.request_id;
                       navigation.navigate('OrderProcess', {
                         order_id: request_id,

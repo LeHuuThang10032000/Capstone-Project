@@ -37,9 +37,6 @@ const Index = (props: Props) => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log(data);
-
   return (
     <View style={styles.bgColor}>
       <HeaderComp title="Thông báo" TrashIcon />

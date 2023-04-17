@@ -41,10 +41,6 @@ const OrderProcess = ({route}: any) => {
 
   const isFocused = useIsFocused();
 
-  console.log('MY ORDER', order_id);
-  console.log('store id', store_id);
-  console.log(order?.order_code);
-
   //Taken
   const takenOrder = async () => {
     try {
@@ -53,7 +49,6 @@ const OrderProcess = ({route}: any) => {
       const result = await axiosClient.post('/order/taken-order', formData, {
         headers: {'content-type': 'multipart/form-data'},
       });
-      console.log(result.data);
       Toast.show({
         type: 'success',
         text1: 'Thành công',
@@ -76,8 +71,6 @@ const OrderProcess = ({route}: any) => {
     setLoading(true);
     const result = await axiosClient.get(`/order/detail?order_id=${order_id}`);
     setOrder(result.data.data);
-    console.log(result.data.data);
-
     setLoading(false);
   }, []);
 
@@ -89,7 +82,6 @@ const OrderProcess = ({route}: any) => {
       const result = await axiosClient.post('/order/cancel-order', formData, {
         headers: {'content-type': 'multipart/form-data'},
       });
-      console.log(result.data);
       Toast.show({
         type: 'success',
         text1: 'Thành công',

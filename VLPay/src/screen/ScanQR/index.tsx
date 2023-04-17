@@ -86,9 +86,7 @@ export default function Index(props: Props) {
               navigation.navigate('Payment', {
                 data: data_navigation,
               });
-            } catch (e) {
-              console.log('bi sai rui');
-            }
+            } catch (e) {}
           }
         })}
       </>

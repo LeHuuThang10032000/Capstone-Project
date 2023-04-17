@@ -62,7 +62,6 @@ const MenuScreen = (props: Props) => {
       setStoreInfo(result.data.data);
       setStore_id(result.data.data.id);
 
-      console.log(products);
       setLoading(false);
     } catch (error) {
       console.log(error);

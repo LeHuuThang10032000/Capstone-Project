@@ -31,7 +31,6 @@ const DetailShop = ({route}: any, props: Props) => {
   const isFocused = useIsFocused();
   const [data, setData] = useState(props);
   const [isLoading, setIsLoading] = useState(false);
-  console.log('myDAta:', data);
 
   const getStore = useCallback(async () => {
     setIsLoading(true);

@@ -65,7 +65,6 @@ const DetailStore = ({route}: any) => {
   const [cart, setCart] = useState<myCart>();
   const [totalItem, setTotalItem] = useState(0);
 
-  console.log(totalItem);
   const getDetailStore = useCallback(async () => {
     const result = await axiosClient.get(`/store/${store_id}`);
     setStore(result.data?.data);

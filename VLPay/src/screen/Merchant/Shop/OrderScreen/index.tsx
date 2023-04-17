@@ -70,9 +70,6 @@ const FirstRoute = () => {
     }, 2000);
   }, [storeId]);
 
-  console.log('store ID:', storeId);
-  console.log('Order LIst:', order);
-
   const getStore = useCallback(async () => {
     const date = new Date(); // Create a new date object with the current date and time
     const isoString = date.toISOString(); // Convert the date to an ISO-formatted string
@@ -163,9 +160,6 @@ const SecondRoute = () => {
     }, 2000);
   }, [storeId]);
 
-  console.log('store ID:', storeId);
-  console.log('Order LIst:', order);
-
   const getStore = useCallback(async () => {
     const date = new Date(); // Create a new date object with the current date and time
     const isoString = date.toISOString(); // Convert the date to an ISO-formatted string
@@ -255,9 +249,6 @@ const ThirdRoute = () => {
       setRefreshing(false);
     }, 2000);
   }, [storeId]);
-
-  console.log('store ID:', storeId);
-  console.log('Order LIst:', order);
 
   const getStore = useCallback(async () => {
     const date = new Date(); // Create a new date object with the current date and time
@@ -360,8 +351,6 @@ const FourthRoute = () => {
         formattedDate,
     );
     setOrder(_history?.data?.data);
-    console.log(_history);
-
     setHistoryCanceled(_history?.data?.data?.total_canceled_orders);
     setHistoryTaken(_history?.data?.data?.total_taken_order);
     setHistory(_history?.data?.data?.orders);
@@ -378,9 +367,6 @@ const FourthRoute = () => {
       setRefreshing(false);
     }, 2000);
   }, []);
-
-  console.log('hist', history);
-
   return (
     <View style={{flex: 1, marginTop: 20}}>
       <ScrollView
@@ -469,8 +455,6 @@ const FourthRoute = () => {
                   ĐƠN HÀNG
                 </UText>
                 {history.map(item => {
-                  console.log('item', item);
-
                   return (
                     <HStack
                       alignItems={'center'}

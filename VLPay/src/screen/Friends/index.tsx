@@ -60,8 +60,6 @@ const Index = () => {
     axiosClient
       .get('https://zennoshop.cf/api/user/friends?request_coming=active')
       .then(res => {
-        console.log(res);
-
         setMasterDataSource(res.data?.data);
         setFilteredDataSource(res.data?.data);
         setLoading(false);
@@ -82,8 +80,6 @@ const Index = () => {
     axiosClient
       .get('https://zennoshop.cf/api/user/friends?request_coming=active')
       .then(res => {
-        console.log(res);
-
         setMasterDataSource(res.data?.data);
         setFilteredDataSource(res.data?.data);
         setLoading(false);

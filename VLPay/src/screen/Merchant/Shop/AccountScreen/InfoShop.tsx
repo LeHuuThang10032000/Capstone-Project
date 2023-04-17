@@ -40,8 +40,6 @@ const InfoShop = (props: Props) => {
     setIsEnabled(!isEnabled);
   };
 
-  console.log('myDAta:', data);
-
   const getStore = useCallback(async () => {
     setIsLoading(true);
     const result = await axiosClient.get(

@@ -19,7 +19,6 @@ const PaymentTypes = ({route}: any) => {
   const [userWallet, setUserWallet] = useState(0);
   const [credit, setCredit] = useState(0);
   const [paymentType, setPaymentType] = useState('debit');
-  console.log('DAta==>', data);
 
   const fetchData = async () => {
     setIsloading(true);

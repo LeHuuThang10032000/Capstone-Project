@@ -82,8 +82,6 @@ const AddItems = () => {
   };
 
   const DataList = ({data}) => {
-    console.log(data);
-
     return (
       <ScrollView style={{height: 400}}>
         {data.map(item => (

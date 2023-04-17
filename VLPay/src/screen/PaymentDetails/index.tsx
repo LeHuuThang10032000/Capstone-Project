@@ -17,11 +17,6 @@ const PaymentDetails = () => {
     useRoute<RouteProp<MainStackParamList, 'PaymentDetails'>>()?.params;
   const navigation = useNavigation<MainStackNavigation>();
   const {name, phone, current_wallet, mess, code, money} = data;
-  console.log(data);
-
-  console.log(data);
-  console.log('====================================');
-  console.log(code);
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => {
       navigation.navigate('Home');
@@ -32,8 +27,6 @@ const PaymentDetails = () => {
   const [userWallet, setUserWallet] = useState(0);
   const [credit, setCredit] = useState(0);
   const phoneNumber = '028 7105 9999';
-
-  console.log(userWallet, credit);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get('/user-wallet');

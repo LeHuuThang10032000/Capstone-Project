@@ -20,8 +20,6 @@ const DetailUser = ({route}: any) => {
   const [isFriend, setFriend] = useState(status === 'active' ? true : false);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [phoneError, setPhoneError] = useState('');
-  console.log(route.params);
-
   useEffect(() => {
     axiosClient
       .get('https://zennoshop.cf/api/user/get-profile')

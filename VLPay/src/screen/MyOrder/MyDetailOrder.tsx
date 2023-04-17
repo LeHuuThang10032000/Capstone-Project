@@ -18,8 +18,6 @@ const MyDetailOrder = ({route}: any) => {
   const [detail, setDetail] = useState<Order>();
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log('Detail Product', id);
-
   const getOrderDetail = useCallback(async () => {
     setIsLoading(true);
     const result = await axiosClient.get(`/order/detail?order_id=${id}`);

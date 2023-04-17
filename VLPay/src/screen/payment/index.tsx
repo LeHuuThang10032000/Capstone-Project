@@ -47,8 +47,6 @@ const Payment = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [userProfile, setUserProfile] = useState('');
 
-  console.log('resultTransaction', resultTransaction?.data?.code);
-
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
       'keyboardDidHide',

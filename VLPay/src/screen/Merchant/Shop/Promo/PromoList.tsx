@@ -18,8 +18,6 @@ const PromoList = () => {
 
   const [state, setState] = useState('RUNNING');
   const [items, setItems] = useState([]);
-  console.log(data.id);
-
   const fetchData = async () => {
     const result = await axiosClient.get(
       baseUrl +
@@ -57,8 +55,6 @@ const PromoList = () => {
         style={{backgroundColor: '#FEB7B1'}}>
         <TouchableOpacity
           onPress={async () => {
-            console.log('data.id', data.id);
-
             setState('RUNNING');
             const result = await axiosClient.get(
               baseUrl +
@@ -73,7 +69,6 @@ const PromoList = () => {
             });
 
             setItems(array_running);
-            console.log(array_running);
           }}
           style={[
             state === 'RUNNING'
@@ -161,8 +156,6 @@ const PromoList = () => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  console.log(item);
-
                   if (item?.type === 'running') {
                     navigation.navigate('CreatePromo', {
                       id: item.store_id,

@@ -50,8 +50,6 @@ const DetailOrder = ({route}: any) => {
 
   const {store_id, phone, name, image} = route.params;
 
-  console.log(route.params);
-
   const navigation = useNavigation<MainStackNavigation>();
   const [cart, setCart] = useState<myCart>();
   const [totalItem, setTotalItem] = useState(0);
@@ -149,8 +147,6 @@ const DetailOrder = ({route}: any) => {
     discount,
   }) => {
     if (radioBox !== id) {
-      console.log(promoCode);
-
       if (parseInt(cart?.total_price) > parseInt(min_purchase)) {
         setRadioBox(id);
         setPromoName(title);

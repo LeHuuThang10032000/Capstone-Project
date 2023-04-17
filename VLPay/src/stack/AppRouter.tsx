@@ -20,7 +20,6 @@ const AppRouter = () => {
     useNativeDriver: true,
   }).start();
   messaging().onMessage(async remoteMessage => {
-    console.log('Received a new notification', remoteMessage?.notification);
     setNotif(true);
     setBody(remoteMessage?.notification);
     setTimeout(() => {
@@ -59,6 +58,7 @@ const AppRouter = () => {
                     height: '100%',
                     padding: 16,
                     borderRadius: 10,
+                    borderWidth: 1,
                   }}>
                   <HStack alignItems={'center'}>
                     <Image

@@ -72,7 +72,6 @@ const Otp = (props: any) => {
   useEffect(() => {
     authFireBase().onAuthStateChanged(user => {
       if (user) {
-        console.log('user:', user);
         setUserFireBase(user);
         // setValue('');
       }

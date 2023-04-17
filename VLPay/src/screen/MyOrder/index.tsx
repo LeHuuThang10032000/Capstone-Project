@@ -45,8 +45,6 @@ const FirstRoute = () => {
     }, 2000);
   }, []);
 
-  console.log('History order:', history);
-
   const getOrder = useCallback(async () => {
     const result = await axiosClient.get('order?page=1&limit=1000');
     setHistory(result.data?.data);
@@ -116,9 +114,6 @@ const SecondRoute = () => {
       setRefreshing(false);
     }, 2000);
   }, []);
-
-  // console.log('===>', history);
-  console.log('History order:', history);
 
   const getOrder = useCallback(async () => {
     const result = await axiosClient.get(

@@ -29,9 +29,6 @@ const Index = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState({});
-
-  console.log(profile);
-
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/get-profile',

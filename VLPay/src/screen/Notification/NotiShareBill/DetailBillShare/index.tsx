@@ -79,8 +79,6 @@ const DetailBillShare = ({route}: any) => {
   const {order_id} = route.params;
   const [data, setData] = useState<DetailBill>();
   const [loading, setLoading] = useState(false);
-  console.log(order_id);
-  console.log(data);
   const getDetailBill = useCallback(async () => {
     setLoading(true);
     const result = await axiosClient.get(`/order/detail?order_id=${order_id}`);
