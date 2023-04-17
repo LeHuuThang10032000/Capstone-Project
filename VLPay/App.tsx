@@ -9,6 +9,8 @@ import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {AppProvider} from './src/context/GlobalContext';
 import messaging from '@react-native-firebase/messaging';
+import {View} from 'react-native';
+import {UText} from './src/components/UText';
 
 const theme = {
   ...DefaultTheme,
