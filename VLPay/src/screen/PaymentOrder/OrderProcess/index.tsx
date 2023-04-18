@@ -210,7 +210,7 @@ const OrderProcess = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Thời gian đặt hàng</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  Hôm nay, {order?.created_at}
+                  {moment(order?.created_at).format('dd, HH:mm')}
                 </Text>
               </HStack>
               <HStack
@@ -370,7 +370,7 @@ const OrderProcess = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Thời gian đặt hàng</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  Hôm nay, {order?.created_at}
+                  {moment(order?.created_at).format('dd, HH:mm')}
                 </Text>
               </HStack>
               <HStack
@@ -510,7 +510,7 @@ const OrderProcess = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Thời gian đặt hàng</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  Hôm nay, {order?.created_at}
+                  {moment(order?.created_at).format('dd, HH:mm')}
                 </Text>
               </HStack>
               <HStack

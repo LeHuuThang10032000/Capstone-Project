@@ -28,10 +28,6 @@ import {Controller, useForm} from 'react-hook-form';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
 import WarningIcon from '../../assets/svg/warning.svg';
-import {
-  escapeCurrency,
-  formatCurrency,
-} from '../../components/helpers/formatNum';
 import TText from './TText';
 import YesNoModal from '../../components/YesNoModal';
 import Icons from '../../components/Icons';
@@ -39,7 +35,14 @@ import Colors from '../../components/helpers/Colors';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {UText} from '../../components/UText';
 import Toast from 'react-native-toast-message';
+import {
+  convertStringNumber,
+  escapeCurrency,
+  formatCurrency,
+} from '../../components/helper';
 interface Transfer {
+  current_wallet: any;
+  current_user: string;
   name: string;
   phone: string;
   money: string;
@@ -80,9 +83,14 @@ const Index = (props: any) => {
     fetchData();
   }, [fetchData]);
 
-  const onSubmit = async (data: any) => {
-    if (!(data.money > parseInt(props.route.params))) {
-      if (data.money >= 3000) {
+  const onSubmit = async (data: Transfer) => {
+    console.log('DATA CASH', data);
+    const money = convertStringNumber(data.money);
+    if (!(money > parseInt(props.route.params))) {
+      if (money > 10000000) {
+        setErroWarning('Không nhập số tiền lớn hơn 10.000.000đ!');
+        setErrorDisplay(true);
+      } else if (money >= 1000) {
         setLoading(true);
         try {
           const phone = data.phone;
@@ -114,7 +122,7 @@ const Index = (props: any) => {
           setErroWarning(e?.data?.message);
         }
       } else {
-        setErroWarning('Số tiền cần chuyển không hợp lệ!');
+        setErroWarning('Không nhập số tiền nhỏ hơn 1.000đ!');
         setErrorDisplay(true);
       }
     } else {
@@ -309,12 +317,14 @@ const Index = (props: any) => {
                   <Input
                     w="90%"
                     placeholder="Nhập số tiền muốn chuyển"
-                    onChangeText={onChange}
+                    onChangeText={newValue => {
+                      let number = newValue.replace(/\./g, ''); // Remove all dots from the string
+                      onChange(number);
+                    }}
                     keyboardType="number-pad"
                     backgroundColor="white"
-                    maxLength={7}
                     onBlur={onBlur}
-                    value={value}
+                    value={formatCurrency(escapeCurrency(value))}
                     style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                   />
 
@@ -354,7 +364,7 @@ const Index = (props: any) => {
                   backgroundColor={'#D9D9D9'}
                   onPress={() => setValue('money', value)}>
                   <TText style={{textAlign: 'center'}}>
-                    {formatCurrency(value.toString())}
+                    {formatCurrency(value)}
                   </TText>
                 </Pressable>
               ))}
