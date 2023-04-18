@@ -19,6 +19,7 @@ import {UText} from '../../components/UText';
 import {axiosClient} from '../../components/apis/axiosClient';
 import Toast from 'react-native-toast-message';
 import moment from 'moment';
+import {escapeCurrency} from '../../components/helper';
 
 interface WithDraw {
   amount: string;
@@ -211,9 +212,12 @@ const WithDrawInfo = (props: any) => {
                 <TextInput
                   placeholder="Nhập số tiền cần rút"
                   placeholderTextColor={'#000'}
-                  onChangeText={onChange}
+                  onChangeText={newValue => {
+                    let number = newValue.replace(/\./g, ''); // Remove all dots from the string
+                    onChange(number);
+                  }}
                   onBlur={onBlur}
-                  value={value}
+                  value={formatCurrency(escapeCurrency(value))}
                   style={{
                     borderWidth: 1,
                     borderRadius: 8,
