@@ -31,7 +31,7 @@ const Payment = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {data} = useRoute<RouteProp<MainStackParamList, 'Payment'>>()?.params;
   const handleBack = () => {
-    navigation.goBack();
+    navigation.replace('Home');
   };
   const [parkingPrice, setParkingPrice] = useState(true);
   const [confirmPayment, setConfirmPayment] = useState(false);
@@ -76,7 +76,7 @@ const Payment = () => {
   const fetchData = async () => {
     try {
       const _result = await axiosClient.get(
-        `https://zennoshop.cf/api/user/find-user/0987654322`,
+        `https://zennoshop.cf/api/user/find-user/` + data.phone,
       );
       const _profile = await axiosClient.get(
         'https://zennoshop.cf/api/user/get-profile',
@@ -139,7 +139,9 @@ const Payment = () => {
                 />
               </View>
               <UText>Giao dịch thành công</UText>
-              <UText style={{fontWeight: '700'}}>-3000đ</UText>
+              <UText style={{fontWeight: '700'}}>
+                -{(data?.money ?? 0).toLocaleString()}đ
+              </UText>
               <View
                 style={{
                   width: '100%',
@@ -232,11 +234,11 @@ const Payment = () => {
                   marginBottom: 20,
                   fontSize: 20,
                 }}>
-                Tiền gửi xe
+                tiền giao dich
               </UText>
               <UText
                 style={{fontWeight: '700', marginBottom: 20, fontSize: 24}}>
-                3.000 đ
+                {(data?.money ?? 0).toLocaleString()} đ
               </UText>
               <View
                 style={{
@@ -389,9 +391,10 @@ const Payment = () => {
                     try {
                       const formData = new FormData();
                       formData.append('f_name', profile[0]?.f_name);
-                      formData.append('cash', 3000);
+                      formData.append('cash', data?.money);
                       formData.append('phone', profile[0]?.phone);
                       formData.append('message', message);
+                      formData.append('payment_type', 'T');
                       await axios.post(
                         'https://zennoshop.cf/api/user/checkPassword',
                         {phone: userProfile, password: value},

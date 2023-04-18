@@ -57,7 +57,7 @@ const App = () => {
   const toggleModal = () => {
     setModalVisible(true);
   };
-  const setValueQR = () => setQrvalue(moneyInput);
+  const setValueQR = () => setQrvalue(`${profile?.data?.phone},${moneyInput}`);
   const saveQR = () => {
     setValueQR();
     closeModal();
@@ -79,6 +79,8 @@ const App = () => {
       fetchData();
     }
   }, [fetchData, isFocused]);
+
+  console.log(qrvalue);
 
   return (
     <SafeAreaView style={{flex: 1}}>

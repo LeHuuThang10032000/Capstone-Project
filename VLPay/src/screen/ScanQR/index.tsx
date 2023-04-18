@@ -74,18 +74,19 @@ export default function Index(props: Props) {
         {barcodes.map((barcode, idx) => {
           if (barcode?.displayValue) {
             try {
-              let data = barcode?.displayValue.split('//')[1];
-              data = data.replace('{', '').replace('}', '').split(',');
-              const id_user = data[0].split(':');
-              const to_pay = data[1].split(':');
+              let data = barcode?.displayValue;
+              const phone = data.split(',')[0];
+              const money = data.split(',')[1];
               const data_navigation = {
-                id_user: id_user[1],
-                to_pay: to_pay[1],
+                phone,
+                money,
                 user_wallet: userWallet,
               };
-              navigation.navigate('Payment', {
-                data: data_navigation,
-              });
+              if (phone && money && userWallet) {
+                navigation.navigate('Payment', {
+                  data: data_navigation,
+                });
+              }
             } catch (e) {}
           }
         })}

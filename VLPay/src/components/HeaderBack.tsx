@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../stack/Navigation';
 import SwitchButton from './SwitchButton';
 import Trash from '../assets/svg/trash.svg';
+import {axiosClient} from './apis/axiosClient';
 
 type Props = {
   title: string;
@@ -38,7 +39,10 @@ const HeaderBack: React.FC<Props> = ({
   };
   const [switchValue, setSwitchValue] = useState(false);
 
-  const handleSwitchValueChange = (value: boolean) => {
+  const handleSwitchValueChange = async (value: boolean) => {
+    await axiosClient.post('merchant/store/update/status', {
+      status: value ? 'opening' : 'closing',
+    });
     setSwitchValue(value);
   };
   return (
