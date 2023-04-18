@@ -10,11 +10,13 @@ use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Services\SendPushNotification;
 use Carbon\Carbon;
 use Exception;
 use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -95,10 +97,10 @@ class TransactionController extends Controller
                 [
                     'from_id' => $user->id,
                     'to_id' => $recipient->id,
-                    'amount' => $request->cash,
+                    'amount' => Crypt::encryptString($request->cash),
                     'code' => Helper::generateNumber(),
                     'type' => 'T',
-                    'message' => $request->message ?? null,
+                    'message' => Crypt::encryptString($request->message) ?? null,
                 ]
             );
 
@@ -145,6 +147,7 @@ class TransactionController extends Controller
             }
 
             DB::commit();
+            // (new SendPushNotification)->merchantNewOrder($merchant, $store->id, $order->id);
             return ApiResponse::successResponse($transaction->id);
         } catch(Exception $e) {
             DB::rollBack();
