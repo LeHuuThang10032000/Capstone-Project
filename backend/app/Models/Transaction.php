@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class Transaction extends Model
 {
@@ -82,6 +83,21 @@ class Transaction extends Model
                 $value = 'Nhận tiền từ ' . $sender->f_name;
             }
         }
+        return $value;
+    }
+
+    public function getAmountAttribute($value) {
+        $value = Crypt::decryptString($value);
+        return $value;
+    }
+
+    public function getCodeAttribute($value) {
+        $value = Crypt::decryptString($value);
+        return $value;
+    }
+
+    public function getMessageAttribute($value) {
+        $value = Crypt::decryptString($value);
         return $value;
     }
 }

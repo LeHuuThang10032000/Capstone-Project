@@ -6,13 +6,14 @@ use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class Helper {
     public static function generateNumber()
     {
         $number = mt_rand(10000000,99999999);
         if (Transaction::where('code', $number)->count() > 0) self::generateNumber();
-        return $number;
+        return Crypt::encryptString($number);
     }
 
     public static function generateOrderCode()
