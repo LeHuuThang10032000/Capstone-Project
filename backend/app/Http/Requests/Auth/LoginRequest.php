@@ -38,6 +38,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'phone.required' => 'Vui lòng nhập số điện thoại',
+            'phone.phone' => 'Số điện thoại không đúng định dạng',
             'password.required' => "Vui lòng nhập mật khẩu",
             'password.min' => "Mật khẩu phải có ít nhất 6 ký tự",
         ];

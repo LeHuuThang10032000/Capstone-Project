@@ -13,6 +13,7 @@ use App\Models\TransactionDetail;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\WithdrawRequest;
+use App\Services\SendPushNotification;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -228,7 +229,9 @@ class OrganiserController extends Controller
     {
         $request->validate([
             'request_id' => 'required|integer',
-            'deny_reason' => 'required',
+            'deny_reason' => 'required|max:255',
+        ],[
+            'deny_reason.max' => 'Lí do từ chối không quá 255 kí tự'
         ]);
 
         $req = CreditRequest::where('id', $request->request_id)->first();
@@ -363,7 +366,9 @@ class OrganiserController extends Controller
     {
         $request->validate([
             'request_id' => 'required|integer',
-            'deny_reason' => 'required',
+            'deny_reason' => 'required|max:255',
+        ],[
+            'deny_reason.max' => 'Lí do từ chối không quá 255 kí tự'
         ]);
 
         $req = WithdrawRequest::where('id', $request->request_id)->first();
@@ -374,14 +379,19 @@ class OrganiserController extends Controller
         $req->deny_reason = $request->deny_reason;
         $req->save();
 
+        $user = User::find($req->user_id);
+        $text = 'Lệnh rút tiền của bạn đã bị từ chối';
+
         Notification::create([
             'user_id' => $req->user_id,
             'tag' => 'Rút tiền',
             'tag_model' => 'withdraw_requests',
             'tag_model_id' => $req->id,
             'title' => 'Rút tiền thất bại',
-            'body' => 'Lệnh rút tiền ' . $req->transaction_id . ' của bạn đã bị từ chối',
+            'body' => $text,
         ]);
+
+        (new SendPushNotification)->userApproveRequest($user, $text);
 
         return back()->with('success', 'Từ chối yêu cầu rút tiền thành công');
     }

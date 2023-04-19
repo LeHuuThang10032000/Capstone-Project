@@ -36,6 +36,19 @@ class SendPushNotification
         return $this->sendNotification($user, $messageData);
     }
 
+    public function userApproveRequest($user, $text)
+    {
+        $messageData = [
+            'type' => 'user_approve_request',
+            'text' => $text,
+            'data' => [
+                'user_id' => $user->id,
+            ]
+        ];
+
+        return $this->sendNotification($user, $messageData);
+    }
+
     public function sendNotification($user, $message)
     {
         $SERVER_API_KEY = env('FCM_SERVER_KEY');
