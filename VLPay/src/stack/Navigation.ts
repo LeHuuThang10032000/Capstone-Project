@@ -108,6 +108,7 @@ export type MainStackParamList = {
   ListStore: undefined;
   DetailStore: {
     store_id: number;
+    status: string;
   };
   DetailProduct: {
     id: number;

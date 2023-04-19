@@ -18,6 +18,7 @@ interface Post {
   image: string;
   name: string;
   location: string;
+  status: string;
 }
 
 const ListStore = () => {
