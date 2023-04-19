@@ -11,6 +11,7 @@ use Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,7 +34,7 @@ class WithdrawController extends Controller
 
         try {
             $result = WithdrawRequest::create([
-                'transaction_id' => Helper::generateNumber(),
+                'transaction_id' => Crypt::decrypt(Helper::generateNumber()),
                 'user_id' => $user->id,
                 'status' => 'pending',
                 'amount' => $request->amount,
