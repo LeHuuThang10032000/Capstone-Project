@@ -843,7 +843,7 @@ class StoreController extends Controller
         }
 
         try {
-            $status = $request->status;
+            $status[] = $request->status;
             if($request->status == 'processing') {
                 $status = ['processing', 'accepted'];
             }
