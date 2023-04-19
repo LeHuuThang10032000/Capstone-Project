@@ -843,9 +843,14 @@ class StoreController extends Controller
         }
 
         try {
+            $status = $request->status;
+            if($request->status == 'processing') {
+                $status = ['processing', 'accepted'];
+            }
+
             $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total', 'product_detail', 'status')
                 ->where('store_id', $request->store_id)
-                ->where('status', $request->status)
+                ->whereIn('status', $status)
                 ->orderBy('created_at');
 
             if ($request->page) {

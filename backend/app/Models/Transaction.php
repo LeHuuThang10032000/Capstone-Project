@@ -73,7 +73,8 @@ class Transaction extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function getTitleAttribute($value) {
+    public function getTitleAttribute($value)
+    {
         if($this->type == 'T') {
             if($this->from_id == Auth::user()->id) {
                 $recipient = $this->toUser()->selectRaw('f_name')->first();
@@ -86,17 +87,20 @@ class Transaction extends Model
         return $value;
     }
 
-    public function getAmountAttribute($value) {
+    public function getAmountAttribute($value)
+    {
         $value = Crypt::decryptString($value);
         return $value;
     }
 
-    public function getCodeAttribute($value) {
+    public function getCodeAttribute($value)
+    {
         $value = Crypt::decryptString($value);
         return $value;
     }
 
-    public function getMessageAttribute($value) {
+    public function getMessageAttribute($value)
+    {
         $value = Crypt::decryptString($value);
         return $value;
     }
