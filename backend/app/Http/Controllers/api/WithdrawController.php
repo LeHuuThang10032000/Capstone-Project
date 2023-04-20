@@ -34,13 +34,14 @@ class WithdrawController extends Controller
 
         try {
             $result = WithdrawRequest::create([
-                'transaction_id' => Crypt::decrypt(Helper::generateNumber()),
+                'transaction_id' => Helper::generateNumber(),
                 'user_id' => $user->id,
                 'status' => 'pending',
                 'amount' => $request->amount,
                 'created_at' => now(),
             ]);
 
+            $result['transaction_id'] = Crypt::decrypt(Helper::generateNumber());
             return ApiResponse::successResponse($result);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
