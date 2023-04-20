@@ -127,6 +127,7 @@ Route::group(['middleware' => ['auth:api']], function(){
 
     Route::group(['prefix' => 'share-bill'], function() {
         Route::get('', [UserController::class, 'getShareBill']);
+        Route::get('/my-share-bill', [UserController::class, 'getMyShareBill']);
         Route::get('paid', [UserController::class, 'getPaidShareBill']);
         Route::get('detail', [UserController::class, 'getShareBillDetail']);
         Route::post('', [UserController::class, 'createShareBill']);
