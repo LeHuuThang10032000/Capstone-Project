@@ -1103,13 +1103,9 @@ class UserController extends Controller
             $user = Auth::user();
 
             $bills = DB::table('share_bills')
-                ->select('share_bills.id', 'transactions.created_at', 'share_bills.transaction_id', DB::raw("CONCAT(users.f_name, ' đã trả ', FORMAT(transactions.amount, 0), 'đ') AS title"))
+                ->select('share_bills.id', 'transactions.created_at', 'share_bills.transaction_id', 'share_bills.amount')
                 ->leftJoin('transactions', 'transactions.id', '=', 'share_bills.transaction_id')
                 ->leftJoin('users', 'users.id', '=', 'transactions.from_id')
-                ->join('transaction_details', function (JoinClause $join) use ($user) {
-                    $join->on('transaction_details.transaction_id', '=', 'transactions.id')
-                            ->where('user_id', $user->id);
-                })
                 ->where('owner_id', $user->id)
                 ->where('share_bills.status', 'paid')
                 ->get();
