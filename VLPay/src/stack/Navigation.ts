@@ -131,6 +131,7 @@ export type MainStackParamList = {
   DetailBill: undefined;
   SendRequestShare: undefined;
   NotiShareBill: {order_id: number; userWallet: number};
+  PaidBillDetail: {order_id: number; userWallet: number};
   DetailTransaction: {
     title: string;
     amount: number;
@@ -138,7 +139,7 @@ export type MainStackParamList = {
     created_at: string;
   };
   ListShareBill: {userWallet: number};
-  ListPaidBill: undefined;
+  ListPaidBill: {userWallet: number};
   ConfirmTranferShare: {
     phone: string;
     isYour: number;

@@ -16,8 +16,10 @@ type Props = {
 
 const ListPaidBill = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
-
+  const {userWallet} = route.params;
   const [data, setData] = useState<Props[]>([]);
+
+  console.log('Paid==>', data);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get('/share-bill/paid?limit=100&page=1');
@@ -32,7 +34,13 @@ const ListPaidBill = ({route}: any) => {
       <ScrollView width={'100%'}>
         {data.map(item => (
           <View key={item.id} marginX={3} marginY={3}>
-            <Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.navigate('PaidBillDetail', {
+                  order_id: item.order_id,
+                  userWallet: userWallet,
+                })
+              }>
               <View
                 p={5}
                 w={'100%'}

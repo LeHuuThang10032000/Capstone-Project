@@ -147,7 +147,7 @@ const PaymentOrder = ({route}: any) => {
           }
         />
         <View position={'absolute'} top={210} background="#ffffff" left={5}>
-          <Text color="#99A3A4">Message</Text>
+          <Text color="#99A3A4">Ghi chú</Text>
         </View>
         <Divider marginTop={200} />
       </Center>
