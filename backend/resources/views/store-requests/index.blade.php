@@ -24,7 +24,7 @@
 
         </div>
         <div class="tab-content" id="myTabContent">
-            <div class="pt-2 px-3">
+            <div class="d-flex pt-2 px-3 justify-content-end">
                 <form action="{{ route('organiser.store-request.index') }}" method="GET">
                     <input type="text" name="key" style="border-radius: 5px;" placeholder="Tìm kiếm theo tên hay sđt">
                 </form>

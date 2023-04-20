@@ -7,8 +7,8 @@
 <div class="{{ ($index == 0) ? 'py-2' : 'pb-2' }} px-3">
     <div class="d-flex justify-content-between rounded border">
         <div class="p-3">
+            <b class="m-0">Mã giao dịch: {{$request->transaction_id}}</b>
             <p class="m-0">id tài khoản: {{$request->user_id}}</p>
-            <p class="m-0">Mã giao dịch: {{$request->transaction_id}}</p>
             <p class="m-0">Số điện thoại: {{$request->user->phone}}</p>
             <p class="m-0">Thời gian gửi yêu cầu: {{$request->created_at}}</p>
             <p class="m-0" style="color: #189F7F">Số tiền đã rút: {{number_format($request->amount)}} VND</p>
