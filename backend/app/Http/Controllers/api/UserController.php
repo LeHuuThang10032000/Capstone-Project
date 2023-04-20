@@ -100,7 +100,7 @@ class UserController extends Controller
     public function checkUserSendRequestCreateStore(): JsonResponse
     {
         $user = Auth::user()->id;
-        $request = Store::where('user_id', $user)->where('status', 'approved')->select('status')->first();
+        $request = Store::where('user_id', $user)->where('status', 'approved')->orWhere('status', 'opening')->select('status')->first();
         if ($request) {
             return ApiResponse::successResponse([
                 'status' => 1,
@@ -902,6 +902,34 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
+    }
+
+    public function getMyShareBill(Request $request): JsonResponse
+    {
+        $validate = Validator::make($request->all(), [
+            'limit' => 'required|integer',
+            'page' => 'required|integer',
+        ]);
+
+        if ($validate->fails()) {
+            return APIResponse::FailureResponse($validate->messages()->first());
+        }
+
+        try {
+            $user = Auth::user();
+
+            $bills = DB::table('share_bills')
+                ->select('share_bills.id', 'share_bills.created_at', 'share_bills.order_id', DB::raw("CONCAT('Hóa đơn chia tiền cho đơn hàng tại ', stores.name) AS title"))
+                ->leftJoin('orders', 'orders.id', '=', 'share_bills.order_id')
+                ->leftJoin('stores', 'stores.id', '=', 'orders.store_id')
+                ->where('owner_id', $user->id)
+                ->where('is_owner', true)
+                ->get();
+
+            return ApiResponse::successResponse($bills);
+        } catch (\Exception $e) {
+            return ApiResponse::failureResponse($e->getMessage());
+        } 
     }
 
     public function createShareBill(Request $request): JsonResponse
