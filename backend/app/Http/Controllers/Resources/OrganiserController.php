@@ -259,24 +259,27 @@ class OrganiserController extends Controller
     {
         if(isset($request->key)) {
             $key = $request->key;
-            $pending = WithdrawRequest::where('name', 'LIKE', '%' . $request->key . '%')
+            $pending = WithdrawRequest::where('transaction_id', 'LIKE', '%' . $request->key . '%')
                 ->with('user.wallet')
-                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
-                ->where('status', 'pending')
+                ->join('users', 'users.id', '=', 'withdraw_request.user_id')
+                ->orWhere('users.phone', 'LIKE', '%' . $request->key . '%')
+                ->where('withdraw_request.status', 'pending')
                 ->paginate(5);
             $pending->appends (array ('key' => $key));
 
-            $approved = WithdrawRequest::where('name', 'LIKE', '%' . $request->key . '%')
+            $approved = WithdrawRequest::where('transaction_id', 'LIKE', '%' . $request->key . '%')
                 ->with('user.wallet')
-                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
-                ->where('status', 'approved')
+                ->join('users', 'users.id', '=', 'withdraw_request.user_id')
+                ->orWhere('users.phone', 'LIKE', '%' . $request->key . '%')
+                ->where('withdraw_request.status', 'approved')
                 ->paginate(5);
             $approved->appends (array ('key' => $key));
 
-            $denied = WithdrawRequest::where('name', 'LIKE', '%' . $request->key . '%')
+            $denied = WithdrawRequest::where('transaction_id', 'LIKE', '%' . $request->key . '%')
                 ->with('user.wallet')
-                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
-                ->where('status', 'denied')
+                ->join('users', 'users.id', '=', 'withdraw_request.user_id')
+                ->orWhere('users.phone', 'LIKE', '%' . $request->key . '%')
+                ->where('withdraw_request.status', 'denied')
                 ->paginate(5);
             $denied->appends (array ('key' => $key));
 

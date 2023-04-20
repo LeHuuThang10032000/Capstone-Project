@@ -15,8 +15,13 @@ use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if(isset($request->key)) {
+            $wallet = Wallet::whereHas('user', function($query) use ($request) {
+                $query->where('phone', $request->key);
+            })->paginate(10);
+        }
         $wallets = Wallet::paginate(10);
         return view('wallets.index', compact('wallets'));
     }
