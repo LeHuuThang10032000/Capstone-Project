@@ -65,6 +65,7 @@ import ConfirmTranferShare from '../screen/Transfer/ConfirmTranferShare';
 import PaymentDetailShare from '../screen/Home/PaymentDetailShare';
 import FriendRequests from '../screen/Friends/FriendRequests';
 import DetailBillShare from '../screen/Notification/NotiShareBill/DetailBillShare';
+import PaidBillDetail from '../screen/PaidBillDetail';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -306,5 +307,9 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'DetailBillShare',
     component: DetailBillShare,
+  },
+  {
+    name: 'PaidBillDetail',
+    component: PaidBillDetail,
   },
 ];

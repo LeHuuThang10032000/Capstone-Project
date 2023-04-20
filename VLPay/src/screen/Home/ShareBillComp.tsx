@@ -61,7 +61,10 @@ const ShareBillComp = (props: Props) => {
             <Text>{formatCurrency((props.paid_bill ?? 0).toString())}đ</Text>
           </VStack>
         </HStack>
-        <TouchableOpacity onPress={() => navigation.navigate('ListPaidBill')}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('ListPaidBill', {userWallet: props.wallet})
+          }>
           <View
             style={{
               backgroundColor: '#FEB7B1',
