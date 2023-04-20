@@ -100,7 +100,11 @@ class UserController extends Controller
     public function checkUserSendRequestCreateStore(): JsonResponse
     {
         $user = Auth::user()->id;
-        $request = Store::where('user_id', $user)->where('status', 'approved')->orWhere('status', 'opening')->orWhere('status', 'closing')->select('id', 'status')->first();
+        $request = Store::where('user_id', $user)->where('status', function($query) {
+            $query->where('status', 'approved')
+                ->orWhere('status', 'opening')
+                ->orWhere('status', 'closing');
+        })->select('id', 'status')->first();
         if ($request) {
             return ApiResponse::successResponse([
                 'status' => 1,
