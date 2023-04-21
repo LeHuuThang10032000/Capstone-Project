@@ -3,6 +3,7 @@ import React from 'react';
 import {Divider, HStack, VStack} from 'native-base';
 import MustPay from '../../assets/svg/must-pay.svg';
 import Received from '../../assets/svg/received.svg';
+import BillYourself from '../../assets/svg/bill-yourself.svg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {formatCurrency} from '../../components/helper';
 import {useNavigation} from '@react-navigation/native';
@@ -64,6 +65,30 @@ const ShareBillComp = (props: Props) => {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('ListPaidBill', {userWallet: props.wallet})
+          }>
+          <View
+            style={{
+              backgroundColor: '#FEB7B1',
+              padding: 10,
+              borderRadius: 8,
+              width: 100,
+              alignItems: 'center',
+            }}>
+            <Text style={{fontWeight: 'bold', color: '#000000'}}>Xem</Text>
+          </View>
+        </TouchableOpacity>
+      </HStack>
+      <Divider />
+      <HStack padding={3} justifyContent="space-between" alignItems="center">
+        <HStack alignItems="center">
+          <BillYourself />
+          <VStack paddingLeft={3}>
+            <Text>Đơn chia tiền</Text>
+          </VStack>
+        </HStack>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('ListYourBill', {userWallet: props.wallet})
           }>
           <View
             style={{

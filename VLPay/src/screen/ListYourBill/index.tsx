@@ -14,7 +14,7 @@ type Props = {
   title: string;
 };
 
-const ListPaidBill = ({route}: any) => {
+const ListYourBill = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const {userWallet} = route.params;
   const [data, setData] = useState<Props[]>([]);
@@ -22,7 +22,9 @@ const ListPaidBill = ({route}: any) => {
   console.log('Paid==>', data);
 
   const fetchData = useCallback(async () => {
-    const result = await axiosClient.get('/share-bill/paid?limit=100&page=1');
+    const result = await axiosClient.get(
+      '/share-bill/my-share-bill?page=1&limit=100',
+    );
     setData(result?.data?.data);
   }, []);
   useEffect(() => {
@@ -34,7 +36,13 @@ const ListPaidBill = ({route}: any) => {
       <ScrollView width={'100%'}>
         {data.map(item => (
           <View key={item.id} marginX={3} marginY={3}>
-            <Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.navigate('PaidBillDetail', {
+                  order_id: item.order_id,
+                  userWallet: userWallet,
+                })
+              }>
               <View
                 p={5}
                 w={'100%'}
@@ -60,7 +68,7 @@ const ListPaidBill = ({route}: any) => {
   );
 };
 
-export default ListPaidBill;
+export default ListYourBill;
 
 const styles = StyleSheet.create({
   text: {
