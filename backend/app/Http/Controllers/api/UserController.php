@@ -1115,7 +1115,7 @@ class UserController extends Controller
         }
     }
 
-    public function remindPayShareBill(Request $request): JsonResponse
+    public function remindPayShareBill(Request $request)
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|integer',
@@ -1138,14 +1138,19 @@ class UserController extends Controller
             foreach($bills as $bill)
             {
                 if($bill->shared_id != Auth::user()->id) {
+                    $shared = User::where('id', $bill->shared_id)->first();
+                    $text = $user->f_name . ' đã nhắc bạn trả tiền';
+
                     Notification::create([
                         'user_id' => $bill->shared_id,
                         'tag' => 'Chia tiền',
                         'tag_model' => 'share_bills',
                         'tag_model_id' => $bill->order_id,
-                        'title' => $user->f_name . ' đã nhắc bạn trả tiền',
+                        'title' => $text,
                         'body' => $request->message,
                     ]);
+
+                    (new SendPushNotification)->userApproveRequest($shared, $text);
                 }
             }
 

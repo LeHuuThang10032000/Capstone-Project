@@ -120,7 +120,7 @@ class TransactionController extends Controller
 
             if($request->payment_type == 'S') {
                 $message = ($request->message != null || $request->message != '') ? $user->f_name . ' đã trả bạn ' . number_format($transaction->amount) . 'đ với lời nhắn "' . $request->message . '"' : $user->f_name . ' đã trả bạn ' . number_format($transaction->amount) . 'đ';
-                Notification::create([
+                $notification = Notification::create([
                     'user_id' => $recipient->id,
                     'tag' => 'Chia tiền',
                     'tag_model' => 'share_bills',
@@ -135,8 +135,10 @@ class TransactionController extends Controller
                 $bill->message = $message;
                 $bill->transaction_id = $transaction->id;
                 $bill->save();
+
+                (new SendPushNotification)->userApproveRequest($recipient, $notification->body);
             } else {
-                Notification::create([
+                $notification = Notification::create([
                     'user_id' => $recipient->id,
                     'tag' => 'Chuyển tiền',
                     'tag_model' => 'transactions',
@@ -144,10 +146,11 @@ class TransactionController extends Controller
                     'title' => 'Chuyển tiền',
                     'body' => 'Nhận ' . number_format($transaction->amount) . ' từ ' . $user->f_name,
                 ]);
+                (new SendPushNotification)->userApproveRequest($recipient, $notification->body);
             }
 
             DB::commit();
-            // (new SendPushNotification)->merchantNewOrder($merchant, $store->id, $order->id);
+            
             return ApiResponse::successResponse($transaction->id);
         } catch(Exception $e) {
             DB::rollBack();
