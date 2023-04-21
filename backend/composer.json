@@ -17,7 +17,6 @@
         "laravel/passport": "*",
         "laravel/sanctum": "*",
         "laravel/tinker": "^2.5",
-        "predis/predis": "~1.0",
         "spatie/laravel-medialibrary": "*",
         "spatie/laravel-permission": "*"
     },
