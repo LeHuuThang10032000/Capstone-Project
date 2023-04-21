@@ -72,7 +72,7 @@ const InfoShop = (props: Props) => {
               />
             ) : (
               <Image
-                source={{uri: data.cover_photo}}
+                source={{uri: data?.cover_photo}}
                 style={styles.image}
                 alt="image-shop"
               />

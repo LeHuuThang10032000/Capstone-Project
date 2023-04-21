@@ -536,6 +536,7 @@ const Index = () => {
   const layout = useWindowDimensions();
   const [tabIndex, setTabIndex] = useState(0);
   const [index, setIndex] = useState(0);
+  const [statusState, setStatusState] = useState('');
   const [routes] = useState([
     {key: 'first', title: 'Đơn mới'},
     {key: 'second', title: 'Đang làm'},
@@ -586,9 +587,26 @@ const Index = () => {
     [],
   );
 
+  const fetchData = async () => {
+    try {
+      const result = await axiosClient.get('/merchant/store');
+      setStatusState(
+        result?.data?.data?.status !== 'closing' ? 'true' : 'false',
+      );
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderBack title="Quán trà sữa" hideRight={true} />
+      <HeaderBack
+        title="Quán trà sữa"
+        hideRight={true}
+        statusValue={statusState}
+      />
       <ImageBackground
         source={require('../../../../assets/img/banner.png')}
         resizeMode="cover"

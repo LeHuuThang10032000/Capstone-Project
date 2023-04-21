@@ -21,7 +21,6 @@ axiosClient.interceptors.request.use(
     if (config.headers == undefined) {
       config.headers = {};
     }
-
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

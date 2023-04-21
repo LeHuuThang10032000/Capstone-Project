@@ -1,5 +1,5 @@
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import BackIcon from '../assets/svg/left-arrow.svg';
 import {HStack, Text, View} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,7 @@ type Props = {
   TrashIcon?: boolean;
   onPress?: () => void;
   hideLeft?: boolean;
+  statusValue?: string;
 };
 
 const HeaderBack: React.FC<Props> = ({
@@ -28,6 +29,7 @@ const HeaderBack: React.FC<Props> = ({
   TrashIcon,
   onPress,
   hideLeft,
+  statusValue,
 }) => {
   const navigation = useNavigation<MainStackNavigation>();
   const handleBack = () => {
@@ -37,7 +39,19 @@ const HeaderBack: React.FC<Props> = ({
       navigation.navigate('Home');
     }
   };
-  const [switchValue, setSwitchValue] = useState(false);
+  const [switchValue, setSwitchValue] = useState(statusValue);
+
+  const fetchData = async () => {
+    try {
+      const result = await axiosClient.get('/merchant/store');
+      setSwitchValue(result?.data?.data?.status !== 'closing' ? true : false);
+    } catch (error) {}
+  };
+  console.log('switchValue', switchValue);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleSwitchValueChange = async (value: boolean) => {
     await axiosClient.post('merchant/store/update/status', {
@@ -60,12 +74,14 @@ const HeaderBack: React.FC<Props> = ({
       <View alignItems={'center'}>
         {hideRight ? (
           <>
-            <SwitchButton
-              label1={'Mở'}
-              label2={'Tắt'}
-              value={switchValue}
-              onValueChange={handleSwitchValueChange}
-            />
+            {switchValue !== '' && (
+              <SwitchButton
+                label1={'Mở'}
+                label2={'Tắt'}
+                value={switchValue}
+                onValueChange={handleSwitchValueChange}
+              />
+            )}
           </>
         ) : null}
 
