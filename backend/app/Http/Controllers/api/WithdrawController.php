@@ -11,7 +11,6 @@ use Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -41,7 +40,6 @@ class WithdrawController extends Controller
                 'created_at' => now(),
             ]);
 
-            $result['transaction_id'] = Crypt::decrypt(Helper::generateNumber());
             return ApiResponse::successResponse($result);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
