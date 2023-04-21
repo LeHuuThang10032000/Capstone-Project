@@ -972,7 +972,7 @@ class StoreController extends Controller
 
         try {
             DB::beginTransaction();
-            $order = Order::with('user')
+            $order = Order::with('user', 'store')
                 ->where('id', $request->order_id)
                 ->where('store_id', $request->store_id)
                 ->first();
@@ -986,23 +986,26 @@ class StoreController extends Controller
                 $order->cancel_reason = $request->cancel_reason;
 
                 Helper::refund($order);
-
+                $order->save();
+                (new SendPushNotification)->merchantCanceledOrder($order->user, $order->store, $order->cancel_reason);
             } else if($request->status == 'accepted') {
                 if($order->status != 'pending') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi tiếp nhận đơn hàng');
                 $order->status = 'accepted';
                 $order->accepted_at = now();
+                $order->save();
             } else if($request->status == 'processing') {
                 if($order->status != 'accepted') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi thực hiện đơn hàng');
                 $order->status = 'processing';
                 $order->processing_at = now();
+                $order->save();
             } else {
                 if($order->status != 'processing') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi hoàn thành đơn hàng');
                 $order->status = 'finished';
                 $order->finished_at = now();
+                $order->save();
+                (new SendPushNotification)->merchantFinishedOrder($order->user, $order->store);
             }
-            $order->save();
-
-            (new SendPushNotification)->merchantFinishedOrder($order->user, $order->store_id, $order->id);
+            
             DB::commit();
             return APIResponse::SuccessResponse($order);
         } catch(\Exception $e) {
