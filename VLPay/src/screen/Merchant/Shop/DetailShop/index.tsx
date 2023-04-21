@@ -130,7 +130,7 @@ const DetailShop = ({route}: any, props: Props) => {
         <View style={{paddingTop: 60}} justifyContent="center">
           <Text style={styles.text}>{data.name}</Text>
         </View>
-        <TouchableOpacity style={styles.button}>
+        {/* <TouchableOpacity style={styles.button}>
           <HStack>
             <Clock />
             <VStack pl={3}>
@@ -145,7 +145,7 @@ const DetailShop = ({route}: any, props: Props) => {
           <Center>
             <ExtendIcon />
           </Center>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity style={[styles.button, {paddingTop: 20}]}>
           <HStack>

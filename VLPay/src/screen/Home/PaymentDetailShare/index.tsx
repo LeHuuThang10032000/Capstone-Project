@@ -77,9 +77,9 @@ const PaymentDetailShare = ({route}: any) => {
             </HStack>
             <VStack width={'90%'} alignItems={'center'}>
               <HStack style={styles.blockContent}>
-                <UText>Thời gian thanh toán</UText>
-                <UText style={styles.leftContent}>
-                  {moment().format('DD/MM/YYYY')}
+                <UText style={{fontSize: 14}}>Thời gian thanh toán</UText>
+                <UText style={[styles.leftContent, {fontSize: 14}]}>
+                  {moment().format('HH:mm [-] DD/MM/YYYY')}
                 </UText>
               </HStack>
               <View style={styles.separate} />

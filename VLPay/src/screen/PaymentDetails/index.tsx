@@ -11,6 +11,7 @@ import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import styles from '../Login/styles';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import moment from 'moment';
 
 const PaymentDetails = () => {
   const {data} =
@@ -82,8 +83,10 @@ const PaymentDetails = () => {
             </HStack>
             <VStack width={'90%'} alignItems={'center'}>
               <HStack style={styles.blockContent}>
-                <UText>Thời gian thanh toán</UText>
-                <UText style={styles.leftContent}>{data?.date ?? ''}</UText>
+                <UText style={{fontSize: 14}}>Thời gian thanh toán</UText>
+                <UText style={[styles.leftContent, {fontSize: 14}]}>
+                  {moment().format('HH:mm [-] DD/MM/YYYY')}
+                </UText>
               </HStack>
               <View style={styles.separate} />
               <HStack style={styles.blockContent}>
