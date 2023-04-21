@@ -13,25 +13,17 @@ class SendPushNotification
             'title' => 'VLPay',
             'type' => 'merchant_new_order',
             'text' => 'Bạn có đơn hàng mới',
-            'data' => [
-                'store_id' => $storeId,
-                'order_id' => $orderId,
-            ]
         ];
 
         SendNotification::dispatch($merchant, $message);
     }
 
-    public function merchantFinishedOrder($user, $storeId, $orderId)
+    public function merchantFinishedOrder($user, $store)
     {
         $message = [
             'title' => 'VLPay',
             'type' => 'merchant_finished_order',
-            'text' => 'Đơn hàng của bạn đã được chuẩn bị xong',
-            'data' => [
-                'store_id' => $storeId,
-                'order_id' => $orderId,
-            ]
+            'text' => 'Đơn hàng tại ' . $store->name . ' của bạn đã được chuẩn bị xong.',
         ];
 
         SendNotification::dispatch($user, $message);
@@ -43,9 +35,17 @@ class SendPushNotification
             'title' => 'VLPay',
             'type' => 'user_approve_request',
             'text' => $text,
-            'data' => [
-                'user_id' => $user->id,
-            ]
+        ];
+
+        SendNotification::dispatch($user, $message);
+    }
+
+    public function merchantCanceledOrder($user, $store, $reason)
+    {
+        $message = [
+            'title' => 'VLPay',
+            'type' => 'user_approve_request',
+            'text' => 'Đơn hàng tại ' . $store->name . ' của bạn đã bị hủy vì lí do: '. $reason,
         ];
 
         SendNotification::dispatch($user, $message);

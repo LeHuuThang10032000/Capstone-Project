@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
@@ -66,10 +67,10 @@ class WalletController extends Controller
         if($userWallet) {
             $transaction = Transaction::create([
                 'code' => Helper::generateNumber(),
-                'amount' => $request->amount,
+                'amount' => Crypt::encryptString($request->amount),
                 'from_id' => Auth::user()->id,
                 'to_id' => $userWallet->user->id,
-                'message' => 'Nạp ' . $request->amount . ' vào ví',
+                'message' => Crypt::encryptString('Nạp ' . $request->amount . ' vào ví'),
                 'title' => 'Nạp tiền vào ví'
             ]);
 
