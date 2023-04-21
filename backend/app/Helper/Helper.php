@@ -45,13 +45,13 @@ class Helper {
 
         $transaction = Transaction::create([
             'code' => Helper::generateNumber(),
-            'amount' => $amount,
+            'amount' => Crypt::encryptString($amount),
             'from_id' => $merchant->id,
             'to_id' => $order->user_id,
             'order_id' => $order->id,
             'type' => 'R',
             'title' => 'Hoàn tiền đơn hàng ' . $order->order_code,
-            'message' => 'Hoàn ' . number_format($amount) . 'đ vào ví do đơn hàng ' . $order->order_code . ' đã bị hủy'
+            'message' => Crypt::encryptString('Hoàn ' . number_format($amount) . 'đ vào ví do đơn hàng ' . $order->order_code . ' đã bị hủy')
         ]);
 
         // Trừ tiền từ ví của merchant

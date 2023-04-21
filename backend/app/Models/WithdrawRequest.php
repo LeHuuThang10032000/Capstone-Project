@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class WithdrawRequest extends Model
 {
@@ -34,5 +35,11 @@ class WithdrawRequest extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function getTransactionIdAttribute($value)
+    {
+        $value = Crypt::decryptString($value);
+        return $value;
     }
 }

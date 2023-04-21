@@ -25,6 +25,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -687,13 +688,13 @@ class UserController extends Controller
 
             $transaction = Transaction::create([
                 'code' => Helper::generateNumber(),
-                'amount' => $total,
+                'amount' => Crypt::encryptString($total),
                 'from_id' => $user->id,
                 'to_id' => $merchant->id,
                 'order_id' => $order->id,
                 'type' => 'O',
                 'title' => 'Thanh toán đơn hàng ' . $store->name,
-                'message' => 'Thanh toán ' . number_format($total) . 'đ cho đơn hàng ' . $order->order_code,
+                'message' => Crypt::encryptString('Thanh toán ' . number_format($total) . 'đ cho đơn hàng ' . $order->order_code),
                 'wallet_type' => $request->wallet_type
             ]);
 

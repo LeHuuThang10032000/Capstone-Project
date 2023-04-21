@@ -17,6 +17,7 @@ use App\Services\SendPushNotification;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -331,10 +332,10 @@ class OrganiserController extends Controller
             if($wallet) {
                 $transaction = Transaction::create([
                     'code' => $req->transaction_id,
-                    'amount' => $req->amount,
+                    'amount' => Crypt::encryptString($req->amount),
                     'from_id' => Auth::user()->id,
                     'to_id' => $wallet->user->id,
-                    'message' => 'Rút ' . $req->amount . ' từ ví',
+                    'message' => Crypt::encryptString('Rút ' . $req->amount . ' từ ví'),
                     'title' => 'Rút tiền'
                 ]);
     
