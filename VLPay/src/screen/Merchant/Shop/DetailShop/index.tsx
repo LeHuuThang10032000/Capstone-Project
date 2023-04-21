@@ -38,6 +38,7 @@ const DetailShop = ({route}: any, props: Props) => {
       'https://zennoshop.cf/api/user/merchant/store',
     );
     setData(result.data?.data);
+
     setIsLoading(false);
   }, []);
 
@@ -55,10 +56,10 @@ const DetailShop = ({route}: any, props: Props) => {
         onPressRight={true}
         onPress={() =>
           navigation.navigate('UpdateShop', {
-            store_id: data.id,
-            name: data.name,
-            image: data.image,
-            cover_photo: data.cover_photo,
+            store_id: data?.id,
+            name: data?.name,
+            image: data?.image,
+            cover_photo: data?.cover_photo,
           })
         }
       />
@@ -90,7 +91,7 @@ const DetailShop = ({route}: any, props: Props) => {
       ) : (
         <>
           <Image
-            source={{uri: data.image}}
+            source={{uri: data?.image}}
             width={'100%'}
             height={'30%'}
             alt="image-store"
@@ -98,9 +99,9 @@ const DetailShop = ({route}: any, props: Props) => {
             zIndex="-999"
           />
           <Center>
-            {data.cover_photo !== null ? (
+            {data?.cover_photo !== null ? (
               <Image
-                source={{uri: data.cover_photo}}
+                source={{uri: data?.cover_photo}}
                 width={100}
                 height={100}
                 borderRadius={50}
@@ -128,7 +129,7 @@ const DetailShop = ({route}: any, props: Props) => {
       )}
       <Center>
         <View style={{paddingTop: 60}} justifyContent="center">
-          <Text style={styles.text}>{data.name}</Text>
+          <Text style={styles.text}>{data?.name}</Text>
         </View>
         {/* <TouchableOpacity style={styles.button}>
           <HStack>

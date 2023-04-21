@@ -50,6 +50,8 @@ const MenuScreen = (props: Props) => {
     setLoading(true);
     try {
       const result = await axiosClient.get(baseUrl + 'merchant/store');
+
+      console.log('result.data');
       const products = await axiosClient.get(
         baseUrl + 'merchant/menu/?store_id=' + result.data.data.id,
       );

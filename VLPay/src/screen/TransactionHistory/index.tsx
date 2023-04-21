@@ -373,19 +373,27 @@ const ThirdRoute = () => {
   console.log('MyID:', profile);
 
   const fetchData = useCallback(async () => {
-    const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/get-profile',
-    );
-    setProfile(result.data?.data?.id);
+    try {
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/get-profile',
+      );
+      setProfile(result.data?.data?.id);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const getYears = useCallback(async () => {
     setLoading(true);
-    const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/history-transaction?filter_key=years',
-    );
-    setHistory(result.data?.data?.data);
-    setLoading(false);
+    try {
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/history-transaction?filter_key=years',
+      );
+      setHistory(result.data?.data?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log('error', error);
+    }
   }, []);
 
   useEffect(() => {
