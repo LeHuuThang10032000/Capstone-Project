@@ -112,20 +112,20 @@ const DetailStore = ({route}: any) => {
     }
   }, [getDetailStore, getCart, isFocused]);
 
-  const backAction = () => {
-    handleGoBack();
-    return true;
-  };
+  // const backAction = () => {
+  //   handleGoBack();
+  //   return true;
+  // };
 
-  const backHandler = BackHandler.addEventListener(
-    'hardwareBackPress',
-    backAction,
-  );
+  // const backHandler = BackHandler.addEventListener(
+  //   'hardwareBackPress',
+  //   backAction,
+  // );
 
-  useEffect(() => {
-    backHandler;
-    return () => backHandler.remove();
-  }, []);
+  // useEffect(() => {
+  //   backHandler;
+  //   return () => backHandler.remove();
+  // }, []);
 
   return useMemo(
     () => (
@@ -140,9 +140,9 @@ const DetailStore = ({route}: any) => {
                 <TouchableOpacity onPress={handleGoBack}>
                   <ChevronLeft />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <Detail />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </HStack>
               <AnimatedImageBackground
                 source={{uri: item.image}}

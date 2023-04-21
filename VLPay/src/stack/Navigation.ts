@@ -140,6 +140,7 @@ export type MainStackParamList = {
   };
   ListShareBill: {userWallet: number};
   ListPaidBill: {userWallet: number};
+  ListYourBill: {userWallet: number};
   ConfirmTranferShare: {
     phone: string;
     isYour: number;

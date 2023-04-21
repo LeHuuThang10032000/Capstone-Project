@@ -158,17 +158,21 @@ const PaidBillDetail = ({route}: any) => {
                     alt="image"
                     borderRadius={50}
                   />
-                  <Text paddingLeft={3}>{item?.shared_user?.f_name}</Text>
+                  <Text paddingLeft={3}>
+                    {item?.is_owner === 1
+                      ? item?.shared_user?.f_name + '(Tôi)'
+                      : item?.shared_user?.f_name}
+                  </Text>
                 </HStack>
                 <VStack>
                   <Text>
                     {item?.status === 'pending' ? (
                       item?.amount.toLocaleString() + 'đ'
-                    ) : (
+                    ) : item?.status === 'paid' ? (
                       <Text color={'red.500'} fontWeight={'bold'}>
                         Đã trả
                       </Text>
-                    )}
+                    ) : null}
                   </Text>
                 </VStack>
               </HStack>
