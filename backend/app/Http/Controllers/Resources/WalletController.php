@@ -82,7 +82,7 @@ class WalletController extends Controller
                 'close_balance' => $userCloseBalance,
             ]);
     
-            $text = 'Bạn đã nạp thành công số tiền ' . number_format($request->amount) . 'đ vào ví';
+            $text = 'Bạn vừa nạp thành công số tiền ' . number_format($request->amount) . 'đ vào ví';
             Notification::create([
                 'user_id' => Auth::user()->id,
                 'tag' => 'Nạp tiền',
