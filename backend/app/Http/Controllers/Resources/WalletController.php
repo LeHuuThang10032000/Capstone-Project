@@ -7,6 +7,7 @@ use App\Models\Notification;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\Wallet;
+use App\Services\SendPushNotification;
 use Carbon\Carbon;
 use Helper;
 use Illuminate\Http\Request;
@@ -56,7 +57,7 @@ class WalletController extends Controller
             return back()->with('error', $validate->messages()->first());
         }
 
-        $userWallet = Wallet::find($id);
+        $userWallet = Wallet::with('user')->find($id);
         $userOpenBalance = $userWallet->balance;
         $userWallet->balance = $userWallet->balance + $request->amount;
         $userCloseBalance = $userWallet->balance;
@@ -81,15 +82,17 @@ class WalletController extends Controller
                 'close_balance' => $userCloseBalance,
             ]);
     
+            $text = 'Bạn vừa nạp thành công số tiền ' . number_format($request->amount) . 'đ vào ví';
             Notification::create([
                 'user_id' => Auth::user()->id,
                 'tag' => 'Nạp tiền',
                 'tag_model' => 'deposits',
                 'tag_model_id' => $transaction->id,
                 'title' => 'Nạp tiền',
-                'body' => 'Bạn đã nạp thành công số tiền ' . number_format($request->amount) . 'đ vào ví',
+                'body' => $text,
             ]);
         }
+        (new SendPushNotification)->userApproveRequest($userWallet->user, $text);
 
         return back()->with('success', 'Nạp tiền vào ví thành công');
     }

@@ -323,7 +323,7 @@ class OrganiserController extends Controller
             $req->status = 'approved';
             $req->save();
     
-            $wallet = Wallet::where('user_id', $req->user_id)->first();
+            $wallet = Wallet::with('user')->where('user_id', $req->user_id)->first();
             $open_balance = $wallet->balance;
             $wallet->balance = $wallet->balance - $req->amount;
             $close_balance = $wallet->balance;
@@ -347,17 +347,18 @@ class OrganiserController extends Controller
                 ]);
             }
     
+            $text = 'Bạn đã thành công rút số tiền ' . number_format($req->amount) . 'đ từ ví thành tiền mặt. Mã giao dịch '. $req->transaction_id;
             Notification::create([
                 'user_id' => $req->user_id,
                 'tag' => 'Rút tiền',
                 'tag_model' => 'withdraw_requests',
                 'tag_model_id' => $req->id,
                 'title' => 'Rút tiền thành công',
-                'body' => 'Bạn đã thành công rút số tiền ' . $req->amount . ' từ ví thành tiền mặt. Mã giao dịch '. $req->transaction_id,
+                'body' => $text,
             ]);
     
+            (new SendPushNotification)->userApproveRequest($wallet->user, $text);
             DB::commit();
-    
             return back()->with('success', 'Chấp nhận yêu cầu rút tiền thành công');
         } catch(Exception $e) {
             DB::commit();
