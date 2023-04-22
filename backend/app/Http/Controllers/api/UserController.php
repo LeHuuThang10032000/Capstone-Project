@@ -774,7 +774,7 @@ class UserController extends Controller
         }
     }
 
-    public function cancelOrder(Request $request): JsonResponse
+    public function cancelOrder(Request $request)
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
@@ -791,7 +791,7 @@ class UserController extends Controller
             $order = Order::where('id', $request->order_id)
                 ->where('user_id', Auth::user()->id)
                 ->firstOrFail();
-
+                
             if ($order->status == 'processing') {
                 return APIResponse::FailureResponse('Không thể hủy đơn hàng vì cửa hàng đang chuẩn bị cho đơn hàng của bạn');
             }
@@ -812,7 +812,7 @@ class UserController extends Controller
             DB::commit();
             return APIResponse::SuccessResponse(null);
         } catch (\Exception $e) {
-            return ApiResponse::failureResponse('Không thể hủy đơn hàng. Đã có lỗi xảy ra');
+            return ApiResponse::failureResponse($e);
         }
     }
 
