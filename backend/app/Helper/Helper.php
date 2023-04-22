@@ -47,7 +47,7 @@ class Helper {
             'code' => Helper::generateNumber(),
             'amount' => Crypt::encryptString($amount),
             'from_id' => $merchant->id,
-            'to_id' => $order->user_id,
+            'to_id' => $user->id,
             'order_id' => $order->id,
             'type' => 'R',
             'title' => 'Hoàn tiền đơn hàng ' . $order->order_code,
@@ -63,7 +63,7 @@ class Helper {
 
         TransactionDetail::create([
             'transaction_id' => $transaction->id,
-            'user_id' => $user->id,
+            'user_id' => $merchant->id,
             'open_balance' => $merchantOpenBalance,
             'close_balance' => $merchantCloseBalance,
         ]);
