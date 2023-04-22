@@ -222,7 +222,7 @@ class OrganiserController extends Controller
         $wallet->credit_limit = $req->amount;
         $wallet->save();
 
-        $user = User::where('user_id', $req->user_id);
+        $user = User::find($req->user_id);
         $text = 'Tin vui tới. Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã được chấp thuận';
         Notification::create([
             'user_id' => $req->user_id,
