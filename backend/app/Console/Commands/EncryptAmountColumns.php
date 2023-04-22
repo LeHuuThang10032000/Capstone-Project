@@ -43,9 +43,7 @@ class EncryptAmountColumns extends Command
         foreach($transactions as $transaction) {
             DB::table('transactions')
                 ->whereIn('id', [452, 453, 454, 457])
-                ->where('id', $transaction->id)
                 ->update([
-                    'code' =>Crypt::encryptString($transaction->code),
                     'message' => Crypt::encryptString($transaction->message),
                     'amount' => Crypt::encryptString($transaction->amount),
                 ]);
