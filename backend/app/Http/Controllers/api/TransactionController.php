@@ -119,7 +119,7 @@ class TransactionController extends Controller
             ]);
 
             if($request->payment_type == 'S') {
-                $message = ($request->message != null || $request->message != '') ? $user->f_name . ' đã trả bạn ' . number_format($transaction->amount) . 'đ với lời nhắn "' . $request->message . '"' : $user->f_name . ' đã trả bạn ' . number_format($transaction->amount) . 'đ';
+                $message = ($request->message != null || $request->message != '') ? $user->f_name . ' đã trả bạn ' . number_format($request->cash) . 'đ với lời nhắn "' . $request->message . '"' : $user->f_name . ' đã trả bạn ' . number_format($request->cash) . 'đ';
                 $notification = Notification::create([
                     'user_id' => $recipient->id,
                     'tag' => 'Chia tiền',

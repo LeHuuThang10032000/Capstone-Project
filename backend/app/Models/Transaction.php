@@ -78,10 +78,10 @@ class Transaction extends Model
         if($this->type == 'T') {
             if($this->from_id == Auth::user()->id) {
                 $recipient = $this->toUser()->select('f_name')->first();
-                $value = 'Chuyển tiền tới ' . ($recipient != null) ? $recipient->f_name : 'Người dùng VLPay';
+                $value = 'Chuyển tiền tới ' . ($recipient != null ? $recipient->f_name : 'Người dùng VLPay');
             } else {
                 $sender = $this->fromUser()->select('f_name')->first();
-                $value = 'Nhận tiền từ ' . ($sender != null) ? $sender->f_name : 'Người dùng VLPay';
+                $value = 'Nhận tiền từ ' . ($sender != null ? $sender->f_name : 'Người dùng VLPay');
             }
         }
         return $value;
