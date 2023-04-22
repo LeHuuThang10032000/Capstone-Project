@@ -96,8 +96,8 @@
             </div>
             
         </div>
-        <div class="col rounded border m-1 p-2 bg-white">
-            <p class="h5">Giao dịch phát sinh gần đây</p>
+        <div class="col rounded border m-1 py-2 px-0 bg-white">
+            <p class="h5 px-2">Giao dịch phát sinh gần đây</p>
             <table class="table">
                 <thead style="background-color: #C7CEEA">
                     <tr>

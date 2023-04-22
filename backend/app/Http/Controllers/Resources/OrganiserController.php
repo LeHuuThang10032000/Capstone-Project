@@ -466,6 +466,7 @@ class OrganiserController extends Controller
             DB::raw('(select sum(balance) from user_wallets) as wallet_total'),
             DB::raw('(select count(*) from users) as user_total'))
             ->with('fromUser', 'toUser')
+            ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
 
