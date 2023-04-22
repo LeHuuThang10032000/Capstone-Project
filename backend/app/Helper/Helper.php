@@ -40,7 +40,7 @@ class Helper {
     public static function refund($order)
     {
         $amount = $order->transactions->first()->amount;
-        $merchant = Auth::user();
+        $merchant = $order->store->user;
         $user = User::where('id', $order->user_id)->first();
 
         $transaction = Transaction::create([
