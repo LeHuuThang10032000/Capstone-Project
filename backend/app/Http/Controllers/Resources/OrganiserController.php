@@ -150,29 +150,41 @@ class OrganiserController extends Controller
     {
         if(isset($request->key)) {
             $key = $request->key;
-            $pending = CreditRequest::where(function ($query) use ($request) {
-                    $query->where('name', 'LIKE', '%' . $request->key . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+            $pending = CreditRequest::with('user')->where(function($query) use ($request) {
+                    $query->where('credit_requests.name', 'LIKE', '%' . $request->key . '%')
+                        ->where('credit_requests.status', 'pending');
                 })
-                ->where('status', 'pending')
+                ->orWhere(function($query) use ($key) {
+                    $query->whereHas('user', function($query) use ($key) {
+                            $query->where('phone', 'LIKE', '%' . $key . '%');
+                        })
+                        ->where('credit_requests.status', 'pending');
+                })
                 ->paginate(5);
-            $pending->appends (array ('key' => $key));
 
-            $approved = CreditRequest::where(function ($query) use ($request) {
-                    $query->where('name', 'LIKE', '%' . $request->key . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+            $approved = CreditRequest::with('user')->where(function($query) use ($request) {
+                    $query->where('credit_requests.name', 'LIKE', '%' . $request->key . '%')
+                        ->where('credit_requests.status', 'pending');
                 })
-                ->where('status', 'approved')
+                ->orWhere(function($query) use ($key) {
+                    $query->whereHas('user', function($query) use ($key) {
+                            $query->where('phone', 'LIKE', '%' . $key . '%');
+                        })
+                        ->where('credit_requests.status', 'approved');
+                })
                 ->paginate(5);
-            $approved->appends (array ('key' => $key));
 
-            $denied = CreditRequest::where(function ($query) use ($request) {
-                    $query->where('name', 'LIKE', '%' . $request->key . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $request->key . '%');
+            $denied = CreditRequest::with('user')->where(function($query) use ($request) {
+                    $query->where('credit_requests.name', 'LIKE', '%' . $request->key . '%')
+                        ->where('credit_requests.status', 'pending');
                 })
-                ->where('status', 'denied')
+                ->orWhere(function($query) use ($key) {
+                    $query->whereHas('user', function($query) use ($key) {
+                            $query->where('phone', 'LIKE', '%' . $key . '%');
+                        })
+                        ->where('credit_requests.status', 'denied');
+                })
                 ->paginate(5);
-            $denied->appends (array ('key' => $key));
 
             $requests = [
                 'pending' => $pending ?? [],
@@ -202,8 +214,8 @@ class OrganiserController extends Controller
         ], [
             'amount.required' => 'Vui lòng nhập hạn mức tín dụng',
             'amount.integer' => 'Hạn mức tín dụng chưa đúng định dạng số',
-            'amount.min' => 'Hạn mức thấp nhất là 500000',
-            'amount.max' => 'Hạn mức thấp nhất là 10000000'
+            'amount.min' => 'Hạn mức thấp nhất là ' . number_format(500000) . 'đ',
+            'amount.max' => 'Hạn mức cao nhất là ' . number_format(10000000) . 'đ'
         ]);
 
         if ($validate->fails()) {
@@ -276,27 +288,42 @@ class OrganiserController extends Controller
     {
         if(isset($request->key)) {
             $key = $request->key;
-            $pending = WithdrawRequest::where('transaction_id', 'LIKE', '%' . $request->key . '%')
-                ->with('user.wallet')
-                ->join('users', 'users.id', '=', 'withdraw_request.user_id')
-                ->orWhere('users.phone', 'LIKE', '%' . $request->key . '%')
-                ->where('withdraw_request.status', 'pending')
+            $pending = WithdrawRequest::with('user')->where(function($query) use ($request) {
+                    $query->where('withdraw_request.transaction_id', 'LIKE', '%' . $request->key . '%')
+                        ->where('withdraw_request.status', 'pending');
+                })
+                ->orWhere(function($query) use ($key) {
+                    $query->whereHas('user', function($query) use ($key) {
+                            $query->where('phone', 'LIKE', '%' . $key . '%');
+                        })
+                        ->where('withdraw_request.status', 'pending');
+                })
                 ->paginate(5);
             $pending->appends (array ('key' => $key));
 
-            $approved = WithdrawRequest::where('transaction_id', 'LIKE', '%' . $request->key . '%')
-                ->with('user.wallet')
-                ->join('users', 'users.id', '=', 'withdraw_request.user_id')
-                ->orWhere('users.phone', 'LIKE', '%' . $request->key . '%')
-                ->where('withdraw_request.status', 'approved')
+            $approved = WithdrawRequest::with('user')->where(function($query) use ($request) {
+                    $query->where('withdraw_request.transaction_id', 'LIKE', '%' . $request->key . '%')
+                        ->where('withdraw_request.status', 'approved');
+                })
+                ->orWhere(function($query) use ($key) {
+                    $query->whereHas('user', function($query) use ($key) {
+                            $query->where('phone', 'LIKE', '%' . $key . '%');
+                        })
+                        ->where('withdraw_request.status', 'approved');
+                })
                 ->paginate(5);
             $approved->appends (array ('key' => $key));
 
-            $denied = WithdrawRequest::where('transaction_id', 'LIKE', '%' . $request->key . '%')
-                ->with('user.wallet')
-                ->join('users', 'users.id', '=', 'withdraw_request.user_id')
-                ->orWhere('users.phone', 'LIKE', '%' . $request->key . '%')
-                ->where('withdraw_request.status', 'denied')
+            $denied = WithdrawRequest::with('user')->where(function($query) use ($request) {
+                    $query->where('withdraw_request.transaction_id', 'LIKE', '%' . $request->key . '%')
+                        ->where('withdraw_request.status', 'denied');
+                })
+                ->orWhere(function($query) use ($key) {
+                    $query->whereHas('user', function($query) use ($key) {
+                            $query->where('phone', 'LIKE', '%' . $key . '%');
+                        })
+                        ->where('withdraw_request.status', 'denied');
+                })
                 ->paginate(5);
             $denied->appends (array ('key' => $key));
 
