@@ -99,6 +99,8 @@ class OrganiserController extends Controller
         $store->status = 'approved';
         $store->save();
 
+        $user = User::find($store->user_id);
+        $text = 'Yêu cầu mở cửa hàng ' . $store->name . ' của bạn đã được chấp nhận';
         Notification::create([
             'user_id' => $store->user_id,
             'tag' => 'Cửa hàng',
@@ -107,6 +109,8 @@ class OrganiserController extends Controller
             'title' => 'Yêu cầu mở cửa hàng VLPAY',
             'body' => 'Yêu cầu mở cửa hàng ' . $store->name . ' của bạn đã được chấp nhận',
         ]);
+
+        (new SendPushNotification)->userApproveRequest($user, $text);
         
         return back()->with('success', 'Chấp nhận yêu cầu mở cửa hàng thành công');
     }
@@ -126,14 +130,18 @@ class OrganiserController extends Controller
         $store->deny_reason = $request->deny_reason;
         $store->save();
 
+        $user = User::find($store->user_id);
+        $text = 'Yêu cầu mở cửa hàng ' . $store->name . ' của bạn đã bị từ chối';
         Notification::create([
             'user_id' => $store->user_id,
             'tag' => 'Cửa hàng',
             'tag_model' => 'stores',
             'tag_model_id' => $request->store_id,
             'title' => 'Yêu cầu mở cửa hàng VLPAY',
-            'body' => 'Yêu cầu mở cửa hàng ' . $store->name . ' của bạn đã bị từ chối',
+            'body' => $text,
         ]);
+
+        (new SendPushNotification)->userApproveRequest($user, $text);
 
         return back()->with('success', 'Từ chối yêu cầu mở cửa hàng thành công');
     }
@@ -214,14 +222,18 @@ class OrganiserController extends Controller
         $wallet->credit_limit = $req->amount;
         $wallet->save();
 
+        $user = User::where('user_id', $req->user_id);
+        $text = 'Tin vui tới. Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã được chấp thuận';
         Notification::create([
             'user_id' => $req->user_id,
             'tag' => 'Hỗ trợ tín dụng',
             'tag_model' => 'credit_requests',
             'tag_model_id' => $req->id,
             'title' => 'Tín dụng sinh viên',
-            'body' => 'Tin vui tới. Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã được chấp thuận',
+            'body' => $text,
         ]);
+
+        (new SendPushNotification)->userApproveRequest($user, $text);
 
         return back()->with('success', 'Chấp nhận yêu cầu cấp hạn mức tín dụng thành công');
     }
@@ -244,14 +256,18 @@ class OrganiserController extends Controller
         $req->deny_reason = $request->deny_reason;
         $req->save();
 
+        $user = User::find($req->user_id);
+        $text = 'Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã bị từ chối';
         Notification::create([
             'user_id' => $req->user_id,
             'tag' => 'Hỗ trợ tín dụng',
             'tag_model' => 'credit_requests',
             'tag_model_id' => $req->id,
             'title' => 'Tín dụng sinh viên',
-            'body' => 'Yêu cầu hỗ trợ tín dụng sinh viên của bạn đã bị từ chối',
+            'body' => $text,
         ]);
+
+        (new SendPushNotification)->userApproveRequest($user, $text);
 
         return back()->with('success', 'Từ chối yêu cầu cấp hạn mức tín dụng thành công');
     }
