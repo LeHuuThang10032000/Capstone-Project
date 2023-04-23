@@ -305,7 +305,9 @@ const DetailOrder = ({route}: any) => {
                 </HStack>
                 <HStack justifyContent={'space-between'}>
                   <Text>Giảm giá</Text>
-                  <Text>{discount_money}đ</Text>
+                  <Text>
+                    {formatCurrency((discount_money ?? 0).toString())}đ
+                  </Text>
                 </HStack>
 
                 {/* <Controller

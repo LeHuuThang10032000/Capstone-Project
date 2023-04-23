@@ -1,6 +1,14 @@
-import {Center, FormControl, HStack, Pressable, VStack} from 'native-base';
+import {
+  Center,
+  FormControl,
+  HStack,
+  Pressable,
+  Text,
+  VStack,
+  View,
+} from 'native-base';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {TextInput, TouchableOpacity, View} from 'react-native';
+import {TextInput, TouchableOpacity} from 'react-native';
 import HeaderBack from '../../components/HeaderBack';
 import TText from '../Transfer/TText';
 import YesNoModal from '../../components/YesNoModal';
@@ -30,10 +38,11 @@ const WithDrawInfo = (props: any) => {
   const [infoWithdraw, setInfoWithdraw] = useState(false);
   const [profile, setProfile] = useState({});
   const isFocused = useIsFocused();
-  const balances = useMemo(() => ['200000', '500000', '1000000'], []);
+  const balances = useMemo(() => ['50000', '100000', '200000'], []);
   const [tranId, setTranId] = useState('');
   const [amount, setAmount] = useState('');
   const [day, setDay] = useState('');
+  const [userWallet, setUserWallet] = useState(0);
 
   console.log(tranId);
   console.log(amount);
@@ -43,6 +52,11 @@ const WithDrawInfo = (props: any) => {
     useRoute<RouteProp<MainStackParamList, 'WithDrawInfo'>>()?.params;
 
   const navigation = useNavigation<MainStackNavigation>();
+
+  const getWallet = useCallback(async () => {
+    const result = await axiosClient.get('/user-wallet');
+    setUserWallet(result?.data?.data?.balance);
+  }, []);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient
@@ -58,6 +72,7 @@ const WithDrawInfo = (props: any) => {
     // Call only when screen open or when back on screen
     if (isFocused) {
       fetchData();
+      getWallet();
     }
   }, [fetchData, isFocused]);
 
@@ -158,7 +173,7 @@ const WithDrawInfo = (props: any) => {
             marginBottom={5}>
             <TText style={{fontSize: 18}}>Ngày giao dịch:</TText>
             <TText style={{fontSize: 18, opacity: 0.31}}>
-              {moment(day).format('h:mm [-] DD/MM/YYYY')}
+              {moment(day).format('HH:mm [-] DD/MM/YYYY')}
             </TText>
           </HStack>
           <View
@@ -190,19 +205,28 @@ const WithDrawInfo = (props: any) => {
         </VStack>
       ) : (
         <>
-          <VStack
-            justifyContent={'center'}
-            alignItems={'center'}
+          <View
+            p={3}
+            w={'100%'}
             marginY={10}
-            space={5}
-            marginX={1}
-            paddingY={3}
-            style={{elevation: 2}}>
-            <TText style={{fontSize: 24, fontWeight: '700'}}>Ví của bạn</TText>
-            <TText style={{fontWeight: '700', color: '#8C8C8C', fontSize: 16}}>
-              Số tiền: 10.000.000đ
-            </TText>
-          </VStack>
+            backgroundColor="#ffffff"
+            justifyContent={'center'}
+            borderWidth={1}
+            style={{elevation: 5}}>
+            <VStack
+              paddingY={5}
+              justifyContent={'center'}
+              alignItems={'center'}>
+              <TText
+                style={{fontSize: 24, fontWeight: '700', paddingBottom: 10}}>
+                Ví của bạn
+              </TText>
+              <TText
+                style={{fontWeight: '700', color: '#8C8C8C', fontSize: 16}}>
+                Số tiền: {formatCurrency((userWallet ?? 0).toString())}đ
+              </TText>
+            </VStack>
+          </View>
 
           <Controller
             control={control}
@@ -252,7 +276,7 @@ const WithDrawInfo = (props: any) => {
               color: '#8C8C8C',
               fontWeight: '700',
             }}>
-            Rút tối thiểu 200.000đ. Rút tối đa 10.000.000đ
+            Rút tối thiểu 50.000đ. Rút tối đa 10.000.000đ
           </TText>
           <Center>
             <HStack space={5} justifyContent="center" width={'90%'}>

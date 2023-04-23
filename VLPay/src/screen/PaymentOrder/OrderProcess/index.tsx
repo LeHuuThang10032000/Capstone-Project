@@ -24,6 +24,7 @@ import HeaderModal from '../../../components/CustomCancelOrder/HeaderModal';
 import BodyModal from '../../../components/CustomCancelOrder/BodyModal';
 import Toast from 'react-native-toast-message';
 import moment from 'moment';
+import BackIcon from '../../../assets/svg/left-arrow.svg';
 
 type State = 'pending' | 'accepted' | 'processing' | 'finished';
 
@@ -105,7 +106,13 @@ const OrderProcess = ({route}: any) => {
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+              <HStack w={'90%'} justifyContent={'space-between'}>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <BackIcon />
+                </TouchableOpacity>
+                <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+                <Text w={5}></Text>
+              </HStack>
               <OrderIcon />
               <View
                 justifyContent="flex-start"
@@ -271,7 +278,13 @@ const OrderProcess = ({route}: any) => {
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={5}>Đã đặt đơn</Heading>
+              <HStack w={'90%'} justifyContent={'space-between'}>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <BackIcon />
+                </TouchableOpacity>
+                <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+                <Text w={5}></Text>
+              </HStack>
               <PrepareIcon />
               <Text paddingBottom={3}>
                 {moment(order.accepted_at).format('h:mm')}
@@ -406,7 +419,13 @@ const OrderProcess = ({route}: any) => {
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={5}>Đã đặt đơn</Heading>
+              <HStack w={'90%'} justifyContent={'space-between'}>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <BackIcon />
+                </TouchableOpacity>
+                <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+                <Text w={5}></Text>
+              </HStack>
               <DoneIcon />
               <View
                 flexDirection="row"
