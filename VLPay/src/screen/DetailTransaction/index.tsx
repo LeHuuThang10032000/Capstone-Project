@@ -8,6 +8,7 @@ import CallMe from '../../assets/svg/call-me.svg';
 import {TouchableOpacity} from 'react-native';
 import Icons from '../../components/Icons';
 import moment from 'moment';
+import {formatCurrency} from '../../components/helper';
 
 const DetailTransaction = ({route}: any) => {
   const {title, amount, code, created_at} = route.params;
@@ -34,7 +35,7 @@ const DetailTransaction = ({route}: any) => {
         borderColor="#E0E0E0">
         <Text fontSize={16}>{title}</Text>
         <Text fontSize={16} fontWeight="bold">
-          {amount.toLocaleString()}đ
+          {formatCurrency((amount ?? 0).toString())}đ
         </Text>
         <Text fontSize={16}>Mã giao dịch: {code}</Text>
         <HStack

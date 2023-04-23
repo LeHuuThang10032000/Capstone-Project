@@ -7,6 +7,8 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import {axiosClient} from '../../components/apis/axiosClient';
 import Icons from '../../components/Icons';
+import moment from 'moment';
+import {formatCurrency} from '../../components/helper';
 
 type Props = {};
 
@@ -53,7 +55,7 @@ const ShareBill = () => {
         borderColor="#E0E0E0">
         <Text fontSize={16}>Thanh toán đơn hàng</Text>
         <Text fontSize={16} fontWeight="bold">
-          {data?.amount.toLocaleString()}đ
+          {formatCurrency(data?.amount ?? 0)}đ
         </Text>
         <Text fontSize={16}>Mã giao dịch: {data?.code}</Text>
         <HStack
@@ -78,7 +80,7 @@ const ShareBill = () => {
           <HStack justifyContent="space-between">
             <Text fontSize={16}>Thời gian thanh toán</Text>
             <Text fontSize={16} fontWeight="bold">
-              {data?.created_at}
+              {moment(data?.created_at).format('HH:mm [-] DD/MM/YYYY')}
             </Text>
           </HStack>
           <Divider marginY={3} />

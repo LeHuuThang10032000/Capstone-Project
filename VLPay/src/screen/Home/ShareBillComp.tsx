@@ -29,7 +29,7 @@ const ShareBillComp = (props: Props) => {
       }}>
       <HStack padding={3} justifyContent="space-between" alignItems="center">
         <HStack alignItems="center">
-          <MustPay />
+          <MustPay width={50} />
           <VStack paddingLeft={3}>
             <Text>Số tiền phải trả:</Text>
             <Text>{formatCurrency((props.need_pay ?? 0).toString())}đ</Text>
@@ -56,7 +56,7 @@ const ShareBillComp = (props: Props) => {
       <Divider />
       <HStack padding={3} justifyContent="space-between" alignItems="center">
         <HStack alignItems="center">
-          <Received />
+          <Received width={50} />
           <VStack paddingLeft={3}>
             <Text>Số tiền đã nhận:</Text>
             <Text>{formatCurrency((props.paid_bill ?? 0).toString())}đ</Text>
@@ -81,7 +81,7 @@ const ShareBillComp = (props: Props) => {
       <Divider />
       <HStack padding={3} justifyContent="space-between" alignItems="center">
         <HStack alignItems="center">
-          <BillYourself />
+          <BillYourself width={50} />
           <VStack paddingLeft={3}>
             <Text>Đơn chia tiền</Text>
           </VStack>

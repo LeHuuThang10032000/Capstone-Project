@@ -60,6 +60,8 @@ const DetailStore = ({route}: any) => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const {width} = useWindowDimensions();
 
+  console.log(store_id);
+
   const {totalItems} = useCartStore();
   const totalPrice = useCartStore(state => state.totalPrice());
   const [cart, setCart] = useState<myCart>();
