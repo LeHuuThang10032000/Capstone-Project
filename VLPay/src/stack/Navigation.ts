@@ -156,6 +156,7 @@ export type MainStackParamList = {
     message: string;
   };
   DetailBillShare: {order_id: number};
+  HistoryWithDrawDetail: {id: number};
 };
 
 export type MainStackNavigation = StackNavigationProp<MainStackParamList>;

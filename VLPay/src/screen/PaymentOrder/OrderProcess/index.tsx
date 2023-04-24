@@ -1,4 +1,9 @@
-import {ActivityIndicator, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  BackHandler,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import OrderIcon from '../../../assets/svg/order1.svg';
 import PrepareIcon from '../../../assets/svg/order2.svg';
@@ -41,6 +46,25 @@ const OrderProcess = ({route}: any) => {
   const [order, setOrder] = useState<Order>();
 
   const isFocused = useIsFocused();
+
+  //back hardware
+  const handleGoBack = () => {
+    navigation.navigate('Home');
+  };
+  const backAction = () => {
+    handleGoBack();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    backAction,
+  );
+
+  useEffect(() => {
+    backHandler;
+    return () => backHandler.remove();
+  }, []);
 
   //Taken
   const takenOrder = async () => {

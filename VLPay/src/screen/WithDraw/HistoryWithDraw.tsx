@@ -4,6 +4,7 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -13,10 +14,14 @@ import {Center, HStack, ScrollView, VStack} from 'native-base';
 import {formatCurrency} from '../../components/helper';
 import Lottie from 'lottie-react-native';
 import moment from 'moment';
+import {useNavigation} from '@react-navigation/native';
+import {MainStackNavigation} from '../../stack/Navigation';
 
 type Props = {};
 
 const HistoryWithDraw = (props: Props) => {
+  const navigation = useNavigation<MainStackNavigation>();
+
   const [history, setHistory] = useState([]);
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
@@ -80,30 +85,37 @@ const HistoryWithDraw = (props: Props) => {
                 </View>
                 {item.data.map((item: any) => {
                   return (
-                    <HStack
-                      backgroundColor="#FFFFFF"
-                      p={3}
+                    <TouchableOpacity
                       key={item.id}
-                      justifyContent="space-between">
-                      <VStack>
-                        <Text
-                          style={styles.title}
-                          ellipsizeMode="tail"
-                          numberOfLines={1}>
-                          {item.status === 'pending'
-                            ? 'Đang xử lý'
-                            : 'Đã duyệt'}
+                      onPress={() =>
+                        navigation.navigate('HistoryWithDrawDetail', {
+                          id: item.id,
+                        })
+                      }>
+                      <HStack
+                        backgroundColor="#FFFFFF"
+                        p={3}
+                        justifyContent="space-between">
+                        <VStack>
+                          <Text
+                            style={styles.title}
+                            ellipsizeMode="tail"
+                            numberOfLines={1}>
+                            {item.status === 'pending'
+                              ? 'Đang xử lý'
+                              : 'Đã duyệt'}
+                          </Text>
+                          <Text style={styles.textDate}>
+                            {moment(item.created_at).format(
+                              'HH:mm [-] DD/MM/YYYY',
+                            )}
+                          </Text>
+                        </VStack>
+                        <Text style={styles.text}>
+                          -{formatCurrency(`${item.amount}`)}đ
                         </Text>
-                        <Text style={styles.textDate}>
-                          {moment(item.created_at).format(
-                            'HH:mm [-] DD/MM/YYYY',
-                          )}
-                        </Text>
-                      </VStack>
-                      <Text style={styles.text}>
-                        -{formatCurrency(`${item.amount}`)}đ
-                      </Text>
-                    </HStack>
+                      </HStack>
+                    </TouchableOpacity>
                   );
                 })}
               </View>
