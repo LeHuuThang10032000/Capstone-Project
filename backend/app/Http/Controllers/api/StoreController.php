@@ -919,7 +919,7 @@ class StoreController extends Controller
                     'status',
                 )->offset($offset)->limit($limit)->get();
 
-            $order_revenue = DB::table('orders')
+            $totalOrders = DB::table('orders')
                 ->select(
                     DB::raw('(SUM(order_total) - SUM(discount_amount)) as taken_order_revenue'),
                     DB::raw('COUNT(id) as taken_order_total')
@@ -935,8 +935,8 @@ class StoreController extends Controller
                 'total_canceled_orders' => $summary->total_canceled_orders,
                 'total_taken_order' => $summary->total_taken_order,
                 'total_revenue' => number_format($summary->total_revenue),
-                'orders_revenue' => number_format($order_revenue->taken_order_revenue),
-                'orders_total' => $order_revenue->taken_order_total,
+                'orders_revenue' => number_format($totalOrders->taken_order_revenue),
+                'orders_total' => $totalOrders->taken_order_total,
             ];
 
             return ApiResponse::successResponse($data);

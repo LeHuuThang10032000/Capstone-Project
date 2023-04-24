@@ -151,7 +151,7 @@ class TransactionController extends Controller
 
             DB::commit();
             
-            return ApiResponse::successResponse($transaction->id);
+            return ApiResponse::successResponse($transaction);
         } catch(Exception $e) {
             DB::rollBack();
             ApiResponse::failureResponse('Đã có lỗi xảy ra');
