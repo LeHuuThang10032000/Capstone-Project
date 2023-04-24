@@ -1,4 +1,9 @@
-import {ActivityIndicator, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  BackHandler,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import OrderIcon from '../../../assets/svg/order1.svg';
 import PrepareIcon from '../../../assets/svg/order2.svg';
@@ -41,6 +46,25 @@ const OrderProcess = ({route}: any) => {
   const [order, setOrder] = useState<Order>();
 
   const isFocused = useIsFocused();
+
+  //back hardware
+  const handleGoBack = () => {
+    navigation.navigate('Home');
+  };
+  const backAction = () => {
+    handleGoBack();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    backAction,
+  );
+
+  useEffect(() => {
+    backHandler;
+    return () => backHandler.remove();
+  }, []);
 
   //Taken
   const takenOrder = async () => {
@@ -119,7 +143,7 @@ const OrderProcess = ({route}: any) => {
                 w="100%"
                 paddingX={12}
                 marginLeft={3}>
-                <Text>{moment(order.created_at).format('h:mm')}</Text>
+                <Text>{moment(order.created_at).format('HH:mm')}</Text>
               </View>
             </Center>
             <Divider />
@@ -287,7 +311,7 @@ const OrderProcess = ({route}: any) => {
               </HStack>
               <PrepareIcon />
               <Text paddingBottom={3}>
-                {moment(order.accepted_at).format('h:mm')}
+                {moment(order.accepted_at).format('HH:mm')}
               </Text>
             </Center>
             <Divider />
@@ -433,7 +457,7 @@ const OrderProcess = ({route}: any) => {
                 w="100%"
                 paddingX={12}
                 marginRight={5}>
-                <Text>{moment(order.finished_at).format('h:mm')}</Text>
+                <Text>{moment(order.finished_at).format('HH:mm')}</Text>
               </View>
             </Center>
             <Divider />

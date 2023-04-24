@@ -47,7 +47,7 @@ const DetailProduct = ({route, productId}: any) => {
   const [isLoading, setLoading] = useState(false);
 
   console.log(id);
-  console.log(checkedItems);
+  console.log('check item', checkedItems.length);
 
   //Get detail product
   const getDetailProduct = useCallback(async () => {
@@ -85,8 +85,13 @@ const DetailProduct = ({route, productId}: any) => {
     formData.append('product_id', id);
     formData.append('store_id', store_id);
     formData.append('quantity', quantity);
-    for (let i = 0; i < checkedItems.length; i++) {
-      formData.append('add_ons[]', checkedItems[i]);
+
+    if (checkedItems.length > 0) {
+      for (let i = 0; i < checkedItems.length; i++) {
+        formData.append('add_ons[]', checkedItems[i]);
+      }
+    } else {
+      formData.append('add_ons[]', '');
     }
     const result = await axiosClient.post('/cart', formData, {
       headers: {'content-type': 'multipart/form-data'},

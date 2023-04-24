@@ -105,29 +105,31 @@ const DetailCart = ({route}: any) => {
                           </Text>
                         ))}
                         <Text>
-                          {formatCurrency((item?.price ?? 0).toString())}đ
+                          {formatCurrency((item?.total_price ?? 0).toString())}đ
                         </Text>
                       </VStack>
                     </HStack>
                     <HStack alignItems={'center'}>
                       <TouchableOpacity
                         onPress={async () => {
-                          if (item?.quantity > 0) {
-                            const formData = new FormData();
-                            formData.append('product_id', item?.id);
-                            formData.append('store_id', store_id);
-                            formData.append('quantity', -1);
-                            let array = [];
-                            item?.add_ons.forEach(element => {
-                              array.push(element.id);
+                          const formData = new FormData();
+                          formData.append('product_id', item?.id);
+                          formData.append('store_id', store_id);
+                          formData.append('quantity', -1);
+                          if (item?.add_ons.length > 0) {
+                            item?.add_ons.forEach((number, index) => {
+                              formData.append('add_ons[]', number.id);
                             });
-                            formData.append('add_ons[]', array);
-
-                            await axiosClient.post('/cart', formData, {
-                              headers: {'content-type': 'multipart/form-data'},
-                            });
-                            getCart();
+                          } else {
+                            formData.append('add_ons[]', '');
                           }
+                          console.log('==>', item?.add_ons.length);
+                          await axiosClient.post('/cart', formData, {
+                            headers: {
+                              'content-type': 'multipart/form-data',
+                            },
+                          });
+                          getCart();
                         }}
                         disabled={item.quantity === 1}>
                         <DecreaseIcon />
@@ -139,11 +141,15 @@ const DetailCart = ({route}: any) => {
                           formData.append('product_id', item?.id);
                           formData.append('store_id', store_id);
                           formData.append('quantity', 1);
-                          let array = [];
-                          item?.add_ons.forEach(element => {
-                            array.push(element.id);
-                          });
-                          formData.append('add_ons[]', array);
+                          if (item?.add_ons.length > 0) {
+                            item?.add_ons.forEach((number, index) => {
+                              formData.append('add_ons[]', number.id);
+                            });
+                          } else {
+                            formData.append('add_ons[]', '');
+                          }
+                          console.log('==>', item?.add_ons.length);
+
                           await axiosClient.post('/cart', formData, {
                             headers: {'content-type': 'multipart/form-data'},
                           });
