@@ -904,13 +904,29 @@ class StoreController extends Controller
             $totalOrders = $orders->count();
             $summary = (clone $orders)
                 ->join('transactions', 'orders.id', '=', 'transactions.order_id')
-                ->selectRaw('SUM(CASE WHEN status = \'taken\' THEN 1 ELSE 0 END) as total_taken_order, 
-                    SUM(CASE WHEN status = \'canceled\' THEN 1 ELSE 0 END) as total_canceled_orders,
-                    SUM(CASE WHEN status = (\'taken\') THEN transactions.amount ELSE 0 END) as total_revenue')->first();
+                ->selectRaw('COUNT(DISTINCT CASE WHEN status = \'taken\' THEN orders.id END) as total_taken_order, 
+                    COUNT(DISTINCT CASE WHEN status = \'canceled\' THEN orders.id END) as total_canceled_orders,
+                    (SUM(DISTINCT CASE WHEN status = \'taken\' THEN orders.order_total ELSE 0 END) - SUM(DISTINCT CASE WHEN status = \'taken\' THEN orders.discount_amount ELSE 0 END)) as total_revenue')->first();
             
-            $orders = $orders->selectRaw('id, order_code, created_at, user_id, order_total, discount_amount, product_detail, status')
-                ->offset($offset)->limit($limit)->get();
+            $orders = $orders->select(
+                    'id', 
+                    'order_code', 
+                    'created_at', 
+                    'user_id', 
+                    'order_total', 
+                    'discount_amount', 
+                    'product_detail', 
+                    'status',
+                )->offset($offset)->limit($limit)->get();
 
+            $order_revenue = DB::table('orders')
+                ->select(
+                    DB::raw('(SUM(order_total) - SUM(discount_amount)) as taken_order_revenue'),
+                    DB::raw('COUNT(id) as taken_order_total')
+                )
+                ->where('status', '=', 'taken')
+                ->first();
+                
             $data = [
                 'total_size' => $totalOrders,
                 'limit' => $limit,
@@ -919,6 +935,8 @@ class StoreController extends Controller
                 'total_canceled_orders' => $summary->total_canceled_orders,
                 'total_taken_order' => $summary->total_taken_order,
                 'total_revenue' => number_format($summary->total_revenue),
+                'orders_revenue' => number_format($order_revenue->taken_order_revenue),
+                'orders_total' => $order_revenue->taken_order_total,
             ];
 
             return ApiResponse::successResponse($data);
