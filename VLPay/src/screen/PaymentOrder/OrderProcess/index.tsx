@@ -119,7 +119,7 @@ const OrderProcess = ({route}: any) => {
                 w="100%"
                 paddingX={12}
                 marginLeft={3}>
-                <Text>{moment(order.created_at).format('h:mm')}</Text>
+                <Text>{moment(order.created_at).format('HH:mm')}</Text>
               </View>
             </Center>
             <Divider />
@@ -287,7 +287,7 @@ const OrderProcess = ({route}: any) => {
               </HStack>
               <PrepareIcon />
               <Text paddingBottom={3}>
-                {moment(order.accepted_at).format('h:mm')}
+                {moment(order.accepted_at).format('HH:mm')}
               </Text>
             </Center>
             <Divider />
@@ -433,7 +433,7 @@ const OrderProcess = ({route}: any) => {
                 w="100%"
                 paddingX={12}
                 marginRight={5}>
-                <Text>{moment(order.finished_at).format('h:mm')}</Text>
+                <Text>{moment(order.finished_at).format('HH:mm')}</Text>
               </View>
             </Center>
             <Divider />

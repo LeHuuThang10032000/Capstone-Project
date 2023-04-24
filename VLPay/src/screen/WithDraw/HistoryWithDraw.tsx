@@ -96,7 +96,7 @@ const HistoryWithDraw = (props: Props) => {
                         </Text>
                         <Text style={styles.textDate}>
                           {moment(item.created_at).format(
-                            'h:mm [-] DD/MM/YYYY',
+                            'HH:mm [-] DD/MM/YYYY',
                           )}
                         </Text>
                       </VStack>
