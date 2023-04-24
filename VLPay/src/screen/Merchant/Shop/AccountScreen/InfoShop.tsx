@@ -17,6 +17,7 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../../../stack/Navigation';
 import {axiosClient} from '../../../../components/apis/axiosClient';
 import SwitchButtonSmall from '../../../../components/SwitchButtonSmall';
+import {baseUrl} from '../../../../components/apis/baseUrl';
 
 type Props = {
   id: string;
@@ -32,8 +33,13 @@ const InfoShop = (props: Props) => {
   const isFocused = useIsFocused();
   const [switchValue, setSwitchValue] = useState(false);
   const [isEnabled, setIsEnabled] = useState(switchValue);
+  const [order, setOrder] = useState({});
+  const [statusState, setStatusState] = useState('');
 
-  const handleSwitchValueChange = (value: boolean) => {
+  const handleSwitchValueChange = async (value: boolean) => {
+    await axiosClient.post('merchant/store/update/status', {
+      status: value ? 'opening' : 'closing',
+    });
     setSwitchValue(value);
   };
   const toggleSwitch = () => {
@@ -49,12 +55,53 @@ const InfoShop = (props: Props) => {
     setIsLoading(false);
   }, []);
 
+  const getInfoStore = useCallback(async () => {
+    const date = new Date(); // Create a new date object with the current date and time
+    const isoString = date.toISOString(); // Convert the date to an ISO-formatted string
+    const formattedDate = isoString.slice(0, 10); // Extract the first 10 characters of the string (YYYY-MM-DD)
+    const result = await axiosClient.get(
+      'https://zennoshop.cf/api/user/merchant/store',
+    );
+    const _history = await axiosClient.get(
+      baseUrl +
+        'merchant/history-order?page=1&limit=10&store_id=' +
+        result?.data?.data?.id +
+        '&date=' +
+        formattedDate,
+    );
+    console.log(_history?.data?.data);
+
+    setOrder(_history?.data?.data);
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const result = await axiosClient.get('/merchant/store');
+      setStatusState(result?.data?.data?.status !== 'closing' ? true : false);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    getInfoStore();
+  }, [getInfoStore]);
+
   useEffect(() => {
     // Call only when screen open or when back on screen
     if (isFocused) {
+      console.log(12335432);
+      setStatusState('');
+      fetchData();
+      getInfoStore();
       getStore();
     }
   }, [getStore, isFocused]);
+
+  console.log(statusState);
+
   return (
     <View>
       <Center borderRadius={10} borderWidth={1} borderColor="#EFEFF4">
@@ -89,7 +136,7 @@ const InfoShop = (props: Props) => {
         </Pressable>
         <Center py={2}>
           <Text style={styles.text}>Tổng đơn hàng</Text>
-          <Text style={styles.textButton}>0</Text>
+          <Text style={styles.textButton}>{order?.total_taken_order ?? 0}</Text>
         </Center>
       </Center>
 
@@ -110,12 +157,14 @@ const InfoShop = (props: Props) => {
             <Text>Tắt để tạm dừng nhận đơn hàng đến</Text>
           </VStack>
           {/* <Switch size={'md'} /> */}
-          <SwitchButtonSmall
-            label1={'Mở'}
-            label2={'Tắt'}
-            value={switchValue}
-            onValueChange={handleSwitchValueChange}
-          />
+          {statusState !== '' && (
+            <SwitchButtonSmall
+              label1={'Mở'}
+              label2={'Tắt'}
+              value={statusState}
+              onValueChange={handleSwitchValueChange}
+            />
+          )}
         </HStack>
       </Center>
 
@@ -143,7 +192,7 @@ const InfoShop = (props: Props) => {
               </Text>
               <Text
                 style={[styles.textButton, {color: '#000000', fontSize: 16}]}>
-                3.654.000đ
+                {(order?.total_revenue ?? 0).toLocaleString()}đ
               </Text>
             </VStack>
           </HStack>
@@ -152,51 +201,9 @@ const InfoShop = (props: Props) => {
               Tổng doanh thu
             </Text>
             <Text style={[styles.textButton, {color: '#000000', fontSize: 11}]}>
-              3.654.000đ
+              {(order?.total_revenue ?? 0).toLocaleString()}đ
             </Text>
           </VStack>
-        </HStack>
-      </Center>
-
-      <Center
-        mt={5}
-        borderRadius={10}
-        borderWidth={1}
-        borderColor="#000000"
-        backgroundColor={'#FFFFFF'}>
-        <View
-          position={'absolute'}
-          top={-12}
-          left={3}
-          backgroundColor="#FFFFFF">
-          <Text style={styles.text}>Tiền của quán</Text>
-        </View>
-        <HStack
-          justifyContent={'space-between'}
-          alignItems="center"
-          width="100%"
-          py={5}
-          px={3}>
-          <VStack>
-            <Text style={styles.text}>Số tiền được rút</Text>
-            <Text style={[styles.textButton, {color: '#4285F4'}]}>
-              5.653.000đ
-            </Text>
-          </VStack>
-          <TouchableOpacity>
-            <View
-              width={100}
-              backgroundColor="#FEB7B1"
-              justifyContent={'center'}
-              p={2}
-              borderRadius={8}>
-              <Center>
-                <Text style={[styles.textButton, {color: '#FFFFFF'}]}>
-                  Rút tiền
-                </Text>
-              </Center>
-            </View>
-          </TouchableOpacity>
         </HStack>
       </Center>
 

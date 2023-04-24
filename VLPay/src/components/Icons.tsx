@@ -1282,6 +1282,24 @@ const RightArrow = (props: SvgProps): JSX.Element => {
   return <SvgXml xml={xml} {...props} />;
 };
 
+const Edit = (props: SvgProps): JSX.Element => {
+  const xml = `
+  <svg
+  width="43"
+  height="44"
+  viewBox="0 0 43 44"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M42.16 9.09333L34.3333 1.22667C33.8161 0.712087 33.1162 0.423218 32.3867 0.423218C31.6571 0.423218 30.9572 0.712087 30.44 1.22667L2.69333 28.9333L0.159999 39.8667C0.0726079 40.2663 0.0756037 40.6805 0.168768 41.0789C0.261932 41.4772 0.442911 41.8498 0.698484 42.1692C0.954057 42.4887 1.27777 42.747 1.64597 42.9254C2.01417 43.1037 2.41756 43.1975 2.82667 43.2C3.01729 43.2193 3.20937 43.2193 3.4 43.2L14.4533 40.6667L42.16 12.9867C42.6746 12.4695 42.9635 11.7696 42.9635 11.04C42.9635 10.3104 42.6746 9.61053 42.16 9.09333ZM13.12 38.2667L2.76 40.44L5.12 30.28L25.88 9.6L33.88 17.6L13.12 38.2667ZM35.6667 15.6667L27.6667 7.66667L32.3067 3.05333L40.1733 11.0533L35.6667 15.6667Z"
+    fill="black"
+  />
+</svg>
+    `;
+
+  return <SvgXml xml={xml} {...props} />;
+};
+
 const DollarsIcon = (props: SvgProps): JSX.Element => {
   const xml = `
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -1403,6 +1421,7 @@ const Icons = {
   StickChoose,
   PromoStar,
   PromoList,
+  Edit,
 };
 
 export default Icons;

@@ -30,6 +30,8 @@ import {
 import HeaderBack from '../../components/HeaderBack';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {useIsFocused} from '@react-navigation/native';
+import Icons from '../../components/Icons';
+import {UText} from '../../components/UText';
 
 const App = () => {
   const [inputText, setInputText] = useState('');
@@ -37,6 +39,7 @@ const App = () => {
   const [moneyInput, setmoneyInput] = useState('');
   const [error, setError] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
+  const [money, setMoney] = useState(0);
   const handleChangeInput = useCallback((str: string) => {
     let money = 0;
     money = parseInt(formatCurrency(escapeCurrency(str)).replace(/,/g, ''));
@@ -57,7 +60,10 @@ const App = () => {
   const toggleModal = () => {
     setModalVisible(true);
   };
-  const setValueQR = () => setQrvalue(`${profile?.data?.phone},${moneyInput}`);
+  const setValueQR = () => {
+    setQrvalue(`${profile?.data?.phone},${moneyInput}`);
+    setMoney(parseInt(moneyInput));
+  };
   const saveQR = () => {
     setValueQR();
     closeModal();
@@ -81,6 +87,7 @@ const App = () => {
   }, [fetchData, isFocused]);
 
   console.log(qrvalue);
+  console.log(money);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -89,6 +96,15 @@ const App = () => {
         {/* <Text style={styles.titleStyle}>
           Generation of QR Code in React Native
         </Text> */}
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}>
+          <UText>{profile?.data?.credit_request?.name}</UText>
+          <UText>{profile?.data?.credit_request?.phone}</UText>
+        </View>
         <QRCode
           //QR code value
           value={qrvalue ? qrvalue : 'NA'}
@@ -114,9 +130,24 @@ const App = () => {
           Vui lòng quét mã QR này để thực hiện giao dịch.
         </Text>
 
-        <TouchableOpacity style={styles.buttonStyle} onPress={toggleModal}>
-          <Text style={styles.buttonTextStyle}>+ Thêm số tiền nhận</Text>
-        </TouchableOpacity>
+        {money ? (
+          <TouchableOpacity
+            onPress={toggleModal}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={styles.textStyle}>
+              {formatCurrency(escapeCurrency(moneyInput))} VND
+              <Icons.Edit height={15} style={{marginTop: 10}} />
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.buttonStyle} onPress={toggleModal}>
+            <Text style={styles.buttonTextStyle}>+ Thêm số tiền nhận</Text>
+          </TouchableOpacity>
+        )}
 
         <Modal
           isVisible={modalVisible}
@@ -153,21 +184,6 @@ const App = () => {
                 {error}
               </Text>
             )}
-            {/* <TouchableOpacity
-              style={[
-                styles.buttonStyle,
-                disabledButton
-                  ? {
-                      backgroundColor: '#979797',
-                    }
-                  : {
-                      backgroundColor: '#B5EAD8',
-                    },
-              ]}
-              disabled={disabledButton || moneyInput.length === 0}
-              onPress={saveQR}>
-              <Text style={styles.buttonTextStyle}>Generate QR Code</Text>
-            </TouchableOpacity> */}
             <Button
               style={[
                 disabledButton

@@ -2,7 +2,7 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import BackIcon from '../assets/svg/left-arrow.svg';
 import {HStack, Text, View} from 'native-base';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../stack/Navigation';
 import SwitchButton from './SwitchButton';
 import Trash from '../assets/svg/trash.svg';
@@ -48,10 +48,20 @@ const HeaderBack: React.FC<Props> = ({
     } catch (error) {}
   };
   console.log('switchValue', switchValue);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      console.log('12335432 <><>');
+      setSwitchValue('');
+      fetchData();
+    }
+  }, [isFocused]);
 
   const handleSwitchValueChange = async (value: boolean) => {
     await axiosClient.post('merchant/store/update/status', {

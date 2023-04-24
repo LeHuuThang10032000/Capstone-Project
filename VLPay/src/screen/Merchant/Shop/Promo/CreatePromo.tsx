@@ -837,12 +837,12 @@ const CreatePromo = () => {
                 }}>
                 {data?.id && data?.type === 'upcoming' && (
                   <UText style={{fontWeight: 'bold'}}>
-                    chỉnh sửa mã giảm giá
+                    chỉnh sửa phiếu giảm giá
                   </UText>
                 )}
                 {!data?.id && (
                   <UText style={{fontWeight: 'bold'}}>
-                    Xác nhận tạo Mã giảm giá
+                    Xác nhận tạo phiếu giảm giá
                   </UText>
                 )}
               </TouchableOpacity>
@@ -1353,12 +1353,12 @@ const CreatePromo = () => {
                 }}>
                 {data?.id && data?.type === 'upcoming' && (
                   <UText style={{fontWeight: 'bold'}}>
-                    chỉnh sửa mã giảm giá
+                    chỉnh sửa phiếu giảm giá
                   </UText>
                 )}
                 {!data?.id && (
                   <UText style={{fontWeight: 'bold'}}>
-                    Xác nhận tạo Mã giảm giá
+                    Xác nhận tạo phiếu giảm giá
                   </UText>
                 )}
               </TouchableOpacity>

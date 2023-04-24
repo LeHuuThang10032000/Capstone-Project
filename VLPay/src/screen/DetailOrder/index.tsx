@@ -178,7 +178,7 @@ const DetailOrder = ({route}: any) => {
       }
     } else {
       setRadioBox(null);
-      setPromoName('Mã giảm giá');
+      setPromoName('Phiếu giảm giá');
       setCart({...cart, total_price: finalMoney});
       setDiscount(0);
     }
@@ -419,7 +419,7 @@ const DetailOrder = ({route}: any) => {
             paddingTop: 20,
           }}>
           <Input
-            placeholder="Nhập mã giảm giá ở đây"
+            placeholder="Nhập phiếu giảm giá ở đây"
             width={'75%'}
             backgroundColor={'#EDF1F7'}
             fontWeight={'700'}

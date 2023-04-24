@@ -49,10 +49,12 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    const intervalId = setInterval(fetchData, 2000);
+    if (token) {
+      const intervalId = setInterval(fetchData, 2000);
 
-    return () => clearInterval(intervalId);
-  }, [fetchData]);
+      return () => clearInterval(intervalId);
+    }
+  }, [fetchData, token]);
   const dispatch = useDispatch();
   const init = async () => {
     dispatch(await Init());

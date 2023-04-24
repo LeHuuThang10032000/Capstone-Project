@@ -1,6 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, {AxiosError} from 'axios';
 import {baseUrl} from './baseUrl';
+import {Logout} from '../../redux/actions/authAction';
+import RNRestart from 'react-native-restart';
+import {useDispatch} from 'react-redux';
+import {clearToken, getToken} from '../../utils/storeUtils';
+import {Alert} from 'react-native';
 
 export const AUTHORIZATION_KEY = 'AUTHORIZATION_KEY';
 
@@ -50,6 +55,24 @@ axiosClient.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     const axiosErr = error as AxiosError;
+    const token = await getToken();
+    console.log(token);
+
+    console.log(
+      'axiosErr?.response?.data',
+      axiosErr?.response?.data?.error == 'Unauthenticated.' && token != null,
+    );
+    console.log('axiosErr?.response?.data', axiosErr?.response?.data);
+    console.log('token', token);
+
+    if (
+      axiosErr?.response?.data?.error == 'Unauthenticated.' &&
+      token != null
+    ) {
+      RNRestart.Restart();
+      clearToken();
+      Alert.alert('Phiên đăng nhập hết hạn.');
+    }
     return Promise.reject(axiosErr?.response?.data);
   },
 );

@@ -222,7 +222,7 @@ const PromoList = () => {
           }}>
           <UText
             style={{alignSelf: 'center', color: 'black', fontWeight: 'bold'}}>
-            Tạo mã giảm giá
+            Tạo phiếu giảm giá
           </UText>
         </TouchableOpacity>
       </View>

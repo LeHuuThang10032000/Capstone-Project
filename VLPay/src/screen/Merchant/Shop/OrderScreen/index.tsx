@@ -600,6 +600,15 @@ const Index = () => {
     fetchData();
   }, []);
 
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      setStatusState('');
+      fetchData();
+    }
+  }, [isFocused]);
+
   return (
     <SafeAreaView style={styles.container}>
       <HeaderBack
