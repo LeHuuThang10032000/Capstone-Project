@@ -14,6 +14,7 @@ import {
   Keyboard,
   ScrollView,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
@@ -31,7 +32,7 @@ const Payment = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {data} = useRoute<RouteProp<MainStackParamList, 'Payment'>>()?.params;
   const handleBack = () => {
-    navigation.replace('Home');
+    navigation.navigate('Home');
   };
   const [parkingPrice, setParkingPrice] = useState(true);
   const [confirmPayment, setConfirmPayment] = useState(false);
@@ -60,6 +61,20 @@ const Payment = () => {
       keyboardDidHideListener.remove();
     };
   }, [input]);
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Home');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const _fetchData = useCallback(async () => {
     const _result = await axiosClient.get(
@@ -234,7 +249,7 @@ const Payment = () => {
                   marginBottom: 20,
                   fontSize: 20,
                 }}>
-                tiền giao dich
+                tiền giao dịch
               </UText>
               <UText
                 style={{fontWeight: '700', marginBottom: 20, fontSize: 24}}>
@@ -313,7 +328,7 @@ const Payment = () => {
                 </HStack>
                 <HStack style={styles.contentContainer}>
                   <UText>Số tiền</UText>
-                  <UText style={styles.content}>3.000đ</UText>
+                  <UText style={styles.content}>{data?.money}đ</UText>
                 </HStack>
                 <HStack style={styles.contentContainer}>
                   <UText>Ngày chuyển tiền </UText>
@@ -389,9 +404,17 @@ const Payment = () => {
                   if (value.length === 6) {
                     setLoading(true);
                     try {
+                      console.log(
+                        'data',
+                        parseInt(data?.money.replace('.', '')),
+                      );
+
                       const formData = new FormData();
                       formData.append('f_name', profile[0]?.f_name);
-                      formData.append('cash', data?.money);
+                      formData.append(
+                        'cash',
+                        parseInt(data?.money.replaceAll('.', '')),
+                      );
                       formData.append('phone', profile[0]?.phone);
                       formData.append('message', message);
                       formData.append('payment_type', 'T');

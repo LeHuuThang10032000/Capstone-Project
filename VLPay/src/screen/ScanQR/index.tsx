@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import * as React from 'react';
 
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {useCameraDevices} from 'react-native-vision-camera';
 import {Camera} from 'react-native-vision-camera';
 import {useScanBarcodes, BarcodeFormat} from 'vision-camera-code-scanner';
@@ -9,6 +9,7 @@ import Colors from '../../components/helpers/Colors';
 import Icons from '../../components/Icons';
 import YesNoModal from '../../components/YesNoModal';
 import {MainStackNavigation} from '../../stack/Navigation';
+import {UText} from '../../components/UText';
 type Props = {
   wallet: any;
 };
@@ -48,6 +49,23 @@ export default function Index(props: Props) {
           frameProcessor={frameProcessor}
           frameProcessorFps={5}
         />
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 10,
+          }}
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <UText
+            style={{
+              fontSize: 40,
+              color: 'white',
+            }}>
+            {'<'}
+          </UText>
+        </TouchableOpacity>
         <YesNoModal
           icon={<Icons.WarningIcon />}
           visible={visibleWarning}

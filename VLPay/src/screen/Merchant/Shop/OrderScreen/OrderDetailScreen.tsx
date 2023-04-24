@@ -326,7 +326,7 @@ const OrderDetailScreen = () => {
               justifyContent={'space-between'}
               alignItems={'center'}
               style={{marginVertical: 10}}>
-              <UText style={{fontWeight: '700'}}>Mã giảm giá</UText>
+              <UText style={{fontWeight: '700'}}>Phiếu giảm giá</UText>
               <UText>
                 {(orderDetail?.discount_amount ?? 0).toLocaleString()}đ
               </UText>

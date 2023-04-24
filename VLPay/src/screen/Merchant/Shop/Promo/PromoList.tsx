@@ -49,7 +49,10 @@ const PromoList = () => {
 
   return (
     <View style={{flex: 1}}>
-      <HeaderComp title="Mã giảm giá" onPressBack={() => navigation.goBack()} />
+      <HeaderComp
+        title="Phiếu giảm giá"
+        onPressBack={() => navigation.goBack()}
+      />
       <HStack
         justifyContent={'space-between'}
         style={{backgroundColor: '#FEB7B1'}}>
@@ -221,7 +224,12 @@ const PromoList = () => {
             borderRadius: 10,
           }}>
           <UText
-            style={{alignSelf: 'center', color: 'black', fontWeight: 'bold'}}>
+            style={{
+              alignSelf: 'center',
+              color: 'black',
+              fontWeight: 'bold',
+              textTransform: 'capitalize',
+            }}>
             Tạo phiếu giảm giá
           </UText>
         </TouchableOpacity>

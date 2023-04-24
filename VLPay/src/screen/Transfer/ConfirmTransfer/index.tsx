@@ -198,8 +198,9 @@ const Index = ({route}: any) => {
                       );
                       data.code = _result?.data?.code;
 
+                      console.log(_result?.data?.data?.code);
+                      data.code = _result?.data?.data?.code;
                       data.from_user = _result?.data?.from_user;
-                      console.log('_result?.data', formData);
 
                       navigation.replace('PaymentDetails', {
                         data: data,

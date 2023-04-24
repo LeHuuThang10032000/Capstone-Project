@@ -60,7 +60,7 @@ const DetailOrder = ({route}: any) => {
   const [visible, setVisible] = useState(false);
   const [promoCode, setPromoCode] = useState([]);
   const [radioBox, setRadioBox] = useState(null);
-  const [promo_name, setPromoName] = useState('Mã giảm giá');
+  const [promo_name, setPromoName] = useState('Phiếu giảm giá');
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [finalMoney, setFinalMoney] = useState(0);
   const [generalError, setGeneralError] = useState('');

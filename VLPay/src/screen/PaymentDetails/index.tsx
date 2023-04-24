@@ -25,6 +25,8 @@ const PaymentDetails = () => {
     });
   }, []);
 
+  console.log(data);
+
   const [userWallet, setUserWallet] = useState(0);
   const [credit, setCredit] = useState(0);
   const phoneNumber = '028 7105 9999';
@@ -38,6 +40,8 @@ const PaymentDetails = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  console.log(data);
+
   return (
     <View style={{flex: 1, paddingBottom: 10, backgroundColor: '#ffffff'}}>
       <HeaderBack title="Xác nhận giao dịch" isReset={true} />
@@ -62,12 +66,7 @@ const PaymentDetails = () => {
               </UText>
               <UText style={{fontSize: 15}}>
                 Mã giao dịch:
-                <UText style={{color: '#0088CC'}}>
-                  {' '}
-                  {parseInt(
-                    Math.floor(Math.random() * 90000000) + 10000000,
-                  ).toString()}
-                </UText>
+                <UText style={{color: '#0088CC'}}> {data?.code}</UText>
               </UText>
             </VStack>
             <HStack

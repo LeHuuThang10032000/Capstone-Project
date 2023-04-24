@@ -68,7 +68,7 @@ const PromoTypes = () => {
             });
           }}
           title={'Chương trình giảm giá'}
-          desc={'Tạo và quản lý các mã giảm giá của quán'}
+          desc={'Tạo và quản lý các phiếu giảm giá của quán'}
         />
         <Element
           onPress={() => {
@@ -78,7 +78,7 @@ const PromoTypes = () => {
           }}
           icon={<Icons.PromoList />}
           title={'Xem danh sách'}
-          desc={'Quản lí các mã giảm giá đã tạo'}
+          desc={'Quản lí các phiếu giảm giá đã tạo'}
         />
       </View>
     </View>

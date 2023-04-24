@@ -183,7 +183,7 @@ const CreatePromo = () => {
         return (
           <>
             <UText style={{marginLeft: 10, marginBottom: 10, marginTop: 30}}>
-              Chọn loại mã
+              Chọn loại phiếu
             </UText>
             <View style={{flexDirection: 'column', alignItems: 'center'}}>
               <Element
@@ -223,7 +223,7 @@ const CreatePromo = () => {
                   width={'100%'}
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
-                  <UText>Mã giảm giá</UText>
+                  <UText>Phiếu giảm giá</UText>
                   <View
                     style={{
                       borderWidth: 1,
@@ -572,9 +572,9 @@ const CreatePromo = () => {
                   width={'100%'}
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
-                  <UText>Giới hạn mã giảm giá (không bắt buộc)</UText>
+                  <UText>Giới hạn phiếu giảm giá (không bắt buộc)</UText>
                   <SelectList
-                    placeholder="Chọn mã giảm giá"
+                    placeholder="Chọn phiếu giảm giá"
                     setSelected={val => {
                       if (parseInt(val) !== 1) {
                         setlimited(true);
@@ -648,7 +648,7 @@ const CreatePromo = () => {
                         color: '#818181',
                         fontWeight: 'bold',
                       }}>
-                      Giá trị của mã giảm giá
+                      Giá trị của phiếu giảm giá
                     </UText>
                     <TouchableOpacity
                       onPress={() => {
@@ -660,7 +660,7 @@ const CreatePromo = () => {
                   <VStack
                     justifyContent={'space-between'}
                     style={{padding: 16}}>
-                    <UText>Giá trị của mã giảm giá</UText>
+                    <UText>Giá trị của phiếu giảm giá</UText>
                     <UText>{discount}% trên tổng hoá đơn</UText>
                   </VStack>
                   <HStack
@@ -741,9 +741,11 @@ const CreatePromo = () => {
                     const formData = new FormData();
                     formData.append('promo_id', data?.id);
                     formData.append('store_id', id);
-
+                    const deleteOrCancel =
+                      data?.type === 'running' ? 'cancel' : 'delete';
+                    console.log(deleteOrCancel, formData);
                     await axiosClient.post(
-                      baseUrl + 'merchant/promocode/cancel',
+                      baseUrl + 'merchant/promocode/' + deleteOrCancel,
                       formData,
                       {
                         headers: {'content-type': 'multipart/form-data'},
@@ -836,12 +838,14 @@ const CreatePromo = () => {
                   navigation.goBack();
                 }}>
                 {data?.id && data?.type === 'upcoming' && (
-                  <UText style={{fontWeight: 'bold'}}>
+                  <UText
+                    style={{fontWeight: 'bold', textTransform: 'capitalize'}}>
                     chỉnh sửa phiếu giảm giá
                   </UText>
                 )}
                 {!data?.id && (
-                  <UText style={{fontWeight: 'bold'}}>
+                  <UText
+                    style={{fontWeight: 'bold', textTransform: 'capitalize'}}>
                     Xác nhận tạo phiếu giảm giá
                   </UText>
                 )}
@@ -1091,9 +1095,9 @@ const CreatePromo = () => {
                   width={'100%'}
                   justifyContent={'space-between'}
                   style={{padding: 16}}>
-                  <UText>Giới hạn mã giảm giá (không bắt buộc)</UText>
+                  <UText>Giới hạn phiếu giảm giá (không bắt buộc)</UText>
                   <SelectList
-                    placeholder="Chọn mã giảm giá"
+                    placeholder="Chọn phiếu giảm giá"
                     setSelected={val => {
                       if (parseInt(val) !== 1) {
                         setlimited(true);
@@ -1166,7 +1170,7 @@ const CreatePromo = () => {
                       color: '#818181',
                       fontWeight: 'bold',
                     }}>
-                    Giá trị của mã giảm giá
+                    Giá trị của phiếu giảm giá
                   </UText>
                   <TouchableOpacity
                     onPress={() => {
@@ -1176,7 +1180,7 @@ const CreatePromo = () => {
                   </TouchableOpacity>
                 </HStack>
                 <VStack justifyContent={'space-between'} style={{padding: 16}}>
-                  <UText>Giá trị của mã giảm giá</UText>
+                  <UText>Giá trị của phiếu giảm giá</UText>
                   <UText>{discount.toLocaleString()}đ trên tổng hoá đơn</UText>
                 </VStack>
                 <HStack
@@ -1259,8 +1263,12 @@ const CreatePromo = () => {
                     const formData = new FormData();
                     formData.append('promo_id', data?.id);
                     formData.append('store_id', id);
+                    const deleteOrCancel =
+                      data?.type === 'running' ? 'cancel' : 'delete';
+                    console.log(deleteOrCancel, formData);
+
                     await axiosClient.post(
-                      baseUrl + 'merchant/promocode/cancel',
+                      baseUrl + 'merchant/promocode/' + deleteOrCancel,
                       formData,
                       {
                         headers: {'content-type': 'multipart/form-data'},
@@ -1352,12 +1360,14 @@ const CreatePromo = () => {
                   }
                 }}>
                 {data?.id && data?.type === 'upcoming' && (
-                  <UText style={{fontWeight: 'bold'}}>
+                  <UText
+                    style={{fontWeight: 'bold', textTransform: 'capitalize'}}>
                     chỉnh sửa phiếu giảm giá
                   </UText>
                 )}
                 {!data?.id && (
-                  <UText style={{fontWeight: 'bold'}}>
+                  <UText
+                    style={{fontWeight: 'bold', textTransform: 'capitalize'}}>
                     Xác nhận tạo phiếu giảm giá
                   </UText>
                 )}

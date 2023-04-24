@@ -89,6 +89,8 @@ const InfoShop = (props: Props) => {
     getInfoStore();
   }, [getInfoStore]);
 
+  console.log('order', order);
+
   useEffect(() => {
     // Call only when screen open or when back on screen
     if (isFocused) {
@@ -136,7 +138,7 @@ const InfoShop = (props: Props) => {
         </Pressable>
         <Center py={2}>
           <Text style={styles.text}>Tổng đơn hàng</Text>
-          <Text style={styles.textButton}>{order?.total_taken_order ?? 0}</Text>
+          <Text style={styles.textButton}>{order?.orders_total ?? 0}</Text>
         </Center>
       </Center>
 
@@ -201,7 +203,7 @@ const InfoShop = (props: Props) => {
               Tổng doanh thu
             </Text>
             <Text style={[styles.textButton, {color: '#000000', fontSize: 11}]}>
-              {(order?.total_revenue ?? 0).toLocaleString()}đ
+              {(order?.orders_revenue ?? 0).toLocaleString()}đ
             </Text>
           </VStack>
         </HStack>
