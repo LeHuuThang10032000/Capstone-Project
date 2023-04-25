@@ -404,8 +404,7 @@ class OrganiserController extends Controller
             DB::commit();
             return back()->with('success', 'Chấp nhận yêu cầu rút tiền thành công');
         } catch(Exception $e) {
-            DB::commit();
-    
+            DB::rollback();
             return back()->with('error', $e->getMessage());
         }        
     }
