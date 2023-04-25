@@ -52,6 +52,9 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
+            $user = Auth::user();
+            $user->device_token = null;
+            $user->save();
             Auth::user()->tokens()->delete();
             return ApiResponse::successResponse(null);
         } catch (Exception $e) {
