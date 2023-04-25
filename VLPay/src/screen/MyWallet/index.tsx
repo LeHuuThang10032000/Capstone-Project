@@ -255,6 +255,17 @@ const Index = () => {
           />
         </View>
       </Modal>
+
+      {!isLoading && (
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            opacity: 0,
+          }}
+        />
+      )}
     </ScrollView>
   );
 };

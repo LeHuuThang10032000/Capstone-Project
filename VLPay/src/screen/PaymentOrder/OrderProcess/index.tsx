@@ -167,9 +167,6 @@ const OrderProcess = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <Text fontWeight={'bold'} fontSize={16} color="#000000">
-                Kios số 10: Trà sữa May
-              </Text>
               <>
                 {order?.product_detail.map(item => (
                   <HStack
@@ -335,9 +332,6 @@ const OrderProcess = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <Text fontWeight={'bold'} fontSize={16} color="#000000">
-                Kios số 10: Trà sữa May
-              </Text>
               <>
                 {order?.product_detail.map(item => (
                   <HStack
@@ -481,9 +475,6 @@ const OrderProcess = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <Text fontWeight={'bold'} fontSize={16} color="#000000">
-                Kios số 10: Trà sữa May
-              </Text>
               <>
                 {order?.product_detail.map(item => (
                   <HStack

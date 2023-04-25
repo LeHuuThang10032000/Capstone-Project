@@ -80,6 +80,8 @@ const MyDetailOrder = ({route}: any) => {
     setLoading(true);
     const result = await axiosClient.get(`/order/detail?order_id=${id}`);
     setOrder(result.data.data);
+    console.log(result.data.data);
+
     setLoading(false);
   }, []);
 
@@ -108,13 +110,15 @@ const MyDetailOrder = ({route}: any) => {
     return () => clearInterval(intervalId);
   }, [getOrder]);
 
+  console.log(order?.status);
+
   const renderComponent = () => {
     switch (order?.status) {
-      case 'pending':
+      case 'canceled':
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+              <Heading paddingBottom={10}>Đơn đã hủy</Heading>
               <OrderIcon />
               <View
                 justifyContent="flex-start"
@@ -145,9 +149,6 @@ const MyDetailOrder = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <Text fontWeight={'bold'} fontSize={16} color="#000000">
-                Kios số 10: Trà sữa May
-              </Text>
               <>
                 {order?.product_detail.map(item => (
                   <HStack
@@ -186,7 +187,169 @@ const MyDetailOrder = ({route}: any) => {
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
                 <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                  {`Tổng (${order?.product_detail?.length} món)`}
+                  {`Tổng (${order?.product_quantity} món)`}
+                </Text>
+                <Text
+                  fontSize={16}
+                  fontWeight={'bold'}
+                  color="#000000"
+                  paddingLeft={1}>
+                  {formatCurrency((order?.order_total ?? 0).toString())}đ
+                </Text>
+              </HStack>
+              <Text
+                fontSize={16}
+                paddingTop={5}
+                paddingBottom={3}
+                fontWeight={'bold'}
+                color="#000000">
+                Chi tiết đơn hàng
+              </Text>
+              <HStack
+                paddingY={1}
+                alignItems={'center'}
+                justifyContent="space-between">
+                <Text color="#818181">Mã đơn hàng</Text>
+                <Text color="#818181" paddingLeft={1}>
+                  #{order?.order_code}
+                </Text>
+              </HStack>
+              <HStack
+                paddingY={1}
+                alignItems={'center'}
+                justifyContent="space-between">
+                <Text color="#818181">Thời gian đặt hàng</Text>
+                <Text color="#818181" paddingLeft={1}>
+                  {moment(order?.created_at).format('dd, HH:mm')}
+                </Text>
+              </HStack>
+              <HStack
+                paddingY={1}
+                alignItems={'center'}
+                justifyContent="space-between">
+                <Text color="#818181">Thanh toán</Text>
+                <Text color="#818181" paddingLeft={1}>
+                  Ví VLpay
+                </Text>
+              </HStack>
+              <TouchableOpacity onPress={toggleModal}>
+                <View
+                  justifyContent="center"
+                  alignItems={'center'}
+                  marginY={5}
+                  style={{
+                    width: '100%',
+                    padding: 10,
+                    backgroundColor: '#B5EAD8',
+                    borderRadius: 12,
+                  }}>
+                  <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+                    Hủy đơn
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </VStack>
+
+            <Modal
+              isVisible={modalVisible}
+              animationIn="slideInUp"
+              animationOut="fadeOutDown"
+              style={{
+                margin: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  height: 230,
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 15,
+                }}>
+                <HeaderModal onPress={closeModal} />
+                <BodyModal
+                  cancel="cancel"
+                  confirm="confirm"
+                  onPressCancel={CancelOrder}
+                  onPressConfirm={closeModal}
+                />
+              </View>
+            </Modal>
+          </View>
+        );
+      case 'pending':
+        return (
+          <View>
+            <Center marginY={5}>
+              <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+              <OrderIcon />
+              <View
+                justifyContent="flex-start"
+                w="100%"
+                paddingX={12}
+                marginLeft={3}>
+                <Text>{moment(order.created_at).format('h:mm')}</Text>
+              </View>
+            </Center>
+            <Divider />
+            <Text padding={5}>
+              Mã đơn hàng:{' '}
+              <Text fontWeight={'bold'} color="#000000">
+                #{order?.order_code}
+              </Text>
+            </Text>
+            <Divider />
+            <VStack padding={5}>
+              <Text fontWeight={'bold'} color="#000000">
+                {order?.store.location}: {order?.store.name}
+              </Text>
+              <Text fontSize={12} color="#818181">
+                {formatCurrency((order?.order_total ?? 0).toString())}đ
+              </Text>
+              <Text fontSize={12} color="#818181">
+                {order?.user.f_name} - {order?.user.phone}
+              </Text>
+            </VStack>
+            <Divider />
+            <VStack padding={5}>
+              <>
+                {order?.product_detail.map(item => (
+                  <HStack
+                    marginY={1}
+                    alignItems={'center'}
+                    justifyContent="space-between">
+                    <VStack>
+                      <HStack key={item.id} alignItems={'center'}>
+                        <Text paddingLeft={1} fontWeight={'bold'}>
+                          {item.quantity} x{' '}
+                        </Text>
+                        <Text fontSize={16} fontWeight={'bold'} color="#000000">
+                          {item.name}
+                        </Text>
+                      </HStack>
+                      {item.add_ons.map(item => (
+                        <Text key={item.id} color={'#747980'}>
+                          {item.name}
+                        </Text>
+                      ))}
+                    </VStack>
+                    <Text fontWeight={'bold'} fontSize={16}>
+                      {formatCurrency((item?.price ?? 0).toString())}đ
+                    </Text>
+                  </HStack>
+                ))}
+              </>
+              <HStack
+                paddingY={3}
+                alignItems={'center'}
+                justifyContent="space-between">
+                <Text color="#818181">Giảm giá</Text>
+                <Text color="#818181" paddingLeft={1}>
+                  {order?.discount_amount}
+                </Text>
+              </HStack>
+              <HStack alignItems={'center'} justifyContent="space-between">
+                <Text fontSize={16} fontWeight={'bold'} color="#000000">
+                  {`Tổng (${order?.product_quantity} món)`}
                 </Text>
                 <Text
                   fontSize={16}
@@ -307,9 +470,6 @@ const MyDetailOrder = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <Text fontWeight={'bold'} fontSize={16} color="#000000">
-                Kios số 10: Trà sữa May
-              </Text>
               <>
                 {order?.product_detail.map(item => (
                   <HStack
@@ -346,7 +506,7 @@ const MyDetailOrder = ({route}: any) => {
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
                 <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                  {`Tổng (${totalItem} món)`}
+                  {`Tổng (${order?.product_quantity} món)`}
                 </Text>
                 <Text
                   fontSize={16}
@@ -446,9 +606,6 @@ const MyDetailOrder = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <Text fontWeight={'bold'} fontSize={16} color="#000000">
-                Kios số 10: Trà sữa May
-              </Text>
               <>
                 {order?.product_detail.map(item => (
                   <HStack
@@ -485,7 +642,7 @@ const MyDetailOrder = ({route}: any) => {
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
                 <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                  {`Tổng (${totalItem} món)`}
+                  {`Tổng (${order?.product_quantity} món)`}
                 </Text>
                 <Text
                   fontSize={16}
@@ -585,9 +742,6 @@ const MyDetailOrder = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <Text fontWeight={'bold'} fontSize={16} color="#000000">
-                Kios số 10: Trà sữa May
-              </Text>
               <>
                 {order?.product_detail.map(item => (
                   <HStack
@@ -624,7 +778,7 @@ const MyDetailOrder = ({route}: any) => {
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
                 <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                  {`Tổng (${totalItem} món)`}
+                  {`Tổng (${order?.product_quantity} món)`}
                 </Text>
                 <Text
                   fontSize={16}
