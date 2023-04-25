@@ -103,8 +103,8 @@ class UserController extends Controller
         $user = Auth::user()->id;
         $request = Store::where('user_id', $user)->select('id', 'status')->first();
         return ApiResponse::successResponse([
-            'status' => $request->status,
-            'store_id' => $request->id
+            'status' => $request->status ?? null,
+            'store_id' => $request->id ?? null,
         ]);
     }
 
