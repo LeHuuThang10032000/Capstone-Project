@@ -374,7 +374,7 @@ class OrganiserController extends Controller
     
             if($wallet) {
                 $transaction = Transaction::create([
-                    'code' => $req->transaction_id,
+                    'code' => Crypt::encryptString($req->transaction_id),
                     'amount' => Crypt::encryptString($req->amount),
                     'from_id' => Auth::user()->id,
                     'to_id' => $wallet->user->id,
