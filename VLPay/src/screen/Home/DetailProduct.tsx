@@ -46,7 +46,7 @@ const DetailProduct = ({route, productId}: any) => {
   const [totalItem, setTotalItem] = useState(0);
   const [isLoading, setLoading] = useState(false);
 
-  console.log(id);
+  console.log(product);
   console.log('check item', checkedItems.length);
 
   //Get detail product

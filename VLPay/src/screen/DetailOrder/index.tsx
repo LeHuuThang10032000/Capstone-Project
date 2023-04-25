@@ -396,7 +396,7 @@ const DetailOrder = ({route}: any) => {
                     borderRadius: 10,
                   }}>
                   <Text color={'#000000'} fontWeight="bold" fontSize={16}>
-                    Thanh Toán
+                    Thanh toán
                   </Text>
                 </View>
               </TouchableOpacity>

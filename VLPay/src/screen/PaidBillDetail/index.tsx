@@ -127,7 +127,7 @@ const PaidBillDetail = ({route}: any) => {
             backgroundColor="#B5EAD8"
             padding={3}>
             <Speaker />
-            <Text w={300} paddingLeft={3}>
+            <Text fontSize={12} w={300} paddingLeft={3}>
               VL Pay sẽ tự động gửi lời nhắc đến những ai chưa trả sau 1 ngày kể
               từ lúc yêu cầu được gửi. Trong trường hợp họ vẫn quên, VLPay sẽ
               báo bạn nha.
