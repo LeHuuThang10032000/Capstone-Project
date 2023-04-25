@@ -867,9 +867,9 @@ class UserController extends Controller
             $orders = Order::where('user_id', Auth::user()->id)->with('store:id,name');
 
             if ($request->status == 'taken') {
-                $orders = $orders->where('status', 'taken')->orWhere('status', 'canceled');
+                $orders = $orders->where('status', 'taken');
             } else {
-                $orders = $orders->where('status', '!=', 'taken');
+                $orders = $orders->where('status', '!=', 'taken')->where('status', '!=', 'canceled');
             }
 
             if ($request->page) {
