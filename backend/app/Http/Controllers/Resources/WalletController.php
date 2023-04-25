@@ -63,8 +63,6 @@ class WalletController extends Controller
         $userCloseBalance = $userWallet->balance;
         $userWallet->save();
 
-        $hour = Carbon::now()->hour;
-
         if($userWallet) {
             $transaction = Transaction::create([
                 'code' => Helper::generateNumber(),
