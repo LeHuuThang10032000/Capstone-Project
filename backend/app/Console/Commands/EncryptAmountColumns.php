@@ -39,13 +39,12 @@ class EncryptAmountColumns extends Command
      */
     public function handle()
     {
-        $transactions = DB::table('transactions')->whereIn('id', [452, 453, 454, 457])->get();
+        $transactions = DB::table('transactions')->whereIn('id', [522])->get();
         foreach($transactions as $transaction) {
             DB::table('transactions')
                 ->where('id', $transaction->id)
                 ->update([
-                    'message' => Crypt::encryptString($transaction->message),
-                    'amount' => Crypt::encryptString($transaction->amount),
+                    'code' => Crypt::encryptString($transaction->code),
                 ]);
         }
 
