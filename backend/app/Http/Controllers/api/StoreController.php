@@ -288,6 +288,7 @@ class StoreController extends Controller
             'store_id' => 'required|integer',
             'name' => 'required|max:255',
             'product_id' => 'required|integer',
+            'status' => '',
         ], [
             'name.required' => 'Vui lòng nhập tên sản phẩm',
             'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự',
@@ -315,7 +316,7 @@ class StoreController extends Controller
 
             $product->name = $request->name;
             $product->price = $request->price;
-            $product->status = 'comingsoon';
+            $product->status = $request->status ?? 'comingsoon';
             $product->add_ons = json_encode($newAddOns);
             $product->category_id = $request->category_id;
 
