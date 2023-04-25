@@ -810,8 +810,6 @@ class StoreController extends Controller
         $validate = Validator::make($request->all(), [
             'promo_id' => 'required|exists:'.app(Promocode::class)->getTable().',id',
             'store_id' => 'required|numeric',
-        ],[
-            'discount.min' => 'Số tiền giảm giá không được nhỏ hơn 0'
         ]);
 
         if ($validate->fails()) {
@@ -823,6 +821,20 @@ class StoreController extends Controller
             $promocode->end_date = now();
             $promocode->end_time = now();
             $promocode->save();
+            return APIResponse::SuccessResponse(null);
+        } catch (\Exception $e) {
+            return APIResponse::FailureResponse($e->getMessage());
+		}
+    }
+
+    public function deletePromocode($id)
+    {
+        try {
+            $promocode = Promocode::find($id);
+            if(($promocode->start_date == now() && $promocode->start_time < now()) || $promocode->start_date < now()->format('Y-m-d')) {
+                return APIResponse::FailureResponse('Phiếu giảm giá này đang trong thời gian áp dụng');
+            }
+            $promocode->delete();
             return APIResponse::SuccessResponse(null);
         } catch (\Exception $e) {
             return APIResponse::FailureResponse($e->getMessage());
