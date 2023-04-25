@@ -670,7 +670,7 @@ class StoreController extends Controller
             $promocode->end_time = $endTime;
             $promocode->discount = $request->discount;
             $promocode->discount_type = $request->discount_type;
-            $promocode->max_discount = $request->max_discount;
+            $promocode->max_discount = ($request->discount_type == 'amount') ? 0 : $request->max_discount;
             $promocode->min_purchase = $request->min_purchase;
             $promocode->limit = $request->limit ?? 0;
             $promocode->total_used = 0;
@@ -689,16 +689,10 @@ class StoreController extends Controller
                     }
                 }
             } else {
-                if($promocode->max_discount == 0 && $promocode->min_purchase == 0) {
+                if($promocode->min_purchase == 0) {
                     $promoDescription = "Giảm ". number_format($request->discount) ."đ";
                 } else {
-                    if($promocode->max_discount == 0) {
-                        $promoDescription = "Giảm ". number_format($request->discount) ."đ cho đơn hàng từ ". number_format($promocode->min_purchase) ."đ trở lên";
-                    } else if($promocode->min_purchase == 0){
-                        $promoDescription = "Giảm ". number_format($request->discount) ."đ, tối đa ". number_format($promocode->max_discount) . "đ";
-                    } else {
-                        $promoDescription = "Giảm ". number_format($request->discount) ."đ, tối đa ". number_format($promocode->max_discount) . "đ cho đơn hàng từ ". number_format($promocode->min_total_order) ."đ trở lên";
-                    }
+                    $promoDescription = "Giảm ". number_format($request->discount) ."đ cho đơn hàng từ ". number_format($promocode->min_purchase) ."đ trở lên";
                 }
             }
             $promocode->title = $promoDescription;
@@ -784,16 +778,10 @@ class StoreController extends Controller
                     }
                 }
             } else {
-                if($promocode->max_discount == 0 && $promocode->min_purchase == 0) {
+                if($promocode->min_purchase == 0) {
                     $promoDescription = "Giảm ". number_format($request->discount) ."đ";
                 } else {
-                    if($promocode->max_discount == 0) {
-                        $promoDescription = "Giảm ". number_format($request->discount) ."đ cho đơn hàng từ ". number_format($promocode->min_purchase) ."đ trở lên";
-                    } else if($promocode->min_purchase == 0){
-                        $promoDescription = "Giảm ". number_format($request->discount) ."đ, tối đa ". number_format($promocode->max_discount) . "đ";
-                    } else {
-                        $promoDescription = "Giảm ". number_format($request->discount) ."đ, tối đa ". number_format($promocode->max_discount) . "đ cho đơn hàng từ ". number_format($promocode->min_total_order) ."đ trở lên";
-                    }
+                    $promoDescription = "Giảm ". number_format($request->discount) ."đ cho đơn hàng từ ". number_format($promocode->min_purchase) ."đ trở lên";
                 }
             }
             $promocode->title = $promoDescription;
