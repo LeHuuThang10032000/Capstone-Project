@@ -406,7 +406,7 @@ const DetailOrder = ({route}: any) => {
       </ScrollView>
 
       <Modal visible={visible} animationType="slide">
-        <HeaderComp title="Mã ưu đãi" onPressBack={toggleModal} />
+        <HeaderComp title="Phiếu giảm giá" onPressBack={toggleModal} />
         <View
           style={{
             width: '100%',
