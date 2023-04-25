@@ -35,8 +35,10 @@
             @else
             <div class="text-center">
                 <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
+                @if(isset($key))
                 <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
-                <a href="{{ route('organiser.credit-request.index') }}">Quay lại</a>
+                @endif
+                <a href="{{ route('organiser.withdraw-request.index') }}">Quay lại</a>
             </div>
             @endif
         </div>
