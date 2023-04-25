@@ -1,5 +1,6 @@
 import {
   Center,
+  Divider,
   FormControl,
   HStack,
   Pressable,
@@ -8,7 +9,7 @@ import {
   View,
 } from 'native-base';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {TextInput, TouchableOpacity} from 'react-native';
+import {Linking, TextInput, TouchableOpacity} from 'react-native';
 import HeaderBack from '../../components/HeaderBack';
 import TText from '../Transfer/TText';
 import YesNoModal from '../../components/YesNoModal';
@@ -28,6 +29,7 @@ import {axiosClient} from '../../components/apis/axiosClient';
 import Toast from 'react-native-toast-message';
 import moment from 'moment';
 import {escapeCurrency} from '../../components/helper';
+import CallMe from '../../assets/svg/call-me.svg';
 
 interface WithDraw {
   amount: string;
@@ -43,6 +45,7 @@ const WithDrawInfo = (props: any) => {
   const [amount, setAmount] = useState('');
   const [day, setDay] = useState('');
   const [userWallet, setUserWallet] = useState(0);
+  const phoneNumber = '028 7105 9999';
 
   console.log(tranId);
   console.log(amount);
@@ -62,7 +65,7 @@ const WithDrawInfo = (props: any) => {
     const result = await axiosClient
       .get('https://zennoshop.cf/api/user/get-profile')
       .then(response => {
-        setProfile(response.data);
+        setProfile(response.data.data);
         console.log(result);
       })
       .catch(err => console.log(err));
@@ -139,48 +142,81 @@ const WithDrawInfo = (props: any) => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <HeaderBack title={isWithdraw ? 'Rút tiền' : 'Nạp tiền'} />
       {infoWithdraw ? (
-        <VStack style={{flex: 1}} alignItems={'center'} paddingX={3}>
-          <TText style={{fontWeight: '700', fontSize: 18, marginTop: 20}}>
-            {isWithdraw ? 'Thông tin rút tiền' : 'Thông tin nạp tiền'}
-          </TText>
-          <TText style={{fontSize: 18, marginTop: 5}}>
-            {isWithdraw ? 'Mã rút' : 'Mã nạp'}: {tranId}
-          </TText>
-          <HStack
-            justifyContent={'space-between'}
-            width={'100%'}
-            marginTop={5}
-            marginBottom={5}>
-            <TText style={{fontSize: 18}}>Họ tên:</TText>
-            <TText style={{fontSize: 18, opacity: 0.31}}>
-              {profile?.data?.f_name}
+        <View flex={1} alignContent={'center'}>
+          <Center
+            margin={5}
+            borderWidth={1}
+            borderRadius={8}
+            alignItems={'center'}
+            borderColor="#E0E0E0">
+            <TText
+              style={{
+                fontWeight: '700',
+                fontSize: 18,
+                marginTop: 20,
+              }}>
+              Thông tin rút tiền
             </TText>
-          </HStack>
-          <HStack
-            justifyContent={'space-between'}
-            width={'100%'}
-            marginBottom={5}>
-            <TText style={{fontSize: 18}}>
-              Số tiền yêu cầu {isWithdraw ? 'rút' : 'nạp'}:
-            </TText>
-            <TText style={{fontSize: 18, opacity: 0.31}}>
-              {formatCurrency(amount)}đ
-            </TText>
-          </HStack>
-          <HStack
-            justifyContent={'space-between'}
-            width={'100%'}
-            marginBottom={5}>
-            <TText style={{fontSize: 18}}>Ngày giao dịch:</TText>
-            <TText style={{fontSize: 18, opacity: 0.31}}>
-              {moment(day).format('HH:mm [-] DD/MM/YYYY')}
-            </TText>
-          </HStack>
+            <TText style={{fontSize: 18, marginTop: 5}}>Mã rút: {tranId}</TText>
+
+            <HStack
+              justifyContent={'space-between'}
+              alignItems={'center'}
+              width={'100%'}
+              marginTop={5}
+              px={3}
+              marginBottom={5}>
+              <TText style={{fontSize: 18}}>Họ tên:</TText>
+              <TText style={{fontSize: 18, opacity: 0.31}}>
+                {profile?.f_name}
+              </TText>
+            </HStack>
+            <HStack
+              px={3}
+              justifyContent={'space-between'}
+              width={'100%'}
+              marginBottom={5}>
+              <TText style={{fontSize: 18}}>
+                Số tiền yêu cầu {isWithdraw ? 'rút' : 'nạp'}:
+              </TText>
+              <TText style={{fontSize: 18, opacity: 0.31}}>
+                {formatCurrency(amount)}đ
+              </TText>
+            </HStack>
+            <HStack
+              px={3}
+              justifyContent={'space-between'}
+              width={'100%'}
+              marginBottom={5}>
+              <TText style={{fontSize: 18}}>Ngày giao dịch:</TText>
+              <TText style={{fontSize: 18, opacity: 0.31}}>
+                {moment(day).format('HH:mm [-] DD/MM/YYYY')}
+              </TText>
+            </HStack>
+
+            <Center
+              w="100%"
+              backgroundColor="#FEB7B1"
+              padding={3}
+              marginTop={10}
+              borderRadius={8}>
+              <Pressable onPress={() => Linking.openURL(`tel:${phoneNumber}`)}>
+                <HStack>
+                  <CallMe />
+                  <Text marginLeft={3} fontSize={16} fontWeight="bold">
+                    Liên hệ hỗ trợ
+                  </Text>
+                </HStack>
+              </Pressable>
+            </Center>
+          </Center>
           <View
             style={{
               width: '100%',
               position: 'absolute',
               bottom: 30,
+              paddingHorizontal: 15,
+              marginTop: 30,
             }}>
             <TouchableOpacity
               onPress={() => {
@@ -202,7 +238,7 @@ const WithDrawInfo = (props: any) => {
               <TText style={{fontWeight: '700'}}>Xong</TText>
             </TouchableOpacity>
           </View>
-        </VStack>
+        </View>
       ) : (
         <>
           <View

@@ -228,7 +228,7 @@ const MenuScreen = (props: Props) => {
                     color: 'black',
                     fontWeight: 'bold',
                   }}>
-                  Thêm món Mới hoặc danh sách
+                  Thêm món mới hoặc danh sách
                 </UText>
               </TouchableOpacity>
             </View>
