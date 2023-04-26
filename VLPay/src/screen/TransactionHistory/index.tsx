@@ -133,7 +133,7 @@ const FirstRoute = () => {
                           </Text>
                           <Text style={styles.textDate}>
                             {moment(item.created_at).format(
-                              'h:mm [-] DD/MM/YYYY',
+                              'HH:mm [-] DD/MM/YYYY',
                             )}
                           </Text>
                         </VStack>
@@ -216,7 +216,7 @@ const FirstRoute = () => {
                           </Text>
                           <Text style={styles.textDate}>
                             {moment(item.created_at).format(
-                              'h:mm [-] DD/MM/YYYY',
+                              'HH:mm [-] DD/MM/YYYY',
                             )}
                           </Text>
                         </VStack>
@@ -310,9 +310,20 @@ const SecondRoute = () => {
                     <TouchableOpacity
                       key={item.id}
                       onPress={() => {
-                        navigation.navigate('ShareBill', {
-                          data: item,
-                        });
+                        console.log(item?.type);
+
+                        if (item?.type === 'O') {
+                          navigation.navigate('ShareBill', {
+                            data: item,
+                          });
+                        } else {
+                          navigation.navigate('DetailTransaction', {
+                            title: item.title,
+                            amount: item.amount,
+                            code: item.code,
+                            created_at: item.created_at,
+                          });
+                        }
                       }}>
                       <HStack
                         my={3}
@@ -328,7 +339,7 @@ const SecondRoute = () => {
                           </Text>
                           <Text style={styles.textDate}>
                             {moment(item.created_at).format(
-                              'h:mm [-] DD/MM/YYYY',
+                              'HH:mm [-] DD/MM/YYYY',
                             )}
                           </Text>
                         </VStack>
@@ -430,11 +441,20 @@ const ThirdRoute = () => {
                     <TouchableOpacity
                       key={item.id}
                       onPress={() => {
-                        console.log(item);
+                        console.log(item?.type);
 
-                        navigation.navigate('ShareBill', {
-                          data: item,
-                        });
+                        if (item?.type === 'O') {
+                          navigation.navigate('ShareBill', {
+                            data: item,
+                          });
+                        } else {
+                          navigation.navigate('DetailTransaction', {
+                            title: item.title,
+                            amount: item.amount,
+                            code: item.code,
+                            created_at: item.created_at,
+                          });
+                        }
                       }}>
                       <HStack my={3} mx={3} justifyContent="space-between">
                         <VStack>
@@ -446,7 +466,7 @@ const ThirdRoute = () => {
                           </Text>
                           <Text style={styles.textDate}>
                             {moment(item.created_at).format(
-                              'h:mm [-] DD/MM/YYYY',
+                              'HH:mm [-] DD/MM/YYYY',
                             )}
                           </Text>
                         </VStack>

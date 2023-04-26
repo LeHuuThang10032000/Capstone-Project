@@ -73,6 +73,24 @@ const Banner = (props: Props) => {
             <Text style={styles.text}>QUÉT MÃ</Text>
           </View>
 
+          <View style={styles.wrapperButton}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('WithDraw', {
+                  isWithdraw: true,
+                })
+              }>
+              <View style={styles.buttonTranfer}>
+                <Image
+                  source={require('../../assets/img/withdraw.png')}
+                  style={{width: 52, height: 52}}
+                  alt={'just image'}
+                />
+              </View>
+            </TouchableOpacity>
+            <Text style={styles.text}>RÚT TIỀN</Text>
+          </View>
+
           {/* <View style={styles.wrapperButton}>
             <TouchableOpacity onPress={() => navigation.navigate('QR')}>
               <View style={styles.button}>

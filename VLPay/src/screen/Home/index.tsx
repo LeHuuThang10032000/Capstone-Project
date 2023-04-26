@@ -71,7 +71,7 @@ const Index = () => {
           <Header />
           <Banner wallet={userWallet} />
           <ManageCash wallet={userWallet} credit={credit} loading={isloading} />
-          <ContentWallet />
+          {/* <ContentWallet /> */}
           <ShareBillComp
             need_pay={needPay}
             paid_bill={paidBill}
