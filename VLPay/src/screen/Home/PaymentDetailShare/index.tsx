@@ -12,7 +12,7 @@ import {axiosClient} from '../../../components/apis/axiosClient';
 type Props = {};
 
 const PaymentDetailShare = ({route}: any) => {
-  const {amount, shared_name, phone, message} = route.params;
+  const {amount, shared_name, phone, message, code} = route.params;
 
   const [userWallet, setUserWallet] = useState(0);
   const [credit, setCredit] = useState(0);
@@ -59,9 +59,7 @@ const PaymentDetailShare = ({route}: any) => {
               </UText>
               <UText style={{fontSize: 15}}>
                 Mã giao dịch:{' '}
-                <UText style={{color: '#0088CC'}}>
-                  {parseInt(Math.random() * 1000000000, 8).toString()}
-                </UText>
+                <UText style={{color: '#0088CC'}}>{code ?? 0}</UText>
               </UText>
             </VStack>
             <HStack

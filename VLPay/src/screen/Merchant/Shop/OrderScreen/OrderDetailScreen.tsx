@@ -343,11 +343,6 @@ const OrderDetailScreen = () => {
                 đ
               </UText>
             </HStack>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-              <UText style={{fontWeight: '700'}}>
-                Đơn hàng chưa thanh toán
-              </UText>
-            </View>
           </VStack>
         </VStack>
       </ScrollView>

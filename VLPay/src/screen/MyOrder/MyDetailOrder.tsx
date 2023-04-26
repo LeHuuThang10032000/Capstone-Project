@@ -53,11 +53,14 @@ const MyDetailOrder = ({route}: any) => {
   //Taken
   const takenOrder = async () => {
     try {
+      console.log(123);
+
       const formData = new FormData();
       formData.append('order_id', id);
-      const result = await axiosClient.post('/order/taken-order', formData, {
+      const result = await axiosClient.post('order/taken-order', formData, {
         headers: {'content-type': 'multipart/form-data'},
       });
+
       Toast.show({
         type: 'success',
         text1: 'Thành công',
@@ -65,6 +68,8 @@ const MyDetailOrder = ({route}: any) => {
       });
       navigation.navigate('Home');
     } catch (error) {
+      console.log('ho');
+
       console.log(error);
     }
     Toast.show({
@@ -125,7 +130,7 @@ const MyDetailOrder = ({route}: any) => {
                 w="100%"
                 paddingX={12}
                 marginLeft={3}>
-                <Text>{moment(order.created_at).format('h:mm')}</Text>
+                <Text>{moment(order.created_at).format('HH:mm')}</Text>
               </View>
             </Center>
             <Divider />
@@ -287,7 +292,7 @@ const MyDetailOrder = ({route}: any) => {
                 w="100%"
                 paddingX={12}
                 marginLeft={3}>
-                <Text>{moment(order.created_at).format('h:mm')}</Text>
+                <Text>{moment(order.created_at).format('HH:mm')}</Text>
               </View>
             </Center>
             <Divider />
@@ -446,7 +451,7 @@ const MyDetailOrder = ({route}: any) => {
               <Heading paddingBottom={5}>Đã đặt đơn</Heading>
               <PrepareIcon />
               <Text paddingBottom={3}>
-                {moment(order.accepted_at).format('h:mm')}
+                {moment(order.accepted_at).format('HH:mm')}
               </Text>
             </Center>
             <Divider />
@@ -582,7 +587,7 @@ const MyDetailOrder = ({route}: any) => {
                 w="100%"
                 paddingX={12}
                 marginRight={5}>
-                <Text>{moment(order.finished_at).format('h:mm')}</Text>
+                <Text>{moment(order.finished_at).format('HH:mm')}</Text>
               </View>
             </Center>
             <Divider />
@@ -718,7 +723,7 @@ const MyDetailOrder = ({route}: any) => {
                 w="100%"
                 paddingX={12}
                 marginRight={5}>
-                <Text>{moment(order.finished_at).format('h:mm')}</Text>
+                <Text>{moment(order.finished_at).format('HH:mm')}</Text>
               </View>
             </Center>
             <Divider />

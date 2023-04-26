@@ -84,6 +84,8 @@ const Index = ({route}: any) => {
     setInput(true);
   }, []);
 
+  console.log('hello world');
+
   return (
     <View>
       <HeaderBack title="Xác nhận giao dịch" />
@@ -199,11 +201,13 @@ const Index = ({route}: any) => {
                       );
                       // data.code = _result?.data?.code;
                       // data.from_user = _result?.data?.from_user;
+                      const code = _result?.data?.data?.code;
                       navigation.replace('PaymentDetailShare', {
                         amount: amount,
                         shared_name: shared_name,
                         phone: phone,
                         message: message,
+                        code: code,
                       });
                       setLoading(false);
                     } catch (e) {

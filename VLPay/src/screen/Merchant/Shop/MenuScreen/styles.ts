@@ -103,7 +103,7 @@ export default StyleSheet.create({
   },
   input: {
     borderWidth: 0,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderBottomColor: '#ccc',
     paddingVertical: 4,
     paddingHorizontal: 8,

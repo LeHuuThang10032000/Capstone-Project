@@ -133,7 +133,7 @@ const FirstRoute = () => {
                           </Text>
                           <Text style={styles.textDate}>
                             {moment(item.created_at).format(
-                              'h:mm [-] DD/MM/YYYY',
+                              'HH:mm [-] DD/MM/YYYY',
                             )}
                           </Text>
                         </VStack>
@@ -328,7 +328,7 @@ const SecondRoute = () => {
                           </Text>
                           <Text style={styles.textDate}>
                             {moment(item.created_at).format(
-                              'h:mm [-] DD/MM/YYYY',
+                              'HH:mm [-] DD/MM/YYYY',
                             )}
                           </Text>
                         </VStack>
@@ -446,7 +446,7 @@ const ThirdRoute = () => {
                           </Text>
                           <Text style={styles.textDate}>
                             {moment(item.created_at).format(
-                              'h:mm [-] DD/MM/YYYY',
+                              'HH:mm [-] DD/MM/YYYY',
                             )}
                           </Text>
                         </VStack>
