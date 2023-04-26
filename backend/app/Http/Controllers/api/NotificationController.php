@@ -7,13 +7,27 @@ use App\Http\Response\ApiResponse;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
     public function index()
     {
         try {
-            $data = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+            $data = Notification::select(
+                    '*', 
+                    DB::raw('CASE tag_model
+                    WHEN "withdraw_requests" THEN "Rút tiền"
+                    WHEN "deposits" THEN "Nạp tiền"
+                    WHEN "credit_requests" THEN "Tín dụng" 
+                    WHEN "share_bills" THEN "Chia tiền"
+                    WHEN "stores" THEN "Cửa hàng"
+                    ELSE "Giao dịch" 
+                    END as type')
+                )->where('user_id', Auth::user()->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+            
             return ApiResponse::successResponse($data);
         } catch (\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
