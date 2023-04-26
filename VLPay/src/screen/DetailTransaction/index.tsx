@@ -58,7 +58,7 @@ const DetailTransaction = ({route}: any) => {
           <HStack justifyContent="space-between">
             <Text fontSize={16}>Thời gian thanh toán</Text>
             <Text fontSize={16} fontWeight="bold">
-              {moment().format('HH:mm [-] DD/MM/YYYY')}
+              {moment(created_at).format('HH:mm [-] DD/MM/YYYY')}
             </Text>
           </HStack>
           <Divider marginY={3} />
