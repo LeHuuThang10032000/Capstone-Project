@@ -44,7 +44,7 @@ class SendPushNotification
     {
         $message = [
             'title' => 'VLPay',
-            'type' => 'user_approve_request',
+            'type' => 'merchant_canceled_request',
             'text' => 'Đơn hàng tại ' . $store->name . ' của bạn đã bị hủy vì lí do: '. $reason,
         ];
 
