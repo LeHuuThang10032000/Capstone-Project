@@ -152,7 +152,7 @@ const MenuScreen = (props: Props) => {
                           <HStack
                             flex={1}
                             alignItems={'center'}
-                            borderBottomWidth={1}
+                            borderBottomWidth={0.5}
                             borderBottomColor={'#979797'}
                             paddingBottom={3}>
                             <Image

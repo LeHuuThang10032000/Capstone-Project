@@ -654,7 +654,9 @@ const CreatePromo = () => {
                       onPress={() => {
                         setPage(PROMOS[1]);
                       }}>
-                      <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                      {data?.type !== 'running' && (
+                        <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                      )}
                     </TouchableOpacity>
                   </HStack>
                   <VStack
@@ -679,7 +681,9 @@ const CreatePromo = () => {
                       onPress={() => {
                         setPage(PROMOS[2]);
                       }}>
-                      <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                      {data?.type !== 'running' && (
+                        <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                      )}
                     </TouchableOpacity>
                   </HStack>
                   <VStack style={{paddingHorizontal: 16}}>
@@ -1176,7 +1180,9 @@ const CreatePromo = () => {
                     onPress={() => {
                       setPage(PROMOS[4]);
                     }}>
-                    <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                    {data?.type !== 'running' && (
+                      <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                    )}
                   </TouchableOpacity>
                 </HStack>
                 <VStack justifyContent={'space-between'} style={{padding: 16}}>
@@ -1199,7 +1205,9 @@ const CreatePromo = () => {
                     onPress={() => {
                       setPage(PROMOS[5]);
                     }}>
-                    <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                    {data?.type !== 'running' && (
+                      <UText style={{color: '#4285F4'}}>Chỉnh sửa</UText>
+                    )}
                   </TouchableOpacity>
                 </HStack>
                 <VStack style={{paddingHorizontal: 16}}>

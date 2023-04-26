@@ -113,17 +113,26 @@ const RegisterMerchant = () => {
       .then(response => {
         setProfile(response.data);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        console.log('bi loi');
+      });
   }, []);
 
   const getRequest = useCallback(async () => {
-    setLoading(true);
-    const result = await axiosClient.get(
-      'https://zennoshop.cf/api/user/get-request-create-store',
-    );
-    setStore(result?.data?.data?.status);
-    setNoti(result.data?.data?.status);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const result = await axiosClient.get(
+        'https://zennoshop.cf/api/user/get-request-create-store',
+      );
+      setStore(result?.data?.data?.status);
+      setNoti(result.data?.data?.status);
+      setLoading(false);
+    } catch (error) {
+      console.log('ok');
+
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
@@ -133,6 +142,8 @@ const RegisterMerchant = () => {
       getRequest();
     }
   }, [fetchData, getRequest, isFocused]);
+
+  console.log('bi loi');
 
   return (
     <View flex={1}>

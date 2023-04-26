@@ -53,14 +53,16 @@ const Index = function () {
         setVisibleWarning(true);
         setPhoneError(result.data.message);
         setDisabled(false);
+      } else {
+        const __result = dispatch(await Login(phoneNumber, password));
+        setDisabled(false);
+        if (!__result.payload) {
+          setVisibleWarning(true);
+          setPhoneError('Mật khẩu không chính xác');
+        }
       }
     } catch (e) {
       console.log(e);
-    }
-    const result = dispatch(await Login(phoneNumber, password));
-    setDisabled(false);
-    if (!result.payload) {
-      setVisibleWarning(true);
     }
     setLoading(false);
   };
