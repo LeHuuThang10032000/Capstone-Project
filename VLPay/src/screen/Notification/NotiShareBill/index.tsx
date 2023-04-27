@@ -53,6 +53,7 @@ const NotiShareBill = ({route}: any) => {
       message: '',
     },
   });
+  console.log(masterDataSource);
 
   const fetchData = async () => {
     try {
@@ -140,7 +141,11 @@ const NotiShareBill = ({route}: any) => {
                     alt="image"
                     borderRadius={50}
                   />
-                  <Text paddingLeft={3}>{item?.shared_user?.f_name}</Text>
+                  <Text paddingLeft={3}>
+                    {item?.is_owner === 0
+                      ? item?.shared_user?.f_name + '(Tôi)'
+                      : item?.shared_user?.f_name}
+                  </Text>
                 </HStack>
                 <VStack>
                   <Text>{item?.amount.toLocaleString()}đ</Text>

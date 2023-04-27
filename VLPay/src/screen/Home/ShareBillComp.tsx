@@ -27,32 +27,35 @@ const ShareBillComp = (props: Props) => {
         borderRadius: 10,
         marginVertical: 30,
       }}>
-      <HStack padding={3} justifyContent="space-between" alignItems="center">
-        <HStack alignItems="center">
-          <MustPay width={50} />
-          <VStack paddingLeft={3}>
-            <Text>Số tiền phải trả:</Text>
-            <Text>{formatCurrency((props.need_pay ?? 0).toString())}đ</Text>
-          </VStack>
+      {props.need_pay > 0 ? (
+        <HStack padding={3} justifyContent="space-between" alignItems="center">
+          <HStack alignItems="center">
+            <MustPay width={50} />
+            <VStack paddingLeft={3}>
+              <Text>Số tiền phải trả:</Text>
+              <Text>{formatCurrency((props.need_pay ?? 0).toString())}đ</Text>
+            </VStack>
+          </HStack>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('ListShareBill', {userWallet: props.wallet})
+            }>
+            <View
+              style={{
+                backgroundColor: '#FEB7B1',
+                padding: 10,
+                borderRadius: 8,
+                width: 100,
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: 'bold', color: '#000000'}}>
+                Thanh toán
+              </Text>
+            </View>
+          </TouchableOpacity>
         </HStack>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ListShareBill', {userWallet: props.wallet})
-          }>
-          <View
-            style={{
-              backgroundColor: '#FEB7B1',
-              padding: 10,
-              borderRadius: 8,
-              width: 100,
-              alignItems: 'center',
-            }}>
-            <Text style={{fontWeight: 'bold', color: '#000000'}}>
-              Thanh toán
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </HStack>
+      ) : null}
+
       <Divider />
       <HStack padding={3} justifyContent="space-between" alignItems="center">
         <HStack alignItems="center">
