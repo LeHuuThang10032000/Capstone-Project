@@ -22,7 +22,7 @@ class NotificationController extends Controller
                     WHEN "credit_requests" THEN "Tín dụng" 
                     WHEN "share_bills" THEN "Chia tiền"
                     WHEN "stores" THEN "Cửa hàng"
-                    ELSE "Giao dịch" 
+                    ELSE "Giao dịch"
                     END as type')
                 )->where('user_id', Auth::user()->id)
                 ->orderBy('created_at', 'desc')
