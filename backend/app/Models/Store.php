@@ -48,6 +48,15 @@ class Store extends Model implements HasMedia
     {
         return $this->hasMany(Order::class);
     }
+
+    public function availablePromocodes()
+    {
+        return $this->hasMany(Promocode::class)->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->whereTime('start_time', '<=', now())
+            ->whereTime('end_time', '>=', now())
+            ->whereColumn('limit', '>=', 'total_used');
+    }
     
     protected $hidden = [
         'created_at',

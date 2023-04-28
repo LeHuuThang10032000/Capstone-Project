@@ -209,7 +209,7 @@ class UserController extends Controller
         }
     }
 
-    public function getStores(Request $request): JsonResponse
+    public function getStores(Request $request)
     {
         $validate = Validator::make($request->all(), [
             'limit' => 'integer',
@@ -235,6 +235,27 @@ class UserController extends Controller
 
             $stores = $stores->get();
 
+            foreach($stores as $store) {
+                $used = DB::table('promocode_used')->where('user_id', Auth::user()->id)->pluck('promocode_id')->toArray();
+
+                $promocodes = DB::table('promocodes')
+                    ->selectRaw('(CASE 
+                        WHEN `limit` = 0 THEN 1 
+                        WHEN `limit` != 0 AND total_used < `limit` THEN 1
+                        ELSE 0 
+                        END) AS available')
+                    ->where('store_id', $store->id)
+                    ->whereNotIn('id', $used)
+                    ->where('start_date', '<=', now())
+                    ->where('end_date', '>=', now())
+                    ->whereTime('start_time', '<=', now())
+                    ->whereTime('end_time', '>=', now())
+                    ->having('available', 1)
+                    ->count();
+
+                $store['promocodes'] = $promocodes;
+            }
+
             return ApiResponse::successResponse($stores);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -259,6 +280,22 @@ class UserController extends Controller
                 ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
                 ->with('schedules')
                 ->get();
+
+            foreach($stores as $store) {
+                $used = DB::table('promocode_used')->where('user_id', Auth::user()->id)->pluck('promocode_id')->toArray();
+
+                $promocodes = DB::table('promocodes')
+                    ->where('store_id', $store->id)
+                    ->whereNotIn('id', $used)
+                    ->where('start_date', '<=', now())
+                    ->where('end_date', '>=', now())
+                    ->whereTime('start_time', '<=', now())
+                    ->whereTime('end_time', '>=', now())
+                    ->whereColumn('limit', '>=', 'total_used')
+                    ->count();
+
+                $store['promocodes'] = $promocodes;
+            }
 
             $users = User::where('status', '!=', 'inactive')
                 ->where('f_name', 'LIKE', '%' . $request->key . '%')
@@ -304,10 +341,8 @@ class UserController extends Controller
                 ->get();
 
             $productCategories = ProductCategory::where('store_id', $id)
-                ->with(['products' => function ($query) {
-                    $query->select('id', 'name', 'price', 'image', 'category_id')->where('status', '!=', 'unavailable');
-                }])
-                ->has('products')
+                ->with('availableProducts')
+                ->has('availableProducts')
                 ->get();
 
             $store[0]['categories'] = $productCategories;
