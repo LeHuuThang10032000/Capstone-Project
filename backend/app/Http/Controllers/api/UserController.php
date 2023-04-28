@@ -306,10 +306,10 @@ class UserController extends Controller
             $array = [];
             foreach ($users as $user){
                 $friend = Friends::where('user_id', $cur_user)
-                    ->where('friend_id', $user->id)
-                    ->where('status', 'pending')->first();
+                    ->where('friend_id', $user->id)->first();
+
                 if ($friend) {
-                    $user->status = $friend->status;
+                    $user->friend_status = $friend->status;
                     $user->requester_id = $friend->requester_id;
                     if($friend->requester_id == $cur_user){
                         $user->type = 'waiting';
