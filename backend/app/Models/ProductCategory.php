@@ -32,6 +32,11 @@ class ProductCategory extends Model
         return $this->hasMany(Product::class, 'category_id', 'id');
     }
 
+    public function availableProducts()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id')->where('status', '!=', 'unavailable');
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

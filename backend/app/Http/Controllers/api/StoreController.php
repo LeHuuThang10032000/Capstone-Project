@@ -348,10 +348,8 @@ class StoreController extends Controller
         try {
             $categories = ProductCategory::where('store_id', $request->store_id)
                 ->select('id', 'name as category_name')
-                ->with('products', function($query) {
-                    $query->where('status', '!=', 'unavailable');
-                })
-                ->withCount('products')
+                ->with('availableProducts')
+                ->withCount('availableProducts')
                 ->get();
 
 			return APIResponse::SuccessResponse($categories);
