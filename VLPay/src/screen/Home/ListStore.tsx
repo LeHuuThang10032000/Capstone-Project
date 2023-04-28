@@ -61,12 +61,12 @@ const ListStore = () => {
 
   const renderItem = ({item}: {item: Post}) => (
     <TouchableOpacity
-      onPress={() =>
+      onPress={() => {
         navigation.navigate('DetailStore', {
           store_id: item.id,
           status: item?.status,
-        })
-      }>
+        });
+      }}>
       <HStack
         py={3}
         mx={3}
@@ -91,6 +91,25 @@ const ListStore = () => {
           </Heading>
           <Text>{item.phone}</Text>
         </VStack>
+        {item?.promocodes ? (
+          <Text
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: -1,
+              backgroundColor: 'red',
+              color: 'white',
+              borderRadius: 30,
+              width: 20,
+              height: 20,
+              textAlign: 'center',
+              lineHeight: 20,
+            }}>
+            {item?.promocodes}
+          </Text>
+        ) : (
+          <></>
+        )}
       </HStack>
     </TouchableOpacity>
   );

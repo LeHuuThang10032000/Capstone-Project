@@ -135,7 +135,7 @@ const AddItems = () => {
                       data: _localItems,
                     });
                   }}>
-                  Cập nhập
+                  Cập nhật
                 </MenuItem>
                 <MenuItem
                   onPress={async () => {

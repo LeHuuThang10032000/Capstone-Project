@@ -110,27 +110,40 @@ const MenuScreen = (props: Props) => {
     return unsubscribe;
   }, [navigation]);
 
+  console.log('products', products);
+
   const DataList = ({data}) => {
     return (
       <ScrollView style={{paddingHorizontal: 16}}>
         <View style={{paddingBottom: 200, backgroundColor: '#ffffff'}}>
-          {data.map(
-            ({id, category_name, products: _products, products_count}) => (
-              <View key={id}>
-                <HStack
-                  alignItems={'center'}
-                  justifyContent={'space-between'}
-                  style={{marginTop: 16, marginBottom: 8}}>
-                  <Text style={styles.category}>{category_name}</Text>
-                  <Text>{products_count} món</Text>
-                </HStack>
-                {_products.map(
-                  (
-                    {id: productId, name, price, image, category_id, add_ons},
-                    index,
-                  ) => (
-                    <>
-                      <TouchableOpacity
+          {data &&
+            data.map(
+              ({
+                id,
+                category_name,
+                available_products: _products,
+                available_products_count: products_count,
+              }) => (
+                <View key={id}>
+                  <HStack
+                    alignItems={'center'}
+                    justifyContent={'space-between'}
+                    style={{marginTop: 16, marginBottom: 8}}>
+                    <Text style={styles.category}>{category_name}</Text>
+                    <Text>{products_count} món</Text>
+                  </HStack>
+                  {_products.map((item, index) => {
+                    const {
+                      id: productId,
+                      name,
+                      price,
+                      image,
+                      category_id,
+                      add_ons,
+                    } = item;
+                    return (
+                      <>
+                        {/* <TouchableOpacity
                         onPress={() => {
                           const item = {
                             products: products,
@@ -147,8 +160,15 @@ const MenuScreen = (props: Props) => {
                             isUpdated: true,
                           };
                           handleUpdatePress(item);
-                        }}>
-                        <View key={productId} style={styles.productContainer}>
+                        }}> */}
+                        <View
+                          key={productId}
+                          style={[
+                            styles.productContainer,
+                            {
+                              position: 'relative',
+                            },
+                          ]}>
                           <HStack
                             flex={1}
                             alignItems={'center'}
@@ -169,14 +189,100 @@ const MenuScreen = (props: Props) => {
                               </Text>
                             </VStack>
                           </HStack>
+                          {selectedProduct === item.id && (
+                            <Menu
+                              visible={visible}
+                              onRequestClose={() => setVisible(false)}
+                              style={[
+                                styles.menuContainer,
+                                menuPosition && {
+                                  top: menuPosition.y,
+                                  left: menuPosition.x - 90,
+                                },
+                              ]}>
+                              <MenuItem
+                                onPress={() => {
+                                  const item = {
+                                    products: products,
+                                    addons: addons,
+                                    store_id: store_di,
+                                    product: {
+                                      id: productId,
+                                      name,
+                                      price,
+                                      image,
+                                      category_id,
+                                      add_ons,
+                                    },
+                                    isUpdated: true,
+                                  };
+                                  handleUpdatePress(item);
+                                }}>
+                                Cập nhật
+                              </MenuItem>
+                              <MenuItem
+                                onPress={async () => {
+                                  try {
+                                    console.log({
+                                      store_id: store_di,
+                                      name: name,
+                                      product_id: productId,
+                                      price: price,
+                                      image: image,
+                                      category_id: category_id,
+                                      add_ons: JSON.stringify(add_ons),
+                                      status: 'unavailable',
+                                    });
+
+                                    await axiosClient.post(
+                                      baseUrl + 'merchant/product/update',
+                                      {
+                                        store_id: store_di,
+                                        name: name,
+                                        product_id: productId,
+                                        price: price,
+                                        image: image,
+                                        category_id: category_id,
+                                        add_ons: JSON.stringify(add_ons),
+                                        status: 'unavailable',
+                                      },
+                                      {
+                                        headers: {
+                                          'content-type': 'multipart/form-data',
+                                        },
+                                      },
+                                    );
+                                    console.log('Ok rui nha bro');
+                                    fetchData();
+                                  } catch (e) {
+                                    // setVisibleWarning(true);
+                                    console.log('e ->>>>', e);
+                                  }
+                                  setVisible(false);
+                                }}>
+                                Xoá
+                              </MenuItem>
+                            </Menu>
+                          )}
+                          <TouchableOpacity
+                            onPress={e => showMenu(item.id, e)}
+                            style={{
+                              height: 20,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <Text style={{fontSize: 20}}>
+                              <Icons.ThreeHorizontalDot />
+                            </Text>
+                          </TouchableOpacity>
                         </View>
-                      </TouchableOpacity>
-                    </>
-                  ),
-                )}
-              </View>
-            ),
-          )}
+                        {/* </TouchableOpacity> */}
+                      </>
+                    );
+                  })}
+                </View>
+              ),
+            )}
         </View>
       </ScrollView>
     );

@@ -311,7 +311,7 @@ const ProductMerchant = () => {
                     style={{
                       height: 20,
                       width: 20,
-                      borderRadius: 3,
+                      borderRadius: 30,
                       borderWidth: 1,
                       marginRight: 10,
                       justifyContent: 'center',
@@ -321,7 +321,7 @@ const ProductMerchant = () => {
                     {selectedOption?.id
                       ? selectedOption.id === option.id && <Icons.StickChoose />
                       : option.id === data?.product?.category_id && (
-                          <Icons.StickChoose />
+                          <Icons.StickChoose style={{borderRadius: 30}} />
                         )}
                   </View>
                   <Text style={{color: 'black', fontSize: 16}}>

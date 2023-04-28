@@ -377,7 +377,14 @@ const FourthRoute = () => {
         <VStack>
           <UText style={{alignSelf: 'center'}}>Chọn ngày</UText>
           <TouchableOpacity onPress={() => setOpen(true)}>
-            <UText style={{alignSelf: 'center', fontWeight: '700'}}>
+            <UText
+              style={{
+                alignSelf: 'center',
+                fontWeight: '700',
+                borderWidth: 0.5,
+                borderRadius: 10,
+                paddingHorizontal: 10,
+              }}>
               {_formattedDate}
             </UText>
           </TouchableOpacity>
