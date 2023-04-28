@@ -341,8 +341,8 @@ class UserController extends Controller
                 ->get();
 
             $productCategories = ProductCategory::where('store_id', $id)
-                ->with('availableProducts')
-                ->has('availableProducts')
+                ->with('products')
+                ->has('products')
                 ->get();
 
             $store[0]['categories'] = $productCategories;
