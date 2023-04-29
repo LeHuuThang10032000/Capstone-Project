@@ -29,8 +29,6 @@ const ListStore = () => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
-  console.log('List store: ', posts);
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     fetchPosts();

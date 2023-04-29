@@ -34,8 +34,6 @@ const DetailCart = ({route}: any) => {
   const [quantity, setQuantity] = useState(1);
   const {store_id} = route.params;
 
-  console.log(cart);
-
   //Get Cart
   const getCart = useCallback(async () => {
     setLoading(true);

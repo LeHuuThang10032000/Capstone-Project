@@ -47,7 +47,6 @@ const HeaderBack: React.FC<Props> = ({
       setSwitchValue(result?.data?.data?.status !== 'closing' ? true : false);
     } catch (error) {}
   };
-  console.log('switchValue', switchValue);
   const isFocused = useIsFocused();
 
   useEffect(() => {

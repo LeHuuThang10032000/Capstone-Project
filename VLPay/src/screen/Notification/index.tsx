@@ -37,6 +37,7 @@ const Index = (props: Props) => {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <View style={styles.bgColor}>
       <HeaderComp title="Thông báo" TrashIcon />
@@ -68,7 +69,7 @@ const Index = (props: Props) => {
                     style={{elevation: 5}}>
                     <VStack justifyContent="space-between">
                       <Text style={styles.text}>
-                        {item.title} ({item.tag_model})
+                        {item.title} ({item.type})
                       </Text>
                       <Text>{item.created_at}</Text>
                       <Text style={styles.titleText}>{item.body}</Text>

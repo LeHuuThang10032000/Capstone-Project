@@ -43,7 +43,6 @@ const BodyModal: React.FC<Props> = ({
     },
   });
   const onSubmit = async (data: Remind) => {
-    console.log(data.remind);
     try {
       const formData = new FormData();
       formData.append('order_id', orderId);

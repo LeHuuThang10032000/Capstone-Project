@@ -19,8 +19,6 @@ const ListYourBill = ({route}: any) => {
   const {userWallet} = route.params;
   const [data, setData] = useState<Props[]>([]);
 
-  console.log('Paid==>', data);
-
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
       '/share-bill/my-share-bill?page=1&limit=100',
@@ -30,6 +28,7 @@ const ListYourBill = ({route}: any) => {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <View flex={1} backgroundColor={'#FFFFFF'}>
       <HeaderBack title="Thông tin thanh toán chia tiền" />

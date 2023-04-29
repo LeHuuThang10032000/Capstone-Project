@@ -118,12 +118,7 @@ const MenuScreen = (props: Props) => {
         <View style={{paddingBottom: 200, backgroundColor: '#ffffff'}}>
           {data &&
             data.map(
-              ({
-                id,
-                category_name,
-                available_products: _products,
-                available_products_count: products_count,
-              }) => (
+              ({id, category_name, products: _products, products_count}) => (
                 <View key={id}>
                   <HStack
                     alignItems={'center'}

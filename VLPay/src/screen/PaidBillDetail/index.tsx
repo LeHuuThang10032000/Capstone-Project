@@ -48,6 +48,7 @@ const PaidBillDetail = ({route}: any) => {
   const [name, setName] = useState('');
   const [currentUser, setCurrentUser] = useState('');
   const {modalVisible, toggleModal, closeModal} = ModalProvider();
+  const [total, setTotal] = useState(0);
   const {
     control,
     handleSubmit,
@@ -60,10 +61,15 @@ const PaidBillDetail = ({route}: any) => {
 
   const fetchData = async () => {
     try {
+      let money = 0;
       const billDetail = await axiosClient.get(
         'share-bill/detail?order_id=' + order_id,
       );
       setDetailBill(billDetail?.data?.data);
+      billDetail?.data?.data.map(item => {
+        money += item.amount;
+      });
+      setTotal(money);
       setMasterDataSource(billDetail?.data?.data);
       if (
         billDetail.data.data.map(
@@ -96,6 +102,8 @@ const PaidBillDetail = ({route}: any) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  console.log(total);
 
   const onSubmit = async (data: any) => {
     console.log(data);
@@ -158,7 +166,9 @@ const PaidBillDetail = ({route}: any) => {
                     alt="image"
                     borderRadius={50}
                   />
-                  <Text paddingLeft={3}>
+                  <Text
+                    paddingLeft={3}
+                    style={item?.is_owner === 1 ? {fontWeight: 'bold'} : {}}>
                     {item?.is_owner === 1
                       ? item?.shared_user?.f_name + '(Tôi)'
                       : item?.shared_user?.f_name}
@@ -167,7 +177,10 @@ const PaidBillDetail = ({route}: any) => {
                 <VStack>
                   <Text>
                     {item?.status === 'pending' ? (
-                      item?.amount.toLocaleString() + 'đ'
+                      item?.amount.toLocaleString() +
+                      '/' +
+                      total.toLocaleString() +
+                      'đ'
                     ) : item?.status === 'paid' ? (
                       <Text color={'red.500'} fontWeight={'bold'}>
                         Đã trả
