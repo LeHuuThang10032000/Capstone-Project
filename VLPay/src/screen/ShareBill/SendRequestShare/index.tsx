@@ -115,7 +115,7 @@ const SendRequestShare = (props: Props) => {
                 borderRadius={50}
               />
               <Text paddingLeft={3} fontWeight={'700'}>
-                {profile.f_name} (Me)
+                {profile.f_name} (Tôi)
               </Text>
             </HStack>
             <VStack>

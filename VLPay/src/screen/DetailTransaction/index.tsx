@@ -2,10 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
-import {Center, Divider, HStack, Image, Text, VStack, View} from 'native-base';
+import {
+  Center,
+  Divider,
+  HStack,
+  Image,
+  Pressable,
+  Text,
+  VStack,
+  View,
+} from 'native-base';
 import HeaderBack from '../../components/HeaderBack';
 import CallMe from '../../assets/svg/call-me.svg';
-import {TouchableOpacity} from 'react-native';
+import {Linking, TouchableOpacity} from 'react-native';
 import Icons from '../../components/Icons';
 import moment from 'moment';
 import {formatCurrency} from '../../components/helper';
@@ -15,6 +24,7 @@ const DetailTransaction = ({route}: any) => {
   const [userWallet, setUserWallet] = useState(0);
   const [hide, setHide] = useState(false);
   const [status, setStatus] = useState('');
+  const phoneNumber = '028 7105 9999';
   const fetchData = async () => {
     const result = await axiosClient.get('/user-wallet');
     setUserWallet(result?.data?.data?.balance);
@@ -76,21 +86,23 @@ const DetailTransaction = ({route}: any) => {
             </Text>
           </HStack>
           <Divider marginY={3} />
-          <Center
-            w="100%"
-            backgroundColor="#d1d1d1"
-            padding={3}
-            borderRadius={8}>
-            <HStack>
-              <CallMe />
-              <Text marginLeft={3} fontSize={16} fontWeight="bold">
-                Liên hệ hỗ trợ
-              </Text>
-            </HStack>
-          </Center>
+          <Pressable onPress={() => Linking.openURL(`tel:${phoneNumber}`)}>
+            <Center
+              w="100%"
+              backgroundColor="#d1d1d1"
+              padding={3}
+              borderRadius={8}>
+              <HStack>
+                <CallMe />
+                <Text marginLeft={3} fontSize={16} fontWeight="bold">
+                  Liên hệ hỗ trợ
+                </Text>
+              </HStack>
+            </Center>
+          </Pressable>
         </VStack>
       </Center>
-      <Center
+      {/* <Center
         margin={5}
         padding={3}
         borderWidth={1}
@@ -112,7 +124,7 @@ const DetailTransaction = ({route}: any) => {
             <Text>*****</Text>
           )}
         </HStack>
-      </Center>
+      </Center> */}
     </View>
   );
 };

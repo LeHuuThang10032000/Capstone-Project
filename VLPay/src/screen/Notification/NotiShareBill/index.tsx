@@ -142,7 +142,7 @@ const NotiShareBill = ({route}: any) => {
                     borderRadius={50}
                   />
                   <Text paddingLeft={3}>
-                    {item?.is_owner === 0
+                    {item?.is_your === 1
                       ? item?.shared_user?.f_name + '(Tôi)'
                       : item?.shared_user?.f_name}
                   </Text>

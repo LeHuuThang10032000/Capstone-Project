@@ -1,8 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import HeaderBack from '../../components/HeaderBack';
-import {Center, Divider, HStack, Image, Text, View, VStack} from 'native-base';
+import {
+  Center,
+  Divider,
+  HStack,
+  Image,
+  Pressable,
+  Text,
+  View,
+  VStack,
+} from 'native-base';
 import CallMe from '../../assets/svg/call-me.svg';
-import {TouchableOpacity} from 'react-native';
+import {Linking, TouchableOpacity} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {MainStackNavigation, MainStackParamList} from '../../stack/Navigation';
 import {axiosClient} from '../../components/apis/axiosClient';
@@ -26,6 +35,8 @@ const ShareBill = () => {
     fetchData();
   }, []);
   const navigation = useNavigation<MainStackNavigation>();
+  const phoneNumber = '028 7105 9999';
+
   console.log(data);
 
   const statusState = key => {
@@ -98,21 +109,23 @@ const ShareBill = () => {
             </Text>
           </HStack>
           <Divider marginY={3} />
-          <Center
-            w="100%"
-            backgroundColor="#d1d1d1"
-            padding={3}
-            borderRadius={8}>
-            <HStack>
-              <CallMe />
-              <Text marginLeft={3} fontSize={16} fontWeight="bold">
-                Liên hệ hỗ trợ
-              </Text>
-            </HStack>
-          </Center>
+          <Pressable onPress={() => Linking.openURL(`tel:${phoneNumber}`)}>
+            <Center
+              w="100%"
+              backgroundColor="#d1d1d1"
+              padding={3}
+              borderRadius={8}>
+              <HStack>
+                <CallMe />
+                <Text marginLeft={3} fontSize={16} fontWeight="bold">
+                  Liên hệ hỗ trợ
+                </Text>
+              </HStack>
+            </Center>
+          </Pressable>
         </VStack>
       </Center>
-      <Center
+      {/* <Center
         margin={5}
         padding={3}
         borderWidth={1}
@@ -134,7 +147,7 @@ const ShareBill = () => {
             <Text>*****</Text>
           )}
         </HStack>
-      </Center>
+      </Center> */}
       <TouchableOpacity
         disabled={
           data?.order?.status === 'canceled' ||

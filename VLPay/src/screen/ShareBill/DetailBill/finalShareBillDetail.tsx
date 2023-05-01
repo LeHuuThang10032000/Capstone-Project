@@ -129,7 +129,7 @@ const FinalShareBillDetail = ({route}: any) => {
                 borderRadius={50}
               />
               <Text paddingLeft={3} fontWeight={'700'}>
-                {profile.f_name} (Me)
+                {profile.f_name} (Tôi)
               </Text>
             </HStack>
             <VStack>
