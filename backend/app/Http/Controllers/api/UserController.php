@@ -847,7 +847,8 @@ class UserController extends Controller
             DB::commit();
             return APIResponse::SuccessResponse(null);
         } catch (\Exception $e) {
-            return ApiResponse::failureResponse($e);
+            DB::rollBack();
+            return APIResponse::FailureResponse($e->getMessage());
         }
     }
 
@@ -949,7 +950,13 @@ class UserController extends Controller
             $user = Auth::user();
 
             $bills = DB::table('share_bills')
-                ->select('share_bills.id', 'share_bills.created_at', 'share_bills.order_id', DB::raw("CONCAT('Hóa đơn chia tiền cho đơn hàng tại ', stores.name) AS title"))
+                ->select(
+                    'share_bills.id', 
+                    'share_bills.created_at', 
+                    'share_bills.order_id', 
+                    DB::raw("CONCAT('Hóa đơn chia tiền cho đơn hàng tại ', stores.name) AS title"),
+                    DB::raw('(SELECT COUNT(*) FROM share_bills WHERE orders.id = share_bills.order_id AND share_bills.status = "paid") as paid_count'),
+                    DB::raw('(SELECT COUNT(*) FROM share_bills WHERE orders.id = share_bills.order_id AND share_bills.is_owner = 0) as total'))
                 ->leftJoin('orders', 'orders.id', '=', 'share_bills.order_id')
                 ->leftJoin('stores', 'stores.id', '=', 'orders.store_id')
                 ->where('owner_id', $user->id)
@@ -1150,7 +1157,7 @@ class UserController extends Controller
         }
     }
 
-    public function remindPayShareBill(Request $request)
+    public function remindPayShareBill(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|integer',
