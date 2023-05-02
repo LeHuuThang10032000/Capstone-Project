@@ -1111,7 +1111,13 @@ class UserController extends Controller
             $user = Auth::user();
 
             $bills = DB::table('share_bills')
-                ->select('share_bills.id', 'share_bills.created_at', 'share_bills.order_id', DB::raw("CONCAT('Hóa đơn chia tiền từ ', users.f_name) AS title"))
+                ->select(
+                    'share_bills.id',
+                    'share_bills.created_at',
+                    'share_bills.order_id',
+                    DB::raw("CONCAT('Hóa đơn chia tiền từ ', users.f_name) AS title"),
+                    DB::raw('(SELECT COUNT(*) FROM share_bills WHERE orders.id = share_bills.order_id AND share_bills.status = "paid") as paid_count'),
+                    DB::raw('(SELECT COUNT(*) FROM share_bills WHERE orders.id = share_bills.order_id AND share_bills.is_owner = 0) as total'))
                 ->leftJoin('orders', 'orders.id', '=', 'share_bills.order_id')
                 ->leftJoin('users', 'users.id', '=', 'orders.user_id')
                 ->where('shared_id', $user->id)
