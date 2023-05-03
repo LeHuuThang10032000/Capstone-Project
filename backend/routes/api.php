@@ -9,6 +9,7 @@ use App\Http\Controllers\api\CreditController;
 use App\Http\Controllers\api\WithdrawController;
 use App\Http\Controllers\api\FriendsController;
 use App\Http\Controllers\api\NotificationController;
+use App\Http\Controllers\api\ParkingFeeController;
 use App\Http\Controllers\api\StoreController;
 use Illuminate\Support\Facades\Route;
 
@@ -137,5 +138,10 @@ Route::group(['middleware' => ['auth:api']], function(){
     });
 
     Route::get('/promocode', [UserController::class, 'getStorePromocode']);
+
+    Route::group(['prefix' => 'parking-fee'], function() {
+        Route::post('pay', [ParkingFeeController::class, 'pay']);
+        Route::get('scan', [ParkingFeeController::class, 'scan']);
+    });
 });
 

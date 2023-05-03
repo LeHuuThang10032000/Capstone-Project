@@ -16,6 +16,13 @@ class Helper {
         return Crypt::encryptString($number);
     }
 
+    public static function generateCode()
+    {
+        $code = mt_rand(1000,9999);
+        if (Transaction::where('code', $code)->count() > 0) self::generateCode();
+        return $code;
+    }
+
     public static function generateOrderCode()
     {
         $number = mt_rand(10000000,99999999);
