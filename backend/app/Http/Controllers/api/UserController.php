@@ -209,7 +209,7 @@ class UserController extends Controller
         }
     }
 
-    public function getStores(Request $request)
+    public function getStores(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'limit' => 'integer',
@@ -809,7 +809,7 @@ class UserController extends Controller
         }
     }
 
-    public function cancelOrder(Request $request)
+    public function cancelOrder(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
