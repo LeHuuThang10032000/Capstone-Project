@@ -102,7 +102,7 @@ class Transaction extends Model
 
     public function getMessageAttribute($value)
     {
-        $value = Crypt::decryptString($value);
+        if($value !== null) $value = Crypt::decryptString($value);
         return $value;
     }
 }
