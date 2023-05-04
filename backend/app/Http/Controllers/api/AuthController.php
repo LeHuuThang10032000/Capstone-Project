@@ -134,7 +134,7 @@ class AuthController extends Controller
         $user = $request->user();
         $currentToken = $request->user()->tokens();
 
-        if ($currentToken) {
+        if ($currentToken && $user->is_sercurity !== true) {
             // Revoke all tokens except the current one
             $user->tokens()->delete();
         }

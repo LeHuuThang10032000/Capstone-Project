@@ -856,8 +856,10 @@ class UserController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
+            'taken_code' => 'required',
         ], [
             'order_id.exists' => 'Đơn hàng không tồn tại',
+            'taken_code.required' => 'Vui lòng nhập mã nhận hàng'
         ]);
 
         if ($validate->fails()) {
@@ -868,6 +870,10 @@ class UserController extends Controller
             $order = Order::where('id', $request->order_id)
                 ->where('user_id', Auth::user()->id)
                 ->firstOrFail();
+
+            if($order->taken_code !== $request->taken_code) {
+                return APIResponse::FailureResponse('Mã nhận hàng không hợp lệ');
+            }
 
             if ($order->status == 'canceled') {
                 return APIResponse::FailureResponse('Đơn hàng đã bị hủy');
