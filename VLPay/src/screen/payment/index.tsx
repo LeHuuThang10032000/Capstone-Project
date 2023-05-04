@@ -249,7 +249,7 @@ const Payment = () => {
                   marginBottom: 20,
                   fontSize: 20,
                 }}>
-                tiền giao dịch
+                Tiền giao dịch
               </UText>
               <UText
                 style={{fontWeight: '700', marginBottom: 20, fontSize: 24}}>

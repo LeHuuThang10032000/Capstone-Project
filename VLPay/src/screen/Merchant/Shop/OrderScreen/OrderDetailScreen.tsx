@@ -24,6 +24,8 @@ const OrderDetailScreen = () => {
   const [status, setStatus] = useState(data?.status);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [isGetCash, setGetCash] = useState(false);
+  console.log(orderDetail.taken_code);
+
   const fetchData = async () => {
     console.error(
       baseUrl +
@@ -225,9 +227,14 @@ const OrderDetailScreen = () => {
       />
       <ScrollView style={{paddingHorizontal: 16, paddingVertical: 20}}>
         <HStack justifyContent={'space-between'} alignItems={'center'}>
-          <UText style={{color: '#4285F4', fontWeight: '700'}}>
-            #{orderDetail?.order_code}
-          </UText>
+          <VStack>
+            <UText style={{color: '#4285F4', fontWeight: '700'}}>
+              #{orderDetail?.order_code}
+            </UText>
+            <UText style={{color: '#000000', fontWeight: '700'}}>
+              {orderDetail?.taken_code}
+            </UText>
+          </VStack>
           <View
             style={{
               paddingHorizontal: 20,
