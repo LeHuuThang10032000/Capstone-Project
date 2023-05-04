@@ -30,6 +30,8 @@ import BodyModal from '../../../components/CustomCancelOrder/BodyModal';
 import Toast from 'react-native-toast-message';
 import moment from 'moment';
 import BackIcon from '../../../assets/svg/left-arrow.svg';
+import HeaderModalCode from '../../../components/CustomCodeOrder/HeaderModal';
+import BodyModalCode from '../../../components/CustomCodeOrder/BodyModal';
 
 type State = 'pending' | 'accepted' | 'processing' | 'finished';
 
@@ -44,6 +46,8 @@ const OrderProcess = ({route}: any) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [order, setOrder] = useState<Order>();
+
+  console.log(order);
 
   const isFocused = useIsFocused();
 
@@ -556,7 +560,7 @@ const OrderProcess = ({route}: any) => {
                   Ví VLpay
                 </Text>
               </HStack>
-              <TouchableOpacity onPress={takenOrder}>
+              <TouchableOpacity onPress={toggleModal}>
                 <View
                   justifyContent="center"
                   alignItems={'center'}
@@ -573,6 +577,33 @@ const OrderProcess = ({route}: any) => {
                 </View>
               </TouchableOpacity>
             </VStack>
+
+            <Modal
+              isVisible={modalVisible}
+              animationIn="slideInUp"
+              animationOut="fadeOutDown"
+              style={{
+                margin: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  height: 280,
+                  width: '90%',
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 8,
+                }}>
+                <HeaderModalCode title="Đăng xuất" onPress={closeModal} />
+                <BodyModalCode
+                  cancel="cancel"
+                  confirm="confirm"
+                  onPressCancel={closeModal}
+                  onPressConfirm={() => console.log('clicked')}
+                  orderId={order_id}
+                />
+              </View>
+            </Modal>
           </View>
         );
       default:

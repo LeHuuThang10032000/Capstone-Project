@@ -31,6 +31,8 @@ import PrepareIcon from '../../assets/svg/order2.svg';
 import DoneIcon from '../../assets/svg/done_order.svg';
 import HeaderModal from '../../components/CustomCancelOrder/HeaderModal';
 import BodyModal from '../../components/CustomCancelOrder/BodyModal';
+import HeaderModalCode from '../../components/CustomCodeOrder/HeaderModal';
+import BodyModalCode from '../../components/CustomCodeOrder/BodyModal';
 type Props = {};
 type State = 'pending' | 'accepted' | 'processing' | 'finished';
 
@@ -692,7 +694,7 @@ const MyDetailOrder = ({route}: any) => {
                   Ví VLpay
                 </Text>
               </HStack>
-              <TouchableOpacity onPress={takenOrder}>
+              <TouchableOpacity onPress={toggleModal}>
                 <View
                   justifyContent="center"
                   alignItems={'center'}
@@ -709,6 +711,33 @@ const MyDetailOrder = ({route}: any) => {
                 </View>
               </TouchableOpacity>
             </VStack>
+
+            <Modal
+              isVisible={modalVisible}
+              animationIn="slideInUp"
+              animationOut="fadeOutDown"
+              style={{
+                margin: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  height: 280,
+                  width: '90%',
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 8,
+                }}>
+                <HeaderModalCode title="Đăng xuất" onPress={closeModal} />
+                <BodyModalCode
+                  cancel="cancel"
+                  confirm="confirm"
+                  onPressCancel={closeModal}
+                  onPressConfirm={() => console.log('clicked')}
+                  orderId={id}
+                />
+              </View>
+            </Modal>
           </View>
         );
       case 'taken':
