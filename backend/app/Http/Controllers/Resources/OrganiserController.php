@@ -503,6 +503,6 @@ class OrganiserController extends Controller
 
     public function parking()
     {
-        
+        return view('parking.index');
     }
 }
