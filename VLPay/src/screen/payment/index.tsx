@@ -211,33 +211,8 @@ const Payment = () => {
                 </UText>
               </HStack>
               <VStack style={styles.contentContainerH}>
-                <UText style={{fontSize: 14}}>Mã QRCode</UText>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    setModal(true);
-                  }}>
-                  <QRCode
-                    //QR code value
-                    value={resultTransaction?.data?.data?.code}
-                    // value="https://randomuser.me/api/portraits/men/78.jpg"
-                    //size of QR Code
-                    size={100}
-                    //Color of the QR Code (Optional)
-                    color="black"
-                    //Background Color of the QR Code (Optional)
-                    backgroundColor="white"
-                    //Logo of in the center of QR Code (Optional)
-                    //Center Logo size  (Optional)
-                    logoSize={30}
-                    //Center Logo margin (Optional)
-                    logoMargin={2}
-                    //Center Logo radius (Optional)
-                    logoBorderRadius={15}
-                    //Center Logo background (Optional)
-                    logoBackgroundColor="#B5EAD8"
-                  />
-                </TouchableOpacity>
+                <UText style={{fontSize: 14}}>Chi tiết giao dịch</UText>
+                <UText>{resultTransaction?.data?.data?.code}</UText>
               </VStack>
             </View>
           </VStack>
@@ -552,52 +527,6 @@ const Payment = () => {
         btnTextLeft={'Xác nhận'}
         style={{flexDirection: 'column'}}
       />
-      {modal && (
-        <View
-          style={{
-            width: '100%',
-            height: '100%',
-            zIndex: 100000,
-            position: 'absolute',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <TouchableOpacity
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'black',
-              opacity: 0.5,
-              position: 'absolute',
-            }}
-            onPress={() => {
-              setModal(false);
-            }}></TouchableOpacity>
-          {modal && (
-            <QRCode
-              //QR code value
-              value={resultTransaction?.data?.data?.code}
-              // value="https://randomuser.me/api/portraits/men/78.jpg"
-              //size of QR Code
-              size={300}
-              //Color of the QR Code (Optional)
-              color="black"
-              //Background Color of the QR Code (Optional)
-              backgroundColor="white"
-              //Logo of in the center of QR Code (Optional)
-              //Center Logo size  (Optional)
-              logoSize={30}
-              //Center Logo margin (Optional)
-              logoMargin={2}
-              //Center Logo radius (Optional)
-              logoBorderRadius={15}
-              //Center Logo background (Optional)
-              logoBackgroundColor="#B5EAD8"
-            />
-          )}
-        </View>
-      )}
     </SafeAreaView>
   );
 };
