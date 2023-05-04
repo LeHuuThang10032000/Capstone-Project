@@ -21,7 +21,7 @@ class Order extends Model
         'updated_at',
         'accepted_at',
         'canceld_at',
-
+        'taken_code',
     ];
 
     protected $appends = ['product_quantity'];

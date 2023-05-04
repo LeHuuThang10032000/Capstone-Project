@@ -53,6 +53,12 @@
                     <span class="flex-1 ml-3 whitespace-nowrap">Cửa hàng</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('organiser.store.index') }}" class="flex items-center p-3 hover:bg-theme {{ Request::is('store') ? 'active' : '' }}">
+                    <img src="{{ asset('img/bike.png') }}" alt="#">
+                    <span class="flex-1 ml-3 whitespace-nowrap">Gửi xe</span>
+                </a>
+            </li>
             <div class="absolute w-full" style="bottom: 0;">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

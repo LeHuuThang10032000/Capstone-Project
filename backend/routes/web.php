@@ -60,4 +60,8 @@ Route::group(['middleware' => ['auth', 'role:organiser']], function () {
     Route::group(['prefix' => 'transaction', 'as' => 'organiser.transaction.'], function () {
         Route::get('', [OrganiserController::class, 'getListTransactions'])->name('index');
     });
+
+    Route::group(['prefix' => 'parking', 'as' => 'organiser.parking.'], function () {
+        Route::get('', [OrganiserController::class, 'parking'])->name('index');
+    });
 });

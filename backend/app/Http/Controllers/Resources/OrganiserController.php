@@ -500,4 +500,9 @@ class OrganiserController extends Controller
 
         return view('dashboard', compact('pendingStores', 'approvedStores', 'newRegisters', 'monthTransactions', 'orders', 'transactions', 'admin'));
     }
+
+    public function parking()
+    {
+        
+    }
 }

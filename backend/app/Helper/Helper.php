@@ -23,6 +23,12 @@ class Helper {
         return $code;
     }
 
+    public static function generateTakenCode()
+    {
+        $code = mt_rand(1000,9999);
+        return $code;
+    }
+
     public static function generateOrderCode()
     {
         $number = mt_rand(10000000,99999999);

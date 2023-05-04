@@ -85,6 +85,7 @@ class ParkingFeeController extends Controller
     public function scan(Request $request)
     {
         try {
+            DB::beginTransaction();
             $sercurity = Auth::user();
             if($sercurity->is_sercurity !== 1)
             {
@@ -92,18 +93,18 @@ class ParkingFeeController extends Controller
             }
 
             $qr_code = $request->code;
-            $transaction = Transaction::where('qr_code', $qr_code)->first();
+            $transaction = Transaction::where('qr_code', $qr_code)->where('type', 'P')->first();
             if (!$transaction) {
                 return ApiResponse::failureResponse('Mã không hợp lệ');
             }
             
-            $yesterday = Carbon::yesterday();
-            $transactionDate = Carbon::parse($transaction->created_at)->format('Y-m-d');
-            if ($transactionDate !== $yesterday->format('Y-m-d')) {
-                ApiResponse::failureResponse('Mã đã hết hạn sử dụng');
-            }
+            $transaction->update([
+                "qr_code" => null
+            ]);
+            DB::commit();
             return ApiResponse::successResponse('valid');
         } catch(\Exception $e) {
+            DB::rollBack();
             ApiResponse::failureResponse($e->getMessage());
         }
     }

@@ -849,7 +849,7 @@ class StoreController extends Controller
                 $status = ['processing', 'accepted'];
             }
 
-            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total', 'product_detail', 'status')
+            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total', 'product_detail', 'status', 'taken_code')
                 ->where('store_id', $request->store_id)
                 ->whereIn('status', $status)
                 ->orderBy('created_at');
@@ -1020,6 +1020,7 @@ class StoreController extends Controller
             } else {
                 if($order->status != 'processing') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi hoàn thành đơn hàng');
                 $order->status = 'finished';
+                $order->taken_code = Helper::generateTakenCode();
                 $order->finished_at = now();
                 $order->save();
                 (new SendPushNotification)->merchantFinishedOrder($order->user, $order->store);
