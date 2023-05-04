@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {HStack, Skeleton, VStack} from 'native-base';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {formatCurrency} from '../../components/helper';
+import {black} from 'react-native-paper/lib/typescript/styles/colors';
 
 const ManageCash = (props: {
   wallet: number;
@@ -69,6 +70,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Poppins-Regular',
+    color: 'black',
   },
   price: {
     fontFamily: 'Poppins-Regular',

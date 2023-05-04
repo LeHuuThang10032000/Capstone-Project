@@ -28,9 +28,11 @@ import YesNoModal from '../../components/YesNoModal';
 import Icons from '../../components/Icons';
 import Colors from '../../components/helpers/Colors';
 import axios from 'axios';
+import QRCode from 'react-native-qrcode-svg';
 const Payment = () => {
   const navigation = useNavigation<MainStackNavigation>();
   const {data} = useRoute<RouteProp<MainStackParamList, 'Payment'>>()?.params;
+
   const handleBack = () => {
     navigation.navigate('Home');
   };
@@ -47,6 +49,7 @@ const Payment = () => {
   const [isLoading, setLoading] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [userProfile, setUserProfile] = useState('');
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -207,12 +210,35 @@ const Payment = () => {
                   })}
                 </UText>
               </HStack>
-              <HStack style={styles.contentContainerH}>
-                <UText style={{fontSize: 14}}>Chi tiết giao dịch</UText>
-                <UText style={{fontWeight: '700', color: 'red', fontSize: 14}}>
-                  {resultTransaction?.data?.code} {'>'}
-                </UText>
-              </HStack>
+              <VStack style={styles.contentContainerH}>
+                <UText style={{fontSize: 14}}>Mã QRCode</UText>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    setModal(true);
+                  }}>
+                  <QRCode
+                    //QR code value
+                    value={resultTransaction?.data?.data?.code}
+                    // value="https://randomuser.me/api/portraits/men/78.jpg"
+                    //size of QR Code
+                    size={100}
+                    //Color of the QR Code (Optional)
+                    color="black"
+                    //Background Color of the QR Code (Optional)
+                    backgroundColor="white"
+                    //Logo of in the center of QR Code (Optional)
+                    //Center Logo size  (Optional)
+                    logoSize={30}
+                    //Center Logo margin (Optional)
+                    logoMargin={2}
+                    //Center Logo radius (Optional)
+                    logoBorderRadius={15}
+                    //Center Logo background (Optional)
+                    logoBackgroundColor="#B5EAD8"
+                  />
+                </TouchableOpacity>
+              </VStack>
             </View>
           </VStack>
         </View>
@@ -434,6 +460,8 @@ const Payment = () => {
                       );
                       setResultTransaction(_result);
                       setResult(true);
+                      console.log(_result?.data?.data);
+
                       setLoading(false);
                     } catch (e) {
                       console.log(e);
@@ -500,6 +528,7 @@ const Payment = () => {
           )}
         </TouchableOpacity>
       </View>
+
       <YesNoModal
         icon={<Icons.WarningIcon />}
         visible={visibleWarning}
@@ -523,6 +552,52 @@ const Payment = () => {
         btnTextLeft={'Xác nhận'}
         style={{flexDirection: 'column'}}
       />
+      {modal && (
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            zIndex: 100000,
+            position: 'absolute',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <TouchableOpacity
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'black',
+              opacity: 0.5,
+              position: 'absolute',
+            }}
+            onPress={() => {
+              setModal(false);
+            }}></TouchableOpacity>
+          {modal && (
+            <QRCode
+              //QR code value
+              value={resultTransaction?.data?.data?.code}
+              // value="https://randomuser.me/api/portraits/men/78.jpg"
+              //size of QR Code
+              size={300}
+              //Color of the QR Code (Optional)
+              color="black"
+              //Background Color of the QR Code (Optional)
+              backgroundColor="white"
+              //Logo of in the center of QR Code (Optional)
+              //Center Logo size  (Optional)
+              logoSize={30}
+              //Center Logo margin (Optional)
+              logoMargin={2}
+              //Center Logo radius (Optional)
+              logoBorderRadius={15}
+              //Center Logo background (Optional)
+              logoBackgroundColor="#B5EAD8"
+            />
+          )}
+        </View>
+      )}
     </SafeAreaView>
   );
 };

@@ -22,6 +22,7 @@ const ListShareBill = ({route}: any) => {
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get('/share-bill?page=1&limit=1000');
     setData(result?.data?.data);
+    console.log('data', data);
   }, []);
   useEffect(() => {
     fetchData();
@@ -55,6 +56,12 @@ const ListShareBill = ({route}: any) => {
                   </Text>
                 </HStack>
                 <Text style={styles.titleText}>{item.title}</Text>
+                <HStack justifyContent="space-between" style={{marginTop: 5}}>
+                  <Text style={styles.text}>Số người đã trả</Text>
+                  <Text style={styles.text}>
+                    {item?.paid_count ?? 0} / {item?.total ?? 0}
+                  </Text>
+                </HStack>
               </View>
             </Pressable>
           </View>

@@ -68,6 +68,7 @@ import DetailBillShare from '../screen/Notification/NotiShareBill/DetailBillShar
 import PaidBillDetail from '../screen/PaidBillDetail';
 import ListYourBill from '../screen/ListYourBill';
 import HistoryWithDrawDetail from '../screen/WithDraw/HistoryWithDrawDetail';
+import QRCodeCheck from '../screen/ScanQR/QRCodeCheck';
 
 export const MAIN_STACK_SCREEN: Screen[] = [
   {
@@ -273,6 +274,10 @@ export const MAIN_STACK_SCREEN: Screen[] = [
   {
     name: 'NotiShareBill',
     component: NotiShareBill,
+  },
+  {
+    name: 'QRCodeCheck',
+    component: QRCodeCheck,
   },
   {
     name: 'PromoCode',

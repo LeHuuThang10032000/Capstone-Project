@@ -42,6 +42,8 @@ const Index = () => {
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get('/user-wallet');
     setUserWallet(result?.data?.data?.balance);
+    console.log(result?.data?.data);
+
     setCredit(result?.data?.data?.credit_limit);
     setNeedPay(result?.data?.data?.need_pay);
     setPaidBill(result?.data?.data?.paid_bill);
@@ -62,6 +64,7 @@ const Index = () => {
   useEffect(() => {
     init();
   });
+
   return (
     <>
       {token ? (
