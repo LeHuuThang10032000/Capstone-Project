@@ -101,25 +101,6 @@ const Index = () => {
         </View>
       </View>
 
-      {/* <View style={{marginHorizontal: 20, marginVertical: 10}}>
-        <Text style={{marginVertical: 3, fontFamily: 'Poppins-Regular'}}>
-          Ví của tôi
-        </Text>
-        <View style={styles.wrapperButton}>
-          <TouchableOpacity style={styles.button}>
-            <View style={styles.info}>
-              <WalletIcon style={{paddingLeft: 30}} />
-              <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Ví</Text>
-              </View>
-            </View>
-            <View>
-              <ExtendIcon />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View> */}
-
       <View style={{marginHorizontal: 20, marginVertical: 10}}>
         <Text
           style={{

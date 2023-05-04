@@ -74,6 +74,7 @@ const DetailOrder = ({route}: any) => {
       'https://zennoshop.cf/api/user/get-profile',
     );
     setProfile(result?.data?.data);
+    console.log(result?.data?.data);
   }, []);
 
   useEffect(() => {
@@ -214,7 +215,7 @@ const DetailOrder = ({route}: any) => {
                   </FormControl.Label>
                   <Input
                     w="90%"
-                    value={phone}
+                    value={profile.phone}
                     style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                     rightElement={
                       <TouchableOpacity style={{paddingRight: 10}}>
@@ -237,7 +238,7 @@ const DetailOrder = ({route}: any) => {
                   </FormControl.Label>
                   <Input
                     w="90%"
-                    value={name}
+                    value={profile?.f_name}
                     style={{fontFamily: 'Poppins-Regular', fontSize: 14}}
                   />
                 </FormControl>

@@ -141,7 +141,9 @@ const NotiShareBill = ({route}: any) => {
                     alt="image"
                     borderRadius={50}
                   />
-                  <Text paddingLeft={3}>
+                  <Text
+                    paddingLeft={3}
+                    style={item?.is_your === 1 ? {fontWeight: 'bold'} : {}}>
                     {item?.is_your === 1
                       ? item?.shared_user?.f_name + '(Tôi)'
                       : item?.shared_user?.f_name}
