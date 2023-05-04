@@ -38,11 +38,15 @@ const Index = () => {
   const [isloading, setIsloading] = useState(false);
   const [needPay, setNeedPay] = useState(0);
   const [paidBill, setPaidBill] = useState(0);
+  const [profile, setProfile] = useState('');
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get('/user-wallet');
+    const _profile = await axiosClient.get(
+      'https://zennoshop.cf/api/user/get-profile',
+    );
+    setProfile(_profile?.data?.data?.is_sercurity);
     setUserWallet(result?.data?.data?.balance);
-    console.log(result?.data?.data);
 
     setCredit(result?.data?.data?.credit_limit);
     setNeedPay(result?.data?.data?.need_pay);
@@ -72,7 +76,7 @@ const Index = () => {
           style={{backgroundColor: '#fff'}}
           showsVerticalScrollIndicator={false}>
           <Header />
-          <Banner wallet={userWallet} />
+          <Banner wallet={userWallet} isSecurity={profile} />
           <ManageCash wallet={userWallet} credit={credit} loading={isloading} />
           {/* <ContentWallet /> */}
           <ShareBillComp

@@ -25,6 +25,8 @@ const Banner = (props: Props) => {
   const paymentType = 'T';
   const [qrcode, setQrcode] = useState(false);
   const [value, setValue] = useState('0');
+  console.log(props);
+
   return (
     <>
       <View>
@@ -77,42 +79,46 @@ const Banner = (props: Props) => {
               <Text style={styles.text}>QUÉT MÃ</Text>
             </View>
 
-            <View style={styles.wrapperButton}>
-              <TouchableOpacity
-                onPress={async () => {
-                  const result = await axiosClient.post('/parking-fee/pay');
-                  setValue(result?.data?.data);
-                  navigation.navigate('QRCodeCheck', {
-                    value: result?.data?.data,
-                    isParking: true,
-                  });
-                }}>
-                <View style={styles.buttonTranfer}>
-                  <Image
-                    source={require('../../assets/img/scan.png')}
-                    style={{width: 52, height: 52}}
-                    alt={'just image'}
-                  />
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.text}>Gửi xe 3k</Text>
-            </View>
+            {!props?.isSecurity && (
+              <View style={styles.wrapperButton}>
+                <TouchableOpacity
+                  onPress={async () => {
+                    const result = await axiosClient.post('/parking-fee/pay');
+                    setValue(result?.data?.data);
+                    navigation.navigate('QRCodeCheck', {
+                      value: result?.data?.data,
+                      isParking: true,
+                    });
+                  }}>
+                  <View style={styles.buttonTranfer}>
+                    <Image
+                      source={require('../../assets/img/scan.png')}
+                      style={{width: 52, height: 52}}
+                      alt={'just image'}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.text}>GỬI XE 3K</Text>
+              </View>
+            )}
 
-            <View style={styles.wrapperButton}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('QRCodeCheck', props.wallet);
-                }}>
-                <View style={styles.buttonTranfer}>
-                  <Image
-                    source={require('../../assets/img/scan.png')}
-                    style={{width: 52, height: 52}}
-                    alt={'just image'}
-                  />
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.text}>KIỂM TRA MÃ</Text>
-            </View>
+            {props?.isSecurity !== 0 && (
+              <View style={styles.wrapperButton}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('QRCodeCheck', props.wallet);
+                  }}>
+                  <View style={styles.buttonTranfer}>
+                    <Image
+                      source={require('../../assets/img/scan.png')}
+                      style={{width: 52, height: 52}}
+                      alt={'just image'}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.text}>KIỂM TRA MÃ</Text>
+              </View>
+            )}
 
             <View style={styles.wrapperButton}>
               <TouchableOpacity
