@@ -78,7 +78,7 @@ const FirstRoute = () => {
                   <Text fontSize={18} fontWeight={'bold'} color="#000000">
                     {item.store_name}
                   </Text>
-                  <Text color={'#919191'}>Mã Đơn: {item.order_code}</Text>
+                  <Text color={'#919191'}>Mã đơn: {item.order_code}</Text>
                 </VStack>
                 <TouchableOpacity
                   onPress={() =>
@@ -150,7 +150,7 @@ const SecondRoute = () => {
                   <Text fontSize={18} fontWeight={'bold'} color="#000000">
                     {item.store_name}
                   </Text>
-                  <Text color={'#919191'}>Mã Đơn: {item.order_code}</Text>
+                  <Text color={'#919191'}>Mã đơn: {item.order_code}</Text>
                 </VStack>
                 <TouchableOpacity
                   onPress={() =>

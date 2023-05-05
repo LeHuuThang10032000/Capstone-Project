@@ -204,7 +204,7 @@ const OrderProcess = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Giảm giá</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  {order?.discount_amount}
+                  {formatCurrency((order?.discount_amount ?? 0).toString())}đ
                 </Text>
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
@@ -367,7 +367,7 @@ const OrderProcess = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Giảm giá</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  {order?.discount_amount}
+                  {formatCurrency((order?.discount_amount ?? 0).toString())}đ
                 </Text>
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
@@ -510,7 +510,7 @@ const OrderProcess = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Giảm giá</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  {order?.discount_amount}
+                  {formatCurrency((order?.discount_amount ?? 0).toString())}đ
                 </Text>
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">

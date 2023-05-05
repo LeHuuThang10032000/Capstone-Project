@@ -762,7 +762,7 @@ const CreatePromo = () => {
                   }
                 }}>
                 <UText style={{color: 'white', fontWeight: 'bold'}}>
-                  {data?.type === 'running' ? 'Kết Thúc Giảm Giá' : 'Xoá'}
+                  {data?.type === 'running' ? 'Kết thúc giảm giá' : 'Xoá'}
                 </UText>
               </TouchableOpacity>
             )}
@@ -842,14 +842,12 @@ const CreatePromo = () => {
                   navigation.goBack();
                 }}>
                 {data?.id && data?.type === 'upcoming' && (
-                  <UText
-                    style={{fontWeight: 'bold', textTransform: 'capitalize'}}>
+                  <UText style={{fontWeight: 'bold'}}>
                     chỉnh sửa phiếu giảm giá
                   </UText>
                 )}
                 {!data?.id && (
-                  <UText
-                    style={{fontWeight: 'bold', textTransform: 'capitalize'}}>
+                  <UText style={{fontWeight: 'bold'}}>
                     Xác nhận tạo phiếu giảm giá
                   </UText>
                 )}
@@ -1291,7 +1289,7 @@ const CreatePromo = () => {
                   });
                 }}>
                 <UText style={{color: 'white', fontWeight: 'bold'}}>
-                  {data?.type === 'running' ? 'Kết Thúc Giảm Giá' : 'Xoá'}
+                  {data?.type === 'running' ? 'Kết thúc giảm giá' : 'Xoá'}
                 </UText>
               </TouchableOpacity>
             )}
