@@ -62,7 +62,7 @@ const FirstRoute = () => {
   const [history, setHistory] = useState([]);
   const isFocused = useIsFocused();
 
-  console.log(order);
+  console.log('My Order', order);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);

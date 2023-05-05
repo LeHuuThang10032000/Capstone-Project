@@ -99,7 +99,7 @@ const Index = () => {
 
   return (
     <View flex={1} backgroundColor={'white'}>
-      <HeaderBack title="Đăng ký tài khoản tín dụng" />
+      <HeaderBack title="Đăng ký tài khoản Tín dụng" />
       {approve ? (
         <ScrollView>
           <VStack mx={3}>

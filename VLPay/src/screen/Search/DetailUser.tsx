@@ -78,7 +78,7 @@ const DetailUser = ({route}: any) => {
                 <DeleteFriend color="#514545" />
               )
             }>
-            <Text style={styles.button}>Xoa kết bạn</Text>
+            <Text style={styles.button}>Xóa kết bạn</Text>
           </Button>
         </Center>
       )}

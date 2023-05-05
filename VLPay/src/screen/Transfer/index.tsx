@@ -282,7 +282,7 @@ const Index = (props: any) => {
                   </FormControl.Label>
                   <Input
                     w="90%"
-                    placeholder="Nhập Họ và tên"
+                    placeholder="Nhập họ và tên"
                     backgroundColor="white"
                     value={profile}
                     isDisabled={true}

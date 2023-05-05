@@ -228,7 +228,7 @@ const PromoList = () => {
               alignSelf: 'center',
               color: 'black',
               fontWeight: 'bold',
-              textTransform: 'capitalize',
+              // textTransform: 'capitalize',
             }}>
             Tạo phiếu giảm giá
           </UText>
