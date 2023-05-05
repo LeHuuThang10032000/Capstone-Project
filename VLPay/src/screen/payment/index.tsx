@@ -405,11 +405,6 @@ const Payment = () => {
                   if (value.length === 6) {
                     setLoading(true);
                     try {
-                      console.log(
-                        'data',
-                        parseInt(data?.money.replace('.', '')),
-                      );
-
                       const formData = new FormData();
                       formData.append('f_name', profile[0]?.f_name);
                       formData.append(

@@ -39,6 +39,7 @@ const Index = () => {
   const [needPay, setNeedPay] = useState(0);
   const [paidBill, setPaidBill] = useState(0);
   const [profile, setProfile] = useState('');
+  const [phone, setPhone] = useState('');
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get('/user-wallet');
@@ -47,6 +48,7 @@ const Index = () => {
     );
     setProfile(_profile?.data?.data?.is_sercurity);
     setUserWallet(result?.data?.data?.balance);
+    setPhone(_profile?.data?.data?.phone);
 
     setCredit(result?.data?.data?.credit_limit);
     setNeedPay(result?.data?.data?.need_pay);
@@ -76,7 +78,12 @@ const Index = () => {
           style={{backgroundColor: '#fff'}}
           showsVerticalScrollIndicator={false}>
           <Header />
-          <Banner wallet={userWallet} isSecurity={profile} />
+          <Banner
+            wallet={userWallet}
+            isSecurity={profile}
+            loading={isloading}
+            phone={phone}
+          />
           <ManageCash wallet={userWallet} credit={credit} loading={isloading} />
           {/* <ContentWallet /> */}
           <ShareBillComp

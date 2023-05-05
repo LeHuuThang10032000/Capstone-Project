@@ -26,11 +26,12 @@ export default function QRCodeCheck(props: Props) {
   const [visibleWarning, setVisibleWarning] = React.useState(false);
   const [changePage, setChangePage] = React.useState(false);
   const [ScanAgain, setScanAgain] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState(null);
+  const [_data, setData] = React.useState([]);
 
   const userWallet = props?.route?.params ?? 0;
 
-  const [frameProcessor, barcodes] = useScanBarcodes(
+  const [frameProcessor, barcodes, setBarcodes] = useScanBarcodes(
     [BarcodeFormat.ALL_FORMATS],
     {checkInverted: true},
   );
@@ -48,24 +49,30 @@ export default function QRCodeCheck(props: Props) {
 
   const handleScan = React.useCallback(async () => {
     if (!data?.isParking) {
-      barcodes.forEach(async barcode => {
+      for (const barcode of barcodes) {
         if (barcode?.displayValue) {
           try {
-            const code = barcode?.displayValue;
-            const result = await axiosClient.get('/parking-fee/scan', {code});
-            setValue(result?.data?.data);
-            console.log('result?.data?.data', result?.data?.data);
-
+            const code = barcode.displayValue.toString();
+            await axiosClient.get('parking-fee/scan?code=' + code);
+            setValue(true);
             setChangePage(true);
-          } catch (e) {}
+            setTimeout(() => {
+              setChangePage(null);
+            }, 2000);
+          } catch (e) {
+            setValue(false);
+            setChangePage(true);
+          }
         }
-      });
+      }
     }
   }, [barcodes, setChangePage, data]);
 
   React.useEffect(() => {
     if (barcodes.length > 0 && !data?.isParking) {
-      handleScan();
+      setTimeout(() => {
+        handleScan();
+      }, 1000);
     }
   }, [barcodes, handleScan]);
 
@@ -80,7 +87,7 @@ export default function QRCodeCheck(props: Props) {
               height: '100%',
               position: 'absolute',
               zIndex: 10000,
-              flexDirection: 'row',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: 'white',
@@ -105,6 +112,18 @@ export default function QRCodeCheck(props: Props) {
               //Center Logo background (Optional)
               logoBackgroundColor="#B5EAD8"
             />
+
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}>
+              <UText style={{marginTop: 20, fontSize: 20}}>
+                Hãy đưa mã này cho
+              </UText>
+              <UText style={{fontSize: 20}}>bác bảo vệ scan nhé.</UText>
+            </View>
           </View>
         ) : (
           <Camera
@@ -115,15 +134,8 @@ export default function QRCodeCheck(props: Props) {
             frameProcessorFps={5}
           />
         )}
-
         <YesNoModal
-          icon={
-            value === 'valid' ? (
-              <Icons.SuccessIcon />
-            ) : (
-              <Image source={require('../../assets/img/success.png')} />
-            )
-          }
+          icon={value === false ? <Icons.WarningIcon /> : <Icons.SuccessIcon />}
           visible={changePage}
           btnLeftStyle={{
             backgroundColor: Colors.primary,
@@ -135,7 +147,7 @@ export default function QRCodeCheck(props: Props) {
             display: 'none',
           }}
           message={
-            value === 'valid' ? 'Mã qrcode hợp lệ' : 'Mã qrcode không hợp lệ'
+            value === true ? 'Mã qrcode hợp lệ' : 'Mã qrcode không hợp lệ'
           }
           title={'Kết quả quét'}
           onActionLeft={() => {
