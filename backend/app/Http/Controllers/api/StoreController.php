@@ -849,7 +849,15 @@ class StoreController extends Controller
                 $status = ['processing', 'accepted'];
             }
 
-            $orders = Order::select('id', 'order_code', 'created_at', 'user_id', 'order_total', 'product_detail', 'status', 'taken_code')
+            $orders = Order::select(
+                    'id',
+                    'order_code',
+                    'created_at',
+                    'user_id',
+                    'product_detail',
+                    'status',
+                    'taken_code', 
+                    DB::raw('(order_total - discount_amount) as order_total'))
                 ->where('store_id', $request->store_id)
                 ->whereIn('status', $status)
                 ->orderBy('created_at');
