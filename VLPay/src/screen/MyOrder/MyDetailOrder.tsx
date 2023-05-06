@@ -189,7 +189,7 @@ const MyDetailOrder = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Giảm giá</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  {order?.discount_amount}
+                  {formatCurrency((order?.discount_amount ?? 0).toString())}đ
                 </Text>
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
@@ -351,7 +351,7 @@ const MyDetailOrder = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Giảm giá</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  {order?.discount_amount}
+                  {formatCurrency((order?.discount_amount ?? 0).toString())}đ
                 </Text>
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
@@ -485,10 +485,12 @@ const MyDetailOrder = ({route}: any) => {
                     justifyContent="space-between">
                     <VStack>
                       <HStack key={item.id} alignItems={'center'}>
+                        <Text paddingLeft={1} fontWeight={'bold'}>
+                          {item.quantity} x{' '}
+                        </Text>
                         <Text fontSize={16} fontWeight={'bold'} color="#000000">
                           {item.name}
                         </Text>
-                        <Text paddingLeft={1}>({item.quantity})</Text>
                       </HStack>
                       {item.add_ons.map(item => (
                         <Text key={item.id} color={'#747980'}>
@@ -508,7 +510,7 @@ const MyDetailOrder = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Giảm giá</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  {order?.discount_amount}
+                  {formatCurrency((order?.discount_amount ?? 0).toString())}đ
                 </Text>
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
@@ -621,10 +623,12 @@ const MyDetailOrder = ({route}: any) => {
                     justifyContent="space-between">
                     <VStack>
                       <HStack key={item.id} alignItems={'center'}>
+                        <Text paddingLeft={1} fontWeight={'bold'}>
+                          {item.quantity} x{' '}
+                        </Text>
                         <Text fontSize={16} fontWeight={'bold'} color="#000000">
                           {item.name}
                         </Text>
-                        <Text paddingLeft={1}>({item.quantity})</Text>
                       </HStack>
                       {item.add_ons.map(item => (
                         <Text key={item.id} color={'#747980'}>
@@ -644,7 +648,7 @@ const MyDetailOrder = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Giảm giá</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  {order?.discount_amount}
+                  {formatCurrency((order?.discount_amount ?? 0).toString())}đ
                 </Text>
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
@@ -784,10 +788,12 @@ const MyDetailOrder = ({route}: any) => {
                     justifyContent="space-between">
                     <VStack>
                       <HStack key={item.id} alignItems={'center'}>
+                        <Text paddingLeft={1} fontWeight={'bold'}>
+                          {item.quantity} x{' '}
+                        </Text>
                         <Text fontSize={16} fontWeight={'bold'} color="#000000">
                           {item.name}
                         </Text>
-                        <Text paddingLeft={1}>({item.quantity})</Text>
                       </HStack>
                       {item.add_ons.map(item => (
                         <Text key={item.id} color={'#747980'}>
@@ -807,7 +813,7 @@ const MyDetailOrder = ({route}: any) => {
                 justifyContent="space-between">
                 <Text color="#818181">Giảm giá</Text>
                 <Text color="#818181" paddingLeft={1}>
-                  {order?.discount_amount}
+                  {formatCurrency((order?.discount_amount ?? 0).toString())}đ
                 </Text>
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">

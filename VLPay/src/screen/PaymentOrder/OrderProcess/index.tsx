@@ -209,7 +209,7 @@ const OrderProcess = ({route}: any) => {
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
                 <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                  {`Tổng (${order?.product_detail?.length} món)`}
+                  {`Tổng (${order?.product_quantity} món)`}
                 </Text>
                 <Text
                   fontSize={16}
@@ -344,10 +344,12 @@ const OrderProcess = ({route}: any) => {
                     justifyContent="space-between">
                     <VStack>
                       <HStack key={item.id} alignItems={'center'}>
+                        <Text paddingLeft={1} fontWeight={'bold'}>
+                          {item.quantity} x{' '}
+                        </Text>
                         <Text fontSize={16} fontWeight={'bold'} color="#000000">
                           {item.name}
                         </Text>
-                        <Text paddingLeft={1}>({item.quantity})</Text>
                       </HStack>
                       {item.add_ons.map(item => (
                         <Text key={item.id} color={'#747980'}>
@@ -372,7 +374,7 @@ const OrderProcess = ({route}: any) => {
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
                 <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                  {`Tổng (${totalItem} món)`}
+                  {`Tổng (${order?.product_quantity} món)`}
                 </Text>
                 <Text
                   fontSize={16}
@@ -487,10 +489,12 @@ const OrderProcess = ({route}: any) => {
                     justifyContent="space-between">
                     <VStack>
                       <HStack key={item.id} alignItems={'center'}>
+                        <Text paddingLeft={1} fontWeight={'bold'}>
+                          {item.quantity} x{' '}
+                        </Text>
                         <Text fontSize={16} fontWeight={'bold'} color="#000000">
                           {item.name}
                         </Text>
-                        <Text paddingLeft={1}>({item.quantity})</Text>
                       </HStack>
                       {item.add_ons.map(item => (
                         <Text key={item.id} color={'#747980'}>
@@ -515,7 +519,7 @@ const OrderProcess = ({route}: any) => {
               </HStack>
               <HStack alignItems={'center'} justifyContent="space-between">
                 <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                  {`Tổng (${totalItem} món)`}
+                  {`Tổng (${order?.product_quantity} món)`}
                 </Text>
                 <Text
                   fontSize={16}

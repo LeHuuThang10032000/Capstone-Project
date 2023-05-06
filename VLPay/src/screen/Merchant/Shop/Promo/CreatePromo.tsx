@@ -843,7 +843,7 @@ const CreatePromo = () => {
                 }}>
                 {data?.id && data?.type === 'upcoming' && (
                   <UText style={{fontWeight: 'bold'}}>
-                    chỉnh sửa phiếu giảm giá
+                    Chỉnh sửa phiếu giảm giá
                   </UText>
                 )}
                 {!data?.id && (
@@ -1366,14 +1366,12 @@ const CreatePromo = () => {
                   }
                 }}>
                 {data?.id && data?.type === 'upcoming' && (
-                  <UText
-                    style={{fontWeight: 'bold', textTransform: 'capitalize'}}>
-                    chỉnh sửa phiếu giảm giá
+                  <UText style={{fontWeight: 'bold'}}>
+                    Chỉnh sửa phiếu giảm giá
                   </UText>
                 )}
                 {!data?.id && (
-                  <UText
-                    style={{fontWeight: 'bold', textTransform: 'capitalize'}}>
+                  <UText style={{fontWeight: 'bold'}}>
                     Xác nhận tạo phiếu giảm giá
                   </UText>
                 )}
