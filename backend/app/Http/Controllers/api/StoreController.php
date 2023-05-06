@@ -816,11 +816,11 @@ class StoreController extends Controller
 		}
     }
 
-    public function deletePromocode($id)
+    public function deletePromocode(Request $request, $id)
     {
         try {
-            $promocode = Promocode::find($id);
-            if(($promocode->start_date == now() && $promocode->start_time < now()) || $promocode->start_date < now()->format('Y-m-d')) {
+            $promocode = Promocode::where('id', $id)->where('store_id', $request->store_id)->first();
+            if(($promocode->start_date == now()->format('Y-m-d') && $promocode->start_time < now()) || $promocode->start_date < now()->format('Y-m-d')) {
                 return APIResponse::FailureResponse('Phiếu giảm giá này đang trong thời gian áp dụng');
             }
             $promocode->delete();
