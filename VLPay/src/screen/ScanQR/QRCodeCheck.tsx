@@ -28,13 +28,28 @@ export default function QRCodeCheck(props: Props) {
   const [ScanAgain, setScanAgain] = React.useState(false);
   const [value, setValue] = React.useState(null);
   const [_data, setData] = React.useState([]);
-
+  const [isActive, setIsActive] = React.useState(true);
+  let count = 0;
   const userWallet = props?.route?.params ?? 0;
 
-  const [frameProcessor, barcodes, setBarcodes] = useScanBarcodes(
+  let [frameProcessor, barcodes] = useScanBarcodes(
     [BarcodeFormat.ALL_FORMATS],
     {checkInverted: true},
   );
+
+  function debounce(func, delay) {
+    let timeoutId;
+
+    return (...args) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+
+      timeoutId = setTimeout(() => {
+        func.apply(null, args);
+      }, delay);
+    };
+  }
 
   React.useEffect(() => {
     (async () => {
@@ -49,32 +64,40 @@ export default function QRCodeCheck(props: Props) {
 
   const handleScan = React.useCallback(async () => {
     if (!data?.isParking) {
+      console.log(barcodes);
+
       for (const barcode of barcodes) {
         if (barcode?.displayValue) {
           try {
             const code = barcode.displayValue.toString();
             await axiosClient.get('parking-fee/scan?code=' + code);
+            barcodes = [];
             setValue(true);
+            setChangePage(true);
+            // navigation.replace('QRCodeCheck', {data});
+          } catch (e) {
+            barcodes = [];
+            setValue(false);
             setChangePage(true);
             setTimeout(() => {
               setChangePage(null);
+              // navigation.replace('QRCodeCheck', {data});
             }, 2000);
-          } catch (e) {
-            setValue(false);
-            setChangePage(true);
           }
+          barcodes = [];
+          break;
         }
       }
     }
   }, [barcodes, setChangePage, data]);
 
+  const debouncedHandleScan = debounce(handleScan, 1000);
+
   React.useEffect(() => {
     if (barcodes.length > 0 && !data?.isParking) {
-      setTimeout(() => {
-        handleScan();
-      }, 1000);
+      debouncedHandleScan();
     }
-  }, [barcodes, handleScan]);
+  }, [barcodes, debouncedHandleScan]);
 
   return (
     device != null &&
@@ -129,9 +152,9 @@ export default function QRCodeCheck(props: Props) {
           <Camera
             style={StyleSheet.absoluteFill}
             device={device}
-            isActive={true}
+            isActive={isActive}
             frameProcessor={frameProcessor}
-            frameProcessorFps={5}
+            frameProcessorFps={1}
           />
         )}
         <YesNoModal
