@@ -5,7 +5,7 @@ export default StyleSheet.create({
     color: 'black',
     fontSize: 24,
     fontWeight: 'bold',
-    marginHorizontal: 30,
+    marginHorizontal: 16,
   },
   btnTab: {
     borderRadius: 10,

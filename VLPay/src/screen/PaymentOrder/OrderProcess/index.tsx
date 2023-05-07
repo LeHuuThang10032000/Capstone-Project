@@ -146,7 +146,7 @@ const OrderProcess = ({route}: any) => {
                 justifyContent="flex-start"
                 w="100%"
                 paddingX={12}
-                marginLeft={3}>
+                marginLeft={-5}>
                 <Text>{moment(order.created_at).format('HH:mm')}</Text>
               </View>
             </Center>
@@ -171,33 +171,34 @@ const OrderProcess = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <>
-                {order?.product_detail.map(item => (
+              {order?.product_detail.map(item => (
+                <VStack key={item.id}>
                   <HStack
-                    marginY={1}
+                    key={item.id}
                     alignItems={'center'}
-                    justifyContent="space-between">
-                    <VStack>
-                      <HStack key={item.id} alignItems={'center'}>
-                        <Text paddingLeft={1} fontWeight={'bold'}>
-                          {item.quantity} x{' '}
-                        </Text>
-                        <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                          {item.name}
-                        </Text>
-                      </HStack>
-                      {item.add_ons.map(item => (
-                        <Text key={item.id} color={'#747980'}>
-                          {item.name}
-                        </Text>
-                      ))}
-                    </VStack>
-                    <Text fontWeight={'bold'} fontSize={16}>
+                    justifyContent={'space-between'}>
+                    <Text paddingLeft={1} fontWeight={'bold'}>
+                      {item.quantity} x {item.name}
+                    </Text>
+                    <Text fontWeight={'bold'} color="#000000">
                       {formatCurrency((item?.price ?? 0).toString())}đ
                     </Text>
                   </HStack>
-                ))}
-              </>
+                  {item.add_ons.map(item => (
+                    <HStack
+                      key={item.id}
+                      alignItems={'center'}
+                      justifyContent="space-between">
+                      <Text key={item.id} color={'#747980'}>
+                        {item.name}
+                      </Text>
+                      <Text key={item.id} color={'#747980'}>
+                        {formatCurrency((item?.price ?? 0).toString())}đ
+                      </Text>
+                    </HStack>
+                  ))}
+                </VStack>
+              ))}
               <HStack
                 paddingY={3}
                 alignItems={'center'}
@@ -336,33 +337,34 @@ const OrderProcess = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <>
-                {order?.product_detail.map(item => (
+              {order?.product_detail.map(item => (
+                <VStack key={item.id}>
                   <HStack
-                    marginY={1}
+                    key={item.id}
                     alignItems={'center'}
-                    justifyContent="space-between">
-                    <VStack>
-                      <HStack key={item.id} alignItems={'center'}>
-                        <Text paddingLeft={1} fontWeight={'bold'}>
-                          {item.quantity} x{' '}
-                        </Text>
-                        <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                          {item.name}
-                        </Text>
-                      </HStack>
-                      {item.add_ons.map(item => (
-                        <Text key={item.id} color={'#747980'}>
-                          {item.name}
-                        </Text>
-                      ))}
-                    </VStack>
-                    <Text fontWeight={'bold'} fontSize={16}>
+                    justifyContent={'space-between'}>
+                    <Text paddingLeft={1} fontWeight={'bold'}>
+                      {item.quantity} x {item.name}
+                    </Text>
+                    <Text fontWeight={'bold'} color="#000000">
                       {formatCurrency((item?.price ?? 0).toString())}đ
                     </Text>
                   </HStack>
-                ))}
-              </>
+                  {item.add_ons.map(item => (
+                    <HStack
+                      key={item.id}
+                      alignItems={'center'}
+                      justifyContent="space-between">
+                      <Text key={item.id} color={'#747980'}>
+                        {item.name}
+                      </Text>
+                      <Text key={item.id} color={'#747980'}>
+                        {formatCurrency((item?.price ?? 0).toString())}đ
+                      </Text>
+                    </HStack>
+                  ))}
+                </VStack>
+              ))}
               <HStack
                 paddingY={3}
                 alignItems={'center'}
@@ -456,7 +458,7 @@ const OrderProcess = ({route}: any) => {
                 justifyContent="flex-end"
                 w="100%"
                 paddingX={12}
-                marginRight={5}>
+                marginRight={-3}>
                 <Text>{moment(order.finished_at).format('HH:mm')}</Text>
               </View>
             </Center>
@@ -481,33 +483,34 @@ const OrderProcess = ({route}: any) => {
             </VStack>
             <Divider />
             <VStack padding={5}>
-              <>
-                {order?.product_detail.map(item => (
+              {order?.product_detail.map(item => (
+                <VStack key={item.id}>
                   <HStack
-                    marginY={1}
+                    key={item.id}
                     alignItems={'center'}
-                    justifyContent="space-between">
-                    <VStack>
-                      <HStack key={item.id} alignItems={'center'}>
-                        <Text paddingLeft={1} fontWeight={'bold'}>
-                          {item.quantity} x{' '}
-                        </Text>
-                        <Text fontSize={16} fontWeight={'bold'} color="#000000">
-                          {item.name}
-                        </Text>
-                      </HStack>
-                      {item.add_ons.map(item => (
-                        <Text key={item.id} color={'#747980'}>
-                          {item.name}
-                        </Text>
-                      ))}
-                    </VStack>
-                    <Text fontWeight={'bold'} fontSize={16}>
+                    justifyContent={'space-between'}>
+                    <Text paddingLeft={1} fontWeight={'bold'}>
+                      {item.quantity} x {item.name}
+                    </Text>
+                    <Text fontWeight={'bold'} color="#000000">
                       {formatCurrency((item?.price ?? 0).toString())}đ
                     </Text>
                   </HStack>
-                ))}
-              </>
+                  {item.add_ons.map(item => (
+                    <HStack
+                      key={item.id}
+                      alignItems={'center'}
+                      justifyContent="space-between">
+                      <Text key={item.id} color={'#747980'}>
+                        {item.name}
+                      </Text>
+                      <Text key={item.id} color={'#747980'}>
+                        {formatCurrency((item?.price ?? 0).toString())}đ
+                      </Text>
+                    </HStack>
+                  ))}
+                </VStack>
+              ))}
               <HStack
                 paddingY={3}
                 alignItems={'center'}
