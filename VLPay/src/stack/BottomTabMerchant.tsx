@@ -24,12 +24,12 @@ const BOTTOM_TAB_STACK_SCREEN: BottomTabScreen[] = [
     tabBarLabel: 'Menu',
     icon: Icons.Menu,
   },
-  {
-    name: 'MailScreen',
-    component: MailScreen,
-    tabBarLabel: 'Hộp thư',
-    icon: Icons.Mail,
-  },
+  // {
+  //   name: 'MailScreen',
+  //   component: MailScreen,
+  //   tabBarLabel: 'Hộp thư',
+  //   icon: Icons.Mail,
+  // },
   {
     name: 'AccountScreen',
     component: AccountScreen,

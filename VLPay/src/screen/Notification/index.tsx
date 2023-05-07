@@ -40,7 +40,7 @@ const Index = (props: Props) => {
 
   return (
     <View style={styles.bgColor}>
-      <HeaderComp title="Thông báo" TrashIcon />
+      <HeaderComp title="Thông báo" />
       <HeaderDivider />
       <ScrollView backgroundColor={'red'} width={'100%'}>
         <FlatList
