@@ -7,7 +7,7 @@ use Exception;
 
 class SendPushNotification
 {
-    public function merchantNewOrder($merchant, $storeId, $orderId)
+    public function merchantNewOrder($merchant)
     {
         $message = [
             'title' => 'VLPay',
