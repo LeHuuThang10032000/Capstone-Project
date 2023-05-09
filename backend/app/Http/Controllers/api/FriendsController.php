@@ -24,7 +24,7 @@ class FriendsController extends Controller
         foreach ($friends as $friend) {
             array_push($id, $friend->friend_id);
         }
-        $users = User::whereIn('id', $id)->where('status', '!=', 'inactive')->get();
+        $users = User::whereIn('id', $id)->get();
         $array = [];
         switch ($request->request_coming) {
             case 'pending':

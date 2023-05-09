@@ -190,15 +190,19 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
 
-            $req = CreditRequest::create([
-                'user_id' => Auth::user()->id,
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'reason' => $request->reason,
-                'mssv' => $request->mssv,
-                'status' => 'pending',
-            ]);
+            $req = CreditRequest::updateOrCreate(
+                [
+                    'user_id' => Auth::user()->id,
+                ],
+                [
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'email' => $request->email,
+                    'reason' => $request->reason,
+                    'mssv' => $request->mssv,
+                    'status' => 'pending',
+                ]
+            );
 
             DB::commit();
             return ApiResponse::successResponse(null);
