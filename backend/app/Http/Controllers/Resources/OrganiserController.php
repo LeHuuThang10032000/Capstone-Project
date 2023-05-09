@@ -503,6 +503,7 @@ class OrganiserController extends Controller
 
     public function parking()
     {
-        return view('parking.index');
+        $fee = DB::table('settings')->pluck('value', 'key');
+        return view('parking.index', compact('fee'));
     }
 }
