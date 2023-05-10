@@ -225,9 +225,8 @@ class UserController extends Controller
 
         try {
             $stores = Store::whereNotIn('status', ['pending', 'denied'])
-                ->where('user_id', '!=', Auth::user()->id)
-                ->select('id', 'name', 'image', 'phone', 'location', 'status')
-                ->with('schedules');
+                // ->where('user_id', '!=', Auth::user()->id)
+                ->select('id', 'name', 'image', 'phone', 'location', 'status');
 
             if ($request->page) {
                 $limit = $request->limit;
@@ -535,13 +534,19 @@ class UserController extends Controller
             $used = DB::table('promocode_used')->where('user_id', Auth::user()->id)->pluck('promocode_id')->toArray();
 
             $promocodes = DB::table('promocodes')
+                ->select('*',
+                DB::raw('(CASE 
+                    WHEN `limit` = 0 THEN 1 
+                    WHEN `limit` != 0 AND total_used < `limit` THEN 1
+                    ELSE 0 
+                    END) AS available'))
                 ->where('store_id', $request->store_id)
                 ->whereNotIn('id', $used)
                 ->where('start_date', '<=', now())
                 ->where('end_date', '>=', now())
                 ->whereTime('start_time', '<=', now())
                 ->whereTime('end_time', '>=', now())
-                ->whereColumn('limit', '>=', 'total_used')
+                ->having('available', 1)
                 ->get();
 
             return APIResponse::SuccessResponse($promocodes);
