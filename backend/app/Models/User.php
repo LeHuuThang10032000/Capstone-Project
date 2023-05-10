@@ -70,12 +70,12 @@ class User extends Authenticatable implements HasMedia
 
     public function pending_withdraw_request()
     {
-        return $this->hasOne(WithdrawRequest::class)->where('status', 'pending');
+        return $this->hasOne(WithdrawRequest::class);
     }
 
     public function pending_credit_request()
     {
-        return $this->hasOne(CreditRequest::class)->where('status', 'pending');
+        return $this->hasOne(CreditRequest::class);
     }
 
     public function getImageAttribute()
