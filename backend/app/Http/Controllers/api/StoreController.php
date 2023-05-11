@@ -1014,7 +1014,17 @@ class StoreController extends Controller
 
                 Helper::refund($order);
                 $order->save();
-                (new SendPushNotification)->merchantCanceledOrder($order->user, $order->store, $order->cancel_reason);
+
+                $message = 'Đơn hàng tại ' . $order->store->name . ' của bạn đã bị hủy vì lí do: '. $order->cancel_reason;
+                Notification::create([
+                    'user_id' => $order->user_id,
+                    'tag' => 'Hủy đơn',
+                    'tag_model' => 'orders',
+                    'tag_model_id' => $order->id,
+                    'title' => 'Đơn hàng của bạn đã bị hủy',
+                    'body' => $message,
+                ]);
+                (new SendPushNotification)->merchantCanceledOrder($order->user, $order->store, $message);
             } else if($request->status == 'accepted') {
                 if($order->status != 'pending') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi tiếp nhận đơn hàng');
                 $order->status = 'accepted';
