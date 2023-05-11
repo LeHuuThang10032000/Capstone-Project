@@ -515,7 +515,7 @@ class UserController extends Controller
                     ->where('product_id', $request->product_id)
                     ->where('add_ons', $addOns)
                     ->where('store_id', $request->store_id)
-                    ->destroy();
+                    ->delete();
             }
 
             DB::commit();
@@ -633,7 +633,7 @@ class UserController extends Controller
         $user = Auth::user();
         $store = Store::select('id', 'user_id', 'name')->where('id', $request->store_id)->first();
 
-        if($store->status == 'closing') {
+        if($store->status !== 'opening') {
             return APIResponse::FailureResponse('Cửa hàng đã đóng cửa');
         }
 

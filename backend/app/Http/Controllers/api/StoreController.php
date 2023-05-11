@@ -910,12 +910,12 @@ class StoreController extends Controller
                 $offset = ($page - 1) * $limit;
             }
 
-            $totalOrders = $orders->count();
+            $countOrders = $orders->count();
             $summary = (clone $orders)
                 ->join('transactions', 'orders.id', '=', 'transactions.order_id')
                 ->selectRaw('COUNT(DISTINCT CASE WHEN status = \'taken\' THEN orders.id END) as total_taken_order, 
                     COUNT(DISTINCT CASE WHEN status = \'canceled\' THEN orders.id END) as total_canceled_orders,
-                    (SUM(DISTINCT CASE WHEN status = \'taken\' THEN orders.order_total ELSE 0 END) - SUM(DISTINCT CASE WHEN status = \'taken\' THEN orders.discount_amount ELSE 0 END)) as total_revenue')->first();
+                    (SUM(CASE WHEN status = \'taken\' THEN orders.order_total ELSE 0 END) - SUM(CASE WHEN status = \'taken\' THEN orders.discount_amount ELSE 0 END)) as total_revenue')->first();
             
             $orders = $orders->select(
                     'id', 
@@ -937,13 +937,13 @@ class StoreController extends Controller
                 ->first();
                 
             $data = [
-                'total_size' => $totalOrders,
+                'total_size' => $countOrders,
                 'limit' => $limit,
                 'page' => $page,
                 'orders' => $orders,
                 'total_canceled_orders' => $summary->total_canceled_orders,
                 'total_taken_order' => $summary->total_taken_order,
-                'total_revenue' => number_format($summary->total_revenue),
+                'total_revenue' => number_format($summary->total_revenue /= 2),
                 'orders_revenue' => number_format($totalOrders->taken_order_revenue),
                 'orders_total' => $totalOrders->taken_order_total,
             ];
