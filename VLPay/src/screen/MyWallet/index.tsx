@@ -34,6 +34,7 @@ const Index = () => {
       'https://zennoshop.cf/api/user/get-profile',
     );
     setProfile(result);
+
     setIsLoading(true);
   }, []);
   const isFocused = useIsFocused();
@@ -168,19 +169,23 @@ const Index = () => {
               <ExtendIcon />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Support')}>
-            <View style={styles.info}>
-              <SupportIcon style={{paddingLeft: 30}} />
-              <View style={{paddingLeft: 10, justifyContent: 'center'}}>
-                <Text style={styles.text}>Đăng ký tài khoản Tín dụng</Text>
+          {(profile?.data?.data?.credit_request?.status === 'denied' ||
+            profile?.data?.data?.credit_request?.status == null) && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('Support')}>
+              <View style={styles.info}>
+                <SupportIcon style={{paddingLeft: 30}} />
+                <View style={{paddingLeft: 10, justifyContent: 'center'}}>
+                  <Text style={styles.text}>Đăng ký tài khoản Tín dụng</Text>
+                </View>
               </View>
-            </View>
-            <View>
-              <ExtendIcon />
-            </View>
-          </TouchableOpacity>
+              <View>
+                <ExtendIcon />
+              </View>
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity
             onPress={() => navigation.navigate('RegisterMerchant')}
             style={styles.button}>

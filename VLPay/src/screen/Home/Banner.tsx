@@ -193,11 +193,12 @@ const Banner = (props: Props) => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
+              borderRadius: 10,
             }}>
             <TouchableOpacity
               style={{position: 'absolute', right: 10, top: 10}}
               onPress={() => setModal(false)}>
-              <UText>X</UText>
+              <UText style={{fontSize: 20}}>X</UText>
             </TouchableOpacity>
             <UText>Nhập mật khẩu</UText>
             <View
@@ -259,6 +260,16 @@ const Banner = (props: Props) => {
                 //   onCodeChanged={() => setIsError(false)}
               />
             </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ChangePassword', {
+                  phone: props?.phone,
+                });
+              }}>
+              <UText style={{color: '#3495CB', fontSize: 14, paddingTop: 10}}>
+                Quên mật khẩu
+              </UText>
+            </TouchableOpacity>
           </View>
         </View>
       )}

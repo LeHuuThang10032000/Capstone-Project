@@ -445,44 +445,48 @@ const DetailOrder = ({route}: any) => {
             </UText>
           </TouchableOpacity>
         </View>
-        <View style={styles.modalContainer}>
-          <VStack
+        {/* <View style={styles.modalContainer}> */}
+        {/* <VStack
             height={'100%'}
             width={'100%'}
             alignItems={'center'}
-            style={{paddingHorizontal: 16}}>
-            <ScrollView>
-              {filteredDataSource?.[0]?.id &&
-                filteredDataSource.map((item, key) => (
-                  <View key={item.id}>
-                    <Image
-                      source={require('../../assets/img/promo_code.png')}
-                      resizeMode="contain"
-                    />
-                    <View style={{position: 'absolute', top: 16, right: 10}}>
-                      <UText
-                        style={{fontWeight: '700', fontSize: 16, width: 230}}>
-                        {item.title}
-                      </UText>
-                      <UText>Hạn sd đến {item.end_date}</UText>
-                    </View>
-                    <View style={{position: 'absolute', bottom: 20, right: 16}}>
-                      <TouchableOpacity onPress={() => handleChoose(item)}>
-                        <Image
-                          source={require('../../assets/img/check_promo.png')}
-                          style={radioBox === item?.id ? {} : {display: 'none'}}
-                        />
-                        <Image
-                          source={require('../../assets/img/uncheck_promo.png')}
-                          style={radioBox !== item?.id ? {} : {display: 'none'}}
-                        />
-                      </TouchableOpacity>
-                    </View>
+            style={{paddingHorizontal: 16}}> */}
+        <ScrollView style={{paddingHorizontal: 16}}>
+          {filteredDataSource?.[0]?.id &&
+            filteredDataSource.map((item, key) => {
+              console.log(key);
+
+              return (
+                <View key={item.id}>
+                  <Image
+                    source={require('../../assets/img/promo_code.png')}
+                    resizeMode="contain"
+                  />
+                  <View style={{position: 'absolute', top: 16, right: 10}}>
+                    <UText
+                      style={{fontWeight: '700', fontSize: 16, width: 230}}>
+                      {item.title}
+                    </UText>
+                    <UText>Hạn sd đến {item.end_date}</UText>
                   </View>
-                ))}
-            </ScrollView>
-          </VStack>
-        </View>
+                  <View style={{position: 'absolute', bottom: 20, right: 16}}>
+                    <TouchableOpacity onPress={() => handleChoose(item)}>
+                      <Image
+                        source={require('../../assets/img/check_promo.png')}
+                        style={radioBox === item?.id ? {} : {display: 'none'}}
+                      />
+                      <Image
+                        source={require('../../assets/img/uncheck_promo.png')}
+                        style={radioBox !== item?.id ? {} : {display: 'none'}}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              );
+            })}
+        </ScrollView>
+        {/* </VStack> */}
+        {/* </View> */}
         <View
           paddingY={5}
           paddingX={5}

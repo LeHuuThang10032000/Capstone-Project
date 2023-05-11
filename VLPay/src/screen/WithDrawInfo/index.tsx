@@ -210,6 +210,7 @@ const WithDrawInfo = (props: any) => {
               </Pressable>
             </Center>
           </Center>
+
           <View
             style={{
               width: '100%',

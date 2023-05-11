@@ -28,9 +28,9 @@ const PaymentTypes = ({route}: any) => {
     setIsloading(false);
   };
   useEffect(() => {
+    data.payment_type = 'debit';
     fetchData();
   }, []);
-  data.payment_type = 'debit';
 
   return (
     <View flex={1} backgroundColor="#FFFFFF">

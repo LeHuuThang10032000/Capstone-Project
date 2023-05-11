@@ -128,6 +128,15 @@ const HistoryWithDrawDetail = ({route}: any) => {
               paddingHorizontal: 15,
               marginTop: 30,
             }}>
+            <Text style={{marginBottom: 30}}>
+              <Text style={{fontWeight: 'bold', color: 'black'}}>Lưu ý:</Text>{' '}
+              <Text style={{color: 'red'}}>
+                Sau khi tải xuống thông tin bạn cần đem thông tin này đến trung
+                tâm hỗ trợ của VLPay tại trường để được nhân viên hỗ trợ xét
+                duyệt rút tiền.
+              </Text>
+            </Text>
+
             <TouchableOpacity
               onPress={() => navigation.goBack()}
               style={{
