@@ -9,7 +9,11 @@ import {
 } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {axiosClient} from '../../components/apis/axiosClient';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Button, Heading, HStack, Image, Text, View, VStack} from 'native-base';
 import HeaderBack from '../../components/HeaderBack';
@@ -128,6 +132,41 @@ const DetailStore = ({route}: any) => {
   //   backHandler;
   //   return () => backHandler.remove();
   // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        totalItem > 0
+          ? Alert.alert(
+              'Cảnh báo',
+              'Bạn đang có sản phẩm trong giỏ hàng. Vui lòng xóa giỏ hàng trước khi rời khỏi cửa hàng này!',
+              [
+                {
+                  text: 'Thoát',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel',
+                },
+                {
+                  text: 'Xóa giỏ hàng',
+                  onPress: () => {
+                    deleteCart();
+                    navigation.goBack();
+                  },
+                },
+              ],
+            )
+          : navigation.goBack();
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+
+      return () => backHandler.remove();
+    }, []),
+  );
 
   return useMemo(
     () => (

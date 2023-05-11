@@ -181,7 +181,7 @@ const PaymentOrder = ({route}: any) => {
             ? {
                 width: '100%',
                 // position: 'absolute',
-                bottom: 250,
+                bottom: 290,
                 height: keyboardHeight,
                 backgroundColor: 'white',
               }

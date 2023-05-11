@@ -33,6 +33,8 @@ import HeaderModal from '../../components/CustomCancelOrder/HeaderModal';
 import BodyModal from '../../components/CustomCancelOrder/BodyModal';
 import HeaderModalCode from '../../components/CustomCodeOrder/HeaderModal';
 import BodyModalCode from '../../components/CustomCodeOrder/BodyModal';
+import BackIcon from '../../assets/svg/left-arrow.svg';
+
 type Props = {};
 type State = 'pending' | 'accepted' | 'processing' | 'finished';
 
@@ -266,7 +268,13 @@ const MyDetailOrder = ({route}: any) => {
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+              <HStack w={'90%'} justifyContent={'space-between'}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <BackIcon />
+                </TouchableOpacity>
+                <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+                <Text w={5}></Text>
+              </HStack>
               <OrderIcon />
               <View
                 justifyContent="flex-start"
@@ -430,7 +438,13 @@ const MyDetailOrder = ({route}: any) => {
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={5}>Đã đặt đơn</Heading>
+              <HStack w={'90%'} justifyContent={'space-between'}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <BackIcon />
+                </TouchableOpacity>
+                <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+                <Text w={5}></Text>
+              </HStack>
               <PrepareIcon />
               <Text paddingBottom={3}>
                 {moment(order.accepted_at).format('HH:mm')}
@@ -564,7 +578,13 @@ const MyDetailOrder = ({route}: any) => {
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={5}>Đã đặt đơn</Heading>
+              <HStack w={'90%'} justifyContent={'space-between'}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <BackIcon />
+                </TouchableOpacity>
+                <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+                <Text w={5}></Text>
+              </HStack>
               <DoneIcon />
               <View
                 flexDirection="row"
@@ -730,7 +750,13 @@ const MyDetailOrder = ({route}: any) => {
         return (
           <View>
             <Center marginY={5}>
-              <Heading paddingBottom={5}>Đã đặt đơn</Heading>
+              <HStack w={'90%'} justifyContent={'space-between'}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <BackIcon />
+                </TouchableOpacity>
+                <Heading paddingBottom={10}>Đã đặt đơn</Heading>
+                <Text w={5}></Text>
+              </HStack>
               <DoneIcon />
               <View
                 flexDirection="row"

@@ -421,11 +421,11 @@ const DetailOrder = ({route}: any) => {
           }}>
           <Input
             placeholder="Nhập phiếu giảm giá ở đây"
-            width={'75%'}
+            width={'70%'}
             backgroundColor={'#EDF1F7'}
             fontWeight={'700'}
             borderRadius={10}
-            fontSize={16}
+            fontSize={14}
             onChangeText={text => searchFilterFunction(text)}
             color={'rgba(143, 155, 179, 1)'}
             value={search}
@@ -445,29 +445,24 @@ const DetailOrder = ({route}: any) => {
             </UText>
           </TouchableOpacity>
         </View>
-        {/* <View style={styles.modalContainer}> */}
-        {/* <VStack
-            height={'100%'}
-            width={'100%'}
-            alignItems={'center'}
-            style={{paddingHorizontal: 16}}> */}
-        <ScrollView style={{paddingHorizontal: 16}}>
-          {filteredDataSource?.[0]?.id &&
-            filteredDataSource.map((item, key) => {
-              console.log(key);
 
-              return (
+        <ScrollView>
+          <View style={styles.modalContainer}>
+            {filteredDataSource?.[0]?.id &&
+              filteredDataSource.map((item, key) => (
                 <View key={item.id}>
                   <Image
                     source={require('../../assets/img/promo_code.png')}
                     resizeMode="contain"
                   />
-                  <View style={{position: 'absolute', top: 16, right: 10}}>
+                  <View style={{position: 'absolute', top: 20, right: 5}}>
                     <UText
                       style={{fontWeight: '700', fontSize: 16, width: 230}}>
                       {item.title}
                     </UText>
-                    <UText>Hạn sd đến {item.end_date}</UText>
+                    <UText style={{fontSize: 14, color: '#ACB1C0'}}>
+                      Hạn sd đến {item.end_date}
+                    </UText>
                   </View>
                   <View style={{position: 'absolute', bottom: 20, right: 16}}>
                     <TouchableOpacity onPress={() => handleChoose(item)}>
@@ -482,16 +477,14 @@ const DetailOrder = ({route}: any) => {
                     </TouchableOpacity>
                   </View>
                 </View>
-              );
-            })}
+              ))}
+          </View>
         </ScrollView>
-        {/* </VStack> */}
-        {/* </View> */}
         <View
           paddingY={5}
           paddingX={5}
           backgroundColor={'#F7F9FC'}
-          style={{position: 'absolute', bottom: 20, width: '100%'}}>
+          style={{position: 'absolute', bottom: 0, width: '100%'}}>
           <TouchableOpacity onPress={toggleModal}>
             <View
               justifyContent="center"
@@ -549,6 +542,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     paddingTop: 20,
+    paddingBottom: 200,
   },
   modalText: {
     fontSize: 24,
