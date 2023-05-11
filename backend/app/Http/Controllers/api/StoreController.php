@@ -933,6 +933,7 @@ class StoreController extends Controller
                     DB::raw('(SUM(order_total) - SUM(discount_amount)) as taken_order_revenue'),
                     DB::raw('COUNT(id) as taken_order_total')
                 )
+                ->where('store_id', $request->store_id)
                 ->where('status', '=', 'taken')
                 ->first();
                 
