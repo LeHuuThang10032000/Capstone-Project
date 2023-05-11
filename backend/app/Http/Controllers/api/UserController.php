@@ -502,13 +502,21 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $addOns = json_encode($request->add_ons);
-            $product = DB::table('carts')->where('user_id', $user->id)
-                ->where('product_id', $request->product_id)
-                ->where('add_ons', $addOns)
-                ->where('store_id', $request->store_id)
-                ->update([
-                    'quantity' => $request->quantity
-                ]);
+            if($request->quantity > 0) {
+                $product = DB::table('carts')->where('user_id', $user->id)
+                    ->where('product_id', $request->product_id)
+                    ->where('add_ons', $addOns)
+                    ->where('store_id', $request->store_id)
+                    ->update([
+                        'quantity' => $request->quantity
+                    ]);
+            } else {
+                $product = DB::table('carts')->where('user_id', $user->id)
+                    ->where('product_id', $request->product_id)
+                    ->where('add_ons', $addOns)
+                    ->where('store_id', $request->store_id)
+                    ->destroy();
+            }
 
             DB::commit();
             return APIResponse::SuccessResponse($user->carts);
@@ -807,7 +815,8 @@ class UserController extends Controller
         }
 
         try {
-            $order = Order::with('user', 'store')
+            $order = Order::select('*', DB::raw('(order_total - discount_amount) as order_total'))
+                ->with('user', 'store')
                 ->where('id', $request->order_id)
                 ->first();
 
@@ -914,7 +923,7 @@ class UserController extends Controller
         }
 
         try {
-            $orders = Order::where('user_id', Auth::user()->id)->with('store:id,name');
+            $orders = Order::select('*', DB::raw('(order_total - discount_amount) as order_total'))->where('user_id', Auth::user()->id)->with('store:id,name');
 
             if ($request->status == 'taken') {
                 $orders = $orders->where('status', 'taken')->orWhere('status', 'canceled');

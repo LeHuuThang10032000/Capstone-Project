@@ -40,12 +40,12 @@ class SendPushNotification
         SendNotification::dispatch($user, $message);
     }
 
-    public function merchantCanceledOrder($user, $store, $reason)
+    public function merchantCanceledOrder($user, $store, $text)
     {
         $message = [
             'title' => 'VLPay',
             'type' => 'merchant_canceled_request',
-            'text' => 'Đơn hàng tại ' . $store->name . ' của bạn đã bị hủy vì lí do: '. $reason,
+            'text' => $text,
         ];
 
         SendNotification::dispatch($user, $message);
