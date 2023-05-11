@@ -45,6 +45,8 @@ const PaymentOrder = ({route}: any) => {
   const [profile, setProfile] = useState('');
   const [value, setValue] = useState('');
 
+  console.log(payment_type);
+
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
       'https://zennoshop.cf/api/user/get-profile',
@@ -222,6 +224,7 @@ const PaymentOrder = ({route}: any) => {
                       if (promo_id) {
                         formData.append('promocode_id', promo_id);
                       }
+                      console.log(formData);
                       await axios.post(
                         'https://zennoshop.cf/api/user/checkPassword',
                         {phone: profile, password: value},
@@ -229,6 +232,7 @@ const PaymentOrder = ({route}: any) => {
                           headers: {'content-type': 'multipart/form-data'},
                         },
                       );
+                      console.log(123);
 
                       const result = await axiosClient.post(
                         '/order/create-order',

@@ -153,7 +153,7 @@ const MyDetailOrder = ({route}: any) => {
                 {formatCurrency((order?.order_total ?? 0).toString())}đ
               </Text>
               <Text fontSize={12} color="#818181">
-                {order?.user.f_name} - {order?.user.phone}
+                {order?.store.name} - {order?.store.phone}
               </Text>
             </VStack>
             <Divider />

@@ -64,40 +64,36 @@ export default function QRCodeCheck(props: Props) {
 
   const handleScan = React.useCallback(async () => {
     if (!data?.isParking) {
-      console.log(barcodes);
-
-      for (const barcode of barcodes) {
-        if (barcode?.displayValue) {
-          try {
-            const code = barcode.displayValue.toString();
-            await axiosClient.get('parking-fee/scan?code=' + code);
-            barcodes = [];
-            setValue(true);
-            setChangePage(true);
-            // navigation.replace('QRCodeCheck', {data});
-          } catch (e) {
-            barcodes = [];
-            setValue(false);
-            setChangePage(true);
-            setTimeout(() => {
-              setChangePage(null);
-              // navigation.replace('QRCodeCheck', {data});
-            }, 2000);
-          }
+      if (barcodes[0]?.displayValue) {
+        try {
+          const code = barcodes[0].displayValue.toString();
+          await axiosClient.get('parking-fee/scan?code=' + code);
           barcodes = [];
-          break;
+          setValue(true);
+          setChangePage(true);
+          // navigation.replace('QRCodeCheck', {data});
+          return;
+        } catch (e) {
+          barcodes = [];
+          setValue(false);
+          setChangePage(true);
+          setTimeout(() => {
+            setChangePage(null);
+            // navigation.replace('QRCodeCheck', {data});
+          }, 2000);
         }
+        barcodes = [];
       }
     }
   }, [barcodes, setChangePage, data]);
 
-  const debouncedHandleScan = debounce(handleScan, 1000);
-
   React.useEffect(() => {
     if (barcodes.length > 0 && !data?.isParking) {
-      debouncedHandleScan();
+      handleScan();
     }
-  }, [barcodes, debouncedHandleScan]);
+  }, [barcodes]);
+
+  console.log(barcodes);
 
   return (
     device != null &&
@@ -154,7 +150,7 @@ export default function QRCodeCheck(props: Props) {
             device={device}
             isActive={isActive}
             frameProcessor={frameProcessor}
-            frameProcessorFps={1}
+            frameProcessorFps={15}
           />
         )}
         <YesNoModal

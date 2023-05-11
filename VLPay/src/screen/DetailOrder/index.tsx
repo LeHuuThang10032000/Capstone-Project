@@ -445,6 +445,7 @@ const DetailOrder = ({route}: any) => {
             </UText>
           </TouchableOpacity>
         </View>
+
         <ScrollView>
           <View style={styles.modalContainer}>
             {filteredDataSource?.[0]?.id &&

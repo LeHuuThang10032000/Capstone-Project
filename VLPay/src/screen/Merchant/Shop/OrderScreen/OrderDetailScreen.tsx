@@ -243,6 +243,9 @@ const OrderDetailScreen = () => {
               borderRadius: 30,
             }}>
             <UText style={{fontWeight: '700'}}>
+              {orderDetail?.status === 'canceled' && (
+                <UText>Đơn đã được hủy</UText>
+              )}
               {orderDetail?.status === 'pending' && <UText>Đơn mới</UText>}
               {orderDetail?.status === 'accepted' && (
                 <UText>Đơn tiếp nhận</UText>

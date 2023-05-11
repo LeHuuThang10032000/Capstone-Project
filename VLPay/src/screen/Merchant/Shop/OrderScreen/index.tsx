@@ -29,7 +29,7 @@ import {TabView, SceneMap, NavigationState} from 'react-native-tab-view';
 import {axiosClient} from '../../../../components/apis/axiosClient';
 import {formatCurrency} from '../../../../components/helpers/formatNum';
 import TText from '../../../Transfer/TText';
-import HeaderBack from '../../../../components/HeaderBack';
+import HeaderBack from '../../../../components/HeaderBackSwitch';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../../../stack/Navigation';
 import {baseUrl} from '../../../../components/apis/baseUrl';
@@ -546,6 +546,7 @@ const Index = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [index, setIndex] = useState(0);
   const [statusState, setStatusState] = useState('');
+  const [name, setName] = useState('');
   const [routes] = useState([
     {key: 'first', title: 'Đơn mới'},
     {key: 'second', title: 'Đang làm'},
@@ -602,6 +603,7 @@ const Index = () => {
       setStatusState(
         result?.data?.data?.status !== 'closing' ? 'true' : 'false',
       );
+      setName(result?.data?.data?.name);
     } catch (error) {}
   };
 
@@ -620,11 +622,7 @@ const Index = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderBack
-        title="Quán trà sữa"
-        hideRight={true}
-        statusValue={statusState}
-      />
+      <HeaderBack title={name} hideRight={true} statusValue={statusState} />
       <ImageBackground
         source={require('../../../../assets/img/banner.png')}
         resizeMode="cover"
