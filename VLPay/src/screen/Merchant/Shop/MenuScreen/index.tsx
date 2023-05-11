@@ -6,6 +6,7 @@ import {
   ScrollView,
   Alert,
   BackHandler,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import HeaderComp from '../../../../components/HeaderComp';
@@ -112,176 +113,134 @@ const MenuScreen = (props: Props) => {
 
   console.log('products', products);
 
-  const DataList = ({data}) => {
-    return (
-      <ScrollView style={{paddingHorizontal: 16}}>
-        <View style={{paddingBottom: 200, backgroundColor: '#ffffff'}}>
-          {data &&
-            data.map(
-              ({id, category_name, products: _products, products_count}) => (
-                <View key={id}>
-                  <HStack
-                    alignItems={'center'}
-                    justifyContent={'space-between'}
-                    style={{marginTop: 16, marginBottom: 8}}>
-                    <Text style={styles.category}>{category_name}</Text>
-                    <Text>{products_count} món</Text>
-                  </HStack>
-                  {_products.map((item, index) => {
-                    const {
-                      id: productId,
-                      name,
-                      price,
-                      image,
-                      category_id,
-                      add_ons,
-                    } = item;
-                    return (
-                      <>
-                        {/* <TouchableOpacity
-                        onPress={() => {
-                          const item = {
-                            products: products,
-                            addons: addons,
+  const renderItem = ({
+    item: {id, category_name, products: _products, products_count},
+  }) => (
+    <>
+      <HStack
+        alignItems={'center'}
+        justifyContent={'space-between'}
+        style={{marginTop: 16, marginBottom: 8}}>
+        <Text style={styles.category}>{category_name}</Text>
+        <Text>{products_count} món</Text>
+      </HStack>
+      {_products.map((item, index) => {
+        const {id: productId, name, price, image, category_id, add_ons} = item;
+        return (
+          <View
+            key={productId}
+            style={[
+              styles.productContainer,
+              {
+                position: 'relative',
+              },
+            ]}>
+            <HStack
+              flex={1}
+              alignItems={'center'}
+              borderBottomWidth={0.5}
+              borderBottomColor={'#979797'}
+              paddingBottom={3}>
+              <Image
+                source={{uri: image}}
+                width={68}
+                height={68}
+                borderRadius={8}
+                style={{marginRight: 10}}
+              />
+              <VStack>
+                <Text style={styles.productName}>{name}</Text>
+                <Text style={styles.price}>{price.toLocaleString()}đ</Text>
+              </VStack>
+            </HStack>
+            {selectedProduct === item.id && (
+              <>
+                {visible && (
+                  <View style={[styles.menuContainer]}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        const item = {
+                          products: products,
+                          addons: addons,
+                          store_id: store_di,
+                          product: {
+                            id: productId,
+                            name,
+                            price,
+                            image,
+                            category_id,
+                            add_ons,
+                          },
+                          isUpdated: true,
+                        };
+                        handleUpdatePress(item);
+                      }}>
+                      <UText>Cập nhật</UText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={async () => {
+                        try {
+                          console.log({
                             store_id: store_di,
-                            product: {
-                              id: productId,
-                              name,
-                              price,
-                              image,
-                              category_id,
-                              add_ons,
-                            },
-                            isUpdated: true,
-                          };
-                          handleUpdatePress(item);
-                        }}> */}
-                        <View
-                          key={productId}
-                          style={[
-                            styles.productContainer,
-                            {
-                              position: 'relative',
-                            },
-                          ]}>
-                          <HStack
-                            flex={1}
-                            alignItems={'center'}
-                            borderBottomWidth={0.5}
-                            borderBottomColor={'#979797'}
-                            paddingBottom={3}>
-                            <Image
-                              source={{uri: image}}
-                              width={68}
-                              height={68}
-                              borderRadius={8}
-                              style={{marginRight: 10}}
-                            />
-                            <VStack>
-                              <Text style={styles.productName}>{name}</Text>
-                              <Text style={styles.price}>
-                                {price.toLocaleString()}đ
-                              </Text>
-                            </VStack>
-                          </HStack>
-                          {selectedProduct === item.id && (
-                            <Menu
-                              visible={visible}
-                              onRequestClose={() => setVisible(false)}
-                              style={[
-                                styles.menuContainer,
-                                menuPosition && {
-                                  top: menuPosition.y,
-                                  left: menuPosition.x - 90,
-                                },
-                              ]}>
-                              <MenuItem
-                                onPress={() => {
-                                  const item = {
-                                    products: products,
-                                    addons: addons,
-                                    store_id: store_di,
-                                    product: {
-                                      id: productId,
-                                      name,
-                                      price,
-                                      image,
-                                      category_id,
-                                      add_ons,
-                                    },
-                                    isUpdated: true,
-                                  };
-                                  handleUpdatePress(item);
-                                }}>
-                                Cập nhật
-                              </MenuItem>
-                              <MenuItem
-                                onPress={async () => {
-                                  try {
-                                    console.log({
-                                      store_id: store_di,
-                                      name: name,
-                                      product_id: productId,
-                                      price: price,
-                                      image: image,
-                                      category_id: category_id,
-                                      add_ons: JSON.stringify(add_ons),
-                                      status: 'unavailable',
-                                    });
+                            name: name,
+                            product_id: productId,
+                            price: price,
+                            image: image,
+                            category_id: category_id,
+                            add_ons: JSON.stringify(add_ons),
+                            status: 'unavailable',
+                          });
 
-                                    await axiosClient.post(
-                                      baseUrl + 'merchant/product/update',
-                                      {
-                                        store_id: store_di,
-                                        name: name,
-                                        product_id: productId,
-                                        price: price,
-                                        image: image,
-                                        category_id: category_id,
-                                        add_ons: JSON.stringify(add_ons),
-                                        status: 'unavailable',
-                                      },
-                                      {
-                                        headers: {
-                                          'content-type': 'multipart/form-data',
-                                        },
-                                      },
-                                    );
-                                    console.log('Ok rui nha bro');
-                                    fetchData();
-                                  } catch (e) {
-                                    // setVisibleWarning(true);
-                                    console.log('e ->>>>', e);
-                                  }
-                                  setVisible(false);
-                                }}>
-                                Xoá
-                              </MenuItem>
-                            </Menu>
-                          )}
-                          <TouchableOpacity
-                            onPress={e => showMenu(item.id, e)}
-                            style={{
-                              height: 20,
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                            }}>
-                            <Text style={{fontSize: 20}}>
-                              <Icons.ThreeHorizontalDot />
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                        {/* </TouchableOpacity> */}
-                      </>
-                    );
-                  })}
-                </View>
-              ),
+                          await axiosClient.post(
+                            baseUrl + 'merchant/product/update',
+                            {
+                              store_id: store_di,
+                              name: name,
+                              product_id: productId,
+                              price: price,
+                              image: image,
+                              category_id: category_id,
+                              add_ons: JSON.stringify(add_ons),
+                              status: 'unavailable',
+                            },
+                            {
+                              headers: {
+                                'content-type': 'multipart/form-data',
+                              },
+                            },
+                          );
+                          console.log('Ok rui nha bro');
+                          fetchData();
+                        } catch (e) {
+                          // setVisibleWarning(true);
+                          console.log('e ->>>>', e);
+                        }
+                        setVisible(false);
+                      }}>
+                      <UText>Xoá</UText>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </>
             )}
-        </View>
-      </ScrollView>
-    );
-  };
+            <TouchableWithoutFeedback
+              onPress={e => showMenu(item.id, e)}
+              style={{
+                height: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontSize: 20}}>
+                <Icons.ThreeHorizontalDot />
+              </Text>
+            </TouchableWithoutFeedback>
+          </View>
+        );
+      })}
+    </>
+  );
+
+  const keyExtractor = (item, index) => item.id.toString();
 
   return (
     <View style={{flex: 1}}>
@@ -304,7 +263,18 @@ const MenuScreen = (props: Props) => {
               resizeMode={'cover'}
             />
             <Text style={styles.titles}>{storeInfo.name}</Text>
-            {products[0] && <DataList data={products} />}
+            {products[0] && (
+              <FlatList
+                data={products}
+                keyExtractor={keyExtractor}
+                renderItem={renderItem}
+                contentContainerStyle={{
+                  paddingHorizontal: 16,
+                  paddingBottom: 200,
+                  backgroundColor: '#ffffff',
+                }}
+              />
+            )}
             <View
               style={{
                 backgroundColor: '#ffffff',
@@ -393,6 +363,18 @@ const MenuScreen = (props: Props) => {
               </View>
             </BottomSheetModal>
           </View>
+        )}
+        {visible && (
+          <TouchableOpacity
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              zIndex: 10000,
+            }}
+            onPress={() => {
+              setVisible(false);
+            }}></TouchableOpacity>
         )}
       </BottomSheetModalProvider>
     </View>

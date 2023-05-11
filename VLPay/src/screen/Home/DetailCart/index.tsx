@@ -132,8 +132,7 @@ const DetailCart = ({route}: any) => {
                             },
                           });
                           getCart();
-                        }}
-                        disabled={item.quantity === 1}>
+                        }}>
                         <DecreaseIcon />
                       </TouchableOpacity>
                       <Text paddingX={5}>{item.quantity}</Text>

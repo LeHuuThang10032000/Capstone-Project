@@ -99,7 +99,10 @@ export default StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
-    width: 100,
+    width: 150,
+    right: 15,
+    bottom: -20,
+    padding: 16,
   },
   input: {
     borderWidth: 0,
