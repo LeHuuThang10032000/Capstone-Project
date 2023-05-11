@@ -28,7 +28,7 @@ import {axiosClient} from '../../components/apis/axiosClient';
 import {formatCurrency} from '../../components/helper';
 import {HistoryOrder} from '../../store/cart';
 import CircleArrow from '../../assets/svg/circle-arrow.svg';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {MainStackNavigation} from '../../stack/Navigation';
 
 const FirstRoute = () => {
@@ -51,10 +51,17 @@ const FirstRoute = () => {
     setLoading(false);
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
-    getOrder();
-  }, []);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   getOrder();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      getOrder();
+    }, []),
+  );
   return (
     <View style={{paddingHorizontal: 5, flex: 1, marginTop: 20}}>
       {loading ? (
@@ -123,10 +130,18 @@ const SecondRoute = () => {
     setLoading(false);
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
-    getOrder();
-  }, []);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   getOrder();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      getOrder();
+    }, []),
+  );
+
   return (
     <View style={{paddingHorizontal: 5, flex: 1, marginTop: 20}}>
       {loading ? (
