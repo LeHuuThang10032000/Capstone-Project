@@ -790,6 +790,15 @@ class UserController extends Controller
             $merchantWallet->save();
             $userWallet->save();
 
+            Notification::create([
+                'user_id' => $merchant->id,
+                'tag' => 'Đơn hàng',
+                'tag_model' => 'orders',
+                'tag_model_id' => $order->id,
+                'title' => 'Thanh toán đơn hàng',
+                'body' => $user->full_name . 'vừa thanh toán ' . $total . 'đ cho đơn hàng '. $order->order_code,
+            ]);
+
             DB::commit();
             $data = [
                 'request_id' => $order->id,
