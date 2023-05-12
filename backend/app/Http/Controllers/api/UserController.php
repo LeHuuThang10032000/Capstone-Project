@@ -532,6 +532,8 @@ class UserController extends Controller
     public function getStorePromocode(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
+            'limit' => 'required|integer',
+            'page' => 'required|integer',
             'store_id' => 'required|exists:' . app(Store::class)->getTable() . ',id',
         ], [
             'store_id.exists' => 'Sản phẩm không tồn tại'
@@ -557,8 +559,15 @@ class UserController extends Controller
                 ->where('end_date', '>=', now())
                 ->whereTime('start_time', '<=', now())
                 ->whereTime('end_time', '>=', now())
-                ->having('available', 1)
-                ->get();
+                ->having('available', 1);
+
+            if ($request->page) {
+                $limit = $request->limit;
+                $page = $request->page;
+                $offset = ($page - 1) * $limit;
+                $promocodes = $promocodes->offset($offset)->limit($limit);
+            }
+            $promocodes = $promocodes->orderBy('created_at', 'desc')->get();
 
             return APIResponse::SuccessResponse($promocodes);
         } catch (\Exception $e) {
