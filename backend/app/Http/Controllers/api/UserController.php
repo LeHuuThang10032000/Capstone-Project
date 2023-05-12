@@ -447,7 +447,8 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
 
-            $addOns = json_encode($request->add_ons);
+            $addOns = ($request->add_ons !== [null]) ? array_map('intval', $request->add_ons) : [];
+            $addOns = json_encode($addOns);
             $product = DB::table('carts')->where('user_id', $user->id)
                 ->where('product_id', $request->product_id)
                 ->where('add_ons', $addOns)
@@ -633,7 +634,7 @@ class UserController extends Controller
         }
 
         $user = Auth::user();
-        $store = Store::select('id', 'user_id', 'name')->where('id', $request->store_id)->first();
+        $store = Store::select('id', 'user_id', 'name', 'status')->where('id', $request->store_id)->first();
 
         if($store->status !== 'opening') {
             return APIResponse::FailureResponse('Cửa hàng đã đóng cửa');
