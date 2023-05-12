@@ -501,7 +501,7 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
 
-            $addOns = array_map('intval', $request->add_ons);
+            $addOns = ($request->add_ons !== [null]) ? array_map('intval', $request->add_ons) : [];
             $addOns = json_encode($addOns);
 
             if($request->quantity > 0) {
