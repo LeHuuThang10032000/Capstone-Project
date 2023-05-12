@@ -944,7 +944,7 @@ class StoreController extends Controller
                 'orders' => $orders,
                 'total_canceled_orders' => $summary->total_canceled_orders,
                 'total_taken_order' => $summary->total_taken_order,
-                'total_revenue' => number_format($summary->total_revenue /= 2),
+                'total_revenue' => number_format($summary->total_revenue),
                 'orders_revenue' => number_format($totalOrders->taken_order_revenue),
                 'orders_total' => $totalOrders->taken_order_total,
             ];
