@@ -484,14 +484,14 @@ class UserController extends Controller
         }
     }
 
-    public function updateCart(Request $request): JsonResponse
+    public function updateCart(Request $request)
     {
         $validate = Validator::make($request->all(), [
             'product_id' => 'required|exists:' . app(Product::class)->getTable() . ',id',
-            'quantity' => 'required|numeric',
+            'quantity' => 'required|integer|min:0',
             'add_ons' => 'array',
         ], [
-            'product_id.exists' => 'Sản phẩm không tồn tại'
+            'product_id.exists' => 'Sản phẩm không tồn tại',
         ]);
 
         if ($validate->fails()) {
@@ -501,17 +501,19 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
 
-            $addOns = json_encode($request->add_ons);
+            $addOns = array_map('intval', $request->add_ons);
+            $addOns = json_encode($addOns);
+
             if($request->quantity > 0) {
-                $product = DB::table('carts')->where('user_id', $user->id)
+                DB::table('carts')->where('user_id', $user->id)
                     ->where('product_id', $request->product_id)
                     ->where('add_ons', $addOns)
                     ->where('store_id', $request->store_id)
                     ->update([
                         'quantity' => $request->quantity
-                    ]);
+                ]);
             } else {
-                $product = DB::table('carts')->where('user_id', $user->id)
+                DB::table('carts')->where('user_id', $user->id)
                     ->where('product_id', $request->product_id)
                     ->where('add_ons', $addOns)
                     ->where('store_id', $request->store_id)
