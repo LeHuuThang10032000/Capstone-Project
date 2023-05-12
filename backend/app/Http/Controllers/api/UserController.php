@@ -447,7 +447,8 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
 
-            $addOns = json_encode($request->add_ons);
+            $addOns = ($request->add_ons !== [null]) ? array_map('intval', $request->add_ons) : [];
+            $addOns = json_encode($addOns);
             $product = DB::table('carts')->where('user_id', $user->id)
                 ->where('product_id', $request->product_id)
                 ->where('add_ons', $addOns)
