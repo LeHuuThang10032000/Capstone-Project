@@ -225,8 +225,11 @@ const OrderDetailScreen = () => {
         title={'Chi tiết đơn hàng'}
         onPressBack={() => navigation.goBack()}
       />
-      <ScrollView style={{paddingHorizontal: 16, paddingVertical: 20}}>
-        <HStack justifyContent={'space-between'} alignItems={'center'}>
+      <ScrollView style={{paddingHorizontal: 16}}>
+        <HStack
+          paddingTop={5}
+          justifyContent={'space-between'}
+          alignItems={'center'}>
           <VStack>
             <UText style={{color: '#4285F4', fontWeight: '700'}}>
               #{orderDetail?.order_code}
@@ -294,26 +297,25 @@ const OrderDetailScreen = () => {
                   <View style={{marginVertical: 10}}>
                     <HStack justifyContent={'space-between'}>
                       <HStack>
-                        <UText>{item.quantity}x</UText>
+                        <UText>
+                          {item.quantity} x {item.name}
+                        </UText>
                         <View style={{width: 10}} />
-                        <HStack>
-                          <VStack>
-                            <UText>{item?.name}</UText>
-                            <VStack>
-                              {item?.add_ons.map(item => {
-                                return (
-                                  <UText
-                                    style={{color: '#50555C', fontSize: 14}}>
-                                    {item.name}
-                                  </UText>
-                                );
-                              })}
-                            </VStack>
-                          </VStack>
-                        </HStack>
                       </HStack>
                       <UText>{(item?.price ?? 0).toLocaleString()}đ</UText>
                     </HStack>
+                    {item?.add_ons.map(item => {
+                      return (
+                        <HStack justifyContent={'space-between'}>
+                          <UText style={{color: '#50555C', fontSize: 14}}>
+                            {item.name}
+                          </UText>
+                          <UText style={{color: '#50555C', fontSize: 14}}>
+                            {(item?.price ?? 0).toLocaleString()}đ
+                          </UText>
+                        </HStack>
+                      );
+                    })}
                     <View
                       style={{
                         width: '100%',
@@ -342,6 +344,7 @@ const OrderDetailScreen = () => {
               </UText>
             </HStack>
             <HStack
+              marginBottom={200}
               justifyContent={'space-between'}
               alignItems={'center'}
               style={{marginVertical: 10}}>
