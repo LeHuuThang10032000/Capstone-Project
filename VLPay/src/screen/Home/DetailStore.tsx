@@ -165,7 +165,7 @@ const DetailStore = ({route}: any) => {
       );
 
       return () => backHandler.remove();
-    }, []),
+    }, [totalItem, BackHandler]),
   );
 
   return useMemo(
