@@ -123,7 +123,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::group(['prefix' => 'cart'], function() {
         Route::get('', [UserController::class, 'getCart']);
         Route::post('', [UserController::class, 'addToCart']);
-        Route::put('', [UserController::class, 'updateCart']);
+        Route::post('update', [UserController::class, 'updateCart']);
         Route::delete('', [UserController::class, 'deleteCart']);
     });
 
