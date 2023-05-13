@@ -10,6 +10,7 @@ import {
   View,
   Center,
   Heading,
+  Input,
 } from 'native-base';
 import HeaderBack from '../../../components/HeaderBack';
 import IncreaseIcon from '../../../assets/svg/increase.svg';
@@ -115,9 +116,13 @@ const DetailCart = ({route}: any) => {
                       <TouchableOpacity
                         onPress={async () => {
                           const formData = new FormData();
+                          const _quantity = item.quantity - 1;
                           formData.append('product_id', item?.id);
                           formData.append('store_id', store_id);
-                          formData.append('quantity', -1);
+                          formData.append('quantity', _quantity);
+
+                          console.log(item);
+
                           if (item?.add_ons.length > 0) {
                             item?.add_ons.forEach((number, index) => {
                               formData.append('add_ons[]', number.id);
@@ -125,8 +130,9 @@ const DetailCart = ({route}: any) => {
                           } else {
                             formData.append('add_ons[]', '');
                           }
-                          console.log('==>', item?.add_ons.length);
-                          await axiosClient.post('/cart', formData, {
+                          console.log(formData);
+
+                          await axiosClient.post('/cart/update', formData, {
                             headers: {
                               'content-type': 'multipart/form-data',
                             },
@@ -135,13 +141,67 @@ const DetailCart = ({route}: any) => {
                         }}>
                         <DecreaseIcon />
                       </TouchableOpacity>
-                      <Text paddingX={5}>{item.quantity}</Text>
+                      <View style={{width: 50}}>
+                        <Input
+                          keyboardType="number-pad"
+                          value={item.quantity.toString()}
+                          onChangeText={async text => {
+                            if (text.length > 0) {
+                              if (
+                                parseInt(
+                                  text
+                                    .trim()
+                                    .replace('.', '')
+                                    .replace(',', '')
+                                    .replace('-', ''),
+                                ) >= 0
+                              ) {
+                                const formData = new FormData();
+                                const _quantity = item.quantity + 1;
+                                formData.append('product_id', item?.id);
+                                formData.append('store_id', store_id);
+                                formData.append(
+                                  'quantity',
+                                  parseInt(
+                                    text
+                                      .trim()
+                                      .replace('.', '')
+                                      .replace(',', '')
+                                      .replace('-', ''),
+                                  ),
+                                );
+                                if (item?.add_ons.length > 0) {
+                                  item?.add_ons.forEach((number, index) => {
+                                    formData.append('add_ons[]', number.id);
+                                  });
+                                } else {
+                                  formData.append('add_ons[]', '');
+                                }
+                                console.log('==>', item?.add_ons.length);
+
+                                await axiosClient.post(
+                                  '/cart/update',
+                                  formData,
+                                  {
+                                    headers: {
+                                      'content-type': 'multipart/form-data',
+                                    },
+                                  },
+                                );
+                                getCart();
+                              } else {
+                              }
+                            }
+                          }}
+                        />
+                      </View>
                       <TouchableOpacity
                         onPress={async () => {
                           const formData = new FormData();
+                          const _quantity = item.quantity + 1;
                           formData.append('product_id', item?.id);
                           formData.append('store_id', store_id);
-                          formData.append('quantity', 1);
+                          formData.append('quantity', _quantity);
                           if (item?.add_ons.length > 0) {
                             item?.add_ons.forEach((number, index) => {
                               formData.append('add_ons[]', number.id);
@@ -151,7 +211,7 @@ const DetailCart = ({route}: any) => {
                           }
                           console.log('==>', item?.add_ons.length);
 
-                          await axiosClient.post('/cart', formData, {
+                          await axiosClient.post('/cart/update', formData, {
                             headers: {'content-type': 'multipart/form-data'},
                           });
                           getCart();

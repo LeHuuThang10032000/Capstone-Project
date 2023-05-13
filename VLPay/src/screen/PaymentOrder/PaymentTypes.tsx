@@ -9,6 +9,9 @@ import {formatCurrency} from '../../components/helper';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {UText} from '../../components/UText';
 import Lottie from 'lottie-react-native';
+import YesNoModal from '../../components/YesNoModal';
+import Icons from '../../components/Icons';
+import Colors from '../../components/helpers/Colors';
 
 const PaymentTypes = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
@@ -19,13 +22,15 @@ const PaymentTypes = ({route}: any) => {
   const [userWallet, setUserWallet] = useState(0);
   const [credit, setCredit] = useState(0);
   const [paymentType, setPaymentType] = useState('debit');
+  const [WarningIcon, setWarningIcon] = useState(false);
 
   const fetchData = async () => {
     setIsloading(true);
     const result = await axiosClient.get('/user-wallet');
-    setUserWallet(result?.data?.data?.balance);
-    setCredit(result?.data?.data?.credit_limit);
+    setUserWallet(result?.data?.data?.balance ?? 0);
+    setCredit(result?.data?.data?.credit_limit ?? 0);
     setIsloading(false);
+    console.log(result?.data?.data);
   };
   useEffect(() => {
     data.payment_type = 'debit';
@@ -53,8 +58,15 @@ const PaymentTypes = ({route}: any) => {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  data.payment_type = 'debit';
-                  setPaymentType('debit');
+                  if (userWallet > parseInt(data.total_price)) {
+                    data.payment_type = 'debit';
+                    setPaymentType('debit');
+                  } else {
+                    setWarningIcon(true);
+                    setInterval(() => {
+                      setWarningIcon(false);
+                    }, 1000);
+                  }
                 }}
                 style={{
                   backgroundColor: '#B5EAD8',
@@ -72,13 +84,20 @@ const PaymentTypes = ({route}: any) => {
                   Ví của tôi
                 </UText>
                 <UText style={{marginTop: 5, color: 'rgba(178, 186, 187, 1)'}}>
-                  {userWallet.toLocaleString()}đ
+                  {(userWallet ?? 0).toLocaleString()}đ
                 </UText>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  data.payment_type = 'credit';
-                  setPaymentType('credit');
+                  if (credit > parseInt(data.total_price)) {
+                    data.payment_type = 'credit';
+                    setPaymentType('credit');
+                  } else {
+                    setWarningIcon(true);
+                    setInterval(() => {
+                      setWarningIcon(false);
+                    }, 1000);
+                  }
                 }}
                 style={{
                   backgroundColor: '#B5EAD8',
@@ -128,6 +147,30 @@ const PaymentTypes = ({route}: any) => {
           </View>
         </>
       )}
+      <YesNoModal
+        icon={<Icons.WarningIcon />}
+        visible={WarningIcon}
+        btnLeftStyle={{
+          backgroundColor: Colors.primary,
+          width: 200,
+        }}
+        hideRight={true}
+        hideLeft={true}
+        btnRightStyle={{
+          backgroundColor: '#909192',
+          width: 200,
+          display: 'none',
+        }}
+        message={'Lượng tiền không đủ'}
+        onActionLeft={() => {
+          setWarningIcon(false);
+        }}
+        onActionRight={() => {
+          setWarningIcon(false);
+        }}
+        btnTextLeft={'Xác nhận'}
+        style={{flexDirection: 'column'}}
+      />
     </View>
   );
 };

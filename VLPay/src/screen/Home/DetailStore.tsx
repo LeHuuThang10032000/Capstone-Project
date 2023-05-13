@@ -80,6 +80,10 @@ const DetailStore = ({route}: any) => {
     const result = await axiosClient.get('/cart');
     setCart(result.data?.data);
     setTotalItem(result?.data?.data?.total_quantity);
+    console.log(
+      'result?.data?.data?.total_quantity',
+      result?.data?.data?.total_quantity,
+    );
   }, []);
 
   //Delete Cart
@@ -269,6 +273,7 @@ const DetailStore = ({route}: any) => {
             </View>
           ))}
         </ScrollView>
+        {console.log('totalItem', totalItem)}
         {totalItem > 0 ? (
           <HStack
             zIndex={99}

@@ -34,6 +34,8 @@ const PaymentOrder = ({route}: any) => {
   const navigation = useNavigation<MainStackNavigation>();
   const {total_price, store_id, promo_id, payment_type, image, name} =
     route.params.data;
+  console.log(payment_type);
+
   const [text, onChangeText] = React.useState('');
   const [orderId, setOrderId] = useState(0);
   const [visibleWarning, setVisibleWarning] = useState(false);
@@ -233,6 +235,7 @@ const PaymentOrder = ({route}: any) => {
                         },
                       );
                       console.log(123);
+                      console.log(formData);
 
                       const result = await axiosClient.post(
                         '/order/create-order',
@@ -249,7 +252,7 @@ const PaymentOrder = ({route}: any) => {
 
                       setLoading(false);
                     } catch (e) {
-                      setPhoneError('Mật khẩu không chính xác');
+                      setPhoneError(e.error);
                       setVisibleWarning(true);
                       console.log(e);
                       setLoading(false);
