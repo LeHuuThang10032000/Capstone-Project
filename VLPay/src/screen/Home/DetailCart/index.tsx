@@ -32,10 +32,8 @@ const DetailCart = ({route}: any) => {
   const [cart, setCart] = useState<myCart>();
   const [totalItem, setTotalItem] = useState(0);
   const [isLoading, setLoading] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
   const {store_id} = route.params;
-
-  console.log('CART:', cart);
 
   //Get Cart
   const getCart = useCallback(async () => {
@@ -120,9 +118,6 @@ const DetailCart = ({route}: any) => {
                           formData.append('product_id', item?.id);
                           formData.append('store_id', store_id);
                           formData.append('quantity', _quantity);
-
-                          console.log(item);
-
                           if (item?.add_ons.length > 0) {
                             item?.add_ons.forEach((number, index) => {
                               formData.append('add_ons[]', number.id);
@@ -130,7 +125,6 @@ const DetailCart = ({route}: any) => {
                           } else {
                             formData.append('add_ons[]', '');
                           }
-                          console.log(formData);
 
                           await axiosClient.post('/cart/update', formData, {
                             headers: {
@@ -144,54 +138,82 @@ const DetailCart = ({route}: any) => {
                       <View style={{width: 50}}>
                         <Input
                           keyboardType="number-pad"
-                          value={item.quantity.toString()}
-                          onChangeText={async text => {
-                            if (text.length > 0) {
-                              if (
+                          defaultValue={item.quantity.toString()}
+                          onSubmitEditing={async ({
+                            nativeEvent: {text, eventCount, target},
+                          }) => {
+                            if (
+                              parseInt(
+                                text
+                                  .trim()
+                                  .replace('.', '')
+                                  .replace(',', '')
+                                  .replace('-', ''),
+                              ) >= 0
+                            ) {
+                              const formData = new FormData();
+                              formData.append('product_id', item?.id);
+                              formData.append('store_id', store_id);
+                              formData.append(
+                                'quantity',
                                 parseInt(
                                   text
                                     .trim()
                                     .replace('.', '')
                                     .replace(',', '')
                                     .replace('-', ''),
-                                ) >= 0
-                              ) {
-                                const formData = new FormData();
-                                const _quantity = item.quantity + 1;
-                                formData.append('product_id', item?.id);
-                                formData.append('store_id', store_id);
-                                formData.append(
-                                  'quantity',
-                                  parseInt(
-                                    text
-                                      .trim()
-                                      .replace('.', '')
-                                      .replace(',', '')
-                                      .replace('-', ''),
-                                  ),
-                                );
-                                if (item?.add_ons.length > 0) {
-                                  item?.add_ons.forEach((number, index) => {
-                                    formData.append('add_ons[]', number.id);
-                                  });
-                                } else {
-                                  formData.append('add_ons[]', '');
-                                }
-                                console.log('==>', item?.add_ons.length);
-
-                                await axiosClient.post(
-                                  '/cart/update',
-                                  formData,
-                                  {
-                                    headers: {
-                                      'content-type': 'multipart/form-data',
-                                    },
-                                  },
-                                );
-                                getCart();
+                                ),
+                              );
+                              if (item?.add_ons.length > 0) {
+                                item?.add_ons.forEach((number, index) => {
+                                  formData.append('add_ons[]', number.id);
+                                });
                               } else {
+                                formData.append('add_ons[]', '');
                               }
+
+                              await axiosClient.post('/cart/update', formData, {
+                                headers: {
+                                  'content-type': 'multipart/form-data',
+                                },
+                              });
+                              getCart();
+                            } else {
                             }
+                          }}
+                          onBlur={async () => {
+                            if (quantity >= 0) {
+                              const formData = new FormData();
+                              formData.append('product_id', item?.id);
+                              formData.append('store_id', store_id);
+                              formData.append('quantity', quantity);
+                              if (item?.add_ons.length > 0) {
+                                item?.add_ons.forEach((number, index) => {
+                                  formData.append('add_ons[]', number.id);
+                                });
+                              } else {
+                                formData.append('add_ons[]', '');
+                              }
+
+                              await axiosClient.post('/cart/update', formData, {
+                                headers: {
+                                  'content-type': 'multipart/form-data',
+                                },
+                              });
+                              getCart();
+                            } else {
+                            }
+                          }}
+                          onChangeText={text => {
+                            setQuantity(
+                              parseInt(
+                                text
+                                  .trim()
+                                  .replace('.', '')
+                                  .replace(',', '')
+                                  .replace('-', ''),
+                              ),
+                            );
                           }}
                         />
                       </View>
@@ -209,8 +231,6 @@ const DetailCart = ({route}: any) => {
                           } else {
                             formData.append('add_ons[]', '');
                           }
-                          console.log('==>', item?.add_ons.length);
-
                           await axiosClient.post('/cart/update', formData, {
                             headers: {'content-type': 'multipart/form-data'},
                           });

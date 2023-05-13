@@ -34,6 +34,7 @@ const Index = () => {
       'https://zennoshop.cf/api/user/get-profile',
     );
     setProfile(result);
+    console.log(result?.data?.data);
 
     setIsLoading(true);
   }, []);
