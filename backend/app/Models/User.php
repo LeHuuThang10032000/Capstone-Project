@@ -75,7 +75,11 @@ class User extends Authenticatable implements HasMedia
 
     public function pending_credit_request()
     {
-        return $this->hasOne(CreditRequest::class);
+        return $this->hasOne(CreditRequest::class)
+            ->where(function ($query) {
+                $query->where('status', 'pending')
+                    ->orWhere('status', 'approved');
+            });
     }
 
     public function getImageAttribute()

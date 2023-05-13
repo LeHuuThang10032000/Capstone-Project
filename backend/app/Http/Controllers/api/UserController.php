@@ -71,7 +71,7 @@ class UserController extends Controller
             $user = auth()->user();
 
             $user['withdraw_request'] = $user->pending_withdraw_request;
-            $user['credit_request'] = $user->pending_credit_request;
+            $user['credit_request'] = ($user->pending_credit_request) ? true: false;
             return ApiResponse::successResponse($user);
         }
     }
