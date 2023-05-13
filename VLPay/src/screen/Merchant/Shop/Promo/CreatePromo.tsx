@@ -52,24 +52,16 @@ const CreatePromo = () => {
   var today = new Date();
   const [dropdownOptionSelect, setDropdownOptionSelect] = useState('');
   const [dateStart, setDateStart] = useState(new Date());
-  const [dateEnd, setDateEnd] = useState(
-    new Date(today.getTime() + 24 * 60 * 60 * 1000),
-  );
+  const [dateEnd, setDateEnd] = useState(new Date(today.getTime()));
   const [openDateStart, setOpenDateStart] = useState(false);
   const [openDateEnd, setOpenDateEnd] = useState(false);
 
   const [code, setCode] = useState(Math.random().toString(36).substring(2, 9));
   const [startDate, setStartDate] = useState(
-    data ? data.start_date : new Date().toISOString().slice(0, 10),
+    data ? data.start_date : new Date().toTimeString().split(' ')[0],
   );
   const [startDateError, setStartDateError] = useState('');
-  const [endDate, setEndDate] = useState(
-    data?.end_date
-      ? data.end_date
-      : new Date(today.getTime() + 24 * 60 * 60 * 1000)
-          .toISOString()
-          .slice(0, 10),
-  );
+  const [endDate, setEndDate] = useState(data?.end_date ? data.end_date : '');
   const [isLoading, setIsLoading] = useState(false);
 
   const [endDateError, setEndDateError] = useState('');
@@ -105,6 +97,10 @@ const CreatePromo = () => {
     }
   };
   let count = 0;
+  const errorDiscount =
+    'Giá trị trong khoảng 0% đến 100% và không được bỏ trống';
+  const errorMaxDiscount = 'Phải lớn hơn 100đ và không được bỏ trống';
+  const errorMinDiscount = 'Không được bé hơn 0đ hoặc bỏ trống';
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -175,6 +171,13 @@ const CreatePromo = () => {
         setMaxDiscount(0);
         setMinPurchase(0);
         setPrevious('');
+        setLimitError('');
+        setEndDateError('');
+        setGeneralError('');
+        setDiscountError('');
+        setStartDateError('');
+        setMaxDiscountError('');
+        setMinPurchaseError('');
         return (
           <>
             <UText style={{marginLeft: 10, marginBottom: 10, marginTop: 30}}>
@@ -201,7 +204,7 @@ const CreatePromo = () => {
         setDiscountType('percentage');
         return (
           <>
-            <ScrollView style={{height: ' 100%'}}>
+            <ScrollView style={{height: ' 100%', marginBottom: 30}}>
               <VStack alignItems={'center'}>
                 <View style={{marginVertical: 20}}>
                   <StagePromo.StageOne />
@@ -234,28 +237,93 @@ const CreatePromo = () => {
                   style={{padding: 16}}>
                   <UText>Nhập giá trị giảm giá trên tổng đơn hàng</UText>
                   <Input
-                    value={discount.toString().replace('.', '') ?? '0'}
+                    defaultValue={discount.toString()}
                     borderRadius={10}
                     rightElement={<UText style={{marginRight: 10}}>%</UText>}
                     keyboardType={'decimal-pad'}
+                    onBlur={() => {
+                      if (
+                        discount.toString() !== 'NaN' &&
+                        discount.toString() !== ''
+                      ) {
+                        if (discount < 100 && discount > 0) {
+                          setDiscountError('');
+                        } else {
+                          setDiscountError(errorDiscount);
+                        }
+                      } else {
+                        setDiscount(0);
+                        setDiscountError(errorDiscount);
+                      }
+                    }}
                     onChangeText={text => {
+                      console.log(text);
+
+                      if (text.length > 0) {
+                        setDiscount(
+                          parseInt(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          ),
+                        );
+                      } else {
+                        setDiscount(0);
+                        setDiscountError(errorDiscount);
+                      }
+                    }}
+                    onSubmitEditing={async ({
+                      nativeEvent: {text, eventCount, target},
+                    }) => {
                       if (text.length > 0) {
                         if (
-                          parseInt(text.replace('.', '')) < 100 &&
-                          parseInt(text.replace('.', '')) > 0
+                          parseInt(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          ) < 100 &&
+                          parseInt(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          ) > 0
                         ) {
                           setDiscountError('');
-                          const result = parseInt(text.replace('.', ''));
+                          const result = parseInt(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          );
                           setDiscount(result);
                         } else {
-                          const result = parseInt(text.replace('.', ''));
+                          const result = parseInt(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          );
                           setDiscount(result);
-                          setDiscountError('Phải lớn hơn 0% và dưới 100%');
-                          setTimeout(() => {
-                            const result = parseInt(text.replace('.', ''));
-                            setDiscount(result);
-                          }, 1000);
+                          setDiscountError(errorDiscount);
+                          setDiscount(result);
                         }
+                      } else {
+                        setDiscount(
+                          text
+                            .trim()
+                            .replace('.', '')
+                            .replace(',', '')
+                            .replace('-', ''),
+                        );
+                        setDiscountError(errorDiscount);
                       }
                     }}
                   />
@@ -342,26 +410,55 @@ const CreatePromo = () => {
                   <UText>Trị giá đơn hàng tối thiểu</UText>
                   <Input
                     rightElement={<UText style={{marginRight: 10}}>đ</UText>}
-                    value={minPurchase.toString()}
+                    defaultValue={minPurchase.toString()}
                     borderRadius={10}
                     keyboardType={'decimal-pad'}
-                    onChangeText={text => {
-                      if (text.length > 0) {
-                        if (parseInt(text.replace('.', '')) >= 0) {
+                    onBlur={() => {
+                      if (
+                        minPurchase.toString() !== 'NaN' &&
+                        minPurchase.toString() !== ''
+                      ) {
+                        if (minPurchase >= 0) {
                           setMinPurchaseError('');
-                          const result = parseInt(text.replace('.', ''));
-                          console.log(result);
-
-                          setMinPurchase(result);
                         } else {
-                          const result = parseInt(text.replace('.', ''));
-                          setMinPurchase(result);
-                          setMinPurchaseError('Không được bé hơn 0đ');
+                          setMinPurchaseError(errorMinDiscount);
                         }
                       } else {
                         setMinPurchase(0);
-                        setMinPurchaseError('');
                       }
+                    }}
+                    onSubmitEditing={async ({
+                      nativeEvent: {text, eventCount, target},
+                    }) => {
+                      const result = parseInt(
+                        text
+                          .trim()
+                          .replace('.', '')
+                          .replace(',', '')
+                          .replace('-', ''),
+                      );
+                      if (text.length > 0) {
+                        if (result >= 0) {
+                          setMinPurchaseError('');
+                          const _result = result.toString();
+                          setMinPurchase(_result);
+                        } else {
+                          const _result = result.toString();
+                          setMinPurchase(_result);
+                          setMinPurchaseError(errorMinDiscount);
+                        }
+                      } else {
+                        setMinPurchaseError(errorMinDiscount);
+                      }
+                    }}
+                    onChangeText={text => {
+                      setMinPurchase(
+                        text
+                          .trim()
+                          .replace('.', '')
+                          .replace(',', '')
+                          .replace('-', ''),
+                      );
                     }}
                   />
                   {minPurchaseError && (
@@ -374,26 +471,57 @@ const CreatePromo = () => {
                   style={{padding: 16}}>
                   <UText>Nhập giá trị giảm tối đa</UText>
                   <Input
-                    value={maxDiscount.toString()}
+                    defaultValue={maxDiscount.toString()}
                     rightElement={<UText style={{marginRight: 10}}>đ</UText>}
                     borderRadius={10}
                     keyboardType={'decimal-pad'}
-                    onChangeText={text => {
-                      if (text.length > 0) {
-                        if (parseInt(text.replace('.', '')) > 0) {
+                    onBlur={() => {
+                      if (
+                        maxDiscount.toString() !== 'NaN' &&
+                        maxDiscount.toString() !== ''
+                      ) {
+                        if (maxDiscount > 100) {
                           setMaxDiscountError('');
-                          const result = parseInt(text.replace('.', ''));
-                          setMaxDiscount(result);
                         } else {
-                          const result = parseInt(text.replace('.', ''));
-                          setMaxDiscount(result);
-                          setMaxDiscountError(
-                            'Không được bé hơn hoặc bằng 100đ',
-                          );
+                          setMaxDiscountError(errorMaxDiscount);
                         }
                       } else {
                         setMaxDiscount(0);
+                        setMaxDiscountError(errorMaxDiscount);
                       }
+                    }}
+                    onSubmitEditing={async ({
+                      nativeEvent: {text, eventCount, target},
+                    }) => {
+                      const number = parseInt(
+                        text
+                          .trim()
+                          .replace('.', '')
+                          .replace(',', '')
+                          .replace('-', ''),
+                      );
+                      if (text.length > 0) {
+                        if (number > 100) {
+                          setMaxDiscountError('');
+                          const result = number.toString();
+                          setMaxDiscount(result);
+                        } else {
+                          const result = number.toString();
+                          setMaxDiscount(result);
+                          setMaxDiscountError(errorMaxDiscount);
+                        }
+                      } else {
+                        setMaxDiscount(number.toString());
+                      }
+                    }}
+                    onChangeText={text => {
+                      const result = text
+                        .trim()
+                        .replace('.', '')
+                        .replace(',', '')
+                        .replace('-', '');
+
+                      setMaxDiscount(result);
                     }}
                   />
                   {maxDiscountError && (
@@ -420,19 +548,15 @@ const CreatePromo = () => {
                   !maxDiscountError &&
                   discount > 0 &&
                   minPurchase >= 0 &&
-                  maxDiscount >= 100
+                  maxDiscount > 100
                 ) {
                   setPage(PROMOS[2]);
                 } else {
                   setGeneralError('Vui lòng kiểm tra lại!');
-                  setDiscountError(
-                    discount > 0 ? '' : 'Giá trị giảm giá phải lớn hơn 0%',
-                  );
-                  setMinPurchaseError(
-                    minPurchase >= 0 ? '' : 'Không được bé hơn 0đ',
-                  );
+                  setDiscountError(discount > 0 ? '' : errorDiscount);
+                  setMinPurchaseError(minPurchase >= 0 ? '' : errorMinDiscount);
                   setMaxDiscountError(
-                    maxDiscount >= 100 ? '' : 'Không được bé hơn 100đ',
+                    maxDiscount > 100 ? '' : errorMaxDiscount,
                   );
                   setVisibleWarning(true);
                 }
@@ -470,22 +594,20 @@ const CreatePromo = () => {
                     <Input
                       value={
                         dateStart
-                          ? moment(dateStart).format(
-                              'DD/MM/YYYY, ddd [lúc] h:mm',
-                            )
+                          ? moment(dateStart).format('DD/MM/YYYY')
                           : 'Chọn ngày và thời gian'
                       }
                       borderRadius={10}
                       isReadOnly={true}
                     />
                   </TouchableOpacity>
-                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
 
                   <DatePicker
                     modal
                     open={openDateStart}
                     date={dateStart}
                     onConfirm={date => {
+                      setStartDateError('');
                       setDateStart(date);
                       setStartDate(date.toISOString().slice(0, 10));
                       setOpenDateStart(false);
@@ -494,9 +616,6 @@ const CreatePromo = () => {
                       setOpenDateStart(false);
                     }}
                   />
-                  {startDateError && (
-                    <UText style={{color: 'red'}}>{startDateError}</UText>
-                  )}
                 </VStack>
                 <VStack
                   width={'100%'}
@@ -507,19 +626,19 @@ const CreatePromo = () => {
                     <Input
                       value={
                         dateEnd
-                          ? moment(dateEnd).format('DD/MM/YYYY, ddd [lúc] h:mm')
+                          ? moment(dateEnd).format('DD/MM/YYYY')
                           : 'Chọn ngày và thời gian'
                       }
                       borderRadius={10}
                       isReadOnly={true}
                     />
                   </TouchableOpacity>
-                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
                   <DatePicker
                     modal
                     open={openDateEnd}
                     date={dateEnd}
                     onConfirm={date => {
+                      setEndDateError('');
                       setDateEnd(date);
                       setEndDate(date.toISOString().slice(0, 10));
                       setOpenDateEnd(false);
@@ -527,10 +646,8 @@ const CreatePromo = () => {
                     onCancel={() => {
                       setOpenDateEnd(false);
                     }}
+                    minimumDate={dateStart}
                   />
-                  {endDateError && (
-                    <UText style={{color: 'red'}}>{endDateError}</UText>
-                  )}
                 </VStack>
 
                 <UText style={{alignSelf: 'flex-start', marginLeft: 16}}>
@@ -622,10 +739,62 @@ const CreatePromo = () => {
                   {isLimit && (
                     <>
                       <Input
-                        value={amount.toString()}
+                        defaultValue={amount.toString()}
                         borderRadius={10}
                         keyboardType={'decimal-pad'}
+                        onBlur={() => {
+                          if (
+                            amount.toString() !== 'NaN' &&
+                            amount.toString() !== ''
+                          ) {
+                            if (amount > 0) {
+                              setLimitError('');
+                            } else {
+                              setLimitError(
+                                'Giới hạn phiếu giảm giá không được bé hơn 1 ',
+                              );
+                            }
+                          } else {
+                            setAmount(0);
+                          }
+                        }}
                         onChangeText={text => {
+                          setAmount(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          );
+                        }}
+                        onSubmitEditing={async ({
+                          nativeEvent: {text, eventCount, target},
+                        }) => {
+                          const result = parseInt(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          );
+                          if (text.length > 0) {
+                            if (result >= 0) {
+                              setLimitError('');
+                              const _result = result.toString();
+                              setMinPurchase(_result);
+                            } else {
+                              const _result = result.toString();
+                              setAmount(_result);
+                              setLimitError(
+                                'Giới hạn phiếu giảm giá không được bé hơn 1 ',
+                              );
+                            }
+                          } else {
+                            setLimitError(
+                              'Giới hạn phiếu giảm giá không được bé hơn 1',
+                            );
+                          }
+
                           if (text.length > 0) {
                             if (parseInt(text) > 0) {
                               setLimitError('');
@@ -901,6 +1070,13 @@ const CreatePromo = () => {
                           }, 2000);
                         }
                       } else {
+                        setSuccessMsg('Phiếu giảm giá được tạo thành công.');
+                        setSuccess(true);
+                        setPage(PROMOS[0]);
+                        setTimeout(() => {
+                          setSuccess(false);
+                          setIsLoading(false);
+                        }, 2000);
                         const result = await axiosClient.post(
                           baseUrl + 'merchant/promocode/create',
                           formData,
@@ -908,13 +1084,6 @@ const CreatePromo = () => {
                             headers: {'content-type': 'multipart/form-data'},
                           },
                         );
-                        setSuccessMsg('Phiếu giảm giá được tạo thành công.');
-                        setSuccess(true);
-                        setTimeout(() => {
-                          setSuccess(false);
-                          setPage(PROMOS[0]);
-                          setIsLoading(false);
-                        }, 2000);
                       }
                     } catch (e) {
                       setGeneralError(e?.error);
@@ -940,8 +1109,6 @@ const CreatePromo = () => {
       case PROMOS[4]:
         setTitle('Tạo phiếu giảm giá ');
         setPrevious(PROMOS[0]);
-        console.log(discount);
-
         return (
           <>
             <VStack alignItems={'center'} height={'100%'}>
@@ -962,22 +1129,83 @@ const CreatePromo = () => {
                 style={{padding: 16}}>
                 <UText>Nhập giá trị giảm giá</UText>
                 <Input
-                  rightElement={<UText style={{marginRight: 10}}>đ</UText>}
-                  value={discount.toString()}
+                  defaultValue={discount.toString()}
                   borderRadius={10}
+                  rightElement={<UText style={{marginRight: 10}}>đ</UText>}
                   keyboardType={'decimal-pad'}
-                  onChangeText={text => {
-                    if (text.length > 0) {
-                      if (parseInt(text.replace('.', '')) > 100) {
+                  onBlur={() => {
+                    if (
+                      discount.toString() !== 'NaN' &&
+                      discount.toString() !== ''
+                    ) {
+                      if (discount > 100) {
                         setDiscountError('');
-                        setDiscount(parseInt(text));
                       } else {
-                        setDiscount(parseInt(text));
-                        setDiscountError('Không được dưới 100đ');
+                        setDiscountError(errorMaxDiscount);
                       }
                     } else {
                       setDiscount(0);
-                      setDiscountError('Không được dưới 100đ');
+                      setDiscountError(errorMaxDiscount);
+                    }
+                  }}
+                  onChangeText={text => {
+                    if (text.length > 0) {
+                      setDiscount(
+                        parseInt(
+                          text
+                            .trim()
+                            .replace('.', '')
+                            .replace(',', '')
+                            .replace('-', ''),
+                        ),
+                      );
+                    } else {
+                      setDiscount(0);
+                    }
+                  }}
+                  onSubmitEditing={async ({
+                    nativeEvent: {text, eventCount, target},
+                  }) => {
+                    if (text.length > 0) {
+                      if (
+                        parseInt(
+                          text
+                            .trim()
+                            .replace('.', '')
+                            .replace(',', '')
+                            .replace('-', ''),
+                        ) > 100
+                      ) {
+                        setDiscountError('');
+                        const result = parseInt(
+                          text
+                            .trim()
+                            .replace('.', '')
+                            .replace(',', '')
+                            .replace('-', ''),
+                        );
+                        setDiscount(result);
+                      } else {
+                        const result = parseInt(
+                          text
+                            .trim()
+                            .replace('.', '')
+                            .replace(',', '')
+                            .replace('-', ''),
+                        );
+                        setDiscount(result);
+                        setDiscountError(errorMaxDiscount);
+                        setDiscount(result);
+                      }
+                    } else {
+                      setDiscount(
+                        text
+                          .trim()
+                          .replace('.', '')
+                          .replace(',', '')
+                          .replace('-', ''),
+                      );
+                      setDiscountError(errorMaxDiscount);
                     }
                   }}
                 />
@@ -992,22 +1220,61 @@ const CreatePromo = () => {
                 <UText>Trị giá đơn hàng tối thiểu</UText>
                 <Input
                   rightElement={<UText style={{marginRight: 10}}>đ</UText>}
-                  value={minPurchase.toString()}
+                  defaultValue={minPurchase.toString()}
                   borderRadius={10}
                   keyboardType={'decimal-pad'}
-                  onChangeText={text => {
-                    if (text.length > 0) {
-                      if (parseInt(text.replace('.', '')) >= 0) {
+                  onBlur={() => {
+                    if (
+                      minPurchase.toString() !== 'NaN' &&
+                      minPurchase.toString() !== ''
+                    ) {
+                      if (minPurchase >= 0) {
                         setMinPurchaseError('');
-                        setMinPurchase(parseInt(text.replace('.', '')));
                       } else {
-                        setMinPurchaseError(
-                          'Đơn hàng tối thiểu phải lớn hoặc bằng 0',
-                        );
+                        setMinPurchaseError(errorMinDiscount);
+                      }
+                    } else {
+                      setMinPurchase(0);
+                    }
+                  }}
+                  onSubmitEditing={async ({
+                    nativeEvent: {text, eventCount, target},
+                  }) => {
+                    const result = parseInt(
+                      text
+                        .trim()
+                        .replace('.', '')
+                        .replace(',', '')
+                        .replace('-', ''),
+                    );
+                    if (text.length > 0) {
+                      if (result >= 0) {
+                        setMinPurchaseError('');
+                        const _result = result;
+                        setMinPurchase(_result);
+                      } else {
+                        const _result = result;
+                        setMinPurchase(_result);
+                        setMinPurchaseError(errorMinDiscount);
                       }
                     } else {
                       setMinPurchase(0);
                       setMinPurchaseError('');
+                    }
+                  }}
+                  onChangeText={text => {
+                    if (text.length > 0) {
+                      setMinPurchase(
+                        parseInt(
+                          text
+                            .trim()
+                            .replace('.', '')
+                            .replace(',', '')
+                            .replace('-', ''),
+                        ),
+                      );
+                    } else {
+                      setMinPurchase(0);
                     }
                   }}
                 />
@@ -1033,19 +1300,13 @@ const CreatePromo = () => {
                   !minPurchaseError &&
                   !discountError &&
                   minPurchase >= 0 &&
-                  discount
+                  discount > 100
                 ) {
                   setPage(PROMOS[5]);
                 } else {
                   setGeneralError('Vui lòng kiểm tra lại!');
-                  setMinPurchaseError(
-                    minPurchase >= 0
-                      ? ''
-                      : 'Đơn hàng tối thiểu phải lớn hoặc bằng 0',
-                  );
-                  setDiscountError(
-                    discount ? '' : 'Giá trị giảm giá không được nhỏ hơn 100đ',
-                  );
+                  setMinPurchaseError(minPurchase >= 0 ? '' : errorMinDiscount);
+                  setDiscountError(discount > 100 ? '' : errorMaxDiscount);
                   setVisibleWarning(true);
                 }
               }}>
@@ -1055,6 +1316,7 @@ const CreatePromo = () => {
         );
       case PROMOS[5]:
         setPrevious(PROMOS[4]);
+
         return (
           <>
             <ScrollView style={{height: '100%', marginBottom: 100}}>
@@ -1079,9 +1341,7 @@ const CreatePromo = () => {
                     <Input
                       value={
                         dateStart
-                          ? moment(dateStart).format(
-                              'DD/MM/YYYY, ddd [lúc] HH:mm',
-                            )
+                          ? moment(dateStart).format('DD/MM/YYYY')
                           : 'Chọn ngày và thời gian'
                       }
                       borderRadius={10}
@@ -1103,9 +1363,6 @@ const CreatePromo = () => {
                       setOpenDateStart(false);
                     }}
                   />
-                  {startDateError && (
-                    <UText style={{color: 'red'}}>{startDateError}</UText>
-                  )}
                 </VStack>
                 <VStack
                   width={'100%'}
@@ -1116,16 +1373,13 @@ const CreatePromo = () => {
                     <Input
                       value={
                         dateEnd
-                          ? moment(dateEnd).format(
-                              'DD/MM/YYYY, ddd [lúc] HH:mm',
-                            )
+                          ? moment(dateEnd).format('DD/MM/YYYY')
                           : 'Chọn ngày và thời gian'
                       }
                       borderRadius={10}
                       isReadOnly={true}
                     />
                   </TouchableOpacity>
-                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
                   <DatePicker
                     modal
                     open={openDateEnd}
@@ -1139,10 +1393,8 @@ const CreatePromo = () => {
                     onCancel={() => {
                       setOpenDateEnd(false);
                     }}
+                    minimumDate={dateStart}
                   />
-                  {endDateError && (
-                    <UText style={{color: 'red'}}>{endDateError}</UText>
-                  )}
                 </VStack>
                 <UText style={{alignSelf: 'flex-start', marginLeft: 16}}>
                   Thời gian áp dụng
@@ -1192,7 +1444,6 @@ const CreatePromo = () => {
                       isReadOnly={true}
                     />
                   </TouchableOpacity>
-                  {/* <DatePicker date={date} onDateChange={setDate} /> */}
                   <DatePicker
                     modal
                     mode="time"
@@ -1221,6 +1472,7 @@ const CreatePromo = () => {
                       if (parseInt(val) !== 1) {
                         setlimited(true);
                       } else {
+                        setLimitError('');
                         setlimited(false);
                       }
                       setDropdownOptionSelect(val);
@@ -1232,10 +1484,65 @@ const CreatePromo = () => {
                   {isLimit && (
                     <>
                       <Input
-                        value={amount.toString()}
+                        defaultValue={amount.toString()}
                         borderRadius={10}
                         keyboardType={'decimal-pad'}
+                        onBlur={() => {
+                          if (
+                            amount.toString() !== 'NaN' &&
+                            amount.toString() !== ''
+                          ) {
+                            if (amount > 0) {
+                              setLimitError('');
+                            } else {
+                              setLimitError(
+                                'Giới hạn phiếu giảm giá không được bé hơn 1 ',
+                              );
+                            }
+                          } else {
+                            setAmount(0);
+                            setLimitError(
+                              'Giới hạn phiếu giảm giá không được bé hơn 1 ',
+                            );
+                          }
+                        }}
                         onChangeText={text => {
+                          setAmount(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          );
+                        }}
+                        onSubmitEditing={async ({
+                          nativeEvent: {text, eventCount, target},
+                        }) => {
+                          const result = parseInt(
+                            text
+                              .trim()
+                              .replace('.', '')
+                              .replace(',', '')
+                              .replace('-', ''),
+                          );
+                          if (text.length > 0) {
+                            if (result >= 0) {
+                              setLimitError('');
+                              const _result = result.toString();
+                              setMinPurchase(_result);
+                            } else {
+                              const _result = result.toString();
+                              setAmount(_result);
+                              setLimitError(
+                                'Giới hạn phiếu giảm giá không được bé hơn 1 ',
+                              );
+                            }
+                          } else {
+                            setLimitError(
+                              'Giới hạn phiếu giảm giá không được bé hơn 1',
+                            );
+                          }
+
                           if (text.length > 0) {
                             if (parseInt(text) > 0) {
                               setLimitError('');
@@ -1275,7 +1582,11 @@ const CreatePromo = () => {
                 bottom: 20,
               }}
               onPress={async () => {
-                setPage(PROMOS[6]);
+                if (!limitError) {
+                  setPage(PROMOS[6]);
+                } else {
+                  setLimitError('Giới hạn phiếu giảm giá không được bé hơn 1');
+                }
               }}>
               <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
             </TouchableOpacity>
@@ -1285,6 +1596,7 @@ const CreatePromo = () => {
         setTitle('Xem trước phiếu giảm giá');
         const __time = new Date();
         setPrevious(PROMOS[5]);
+        console.log(isLoading);
 
         return (
           <>
@@ -1467,10 +1779,10 @@ const CreatePromo = () => {
                     );
                     formData.append('start_time', startTime);
                     formData.append('end_time', endTime);
-                    formData.append('discount', discount);
+                    formData.append('discount', parseInt(discount));
                     formData.append('discount_type', 'amount');
                     formData.append('max_discount', 10000);
-                    formData.append('min_purchase', minPurchase);
+                    formData.append('min_purchase', parseInt(minPurchase));
 
                     if (!limit) {
                       formData.append('limit', amount);
@@ -1499,6 +1811,13 @@ const CreatePromo = () => {
                           }, 2000);
                         }
                       } else {
+                        setPage(PROMOS[0]);
+                        setSuccessMsg('Phiếu giảm giá được tạo thành công.');
+                        setSuccess(true);
+                        setTimeout(() => {
+                          setSuccess(false);
+                          setIsLoading(false);
+                        }, 2000);
                         await axiosClient.post(
                           baseUrl + 'merchant/promocode/create',
                           formData,
@@ -1506,13 +1825,6 @@ const CreatePromo = () => {
                             headers: {'content-type': 'multipart/form-data'},
                           },
                         );
-                        setSuccessMsg('Phiếu giảm giá được tạo thành công.');
-                        setSuccess(true);
-                        setTimeout(() => {
-                          setSuccess(false);
-                          setIsLoading(false);
-                          setPage(PROMOS[0]);
-                        }, 2000);
                       }
                     } catch (e) {
                       setGeneralError(e?.error);
@@ -1596,6 +1908,8 @@ const CreatePromo = () => {
     setVisibleWarning,
     previous,
     setPrevious,
+    setIsLoading,
+    isLoading,
   ]);
 
   return (
