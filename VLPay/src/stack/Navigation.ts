@@ -137,6 +137,8 @@ export type MainStackParamList = {
     amount: number;
     code: number;
     created_at: string;
+    type: string;
+    qr_code: string;
   };
   ListShareBill: {userWallet: number};
   ListPaidBill: {userWallet: number};

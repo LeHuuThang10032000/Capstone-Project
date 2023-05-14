@@ -18,9 +18,10 @@ import {Linking, TouchableOpacity} from 'react-native';
 import Icons from '../../components/Icons';
 import moment from 'moment';
 import {formatCurrency} from '../../components/helper';
+import QRCode from 'react-native-qrcode-svg';
 
 const DetailTransaction = ({route}: any) => {
-  const {title, amount, code, created_at} = route.params;
+  const {title, amount, code, created_at, type, qr_code} = route.params;
   const [userWallet, setUserWallet] = useState(0);
   const [hide, setHide] = useState(false);
   const [status, setStatus] = useState('');
@@ -33,6 +34,8 @@ const DetailTransaction = ({route}: any) => {
     fetchData();
   }, []);
   const navigation = useNavigation<MainStackNavigation>();
+
+  console.log('QR', qr_code);
 
   return (
     <View flex={1} backgroundColor="#ffffff">
@@ -102,29 +105,11 @@ const DetailTransaction = ({route}: any) => {
           </Pressable>
         </VStack>
       </Center>
-      {/* <Center
-        margin={5}
-        padding={3}
-        borderWidth={1}
-        borderRadius={8}
-        borderColor="#E0E0E0">
-        <HStack w="100%" justifyContent="space-between">
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text fontSize={16}>Số dư ví</Text>
-            <View style={{width: 10}} />
-            <TouchableOpacity onPress={() => setHide(!hide)}>
-              {hide ? <Icons.EyeCloseIcon /> : <Icons.EyeOpenIcon />}
-            </TouchableOpacity>
-          </View>
-          {hide ? (
-            <Text fontSize={16} fontWeight="bold">
-              {(userWallet ?? 0).toLocaleString()}đ
-            </Text>
-          ) : (
-            <Text>*****</Text>
-          )}
-        </HStack>
-      </Center> */}
+      {type === 'P' ? (
+        <Center>
+          <QRCode value={qr_code ? qr_code : 'nothing'} size={250} />
+        </Center>
+      ) : null}
     </View>
   );
 };
