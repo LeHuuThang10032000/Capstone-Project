@@ -27,7 +27,7 @@ import TText from '../Transfer/TText';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {formatCurrency} from '../../components/helper';
 import {MainStackNavigation} from '../../stack/Navigation';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 
 const FirstRoute = () => {
@@ -70,10 +70,17 @@ const FirstRoute = () => {
     setLoading(false);
   }, []);
 
-  useEffect(() => {
-    fetchData();
-    getDays();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  //   getDays();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+      getDays();
+    }, []),
+  );
   return (
     <View style={{flex: 1, marginTop: 20}}>
       {loading && (
@@ -116,6 +123,8 @@ const FirstRoute = () => {
                             amount: item.amount,
                             code: item.code,
                             created_at: item.created_at,
+                            type: item.type,
+                            qr_code: item.qr_code,
                           });
                         }
                       }}>
@@ -276,10 +285,17 @@ const SecondRoute = () => {
     setLoading(false);
   }, []);
 
-  useEffect(() => {
-    fetchData();
-    getMonths();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  //   getMonths();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+      getMonths();
+    }, []),
+  );
   return (
     <View style={{flex: 1, marginTop: 20}}>
       {loading ? (
@@ -407,10 +423,18 @@ const ThirdRoute = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchData();
-    getYears();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  //   getYears();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+      getYears();
+    }, []),
+  );
+
   return (
     <View style={{flex: 1, marginTop: 20}}>
       {loading ? (
