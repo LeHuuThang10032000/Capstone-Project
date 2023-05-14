@@ -504,6 +504,31 @@ class OrganiserController extends Controller
     public function parking()
     {
         $fee = DB::table('settings')->pluck('value', 'key');
-        return view('parking.index', compact('fee'));
+        $users = User::select('id', 'phone', 'is_sercurity', 'f_name')->get();
+        return view('parking.index', compact('fee', 'users'));
+    }
+
+    public function updateFee(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'parking_fee' => 'required|integer|min:0',
+        ], [
+            'parking_fee.min' => 'Phí gửi xe không nhỏ hơn 0đ',
+            'parking_fee.required' => 'Phí gửi xe không được bỏ trống',
+            'parking_fee.integer' => 'Phí gửi xe không đúng định dạng'
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json(['message' => $validate->messages()->first(), 'img' => asset('img/error.png')]);
+        }
+
+        try {
+            DB::table('settings')->updateOrInsert(['key' => 'parking_fee'], [
+                'value' => $request->parking_fee
+            ]);
+            return response()->json(['message' => 'Cập nhật phí gửi xe thành công', 'img' => asset('img/success.png')]);
+        } catch(Exception $e) {
+            return response()->json(['message' => 'Cập nhật phí gửi không xe thành công. Đã có lỗi xảy ra', 'img' => asset('img/error.png')]);
+        }
     }
 }
