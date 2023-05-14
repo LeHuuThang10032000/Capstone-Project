@@ -87,13 +87,19 @@ const CreatePromo = () => {
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [visibleSuccess, setSuccess] = useState(false);
   const [visibleSuccessMsg, setSuccessMsg] = useState('');
+  const [dateStartError, setDateStartError] = useState('');
+  const [dateEndError, setDateEndError] = useState('');
 
   const [title, setTitle] = useState('Tạo phiếu giảm giá');
   let previousPage = () => {
-    if (!previous) {
-      navigation.goBack();
+    if (!data) {
+      if (!previous) {
+        navigation.goBack();
+      } else {
+        setPage(previous);
+      }
     } else {
-      setPage(previous);
+      navigation.goBack();
     }
   };
   let count = 0;
@@ -108,7 +114,15 @@ const CreatePromo = () => {
       () => {
         // Handle the back button press event here
         // ...
-        setPage(previous);
+        if (!data) {
+          if (!previous) {
+            navigation.goBack();
+          } else {
+            setPage(previous);
+          }
+        } else {
+          navigation.goBack();
+        }
 
         // Return true to indicate that we've handled the event
         return true;
@@ -601,7 +615,6 @@ const CreatePromo = () => {
                       isReadOnly={true}
                     />
                   </TouchableOpacity>
-
                   <DatePicker
                     modal
                     open={openDateStart}
@@ -611,6 +624,10 @@ const CreatePromo = () => {
                       setDateStart(date);
                       setStartDate(date.toISOString().slice(0, 10));
                       setOpenDateStart(false);
+                      if (date > dateEnd) {
+                        setDateEnd(date);
+                        setEndDate(date.toISOString().slice(0, 10));
+                      }
                     }}
                     onCancel={() => {
                       setOpenDateStart(false);
@@ -642,6 +659,7 @@ const CreatePromo = () => {
                       setDateEnd(date);
                       setEndDate(date.toISOString().slice(0, 10));
                       setOpenDateEnd(false);
+                      console.log(date, dateStart, date >= dateStart);
                     }}
                     onCancel={() => {
                       setOpenDateEnd(false);
@@ -726,8 +744,10 @@ const CreatePromo = () => {
                     placeholder="Chọn phiếu giảm giá"
                     setSelected={val => {
                       if (parseInt(val) !== 1) {
+                        setLimitError('');
                         setlimited(true);
                       } else {
+                        setLimitError('');
                         setlimited(false);
                       }
                       setDropdownOptionSelect(val);
@@ -834,11 +854,29 @@ const CreatePromo = () => {
                 bottom: 20,
               }}
               onPress={async () => {
-                if (!limitError) {
-                  setPage(PROMOS[3]);
+                console.log(dateEnd >= dateStart);
+                if (isLimit) {
+                  if (!limitError && limit > 0) {
+                    setPage(PROMOS[3]);
+                  } else {
+                    setGeneralError('Vui lòng kiểm tra lại!');
+                    setLimitError(
+                      'Giới hạn phiếu giảm giá không được bé hơn 1',
+                    );
+
+                    setVisibleWarning(true);
+                  }
                 } else {
-                  setGeneralError('Vui lòng kiểm tra lại!');
-                  setVisibleWarning(true);
+                  if (!limitError) {
+                    setPage(PROMOS[3]);
+                  } else {
+                    setGeneralError('Vui lòng kiểm tra lại!');
+                    setLimitError(
+                      'Giới hạn phiếu giảm giá không được bé hơn 1',
+                    );
+
+                    setVisibleWarning(true);
+                  }
                 }
               }}>
               <UText style={{fontWeight: '700'}}>Tiếp theo</UText>
@@ -1072,6 +1110,8 @@ const CreatePromo = () => {
                       } else {
                         setSuccessMsg('Phiếu giảm giá được tạo thành công.');
                         setSuccess(true);
+                        setDateStart(new Date());
+                        setDateEnd(new Date(today.getTime()));
                         setPage(PROMOS[0]);
                         setTimeout(() => {
                           setSuccess(false);
@@ -1348,7 +1388,6 @@ const CreatePromo = () => {
                       isReadOnly={true}
                     />
                   </TouchableOpacity>
-
                   <DatePicker
                     modal
                     open={openDateStart}
@@ -1358,6 +1397,10 @@ const CreatePromo = () => {
                       setDateStart(date);
                       setStartDate(date.toISOString().slice(0, 10));
                       setOpenDateStart(false);
+                      if (date > dateEnd) {
+                        setDateEnd(date);
+                        setEndDate(date.toISOString().slice(0, 10));
+                      }
                     }}
                     onCancel={() => {
                       setOpenDateStart(false);
@@ -1389,6 +1432,7 @@ const CreatePromo = () => {
                       setDateEnd(date);
                       setEndDate(date.toISOString().slice(0, 10));
                       setOpenDateEnd(false);
+                      console.log(date, dateStart, date >= dateStart);
                     }}
                     onCancel={() => {
                       setOpenDateEnd(false);
@@ -1595,6 +1639,8 @@ const CreatePromo = () => {
       case PROMOS[6]:
         setTitle('Xem trước phiếu giảm giá');
         const __time = new Date();
+        console.log(data?.type);
+
         setPrevious(PROMOS[5]);
         console.log(isLoading);
 
@@ -1811,6 +1857,8 @@ const CreatePromo = () => {
                           }, 2000);
                         }
                       } else {
+                        setDateStart(new Date());
+                        setDateEnd(new Date(today.getTime()));
                         setPage(PROMOS[0]);
                         setSuccessMsg('Phiếu giảm giá được tạo thành công.');
                         setSuccess(true);
@@ -1910,6 +1958,8 @@ const CreatePromo = () => {
     setPrevious,
     setIsLoading,
     isLoading,
+    setDateStartError,
+    dateStartError,
   ]);
 
   return (
