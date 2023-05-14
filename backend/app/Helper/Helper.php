@@ -44,7 +44,7 @@ class Helper {
                 $discount = round(($cartPrice * $promocode->discount) / 100);
                 return $promoDiscount = ($discount > $promocode->max_discount) ? $promocode->max_discount : $discount;
             } else {
-                return $promoDiscount = ($promocode->discount > $cartPrice) ? 0 : $promocode->discount;
+                return $promoDiscount = ($promocode->discount > $cartPrice) ? $cartPrice : $promocode->discount;
             }
         }
         return $promoDiscount;

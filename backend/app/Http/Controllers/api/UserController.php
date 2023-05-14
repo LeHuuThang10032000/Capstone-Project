@@ -234,7 +234,7 @@ class UserController extends Controller
 
         try {
             $stores = Store::whereNotIn('status', ['pending', 'denied'])
-                // ->where('user_id', '!=', Auth::user()->id)
+                ->where('user_id', '!=', Auth::user()->id)
                 ->select('id', 'name', 'image', 'phone', 'location', 'status');
 
             if ($request->page) {
@@ -250,11 +250,11 @@ class UserController extends Controller
                 $used = DB::table('promocode_used')->where('user_id', Auth::user()->id)->pluck('promocode_id')->toArray();
 
                 $promocodes = DB::table('promocodes')
-                    ->selectRaw('(CASE 
-                        WHEN `limit` = 0 THEN 1 
-                        WHEN `limit` != 0 AND total_used < `limit` THEN 1
-                        ELSE 0 
-                        END) AS available')
+                    ->select('*',
+                    DB::raw('(CASE 
+                        WHEN `limit` > 0 AND `total_used` >= `limit` THEN 0
+                        ELSE 1 
+                        END) AS available'))
                     ->where('store_id', $store->id)
                     ->whereNotIn('id', $used)
                     ->where('start_date', '<=', now())
@@ -545,7 +545,7 @@ class UserController extends Controller
             'page' => 'required|integer',
             'store_id' => 'required|exists:' . app(Store::class)->getTable() . ',id',
         ], [
-            'store_id.exists' => 'Sản phẩm không tồn tại'
+            'store_id.exists' => 'Cửa hàng không tồn tại'
         ]);
 
         if ($validate->fails()) {
@@ -558,9 +558,8 @@ class UserController extends Controller
             $promocodes = DB::table('promocodes')
                 ->select('*',
                 DB::raw('(CASE 
-                    WHEN `limit` = 0 THEN 1 
-                    WHEN `limit` != 0 AND total_used < `limit` THEN 1
-                    ELSE 0 
+                    WHEN `limit` > 0 AND `total_used` >= `limit` THEN 0
+                    ELSE 1 
                     END) AS available'))
                 ->where('store_id', $request->store_id)
                 ->whereNotIn('id', $used)
