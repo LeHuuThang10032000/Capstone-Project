@@ -23,14 +23,12 @@ export default function QRCodeCheck(props: Props) {
   const navigation = useNavigation<MainStackNavigation>();
   const devices = useCameraDevices();
   const device = devices.back;
-  const [visibleWarning, setVisibleWarning] = React.useState(false);
   const [changePage, setChangePage] = React.useState(false);
   const [ScanAgain, setScanAgain] = React.useState(false);
   const [value, setValue] = React.useState(null);
   const [_data, setData] = React.useState([]);
   const [isActive, setIsActive] = React.useState(true);
-  let count = 0;
-  const userWallet = props?.route?.params ?? 0;
+  const [__result, setResult] = React.useState('');
 
   let [frameProcessor, barcodes] = useScanBarcodes(
     [BarcodeFormat.ALL_FORMATS],
@@ -64,23 +62,19 @@ export default function QRCodeCheck(props: Props) {
 
   const handleScan = React.useCallback(async () => {
     if (!data?.isParking) {
-      if (barcodes[0]?.displayValue) {
+      if (barcodes[0]?.displayValue && !ScanAgain) {
         try {
           const code = barcodes[0].displayValue.toString();
           await axiosClient.get('parking-fee/scan?code=' + code);
           barcodes = [];
+          setScanAgain(true);
           setValue(true);
           setChangePage(true);
-          // navigation.replace('QRCodeCheck', {data});
-          return;
         } catch (e) {
           barcodes = [];
           setValue(false);
+          setScanAgain(true);
           setChangePage(true);
-          setTimeout(() => {
-            setChangePage(null);
-            // navigation.replace('QRCodeCheck', {data});
-          }, 2000);
         }
         barcodes = [];
       }
@@ -92,8 +86,6 @@ export default function QRCodeCheck(props: Props) {
       handleScan();
     }
   }, [barcodes]);
-
-  console.log(barcodes);
 
   return (
     device != null &&
@@ -150,7 +142,7 @@ export default function QRCodeCheck(props: Props) {
             device={device}
             isActive={isActive}
             frameProcessor={frameProcessor}
-            frameProcessorFps={15}
+            frameProcessorFps={5}
           />
         )}
         <YesNoModal
@@ -170,9 +162,11 @@ export default function QRCodeCheck(props: Props) {
           }
           title={'Kết quả quét'}
           onActionLeft={() => {
+            setScanAgain(false);
             setChangePage(false);
           }}
           onActionRight={() => {
+            setScanAgain(false);
             setChangePage(false);
           }}
           btnTextLeft={'Xác nhận'}

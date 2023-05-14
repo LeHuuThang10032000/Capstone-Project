@@ -88,7 +88,7 @@ const DetailOrder = ({route}: any) => {
     const promocode = await axiosClient.get(
       '/merchant/promocode?store_id=' +
         store_id +
-        '&page=1&limit=10&status=RUNNING',
+        '&page=1&limit=100&status=RUNNING',
     );
 
     const _array = [];

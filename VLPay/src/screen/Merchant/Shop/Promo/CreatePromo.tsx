@@ -1102,9 +1102,9 @@ const CreatePromo = () => {
                             'Phiếu giảm giá được cập nhập thành công.',
                           );
                           setSuccess(true);
+                          navigation.goBack();
                           setTimeout(() => {
                             setSuccess(false);
-                            setPage(PROMOS[3]);
                           }, 2000);
                         }
                       } else {
@@ -1852,6 +1852,7 @@ const CreatePromo = () => {
                             'Phiếu giảm giá được cập nhập thành công.',
                           );
                           setSuccess(true);
+                          navigation.goBack();
                           setTimeout(() => {
                             setSuccess(false);
                           }, 2000);
