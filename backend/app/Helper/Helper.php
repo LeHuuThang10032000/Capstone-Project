@@ -55,7 +55,22 @@ class Helper {
         $amount = $order->transactions->first()->amount;
         $merchant = $order->store->user;
         $user = User::where('id', $order->user_id)->first();
+        $walletType = $order->transactions->first()->wallet_type;
 
+        $transaction = self::refundToWallet($amount, $order, $user, $merchant, $walletType);
+
+        Notification::create([
+            'user_id' => $user->id,
+            'tag' => 'Hoàn tiền',
+            'tag_model' => 'transactions',
+            'tag_model_id' => $transaction->id,
+            'title' => 'Hoàn tiền',
+            'body' => 'Bạn được hoàn số tiền ' . number_format($amount) . ' từ đơn hàng ' . $order->order_code . ' do đơn hàng đã bị hủy',
+        ]);
+    }
+
+    private function refundToWallet($amount, $order, $user, $merchant, $walletType)
+    {
         $transaction = Transaction::create([
             'code' => Helper::generateNumber(),
             'amount' => Crypt::encryptString($amount),
@@ -64,7 +79,8 @@ class Helper {
             'order_id' => $order->id,
             'type' => 'R',
             'title' => 'Hoàn tiền đơn hàng ' . $order->order_code,
-            'message' => Crypt::encryptString('Hoàn ' . number_format($amount) . 'đ vào ví do đơn hàng ' . $order->order_code . ' đã bị hủy')
+            'message' => Crypt::encryptString('Hoàn ' . number_format($amount) . 'đ vào ví do đơn hàng ' . $order->order_code . ' đã bị hủy'),
+            'wallet_type' => $walletType,
         ]);
 
         // Trừ tiền từ ví của merchant
@@ -83,11 +99,18 @@ class Helper {
 
         // hoàn tiền vào ví của user
         $userWallet = $user->wallet;
-        $userOpenBalance = $userWallet->balance;
-        $userWallet->balance = $userWallet->balance + $amount;
-        $userCloseBalance = $userWallet->balance;
-        $userWallet->save();
-
+        if($walletType == 'credit') {
+            $userOpenBalance = $userWallet->credit_limit;
+            $userWallet->credit_limit = $userWallet->credit_limit + $amount;
+            $userCloseBalance = $userWallet->credit_limit;
+            $userWallet->save();
+        } else {
+            $userOpenBalance = $userWallet->balance;
+            $userWallet->balance = $userWallet->balance + $amount;
+            $userCloseBalance = $userWallet->balance;
+            $userWallet->save();
+        }
+        
         TransactionDetail::create([
             'transaction_id' => $transaction->id,
             'user_id' => $user->id,
@@ -95,13 +118,6 @@ class Helper {
             'close_balance' => $userCloseBalance,
         ]);
 
-        Notification::create([
-            'user_id' => $user->id,
-            'tag' => 'Hoàn tiền',
-            'tag_model' => 'transactions',
-            'tag_model_id' => $transaction->id,
-            'title' => 'Hoàn tiền',
-            'body' => 'Bạn được hoàn số tiền ' . number_format($amount) . ' từ đơn hàng ' . $order->order_code . ' do đơn hàng đã bị hủy',
-        ]);
+        return $transaction;
     }
 }
