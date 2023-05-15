@@ -823,7 +823,7 @@ class UserController extends Controller
             $data = [
                 'request_id' => $order->id,
             ];
-            (new SendPushNotification)->merchantNewOrder($merchant, $store->id, $order->id);
+            // (new SendPushNotification)->merchantNewOrder($merchant, $store->id, $order->id);
             return APIResponse::SuccessResponse($data);
         } catch (\Exception $e) {
             DB::rollBack();
