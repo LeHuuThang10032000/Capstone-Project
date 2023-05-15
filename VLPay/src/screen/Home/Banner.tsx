@@ -4,6 +4,9 @@ import {
   ImageBackground,
   TouchableOpacity,
   StyleSheet,
+  PermissionsAndroid,
+  Alert,
+  Linking,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -31,6 +34,7 @@ const Banner = (props: Props) => {
   const [modal, setModal] = useState(false);
   const [value, setValue] = useState('0');
   const [phoneError, setPhoneError] = useState('');
+
   return (
     <>
       <View>
@@ -74,11 +78,37 @@ const Banner = (props: Props) => {
 
               <View style={styles.wrapperButton}>
                 <TouchableOpacity
-                  onPress={() => {
-                    if (props.wallet > 3000) {
-                      navigation.navigate('ScanQR', props.wallet);
-                    } else {
-                      setVisibleWarning(true);
+                  onPress={async () => {
+                    try {
+                      const granted = await PermissionsAndroid.check(
+                        PermissionsAndroid.PERMISSIONS.CAMERA,
+                      );
+                      if (granted) {
+                        // User has granted permission
+                        if (props.wallet > 3000) {
+                          navigation.navigate('ScanQR', props.wallet);
+                        } else {
+                          setVisibleWarning(true);
+                        }
+                      } else {
+                        Alert.alert(
+                          'Cần có quyền của máy ảnh',
+                          'Vui lòng bật quyền máy ảnh theo cách thủ công trong cài đặt thiết bị của bạn để sử dụng tính năng này.',
+                          [
+                            {
+                              text: 'Hủy bỏ',
+                              onPress: () => {},
+                              style: 'cancel',
+                            },
+                            {
+                              text: 'Mở cài đặt',
+                              onPress: () => Linking.openSettings(),
+                            },
+                          ],
+                        );
+                      }
+                    } catch (err) {
+                      console.warn(err);
                     }
                   }}>
                   <View style={styles.buttonTranfer}>
@@ -96,13 +126,33 @@ const Banner = (props: Props) => {
                 <View style={styles.wrapperButton}>
                   <TouchableOpacity
                     onPress={async () => {
-                      setModal(true);
-                      // const result = await axiosClient.post('/parking-fee/pay');
-                      // setValue(result?.data?.data);
-                      // navigation.navigate('QRCodeCheck', {
-                      //   value: result?.data?.data,
-                      //   isParking: true,
-                      // });
+                      try {
+                        const granted = await PermissionsAndroid.check(
+                          PermissionsAndroid.PERMISSIONS.CAMERA,
+                        );
+                        if (granted) {
+                          // User has granted permission
+                          setModal(true);
+                        } else {
+                          Alert.alert(
+                            'Cần có quyền của máy ảnh',
+                            'Vui lòng bật quyền máy ảnh theo cách thủ công trong cài đặt thiết bị của bạn để sử dụng tính năng này.',
+                            [
+                              {
+                                text: 'Hủy bỏ',
+                                onPress: () => {},
+                                style: 'cancel',
+                              },
+                              {
+                                text: 'Mở cài đặt',
+                                onPress: () => Linking.openSettings(),
+                              },
+                            ],
+                          );
+                        }
+                      } catch (err) {
+                        console.warn(err);
+                      }
                     }}>
                     <View style={styles.buttonTranfer}>
                       <Image
