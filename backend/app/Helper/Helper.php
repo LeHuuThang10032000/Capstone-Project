@@ -69,7 +69,7 @@ class Helper {
         ]);
     }
 
-    private function refundToWallet($amount, $order, $user, $merchant, $walletType)
+    private static function refundToWallet($amount, $order, $user, $merchant, $walletType)
     {
         $transaction = Transaction::create([
             'code' => Helper::generateNumber(),
