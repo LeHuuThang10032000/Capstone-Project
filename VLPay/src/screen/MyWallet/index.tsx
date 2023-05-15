@@ -170,8 +170,7 @@ const Index = () => {
               <ExtendIcon />
             </View>
           </TouchableOpacity>
-          {(profile?.data?.data?.credit_request?.status === 'denied' ||
-            profile?.data?.data?.credit_request?.status == null) && (
+          {profile?.data?.data?.credit_request == null && (
             <TouchableOpacity
               style={styles.button}
               onPress={() => navigation.navigate('Support')}>
