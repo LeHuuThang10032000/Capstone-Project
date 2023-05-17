@@ -463,7 +463,7 @@ class OrganiserController extends Controller
                 ->withCount('orders')
                 ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
                 ->with('user')
-                ->get();
+                ->paginate(10);
             $key = $request->key;
             return view('stores.index', compact('stores', 'key'));
         }
