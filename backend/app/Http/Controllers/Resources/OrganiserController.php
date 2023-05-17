@@ -459,15 +459,22 @@ class OrganiserController extends Controller
     {
         if(isset($request->key)) {
             $key = $request->key;
-            $stores = Store::where('name', 'LIKE', '%' . $key . '%')
-                ->where('status', 'approved')
+            $stores = Store::where(function ($query) use ($key) {
+                $query->where('name', 'LIKE', '%' . $key . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $key . '%');
+                })
+                ->whereIn('status', ['approved', 'opening', 'closing'])
                 ->withCount('orders')
-                ->orWhere('phone', 'LIKE', '%' . $key . '%')
                 ->with('user')
                 ->paginate(10);
+
             return view('stores.index', compact('stores', 'key'));
         }
-        $stores = Store::with('user')->where('status', 'approved')->withCount('orders')->paginate(10);
+        $stores = Store::whereIn('status', ['approved', 'opening', 'closing'])
+            ->withCount('orders')
+            ->with('user')
+            ->paginate(10);
+
         return view('stores.index', compact('stores'));
     }
 
