@@ -262,9 +262,9 @@ class UserController extends Controller
                     ->whereTime('start_time', '<=', now())
                     ->whereTime('end_time', '>=', now())
                     ->having('available', 1)
-                    ->count();
+                    ->first();
 
-                $store['promocodes'] = $promocodes;
+                $store['promocodes'] = ($promocodes) ? $promocodes->title : null;
             }
 
             return ApiResponse::successResponse($stores);
@@ -296,16 +296,21 @@ class UserController extends Controller
                 $used = DB::table('promocode_used')->where('user_id', Auth::user()->id)->pluck('promocode_id')->toArray();
 
                 $promocodes = DB::table('promocodes')
+                    ->select('*',
+                    DB::raw('(CASE 
+                        WHEN `limit` > 0 AND `total_used` >= `limit` THEN 0
+                        ELSE 1 
+                        END) AS available'))
                     ->where('store_id', $store->id)
                     ->whereNotIn('id', $used)
                     ->where('start_date', '<=', now())
                     ->where('end_date', '>=', now())
                     ->whereTime('start_time', '<=', now())
                     ->whereTime('end_time', '>=', now())
-                    ->whereColumn('limit', '>=', 'total_used')
-                    ->count();
+                    ->having('available', 1)
+                    ->first();
 
-                $store['promocodes'] = $promocodes;
+                $store['promocodes'] = ($promocodes) ? $promocodes->title : null;
             }
 
             $users = User::where('status', '!=', 'inactive')
