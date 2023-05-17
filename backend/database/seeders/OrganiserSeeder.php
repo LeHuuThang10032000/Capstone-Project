@@ -24,7 +24,9 @@ class OrganiserSeeder extends Seeder
                 'f_name' => 'Organiser',
                 'phone' => '0353909400',
                 'password' => bcrypt('123456'),
-                'status' => 'active'
+                'status' => 'active',
+                'is_organiser' => true,
+                'is_sercurity' => true
             ]);
             $newUser->assignRole($organiser->id);
         }
