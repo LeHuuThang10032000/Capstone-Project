@@ -33,13 +33,13 @@
                 @include('credit-requests.tabs.pending')
                 @include('credit-requests.tabs.denied')
             @else
-            <div class="text-center">
-                <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
                 @if(isset($key))
-                <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+                    <div class="text-center">
+                        <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
+                        <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+                        <a href="{{ route('organiser.withdraw-request.index') }}">Quay lại</a>
+                    </div>
                 @endif
-                <a href="{{ route('organiser.withdraw-request.index') }}">Quay lại</a>
-            </div>
             @endif
         </div>
     </div>

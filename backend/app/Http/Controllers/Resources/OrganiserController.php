@@ -458,13 +458,13 @@ class OrganiserController extends Controller
     public function getStores(Request $request)
     {
         if(isset($request->key)) {
-            $stores = Store::where('name', 'LIKE', '%' . $request->key . '%')
+            $key = $request->key;
+            $stores = Store::where('name', 'LIKE', '%' . $key . '%')
                 ->where('status', 'approved')
                 ->withCount('orders')
-                ->orWhere('phone', 'LIKE', '%' . $request->key . '%')
+                ->orWhere('phone', 'LIKE', '%' . $key . '%')
                 ->with('user')
                 ->paginate(10);
-            $key = $request->key;
             return view('stores.index', compact('stores', 'key'));
         }
         $stores = Store::with('user')->where('status', 'approved')->withCount('orders')->paginate(10);

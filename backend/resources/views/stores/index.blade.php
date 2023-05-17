@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="tab-content" id="myTabContent">
-        @if($stores->count() > 0)
+            @if($stores->count() > 0)
             @foreach($stores as $index => $store)
             <div class="{{ ($index == 0) ? 'py-2' : 'pb-2' }} px-3">
                 <div class="rounded border d-flex">
@@ -34,17 +34,17 @@
             @endforeach
         </div>
         <div class="py-2 px-3">
-        {{ $stores->links() }}
+            {{ $stores->links() }}
         </div>
         @else
         <hr>
-        <div class="text-center">
-            <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
             @if(isset($key))
+            <div class="text-center">
+                <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
                 <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+                <a href="{{ route('organiser.store.index') }}">Quay lại</a>
+            </div>
             @endif
-            <a href="{{ route('organiser.store.index') }}">Quay lại</a>
-        </div>
         @endif
     </div>
 </div>

@@ -142,6 +142,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::group(['prefix' => 'parking-fee'], function() {
         Route::post('pay', [ParkingFeeController::class, 'pay']);
         Route::get('scan', [ParkingFeeController::class, 'scan']);
+        Route::get('check-valid', [ParkingFeeController::class, 'checkQr']);
     });
 });
 
