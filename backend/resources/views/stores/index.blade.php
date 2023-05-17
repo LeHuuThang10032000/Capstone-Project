@@ -40,7 +40,9 @@
         <hr>
         <div class="text-center">
             <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
-            <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+            @if(isset($key))
+                <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+            @endif
             <a href="{{ route('organiser.store.index') }}">Quay lại</a>
         </div>
         @endif

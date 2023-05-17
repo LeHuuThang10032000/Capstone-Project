@@ -54,7 +54,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('organiser.parking.index') }}" class="flex items-center p-3 hover:bg-theme {{ Request::is('store') ? 'active' : '' }}">
+                <a href="{{ route('organiser.parking.index') }}" class="flex items-center p-3 hover:bg-theme {{ Request::is('parking') ? 'active' : '' }}">
                     <img src="{{ asset('img/bike.png') }}" alt="#">
                     <span class="flex-1 ml-3 whitespace-nowrap">Gửi xe</span>
                 </a>
