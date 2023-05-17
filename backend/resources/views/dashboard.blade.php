@@ -56,43 +56,43 @@
             <p class="h5">Thống kê</p>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Tổng tiền ví</p>
-                <p>{{ number_format($transactions->first()->wallet_total) }}đ</p>
+                <p>{{ number_format(($transactions->first()->wallet_total ?? 0)) }}đ</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Tổng tiền ví tín dụng</p>
-                <p>{{ number_format($transactions->first()->credit_total) }}đ</p>
+                <p>{{ number_format(($transactions->first()->credit_total ?? 0)) }}đ</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Số đơn thành công</p>
-                <p>{{ $orders->first()->taken_count }} đơn</p>
+                <p>{{ $orders->first()->taken_count ?? 0 }} đơn</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Số đơn đã hủy</p>
-                <p>{{ $orders->first()->canceled_count }} đơn</p>
+                <p>{{ $orders->first()->canceled_count ?? 0 }} đơn</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Tổng tiền đơn hàng</p>
-                <p>{{ number_format($orders->first()->total) }}đ</p>
+                <p>{{ number_format(($orders->first()->total ?? 0)) }}đ</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Tổng tiền đã giao dịch</p>
-                <p>{{ number_format($transactions->first()->transaction_total) }}đ</p>
+                <p>{{ number_format(($transactions->first()->transaction_total ?? 0)) }}đ</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Số tiền đã rút</p>
-                <p>{{ number_format($transactions->first()->withdraw_total) }}đ</p>
+                <p>{{ number_format(($transactions->first()->withdraw_total ?? 0)) }}đ</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Số tiền đã nạp</p>
-                <p>{{ number_format($transactions->first()->deposit_total) }}đ</p>
+                <p>{{ number_format(($transactions->first()->deposit_total ?? 0)) }}đ</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Số lượng người dùng</p>
-                <p>{{ number_format($transactions->first()->user_total) }}</p>
+                <p>{{ number_format(($transactions->first()->user_total ?? 0)) }}</p>
             </div>
             <div class="border-top d-flex justify-content-between pt-1">
                 <p>Số dư ví hệ thống</p>
-                <p>{{ number_format($admin->wallet->balance) }}đ</p>
+                <p>{{ number_format(($admin->wallet->balance ?? 0)) }}đ</p>
             </div>
             
         </div>

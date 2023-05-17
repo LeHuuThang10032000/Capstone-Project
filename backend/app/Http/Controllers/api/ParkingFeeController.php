@@ -108,4 +108,11 @@ class ParkingFeeController extends Controller
             ApiResponse::failureResponse($e->getMessage());
         }
     }
+
+    public function checkQr(Request $request)
+    {
+        $user = Auth::user();
+        $transaction = Transaction::where('qr_code', $request->code)->where('type', 'P')->first();
+        return ApiResponse::successResponse(($transaction ? 'valid' : 'invalid'));
+    }
 }
