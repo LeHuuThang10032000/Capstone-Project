@@ -15,6 +15,7 @@ use App\Models\StoreSchedule;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
+use App\Services\OrderService;
 use App\Services\SendPushNotification;
 use Carbon\Carbon;
 use Exception;
@@ -60,7 +61,7 @@ class StoreController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return APIResponse::FailureResponse($validate->messages()->first());
+                return APIResponse::failureResponse($validate->messages()->first());
             }
 
             $store = Store::where('id', $request->store_id)
@@ -125,12 +126,12 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
         if(!$store) {
-            return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
+            return APIResponse::failureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
 
         $addOns = json_decode($request->get('add_ons'));
@@ -177,7 +178,7 @@ class StoreController extends Controller
             $product->save();
 
             DB::commit();
-			return APIResponse::SuccessResponse(null);
+			return APIResponse::successResponse(null);
         } catch(Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -195,12 +196,12 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
         if(!$store) {
-            return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
+            return APIResponse::failureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
 
         try {
@@ -211,7 +212,7 @@ class StoreController extends Controller
             $category->save();
 
             DB::commit();
-			return APIResponse::SuccessResponse(null);
+			return APIResponse::successResponse(null);
         } catch(Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -230,12 +231,12 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
         if(!$store) {
-            return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
+            return APIResponse::failureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
 
         try {
@@ -245,7 +246,7 @@ class StoreController extends Controller
             $category->save();
 
             DB::commit();
-			return APIResponse::SuccessResponse(null);
+			return APIResponse::successResponse(null);
         } catch(Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -259,7 +260,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try{
@@ -269,13 +270,13 @@ class StoreController extends Controller
             $products = $productCategory->products->count();
             if($products > 0)
             {
-                return APIResponse::FailureResponse('Không thể xóa do đang có món ăn thuộc danh sách này');
+                return APIResponse::failureResponse('Không thể xóa do đang có món ăn thuộc danh sách này');
             }
             
             $productCategory->delete();
 
             DB::commit();
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch(Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -295,12 +296,12 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         $store = Store::where('id', $request->store_id)->where('user_id', Auth::user()->id)->get();
         if(!$store) {
-            return APIResponse::FailureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
+            return APIResponse::failureResponse('Không tìm thấy cửa hàng của bạn. Vui lòng thử lại sau nhé');
         }
         $addOns = json_decode($request->get('add_ons'));
 
@@ -328,7 +329,7 @@ class StoreController extends Controller
             $product->save();
 
             DB::commit();
-			return APIResponse::SuccessResponse(null);
+			return APIResponse::successResponse(null);
         } catch(Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -342,7 +343,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -352,7 +353,7 @@ class StoreController extends Controller
                 ->withCount('products')
                 ->get();
 
-			return APIResponse::SuccessResponse($categories);
+			return APIResponse::successResponse($categories);
         } catch(Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -366,14 +367,14 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
             $categories = ProductCategory::where('store_id', $request->store_id)
                 ->get();
 
-			return APIResponse::SuccessResponse($categories);
+			return APIResponse::successResponse($categories);
         } catch(Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -388,12 +389,12 @@ class StoreController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return APIResponse::FailureResponse($validate->messages()->first());
+                return APIResponse::failureResponse($validate->messages()->first());
             }
 
             $addOns = AddOn::select('id', 'name', 'price')->where('store_id', $request->store_id)->get();
 
-            return APIResponse::SuccessResponse($addOns);
+            return APIResponse::successResponse($addOns);
         } catch(Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -409,7 +410,7 @@ class StoreController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return APIResponse::FailureResponse($validate->messages()->first());
+                return APIResponse::failureResponse($validate->messages()->first());
             }
 
             $addon = AddOn::where('store_id', $request->store_id)->where('name', $request->name)->get();
@@ -425,7 +426,7 @@ class StoreController extends Controller
                 ]
             );
 
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch(Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -442,7 +443,7 @@ class StoreController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return APIResponse::FailureResponse($validate->messages()->first());
+                return APIResponse::failureResponse($validate->messages()->first());
             }
 
             $addOn = AddOn::where('id', $request->id)->update(
@@ -453,7 +454,7 @@ class StoreController extends Controller
                 ]
             );
 
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch(Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -467,12 +468,12 @@ class StoreController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return APIResponse::FailureResponse($validate->messages()->first());
+                return APIResponse::failureResponse($validate->messages()->first());
             }
 
             $addOn = AddOn::where('id', $request->id)->delete();
 
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch(Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -485,15 +486,15 @@ class StoreController extends Controller
                 'store_id' => 'required|integer',
             ]);
             if ($validate->fails()) {
-                return APIResponse::FailureResponse($validate->messages()->first());
+                return APIResponse::failureResponse($validate->messages()->first());
             }
             $data = StoreSchedule::select('id','day','opening_time','closing_time')->where('store_id', $request->store_id)->get();
             if(count($data) == 0){
                 $data = $this->initTimeActive($request->store_id);
             }
-            return APIResponse::SuccessResponse($data);
+            return APIResponse::successResponse($data);
 		} catch (\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
 		}
     }
 
@@ -530,7 +531,7 @@ class StoreController extends Controller
                 'day_id.required_if' => 'Trường day_id không được bỏ trống.'
             ]);
             if ($validate->fails()) {
-                return APIResponse::FailureResponse($validate->messages()->first());
+                return APIResponse::failureResponse($validate->messages()->first());
             }
 
             $openingTime = Carbon::createFromFormat('H:i:s', $request->opening_time)->format('H:i:s');
@@ -554,9 +555,9 @@ class StoreController extends Controller
                     ]
                 );
             }
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
 		} catch (\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
 		}
     }
 
@@ -570,7 +571,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -609,9 +610,9 @@ class StoreController extends Controller
             }
 
             $promocodes = $promocodes->get();
-            return APIResponse::SuccessResponse($promocodes);
+            return APIResponse::successResponse($promocodes);
         } catch (\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
 		}
     }
 
@@ -636,7 +637,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -647,19 +648,19 @@ class StoreController extends Controller
             $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
 
             if($startDate < now()->format('Y-m-d')) {
-                return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
+                return APIResponse::failureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
 
             if($startDate > $endDate) {
-                return APIResponse::FailureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
+                return APIResponse::failureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
             }
 
             if($endDate <= now()->format('Y-m-d') && $endTime <= now()->format('H:i:s')) {
-                return APIResponse::FailureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
+                return APIResponse::failureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
             }
 
             if($request->discount_type == 'percentage' && $request->discount > 100) {
-                return APIResponse::FailureResponse('Giá trị giảm giá không được vượt quá 100%');
+                return APIResponse::failureResponse('Giá trị giảm giá không được vượt quá 100%');
             }
 
             $promocode = new Promocode;
@@ -699,9 +700,9 @@ class StoreController extends Controller
             $promocode->title = $promoDescription;
 
             $promocode->save();
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch (\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
 		}
     }
 
@@ -727,7 +728,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -738,19 +739,19 @@ class StoreController extends Controller
             $endTime = Carbon::createFromFormat('H:i:s', $request->end_time);
 
             if($startDate < now()->format('Y-m-d')) {
-                return APIResponse::FailureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
+                return APIResponse::failureResponse('Mã giảm giá phải bắt đầu từ ngày hôm nay hoặc sau ngày hôm nay');
             }
 
             if($startDate > $endDate) {
-                return APIResponse::FailureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
+                return APIResponse::failureResponse('Ngày bắt đầu phải trước hoặc cùng với ngày kết thúc');
             }
 
             if($endDate <= now()->format('Y-m-d') && $endTime <= now()->format('H:i:s')){
-                return APIResponse::FailureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
+                return APIResponse::failureResponse('Mã giảm giá phải kết thúc vào ngày hôm nay hoặc sau ngày hôm này');
             }
 
             if($request->discount_type == 'percentage' && $request->discount > 100) {
-                return APIResponse::FailureResponse('Giá trị giảm giá không được vượt quá 100%');
+                return APIResponse::failureResponse('Giá trị giảm giá không được vượt quá 100%');
             }
 
             $promocode = Promocode::where('id', $request->promo_id)->where('store_id', $request->store_id)->first();
@@ -788,9 +789,9 @@ class StoreController extends Controller
             $promocode->title = $promoDescription;
 
             $promocode->save();
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch (\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
 		}
     }
 
@@ -802,7 +803,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -810,9 +811,9 @@ class StoreController extends Controller
             $promocode->end_date = now();
             $promocode->end_time = now();
             $promocode->save();
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch (\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
 		}
     }
 
@@ -821,12 +822,12 @@ class StoreController extends Controller
         try {
             $promocode = Promocode::where('id', $id)->first();
             if(($promocode->start_date == now()->format('Y-m-d') && $promocode->start_time < now()) || $promocode->start_date < now()->format('Y-m-d')) {
-                return APIResponse::FailureResponse('Phiếu giảm giá này đang trong thời gian áp dụng');
+                return APIResponse::failureResponse('Phiếu giảm giá này đang trong thời gian áp dụng');
             }
             $promocode->delete();
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch (\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
 		}
     }
 
@@ -840,7 +841,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -880,7 +881,7 @@ class StoreController extends Controller
 
             return ApiResponse::successResponse($data);
         } catch(\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
         }
     }
 
@@ -894,7 +895,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -951,7 +952,7 @@ class StoreController extends Controller
 
             return ApiResponse::successResponse($data);
         } catch(\Exception $e) {
-            return APIResponse::FailureResponse($e->getMessage());
+            return APIResponse::failureResponse($e->getMessage());
         }
     }
 
@@ -965,7 +966,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -974,10 +975,10 @@ class StoreController extends Controller
                 ->where('store_id', $request->store_id)
                 ->first();
                 
-            if(!isset($order)) return APIResponse::FailureResponse('Không tìm thấy đơn hàng');
+            if(!isset($order)) return APIResponse::failureResponse('Không tìm thấy đơn hàng');
             
             $order['product_count'] = count($order->product_detail);
-            return APIResponse::SuccessResponse($order);
+            return APIResponse::successResponse($order);
         } catch(\Exception $e) {
             return ApiResponse::failureResponse($e->getMessage());
         }
@@ -987,15 +988,18 @@ class StoreController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
-            'status' => 'required|in:processing,finished,accepted,canceled',
-            'cancel_reason' => 'required_if:status,==,canceled'
+            'status' => 'required|in:processing,finished,accepted,canceled,taken',
+            'cancel_reason' => 'required_if:status,==,canceled',
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
+            'taken_code' => 'required_if:status,==,taken',
         ], [
             'order_id.exists' => 'Đơn hàng không tồn tại',
-            'cancel_reason.required_if' => 'Vui lòng nhập lí do hủy đơn hàng'
+            'cancel_reason.required_if' => 'Vui lòng nhập lí do hủy đơn hàng',
+            'taken_code.required_if' => 'Vui lòng nhập mã nhận hàng'
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -1005,48 +1009,23 @@ class StoreController extends Controller
                 ->where('store_id', $request->store_id)
                 ->first();
 
-            if(!isset($order)) return APIResponse::FailureResponse('Không tìm thấy đơn hàng');
+            if(!isset($order)) return APIResponse::failureResponse('Không tìm thấy đơn hàng');
 
+            $orderService = new OrderService();
             if($request->status == 'canceled') {
-                if($order->status != 'pending') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi hủy đơn hàng');
-                $order->status = 'canceled';
-                $order->canceled_at = now();
-                $order->cancel_reason = $request->cancel_reason;
-
-                Helper::refund($order);
-                $order->save();
-
-                $message = 'Đơn hàng tại ' . $order->store->name . ' của bạn đã bị hủy vì lí do: '. $order->cancel_reason;
-                Notification::create([
-                    'user_id' => $order->user_id,
-                    'tag' => 'Hủy đơn',
-                    'tag_model' => 'orders',
-                    'tag_model_id' => $order->id,
-                    'title' => 'Đơn hàng của bạn đã bị hủy',
-                    'body' => $message,
-                ]);
-                (new SendPushNotification)->merchantCanceledOrder($order->user, $order->store, $message);
+                $result = $orderService->cancelOrder($order, $request->cancel_reason);
             } else if($request->status == 'accepted') {
-                if($order->status != 'pending') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi tiếp nhận đơn hàng');
-                $order->status = 'accepted';
-                $order->accepted_at = now();
-                $order->save();
+                $result = $orderService->acceptOrder($order, $request->taken_code);
             } else if($request->status == 'processing') {
-                if($order->status != 'accepted') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi thực hiện đơn hàng');
-                $order->status = 'processing';
-                $order->processing_at = now();
-                $order->save();
+                $result = $orderService->processingOrder($order, $request->taken_code);
+            } else if($request->status == 'finished') {
+                $result = $orderService->finishedOrder($order, $request->taken_code);
             } else {
-                if($order->status != 'processing') return APIResponse::FailureResponse('Đã có lỗi xảy ra khi hoàn thành đơn hàng');
-                $order->status = 'finished';
-                $order->taken_code = Helper::generateTakenCode();
-                $order->finished_at = now();
-                $order->save();
-                (new SendPushNotification)->merchantFinishedOrder($order->user, $order->store);
+                $result = $orderService->takenOrder($order, $request->taken_code);
             }
             
             DB::commit();
-            return APIResponse::SuccessResponse($order);
+            return $result;
         } catch(\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
@@ -1060,7 +1039,7 @@ class StoreController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
+            return APIResponse::failureResponse($validate->messages()->first());
         }
 
         try {
@@ -1068,7 +1047,7 @@ class StoreController extends Controller
             $store->status = $request->status; 
             $store->save();
 
-            return APIResponse::SuccessResponse(null);
+            return APIResponse::successResponse(null);
         } catch(\Exception $e) {
             DB::rollBack();
             return ApiResponse::failureResponse($e->getMessage());
