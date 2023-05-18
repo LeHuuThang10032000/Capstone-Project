@@ -715,6 +715,7 @@ class UserController extends Controller
             $order->discount_amount = Helper::calcPromocodeDiscount($promocode, $cartPrice);
             $order->status = 'pending';
             $order->note = $request->note ?? null;
+            $order->taken_code = Helper::generateTakenCode();
 
             foreach ($carts as $cart) {
                 $orderDetails[] = [
@@ -900,47 +901,6 @@ class UserController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return APIResponse::FailureResponse($e->getMessage());
-        }
-    }
-
-    public function takenOrder(Request $request): JsonResponse
-    {
-        $validate = Validator::make($request->all(), [
-            'order_id' => 'required|exists:' . app(Order::class)->getTable() . ',id',
-            'taken_code' => 'required',
-        ], [
-            'order_id.exists' => 'Đơn hàng không tồn tại',
-            'taken_code.required' => 'Vui lòng nhập mã nhận hàng'
-        ]);
-
-        if ($validate->fails()) {
-            return APIResponse::FailureResponse($validate->messages()->first());
-        }
-
-        try {
-            $order = Order::where('id', $request->order_id)
-                ->where('user_id', Auth::user()->id)
-                ->firstOrFail();
-
-            if($order->taken_code !== $request->taken_code) {
-                return APIResponse::FailureResponse('Mã nhận hàng không hợp lệ');
-            }
-
-            if ($order->status == 'canceled') {
-                return APIResponse::FailureResponse('Đơn hàng đã bị hủy');
-            }
-
-            if ($order->status != 'finished') {
-                return APIResponse::FailureResponse('Đơn hàng vẫn chưa được chuẩn bị xong');
-            }
-
-            $order->status = 'taken';
-            $order->taken_at = now();
-            $order->save();
-
-            return APIResponse::SuccessResponse(null);
-        } catch (\Exception $e) {
-            return ApiResponse::failureResponse('Không thể hủy đơn hàng. Đã có lỗi xảy ra');
         }
     }
 

@@ -37,7 +37,8 @@
         },
         "files": [
             "app/Helper/Helper.php",
-            "app/Services/SendPushNotification.php"
+            "app/Services/SendPushNotification.php",
+            "app/Services/OrderService.php"
         ]
     },
     "autoload-dev": {
