@@ -23,6 +23,7 @@ type Props = {
   onPressCancel: () => void;
   onPressConfirm: () => void;
   orderId: number;
+  store_id: number;
 };
 
 interface Remind {
@@ -35,6 +36,7 @@ const BodyModalCode: React.FC<Props> = ({
   onPressCancel,
   onPressConfirm,
   orderId,
+  store_id,
 }) => {
   const navigation = useNavigation<MainStackNavigation>();
 
@@ -55,15 +57,17 @@ const BodyModalCode: React.FC<Props> = ({
     try {
       const formData = new FormData();
       formData.append('order_id', orderId);
+      formData.append('store_id', store_id);
       formData.append('taken_code', data.remind);
-      await axiosClient.post('/order/taken-order', formData, {
+      formData.append('status', 'taken');
+      await axiosClient.post('/merchant/order/update-status', formData, {
         headers: {'content-type': 'multipart/form-data'},
       });
-      navigation.navigate('Home');
+      navigation.navigate('OrderScreen');
       Toast.show({
         type: 'success',
         text1: 'Thành công',
-        text2: 'Nhận hàng thành công!',
+        text2: 'Giao hàng thành công!',
       });
     } catch (error) {
       console.log(error);

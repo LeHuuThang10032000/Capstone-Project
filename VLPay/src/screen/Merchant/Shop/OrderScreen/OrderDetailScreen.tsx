@@ -16,6 +16,10 @@ import {
 } from '../../../../stack/Navigation';
 import Order from '../../../../assets/svg/order.svg';
 import Call from '../../../../assets/svg/call-user.svg';
+import ModalProvider from '../../../../context/ModalProvider';
+import Modal from 'react-native-modal';
+import HeaderModalCode from '../../../../components/CustomCodeOrder/HeaderModal';
+import BodyModalCode from '../../../../components/CustomCodeOrder/BodyModal';
 
 const OrderDetailScreen = () => {
   const navigation = useNavigation<MainStackNavigation>();
@@ -24,6 +28,8 @@ const OrderDetailScreen = () => {
   const [status, setStatus] = useState(data?.status);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [isGetCash, setGetCash] = useState(false);
+  const {modalVisible, toggleModal, closeModal} = ModalProvider();
+
   console.log(orderDetail.taken_code);
 
   const fetchData = async () => {
@@ -195,26 +201,54 @@ const OrderDetailScreen = () => {
         );
       case 'finished':
         return (
-          <HStack
-            justifyContent={'space-evenly'}
-            position={'absolute'}
-            width={'100%'}
-            bottom={10}>
-            <TouchableOpacity
+          <>
+            <HStack
+              justifyContent={'space-evenly'}
+              position={'absolute'}
+              width={'100%'}
+              bottom={10}>
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 16,
+                  backgroundColor: '#B5EAD8',
+                  borderRadius: 10,
+                  width: '90%',
+                }}
+                onPress={toggleModal}>
+                <UText style={{alignSelf: 'center', fontWeight: '700'}}>
+                  Nhập mã
+                </UText>
+              </TouchableOpacity>
+            </HStack>
+
+            <Modal
+              isVisible={modalVisible}
+              animationIn="slideInUp"
+              animationOut="fadeOutDown"
               style={{
-                paddingVertical: 16,
-                backgroundColor: '#B5EAD8',
-                borderRadius: 10,
-                width: '90%',
-              }}
-              onPress={async () => {
-                navigation.goBack();
+                margin: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              <UText style={{alignSelf: 'center', fontWeight: '700'}}>
-                Đóng
-              </UText>
-            </TouchableOpacity>
-          </HStack>
+              <View
+                style={{
+                  height: 280,
+                  width: '90%',
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 8,
+                }}>
+                <HeaderModalCode title="Đăng xuất" onPress={closeModal} />
+                <BodyModalCode
+                  cancel="cancel"
+                  confirm="confirm"
+                  onPressCancel={closeModal}
+                  onPressConfirm={() => console.log('clicked')}
+                  orderId={data?.id}
+                  store_id={data?.store_id}
+                />
+              </View>
+            </Modal>
+          </>
         );
     }
   };
@@ -233,9 +267,6 @@ const OrderDetailScreen = () => {
           <VStack>
             <UText style={{color: '#4285F4', fontWeight: '700'}}>
               #{orderDetail?.order_code}
-            </UText>
-            <UText style={{color: '#000000', fontWeight: '700'}}>
-              {orderDetail?.taken_code}
             </UText>
           </VStack>
           <View
