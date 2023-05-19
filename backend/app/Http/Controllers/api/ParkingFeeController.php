@@ -16,12 +16,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\ConnectionInterface;
 
 class ParkingFeeController extends Controller
 {
     private $fee, $code;
     
-    public function __construct(Helper $helper, \Illuminate\Database\ConnectionInterface $db)
+    public function __construct(Helper $helper, ConnectionInterface $db)
     {
         $this->fee = $db->table('settings')->where('key', 'parking_fee')->value('value');
         $this->code = $helper->generateCode();
