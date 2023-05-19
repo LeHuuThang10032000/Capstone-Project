@@ -91,17 +91,19 @@ const ListStore = () => {
         </VStack>
         {item?.promocodes ? (
           <Text
+            numberOfLines={1}
             style={{
               position: 'absolute',
               right: 0,
-              top: -1,
+              top: -10,
               backgroundColor: 'red',
               color: 'white',
               borderRadius: 30,
-              width: 20,
+              width: 150,
               height: 20,
               textAlign: 'center',
               lineHeight: 20,
+              paddingHorizontal: 5,
             }}>
             {item?.promocodes}
           </Text>

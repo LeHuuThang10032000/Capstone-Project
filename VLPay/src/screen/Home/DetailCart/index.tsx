@@ -112,6 +112,9 @@ const DetailCart = ({route}: any) => {
                     </HStack>
                     <HStack alignItems={'center'}>
                       <TouchableOpacity
+                        style={{
+                          width: 30,
+                        }}
                         onPress={async () => {
                           const formData = new FormData();
                           const _quantity = item.quantity - 1;
@@ -137,6 +140,14 @@ const DetailCart = ({route}: any) => {
                       </TouchableOpacity>
                       <View style={{width: 50}}>
                         <Input
+                          style={{
+                            borderBottomColor: 'gray',
+                            borderBottomWidth: 1,
+                            borderTopWidth: 0,
+                          }}
+                          borderWidth={0}
+                          borderColor={'white'}
+                          underlineColorAndroid="transparent"
                           keyboardType="number-pad"
                           defaultValue={item.quantity.toString()}
                           onSubmitEditing={async ({
@@ -218,6 +229,9 @@ const DetailCart = ({route}: any) => {
                         />
                       </View>
                       <TouchableOpacity
+                        style={{
+                          width: 30,
+                        }}
                         onPress={async () => {
                           const formData = new FormData();
                           const _quantity = item.quantity + 1;

@@ -57,6 +57,21 @@ export default function QRCodeCheck(props: Props) {
   }, []);
 
   React.useEffect(() => {
+    setInterval(async () => {
+      const __result = await axiosClient.get('/parking-fee/check-valid');
+      let bool = __result?.data?.data;
+      console.log(bool);
+
+      if (bool !== 'valid') {
+        navigation.goBack();
+      }
+    }, 1000);
+  }, []);
+  console.log('====================================');
+  console.log(data);
+  console.log('====================================');
+
+  React.useEffect(() => {
     // console.log(typeof barcodes);
   }, [barcodes]);
 

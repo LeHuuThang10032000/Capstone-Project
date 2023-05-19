@@ -156,6 +156,11 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} color="#000000">
                 #{order?.order_code}
               </Text>
+              {'\n'}
+              Mã lấy hàng:{' '}
+              <Text fontWeight={'bold'} color="#000000">
+                {order?.taken_code}
+              </Text>
             </Text>
             <Divider />
             <VStack padding={5}>
@@ -322,6 +327,11 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} color="#000000">
                 #{order?.order_code}
               </Text>
+              {'\n'}
+              Mã lấy hàng:{' '}
+              <Text fontWeight={'bold'} color="#000000">
+                {order?.taken_code}
+              </Text>
             </Text>
             <Divider />
             <VStack padding={5}>
@@ -468,6 +478,11 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} color="#000000">
                 #{order?.order_code}
               </Text>
+              {'\n'}
+              Mã lấy hàng:{' '}
+              <Text fontWeight={'bold'} color="#000000">
+                {order?.taken_code}
+              </Text>
             </Text>
             <Divider />
             <VStack padding={5}>
@@ -567,7 +582,10 @@ const OrderProcess = ({route}: any) => {
                   Ví VLpay
                 </Text>
               </HStack>
-              <TouchableOpacity onPress={toggleModal}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Home');
+                }}>
                 <View
                   justifyContent="center"
                   alignItems={'center'}
@@ -579,7 +597,7 @@ const OrderProcess = ({route}: any) => {
                     borderRadius: 12,
                   }}>
                   <Text color={'#000000'} fontWeight="bold" fontSize={16}>
-                    Đã nhận hàng
+                    Đóng
                   </Text>
                 </View>
               </TouchableOpacity>
