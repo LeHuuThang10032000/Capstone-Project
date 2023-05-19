@@ -510,7 +510,7 @@ const OrderDetailScreen = () => {
                     }
                   }
                 }}
-                secureTextEntry={true}
+                secureTextEntry={false}
               />
             </View>
             <TouchableOpacity
