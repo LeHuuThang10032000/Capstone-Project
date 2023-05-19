@@ -40,6 +40,17 @@ class SendPushNotification
         SendNotification::dispatch($user, $message);
     }
 
+    public function userParking($user, $text)
+    {
+        $message = [
+            'title' => 'VLPay',
+            'type' => 'user_parking',
+            'text' => $text,
+        ];
+
+        SendNotification::dispatch($user, $message);
+    }
+
     public function merchantCanceledOrder($user, $store, $text)
     {
         $message = [
