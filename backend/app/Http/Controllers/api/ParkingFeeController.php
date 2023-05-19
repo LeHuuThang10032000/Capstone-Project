@@ -4,12 +4,14 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Jobs\SendNotification;
+use App\Models\Notification;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\User;
+use App\Services\SendPushNotification;
 use Carbon\Carbon;
 use Helper;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -19,9 +21,9 @@ class ParkingFeeController extends Controller
 {
     private $fee, $code;
     
-    public function __construct(Helper $helper)
+    public function __construct(Helper $helper, \Illuminate\Database\ConnectionInterface $db)
     {
-        $this->fee = 3000;
+        $this->fee = $db->table('settings')->where('key', 'parking_fee')->value('value');
         $this->code = $helper->generateCode();
     }
 
@@ -101,6 +103,16 @@ class ParkingFeeController extends Controller
             $transaction->update([
                 "qr_code" => null
             ]);
+
+            Notification::create([
+                'user_id' => $transaction->from_id,
+                'tag' => 'Gửi xe',
+                'tag_model' => 'transactions',
+                'tag_model_id' => $transaction->id,
+                'title' => 'Gửi xe',
+                'body' => 'Thanh toán tiền gửi xe thành công',
+            ]);
+            (new SendPushNotification)->userParking($transaction->fromUser, 'Thanh toán tiền gửi xe thành công');
             DB::commit();
             return ApiResponse::successResponse('valid');
         } catch(\Exception $e) {
@@ -112,7 +124,7 @@ class ParkingFeeController extends Controller
     public function checkQr(Request $request)
     {
         $user = Auth::user();
-        $transaction = Transaction::where('qr_code', $request->code)->where('type', 'P')->first();
+        $transaction = Transaction::where('from_id', $user->id)->where('qr_code', $request->code)->where('type', 'P')->first();
         return ApiResponse::successResponse(($transaction ? 'valid' : 'invalid'));
     }
 }
