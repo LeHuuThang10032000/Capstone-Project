@@ -3,6 +3,7 @@ import {create} from 'zustand';
 export interface Order {
   id: number;
   order_code: string;
+  taken_code: string;
   user_id: number;
   store_id: number;
   promocode_id: string;
