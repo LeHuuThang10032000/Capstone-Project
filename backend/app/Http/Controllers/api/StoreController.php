@@ -990,6 +990,7 @@ class StoreController extends Controller
             'order_id' => 'required|exists:'.app(Order::class)->getTable().',id',
             'status' => 'required|in:processing,finished,accepted,canceled,taken',
             'cancel_reason' => 'required_if:status,==,canceled',
+            'store_id' => 'required|exists:'.app(Store::class)->getTable().',id',
             'taken_code' => 'required_if:status,==,taken',
         ], [
             'order_id.exists' => 'Đơn hàng không tồn tại',
@@ -1005,6 +1006,7 @@ class StoreController extends Controller
             DB::beginTransaction();
             $order = Order::with('user', 'store')
                 ->where('id', $request->order_id)
+                ->where('store_id', $request->store_id)
                 ->first();
 
             if(!isset($order)) return APIResponse::failureResponse('Không tìm thấy đơn hàng');
