@@ -477,7 +477,7 @@ const OrderDetailScreen = () => {
                 pinCount={4}
                 // autoFocusOnLoad
                 codeInputFieldStyle={{
-                  width: 40,
+                  width: 50,
                   height: 60,
                   color: Colors.cloudBurst,
                   fontSize: moderateScale(28),

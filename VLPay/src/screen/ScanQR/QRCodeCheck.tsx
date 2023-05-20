@@ -78,8 +78,8 @@ export default function QRCodeCheck(props: Props) {
           setTimeout(() => {
             // navigation.navigate('Home');
             _setChangePage(false);
+            RNRestart.Restart();
           }, 2000);
-          RNRestart.Restart();
         }
       }
     }, 1000);
