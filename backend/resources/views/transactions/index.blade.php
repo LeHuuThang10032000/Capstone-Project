@@ -46,12 +46,14 @@
         {{ $transactions->links() }}
         </div>
         @else
-        <hr>
-        <div class="text-center">
-            <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
-            <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
-            <a href="{{ route('organiser.transaction.index') }}">Quay lại</a>
-        </div>
+            @if(isset($key))
+            <hr>
+            <div class="text-center">
+                <img src="{{ asset('img/no-result.png') }}" alt="" style="margin-left: auto; margin-right: auto; display: block">
+                <p class="h5 mt-3">Không tìm thấy kết quả tìm kiếm nào khớp với "{{ $key }}"</p>
+                <a href="{{ route('organiser.transaction.index') }}">Quay lại</a>
+            </div>
+            @endif
         @endif
     </div>
 </div>
