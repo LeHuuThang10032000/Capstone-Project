@@ -32,7 +32,9 @@ const ShareBillComp = (props: Props) => {
           <HStack alignItems="center">
             <MustPay width={50} />
             <VStack paddingLeft={3}>
-              <Text>Số tiền phải trả:</Text>
+              <Text style={{fontSize: 14, color: 'black'}}>
+                Số tiền phải trả:
+              </Text>
               <Text>{formatCurrency((props.need_pay ?? 0).toString())}đ</Text>
             </VStack>
           </HStack>
@@ -61,8 +63,10 @@ const ShareBillComp = (props: Props) => {
         <HStack alignItems="center">
           <Received width={50} />
           <VStack paddingLeft={3}>
-            <Text>Số tiền đã nhận:</Text>
-            <Text>{formatCurrency((props.paid_bill ?? 0).toString())}đ</Text>
+            <Text style={{fontSize: 14, color: 'black'}}>Số tiền đã nhận:</Text>
+            <Text style={{fontSize: 14, color: 'black'}}>
+              {formatCurrency((props.paid_bill ?? 0).toString())}đ
+            </Text>
           </VStack>
         </HStack>
         <TouchableOpacity
@@ -86,7 +90,7 @@ const ShareBillComp = (props: Props) => {
         <HStack alignItems="center">
           <BillYourself width={50} />
           <VStack paddingLeft={3}>
-            <Text>Đơn chia tiền</Text>
+            <Text style={{fontSize: 14, color: 'black'}}>Đơn chia tiền</Text>
           </VStack>
         </HStack>
         <TouchableOpacity

@@ -20,7 +20,7 @@ const ListShareBill = ({route}: any) => {
   const [data, setData] = useState<Props[]>([]);
   const {userWallet} = route.params;
   const fetchData = useCallback(async () => {
-    const result = await axiosClient.get('/share-bill?page=1&limit=1000');
+    const result = await axiosClient.get('/share-bill?page=1&limit=20');
     setData(result?.data?.data);
     console.log('data', data);
   }, []);

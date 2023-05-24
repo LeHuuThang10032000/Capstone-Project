@@ -21,7 +21,7 @@ const ListYourBill = ({route}: any) => {
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
-      '/share-bill/my-share-bill?page=1&limit=100',
+      '/share-bill/my-share-bill?page=1&limit=20',
     );
     setData(result?.data?.data);
   }, []);

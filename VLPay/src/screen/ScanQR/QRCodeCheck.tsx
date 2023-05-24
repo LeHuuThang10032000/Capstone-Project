@@ -61,12 +61,7 @@ export default function QRCodeCheck(props: Props) {
 
   React.useEffect(() => {
     setInterval(async () => {
-      console.log(data);
-
       if (data?.value) {
-        // console.log('====================================');
-        // console.log('/parking-fee/check-valid?code=' + data?.value);
-        // console.log('====================================');
         const __result = await axiosClient.get(
           '/parking-fee/check-valid?code=' + data?.value,
         );
@@ -85,28 +80,28 @@ export default function QRCodeCheck(props: Props) {
     }, 1000);
   }, []);
 
-  React.useEffect(() => {}, [barcodes]);
+  console.log(ScanAgain);
 
+  React.useEffect(() => {}, [barcodes]);
   const handleScan = React.useCallback(async () => {
     if (!data?.isParking) {
       if (barcodes[0]?.displayValue && !ScanAgain) {
         try {
           const code = barcodes[0].displayValue.toString();
+          setScanAgain(true);
           await axiosClient.get('parking-fee/scan?code=' + code);
           barcodes = [];
-          setScanAgain(true);
           setValue(true);
           setChangePage(true);
         } catch (e) {
           barcodes = [];
           setValue(false);
-          setScanAgain(true);
           setChangePage(true);
         }
         barcodes = [];
       }
     }
-  }, [barcodes, setChangePage, data]);
+  }, [barcodes, setChangePage, data, setScanAgain, ScanAgain]);
 
   React.useEffect(() => {
     if (barcodes.length > 0 && !data?.isParking) {
