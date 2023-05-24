@@ -364,19 +364,19 @@ const MenuScreen = (props: Props) => {
             </BottomSheetModal>
           </View>
         )}
-        {visible && (
-          <TouchableOpacity
-            style={{
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              zIndex: 10000,
-            }}
-            onPress={() => {
-              setVisible(false);
-            }}></TouchableOpacity>
-        )}
       </BottomSheetModalProvider>
+      {/* {visible && (
+        <TouchableOpacity
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            backgroundColor: 'red',
+          }}
+          onPress={() => {
+            setVisible(false);
+          }}></TouchableOpacity>
+      )} */}
     </View>
   );
 };
