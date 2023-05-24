@@ -221,12 +221,7 @@ const DetailStore = ({route}: any) => {
                       <View my={3} key={item.id}>
                         <TouchableOpacity
                           onPress={() => {
-                            if (status === 'opening') {
-                              navigation.navigate('DetailProduct', {
-                                id: item.id,
-                                store_id: store_id,
-                              });
-                            } else if (status === 'closing') {
+                            if (status === 'closing') {
                               Alert.alert('Cảnh báo', 'Cửa hàng đã đóng cửa!', [
                                 {
                                   text: 'Thoát',
@@ -234,6 +229,11 @@ const DetailStore = ({route}: any) => {
                                   style: 'cancel',
                                 },
                               ]);
+                            } else {
+                              navigation.navigate('DetailProduct', {
+                                id: item.id,
+                                store_id: store_id,
+                              });
                             }
                           }}>
                           <HStack>
