@@ -850,7 +850,7 @@ class UserController extends Controller
         }
 
         try {
-            $order = Order::select('*', DB::raw('(order_total - discount_amount) as order_total'))
+            $order = Order::select('*', DB::raw('(order_total - discount_amount) as total'))
                 ->with('user', 'store')
                 ->where('id', $request->order_id)
                 ->first();
@@ -917,7 +917,9 @@ class UserController extends Controller
         }
 
         try {
-            $orders = Order::select('*', DB::raw('(order_total - discount_amount) as order_total'))->where('user_id', Auth::user()->id)->with('store:id,name');
+            $orders = Order::select('*', DB::raw('(order_total - discount_amount) as total'))
+                ->where('user_id', Auth::user()->id)
+                ->with('store:id,name');
 
             if ($request->status == 'taken') {
                 $orders = $orders->where('status', 'taken')->orWhere('status', 'canceled');
