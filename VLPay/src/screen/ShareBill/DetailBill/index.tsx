@@ -200,8 +200,7 @@ const DetailBill = ({route}: any) => {
             <TouchableOpacity
               onPress={async () => {
                 try {
-                  data.masterDataSource = [{...masterDataSource[0]}];
-                  const masterdata = [{...masterDataSource[0]}];
+                  const masterdata = [...masterDataSource];
                   const order_id = data?.order_id;
                   data.isFinal = true;
                   const detail = [];
