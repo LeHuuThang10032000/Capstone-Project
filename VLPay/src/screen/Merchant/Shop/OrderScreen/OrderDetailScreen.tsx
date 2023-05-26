@@ -27,6 +27,8 @@ const OrderDetailScreen = () => {
   const [status, setStatus] = useState(data?.status);
   const [visibleWarning, setVisibleWarning] = useState(false);
   const [isGetCash, setGetCash] = useState(false);
+  const {modalVisible, toggleModal, closeModal} = ModalProvider();
+
   console.log(orderDetail.taken_code);
   const [modal, setModal] = useState(false);
   const [phoneError, setPhoneError] = useState('');
@@ -194,12 +196,30 @@ const OrderDetailScreen = () => {
         );
       case 'finished':
         return (
-          <HStack
-            justifyContent={'space-evenly'}
-            position={'absolute'}
-            width={'100%'}
-            bottom={10}>
-            <TouchableOpacity
+          <>
+            <HStack
+              justifyContent={'space-evenly'}
+              position={'absolute'}
+              width={'100%'}
+              bottom={10}>
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 16,
+                  backgroundColor: '#B5EAD8',
+                  borderRadius: 10,
+                  width: '90%',
+                }}
+                onPress={toggleModal}>
+                <UText style={{alignSelf: 'center', fontWeight: '700'}}>
+                  Nhập mã
+                </UText>
+              </TouchableOpacity>
+            </HStack>
+
+            <Modal
+              isVisible={modalVisible}
+              animationIn="slideInUp"
+              animationOut="fadeOutDown"
               style={{
                 paddingVertical: 16,
                 backgroundColor: '#B5EAD8',

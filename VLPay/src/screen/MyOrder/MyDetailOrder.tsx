@@ -700,23 +700,36 @@ const MyDetailOrder = ({route}: any) => {
                   Ví VLpay
                 </Text>
               </HStack>
-              <TouchableOpacity onPress={toggleModal}>
-                <View
-                  justifyContent="center"
-                  alignItems={'center'}
-                  marginY={5}
-                  style={{
-                    width: '100%',
-                    padding: 10,
-                    backgroundColor: '#B5EAD8',
-                    borderRadius: 12,
-                  }}>
-                  <Text color={'#000000'} fontWeight="bold" fontSize={16}>
-                    Đã nhận hàng
-                  </Text>
-                </View>
-              </TouchableOpacity>
             </VStack>
+            <Divider />
+            <View padding={5}>
+              <Text fontSize={16}>
+                Mã hoàn thành đơn:{' '}
+                <Text style={{fontWeight: 'bold'}}>{order?.taken_code}</Text>
+              </Text>
+              <Text fontSize={16} fontWeight={'bold'}>
+                Lưu ý:{' '}
+                <Text color={'red.500'}>
+                  Bạn vui lòng đọc mã này cho nhân viên khi lấy hàng.
+                </Text>
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <View
+                justifyContent="center"
+                alignItems={'center'}
+                marginY={5}
+                style={{
+                  padding: 10,
+                  marginHorizontal: 10,
+                  backgroundColor: '#B5EAD8',
+                  borderRadius: 12,
+                }}>
+                <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+                  Đã nhận hàng
+                </Text>
+              </View>
+            </TouchableOpacity>
 
             <Modal
               isVisible={modalVisible}

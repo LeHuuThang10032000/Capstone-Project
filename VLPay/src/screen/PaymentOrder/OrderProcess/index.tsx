@@ -602,33 +602,35 @@ const OrderProcess = ({route}: any) => {
                 </View>
               </TouchableOpacity>
             </VStack>
-
-            <Modal
-              isVisible={modalVisible}
-              animationIn="slideInUp"
-              animationOut="fadeOutDown"
-              style={{
-                margin: 0,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+            <Divider />
+            <View padding={5}>
+              <Text fontSize={16}>
+                Mã hoàn thành đơn:{' '}
+                <Text style={{fontWeight: 'bold'}}>{order?.taken_code}</Text>
+              </Text>
+              <Text fontSize={16} fontWeight={'bold'}>
+                Lưu ý:{' '}
+                <Text color={'red.500'}>
+                  Bạn vui lòng đọc mã này cho nhân viên khi lấy hàng.
+                </Text>
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
               <View
+                justifyContent="center"
+                alignItems={'center'}
+                marginY={5}
                 style={{
-                  height: 280,
-                  width: '90%',
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: 8,
+                  padding: 10,
+                  marginHorizontal: 10,
+                  backgroundColor: '#B5EAD8',
+                  borderRadius: 12,
                 }}>
-                <HeaderModalCode title="Đăng xuất" onPress={closeModal} />
-                <BodyModalCode
-                  cancel="cancel"
-                  confirm="confirm"
-                  onPressCancel={closeModal}
-                  onPressConfirm={() => console.log('clicked')}
-                  orderId={order_id}
-                />
+                <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+                  Đã nhận hàng
+                </Text>
               </View>
-            </Modal>
+            </TouchableOpacity>
           </View>
         );
       default:
