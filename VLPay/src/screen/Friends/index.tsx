@@ -132,19 +132,6 @@ const Index = () => {
     );
   };
 
-  const ItemSeparatorView = () => {
-    return (
-      // Flat List Item Separator
-      <View
-        style={{
-          height: 0.5,
-          width: '100%',
-          backgroundColor: '#C8C8C8',
-        }}
-      />
-    );
-  };
-
   const EmptyComponent = () => {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
