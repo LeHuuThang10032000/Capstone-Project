@@ -13,6 +13,8 @@ import {UText} from '../../components/UText';
 import {axiosClient} from '../../components/apis/axiosClient';
 import {Image, VStack, View} from 'native-base';
 import QRCode from 'react-native-qrcode-svg';
+import RNRestart from 'react-native-restart';
+import {CommonActions} from '@react-navigation/native';
 type Props = {
   wallet: any;
 };
@@ -24,6 +26,7 @@ export default function QRCodeCheck(props: Props) {
   const devices = useCameraDevices();
   const device = devices.back;
   const [changePage, setChangePage] = React.useState(false);
+  const [_changePage, _setChangePage] = React.useState(false);
   const [ScanAgain, setScanAgain] = React.useState(false);
   const [value, setValue] = React.useState(null);
   const [_data, setData] = React.useState([]);
@@ -57,29 +60,48 @@ export default function QRCodeCheck(props: Props) {
   }, []);
 
   React.useEffect(() => {
-    // console.log(typeof barcodes);
-  }, [barcodes]);
+    setInterval(async () => {
+      if (data?.value) {
+        const __result = await axiosClient.get(
+          '/parking-fee/check-valid?code=' + data?.value,
+        );
+        let bool = __result?.data?.data;
+        console.log(bool + 'dsdfsd f');
 
+        if (bool !== 'valid') {
+          _setChangePage(true);
+          setTimeout(() => {
+            // navigation.navigate('Home');
+            _setChangePage(false);
+            RNRestart.Restart();
+          }, 2000);
+        }
+      }
+    }, 1000);
+  }, []);
+
+  console.log(ScanAgain);
+
+  React.useEffect(() => {}, [barcodes]);
   const handleScan = React.useCallback(async () => {
     if (!data?.isParking) {
       if (barcodes[0]?.displayValue && !ScanAgain) {
         try {
           const code = barcodes[0].displayValue.toString();
+          setScanAgain(true);
           await axiosClient.get('parking-fee/scan?code=' + code);
           barcodes = [];
-          setScanAgain(true);
           setValue(true);
           setChangePage(true);
         } catch (e) {
           barcodes = [];
           setValue(false);
-          setScanAgain(true);
           setChangePage(true);
         }
         barcodes = [];
       }
     }
-  }, [barcodes, setChangePage, data]);
+  }, [barcodes, setChangePage, data, setScanAgain, ScanAgain]);
 
   React.useEffect(() => {
     if (barcodes.length > 0 && !data?.isParking) {
@@ -168,6 +190,29 @@ export default function QRCodeCheck(props: Props) {
           onActionRight={() => {
             setScanAgain(false);
             setChangePage(false);
+          }}
+          btnTextLeft={'Xác nhận'}
+          style={{flexDirection: 'column'}}
+        />
+        <YesNoModal
+          icon={<Icons.SuccessIcon />}
+          visible={_changePage}
+          btnLeftStyle={{
+            backgroundColor: Colors.primary,
+            width: 200,
+          }}
+          btnRightStyle={{
+            backgroundColor: '#909192',
+            width: 200,
+            display: 'none',
+          }}
+          message={'Đã Qrcode đã được quét thành công'}
+          title={'Kết quả quét'}
+          onActionLeft={() => {
+            _setChangePage(false);
+          }}
+          onActionRight={() => {
+            _setChangePage(false);
           }}
           btnTextLeft={'Xác nhận'}
           style={{flexDirection: 'column'}}

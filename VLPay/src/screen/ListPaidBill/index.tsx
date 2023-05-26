@@ -20,7 +20,7 @@ const ListPaidBill = ({route}: any) => {
   const [data, setData] = useState<Props[]>([]);
 
   const fetchData = useCallback(async () => {
-    const result = await axiosClient.get('/share-bill/paid?limit=100&page=1');
+    const result = await axiosClient.get('/share-bill/paid?limit=20&page=1');
     setData(result?.data?.data);
   }, []);
   useEffect(() => {

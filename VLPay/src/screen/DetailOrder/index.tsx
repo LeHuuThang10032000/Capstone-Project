@@ -68,6 +68,7 @@ const DetailOrder = ({route}: any) => {
   const [search, setSearch] = useState('');
   const [profile, setProfile] = useState({});
   const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [tempCash, setTempCash] = useState(0);
 
   const fetchData = useCallback(async () => {
     const result = await axiosClient.get(
@@ -88,7 +89,7 @@ const DetailOrder = ({route}: any) => {
     const promocode = await axiosClient.get(
       '/merchant/promocode?store_id=' +
         store_id +
-        '&page=1&limit=100&status=RUNNING',
+        '&page=1&limit=20&status=RUNNING',
     );
 
     const _array = [];
@@ -100,6 +101,10 @@ const DetailOrder = ({route}: any) => {
     });
 
     setCart(result?.data?.data);
+    console.log('====================================');
+    console.log('result?.data?.data', result?.data?.data);
+    console.log('====================================');
+    setTempCash(result?.data?.data?.total_price);
     setFinalMoney(result?.data?.data?.total_price);
     setPromoCode(_array);
     setFilteredDataSource(_array);
@@ -300,9 +305,7 @@ const DetailOrder = ({route}: any) => {
               <VStack marginTop={5}>
                 <HStack paddingBottom={3} justifyContent={'space-between'}>
                   <Text>Tổng tạm tính</Text>
-                  <Text>
-                    {formatCurrency((cart?.total_price ?? 0).toString())}đ
-                  </Text>
+                  <Text>{formatCurrency((tempCash ?? 0).toString())}đ</Text>
                 </HStack>
                 <HStack justifyContent={'space-between'}>
                   <Text>Giảm giá</Text>

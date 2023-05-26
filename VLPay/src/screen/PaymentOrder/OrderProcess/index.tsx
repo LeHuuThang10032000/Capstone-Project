@@ -156,6 +156,11 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} color="#000000">
                 #{order?.order_code}
               </Text>
+              {'\n'}
+              Mã lấy hàng:{' '}
+              <Text fontWeight={'bold'} color="#000000">
+                {order?.taken_code}
+              </Text>
             </Text>
             <Divider />
             <VStack padding={5}>
@@ -322,6 +327,11 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} color="#000000">
                 #{order?.order_code}
               </Text>
+              {'\n'}
+              Mã lấy hàng:{' '}
+              <Text fontWeight={'bold'} color="#000000">
+                {order?.taken_code}
+              </Text>
             </Text>
             <Divider />
             <VStack padding={5}>
@@ -468,6 +478,11 @@ const OrderProcess = ({route}: any) => {
               <Text fontWeight={'bold'} color="#000000">
                 #{order?.order_code}
               </Text>
+              {'\n'}
+              Mã lấy hàng:{' '}
+              <Text fontWeight={'bold'} color="#000000">
+                {order?.taken_code}
+              </Text>
             </Text>
             <Divider />
             <VStack padding={5}>
@@ -567,6 +582,25 @@ const OrderProcess = ({route}: any) => {
                   Ví VLpay
                 </Text>
               </HStack>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Home');
+                }}>
+                <View
+                  justifyContent="center"
+                  alignItems={'center'}
+                  marginY={5}
+                  style={{
+                    width: '100%',
+                    padding: 10,
+                    backgroundColor: '#B5EAD8',
+                    borderRadius: 12,
+                  }}>
+                  <Text color={'#000000'} fontWeight="bold" fontSize={16}>
+                    Đóng
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </VStack>
             <Divider />
             <View padding={5}>

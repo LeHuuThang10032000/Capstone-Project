@@ -160,6 +160,10 @@ const DetailProduct = ({route, productId}: any) => {
                   color="#4285F4"
                   key={item.id}
                   label={item.name}
+                  labelStyle={{
+                    color: 'black',
+                  }}
+                  uncheckedColor={'black'}
                   position="leading"
                   status={
                     checkedItems.includes(item.id) ? 'checked' : 'unchecked'
@@ -174,7 +178,9 @@ const DetailProduct = ({route, productId}: any) => {
                     }
                   }}
                 />
-                <Text>{formatCurrency((item.price ?? 0).toString())}đ</Text>
+                <Text style={{color: 'black'}}>
+                  {formatCurrency((item.price ?? 0).toString())}đ
+                </Text>
               </HStack>
             ))}
           </View>

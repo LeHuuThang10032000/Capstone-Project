@@ -84,7 +84,7 @@ const FirstRoute = () => {
 
   const getOrders = useCallback(async () => {
     const result = await axiosClient.get(
-      `merchant/order?limit=100&page=1&store_id=${storeId}&status=pending`,
+      `merchant/order?limit=20&page=1&store_id=${storeId}&status=pending`,
     );
     const data = result?.data?.data;
     setOrder(data);
@@ -174,7 +174,7 @@ const SecondRoute = () => {
 
   const getOrders = useCallback(async () => {
     const result = await axiosClient.get(
-      `merchant/order?limit=100&page=1&store_id=${storeId}&status=processing`,
+      `merchant/order?limit=20&page=1&store_id=${storeId}&status=processing`,
     );
     const data = result?.data?.data;
     setOrder(data);
@@ -264,7 +264,7 @@ const ThirdRoute = () => {
 
   const getOrders = useCallback(async () => {
     const result = await axiosClient.get(
-      `merchant/order?limit=100&page=1&store_id=${storeId}&status=finished`,
+      `merchant/order?limit=20&page=1&store_id=${storeId}&status=finished`,
     );
     const data = result?.data?.data;
     setOrder(data);

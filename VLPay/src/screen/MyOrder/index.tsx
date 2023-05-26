@@ -123,9 +123,7 @@ const SecondRoute = () => {
   }, []);
 
   const getOrder = useCallback(async () => {
-    const result = await axiosClient.get(
-      'order?page=1&limit=1000&status=taken',
-    );
+    const result = await axiosClient.get('order?page=1&limit=20&status=taken');
     setHistory(result.data?.data);
     setLoading(false);
   }, []);
