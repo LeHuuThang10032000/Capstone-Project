@@ -188,6 +188,7 @@ const Index = function () {
             <Utitle style={styles.headerItem}>Đăng ký</Utitle>
           </View>
           <FormInputController
+            maxLength={36}
             title={'Họ và tên'}
             placeHolder={'Nhập họ và tên'}
             styles={styles.textInput}
