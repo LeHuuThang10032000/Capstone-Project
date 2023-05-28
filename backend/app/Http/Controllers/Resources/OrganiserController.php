@@ -32,6 +32,7 @@ class OrganiserController extends Controller
             $user->save();
         } else {
             $user->status = 'active';
+            $user->login_attempts = 0;
             $user->save();
         }
 
