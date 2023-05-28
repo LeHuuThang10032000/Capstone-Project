@@ -65,8 +65,8 @@ class AuthController extends Controller
     public function checkPhoneExist(Request $request)
     {
         if ($request->has('own_phone')) {
-            if($request->own_phone == $request->phone){
-                return response (
+            if ($request->own_phone == $request->phone) {
+                return response(
                     [
                         "message" => "Số điện thoại bị trùng với số điện thoại đang sử dụng",
                         "status_code" => 430,
@@ -127,23 +127,46 @@ class AuthController extends Controller
         }
 
         $credentials = ['phone' => $request->phone, 'password' => $request->password];
-        if (!Auth::attempt($credentials)) {
+
+        $user = User::where('phone', $credentials['phone'])->first();
+
+        if ($user->status === 'inactive') {
+            return ApiResponse::failureResponse('Tài khoản của bạn đang bị tạm khóa. Vui lòng liên hệ dịch vụ VLPay tại Văn Lang');
+        }
+
+        if ($user->login_attempts >= 3) {
+            $user->status = 'inactive';
+            $user->save();
+            return ApiResponse::failureResponse('Tài khoản của bạn đang bị tạm khóa. Vui lòng liên hệ dịch vụ VLPay tại Văn Lang');
+        }
+
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            // Authentication successful
+            Auth::login($user);
+            $currentToken = $user->tokens();
+
+            if ($currentToken && $user->is_sercurity !== true) {
+                // Revoke all tokens except the current one
+                $user->tokens()->delete();
+            }
+            $user->login_attempts = 0; // reset login attempt counter
+            $user->device_token = $request->device_token;
+            $user->save();
+
+            $token = $user->createToken('myapptoken')->accessToken;
+
+            return ApiResponse::successResponse($token);
+        } else {
+            // Authentication failed
+            if ($user) {
+                $user->login_attempts++;
+                $user->save();
+
+                $attemptsRemain = 3 - $user->login_attempts;
+                return ApiResponse::failureResponse('Sai mật khẩu bạn còn ' . $attemptsRemain . ' lần thử');
+            }
             return ApiResponse::failureResponse('Số điện thoại hoặc mật khẩu không đúng');
         }
-
-        $user = $request->user();
-        $currentToken = $request->user()->tokens();
-
-        if ($currentToken && $user->is_sercurity !== true) {
-            // Revoke all tokens except the current one
-            $user->tokens()->delete();
-        }
-        $user->device_token = $request->device_token;
-        $user->save();
-        
-        $token = $user->createToken('myapptoken')->accessToken;
-
-        return ApiResponse::successResponse($token);
     }
 
     public function checkPassword(Request $request)
