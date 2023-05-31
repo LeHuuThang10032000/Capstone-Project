@@ -56,9 +56,9 @@ const Index = function () {
       } else {
         const __result = dispatch(await Login(phoneNumber, password));
         setDisabled(false);
-        if (!__result.payload) {
+        if (__result.error) {
           setVisibleWarning(true);
-          setPhoneError('Mật khẩu không chính xác');
+          setPhoneError(__result.error); // Display the error message from __result.error
         }
       }
     } catch (e) {

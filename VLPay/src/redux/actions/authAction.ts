@@ -34,12 +34,13 @@ export const Login = async (phoneNumber: string, password: string) => {
       payload: res.data.data,
     };
   } catch (e) {
-    console.log(e);
+    console.log('New error', e.error);
+    return {
+      type: LOGIN,
+      payload: null,
+      error: e.error, // Add the error property with the value from e.error
+    };
   }
-  return {
-    type: LOGIN,
-    payload: null,
-  };
 };
 
 export const Logout = async () => {
