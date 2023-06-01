@@ -32,6 +32,7 @@ class OrganiserController extends Controller
             $user->save();
         } else {
             $user->status = 'active';
+            $user->password = bcrypt('123456');
             $user->login_attempts = 0;
             $user->save();
         }
