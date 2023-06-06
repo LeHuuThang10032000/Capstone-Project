@@ -160,7 +160,8 @@ const Index = () => {
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('DetailStore', {
-                    id: store.id,
+                    store_id: store.id,
+                    status: store?.status,
                   });
                 }}>
                 <HStack key={store.id}>

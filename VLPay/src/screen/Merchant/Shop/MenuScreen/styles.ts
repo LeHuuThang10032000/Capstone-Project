@@ -103,7 +103,7 @@ export default StyleSheet.create({
     right: 15,
     bottom: -20,
     padding: 16,
-    zIndex: 10000000,
+    zIndex: 1000000000,
   },
   input: {
     borderWidth: 0,

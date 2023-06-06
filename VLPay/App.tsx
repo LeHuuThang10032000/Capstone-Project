@@ -8,9 +8,7 @@ import {store} from './src/redux/store';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {AppProvider} from './src/context/GlobalContext';
-import messaging from '@react-native-firebase/messaging';
-import {View} from 'react-native';
-import {UText} from './src/components/UText';
+import {ClickOutsideProvider} from 'react-native-click-outside';
 
 const theme = {
   ...DefaultTheme,
@@ -30,16 +28,18 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   return (
-    <AppProvider>
-      <NativeBaseProvider>
-        <Provider store={store}>
-          <PaperProvider>
-            <AppRouter />
-          </PaperProvider>
-        </Provider>
-        <Toast position="top" bottomOffset={20} />
-      </NativeBaseProvider>
-    </AppProvider>
+    <ClickOutsideProvider>
+      <AppProvider>
+        <NativeBaseProvider>
+          <Provider store={store}>
+            <PaperProvider>
+              <AppRouter />
+            </PaperProvider>
+          </Provider>
+          <Toast position="top" bottomOffset={20} />
+        </NativeBaseProvider>
+      </AppProvider>
+    </ClickOutsideProvider>
   );
 };
 

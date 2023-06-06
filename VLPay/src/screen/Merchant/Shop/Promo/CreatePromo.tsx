@@ -774,8 +774,6 @@ const CreatePromo = () => {
                                 'Giới hạn phiếu giảm giá không được bé hơn 1 ',
                               );
                             }
-                          } else {
-                            setAmount(0);
                           }
                         }}
                         onChangeText={text => {
@@ -854,9 +852,8 @@ const CreatePromo = () => {
                 bottom: 20,
               }}
               onPress={async () => {
-                console.log(dateEnd >= dateStart);
                 if (isLimit) {
-                  if (!limitError && limit > 0) {
+                  if (!limitError) {
                     setPage(PROMOS[3]);
                   } else {
                     setGeneralError('Vui lòng kiểm tra lại!');

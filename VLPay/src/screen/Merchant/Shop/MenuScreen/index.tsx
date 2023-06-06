@@ -22,6 +22,8 @@ import Icons from '../../../../components/Icons';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {UText} from '../../../../components/UText';
 import Lottie from 'lottie-react-native';
+import OutsideClickHandler from 'react-outside-click-handler';
+import {useClickOutside} from 'react-native-click-outside';
 
 type Props = {};
 const MenuScreen = (props: Props) => {
@@ -37,6 +39,7 @@ const MenuScreen = (props: Props) => {
 
   // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const ref = useClickOutside<Text>(() => setVisible(false));
 
   // variables
   const snapPoints = useMemo(() => ['10%', '50%'], []);
@@ -92,12 +95,6 @@ const MenuScreen = (props: Props) => {
 
     return () => backHandler.remove();
   }, []);
-
-  const showMenu = (productId, e) => {
-    setSelectedProduct(productId);
-    setVisible(true);
-    setMenuPosition({x: e.nativeEvent.pageX, y: e.nativeEvent.pageY});
-  };
 
   useEffect(() => {
     fetchData();
@@ -156,7 +153,7 @@ const MenuScreen = (props: Props) => {
             {selectedProduct === item.id && (
               <>
                 {visible && (
-                  <View style={[styles.menuContainer]}>
+                  <View style={[styles.menuContainer]} ref={ref}>
                     <TouchableOpacity
                       onPress={() => {
                         const item = {
@@ -209,7 +206,6 @@ const MenuScreen = (props: Props) => {
                               },
                             },
                           );
-                          console.log('Ok rui nha bro');
                           fetchData();
                         } catch (e) {
                           // setVisibleWarning(true);
@@ -224,13 +220,17 @@ const MenuScreen = (props: Props) => {
               </>
             )}
             <TouchableWithoutFeedback
-              onPress={e => showMenu(item.id, e)}
-              style={{
-                height: 20,
-                flexDirection: 'row',
-                alignItems: 'center',
+              onPress={e => {
+                setSelectedProduct(item.id);
+                setVisible(true);
               }}>
-              <Text style={{fontSize: 20}}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  width: 30,
+                  height: 10,
+                  textAlign: 'right',
+                }}>
                 <Icons.ThreeHorizontalDot />
               </Text>
             </TouchableWithoutFeedback>
@@ -255,128 +255,119 @@ const MenuScreen = (props: Props) => {
             />
           </Center>
         ) : (
-          <View style={{backgroundColor: '#ffffff', flex: 1}}>
-            <Image
-              source={{uri: storeInfo.image}}
-              style={{width: '100%', height: '25%'}}
-              alt={'img'}
-              resizeMode={'cover'}
-            />
-            <Text style={styles.titles}>{storeInfo.name}</Text>
-            {products[0] && (
-              <FlatList
-                data={products}
-                keyExtractor={keyExtractor}
-                renderItem={renderItem}
-                contentContainerStyle={{
-                  paddingHorizontal: 16,
-                  paddingBottom: 200,
-                  backgroundColor: '#ffffff',
-                }}
+          <>
+            <View style={{backgroundColor: '#ffffff', flex: 1}}>
+              <Image
+                source={{uri: storeInfo.image}}
+                style={{width: '100%', height: '25%'}}
+                alt={'img'}
+                resizeMode={'cover'}
               />
-            )}
-            <View
-              style={{
-                backgroundColor: '#ffffff',
-                width: '100%',
-                position: 'absolute',
-                bottom: 0,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                padding: 20,
-              }}>
-              <TouchableOpacity
-                onPress={handlePresentModalPress}
+              <Text style={styles.titles}>{storeInfo.name}</Text>
+              {products[0] && (
+                <FlatList
+                  data={products}
+                  keyExtractor={keyExtractor}
+                  renderItem={renderItem}
+                  contentContainerStyle={{
+                    paddingHorizontal: 16,
+                    paddingBottom: 200,
+                    backgroundColor: '#ffffff',
+                  }}
+                />
+              )}
+              <View
                 style={{
-                  backgroundColor: '#B5EAD8',
+                  backgroundColor: '#ffffff',
                   width: '100%',
-                  paddingVertical: 10,
-                  borderRadius: 10,
+                  position: 'absolute',
+                  bottom: 0,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  padding: 20,
                 }}>
-                <UText
+                <TouchableOpacity
+                  onPress={handlePresentModalPress}
                   style={{
-                    alignSelf: 'center',
-                    color: 'black',
-                    fontWeight: 'bold',
+                    backgroundColor: '#B5EAD8',
+                    width: '100%',
+                    paddingVertical: 10,
+                    borderRadius: 10,
                   }}>
-                  Thêm món mới hoặc danh sách
-                </UText>
-              </TouchableOpacity>
-            </View>
-            <BottomSheetModal
-              ref={bottomSheetModalRef}
-              index={1}
-              snapPoints={snapPoints}
-              onChange={handleSheetChanges}>
-              <View style={styles.contentContainer}>
-                <Text style={{fontWeight: '700', fontSize: 16, color: 'black'}}>
-                  Thêm danh sách / món mới
-                </Text>
-                <TouchableOpacity
-                  style={styles.btnTab}
-                  onPress={() => {
-                    const item = {
-                      products: products,
-                      addons: addons,
-                      store_id: store_di,
-                      isAddCategories: true,
-                    };
-                    navigation.navigate('AddItems', {
-                      data: item,
-                    });
-                    bottomSheetModalRef.current?.close();
-                  }}>
-                  <UText>Thêm danh sách mới</UText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.btnTab}
-                  onPress={() => {
-                    const item = {
-                      products: products,
-                      addons: addons,
-                      store_id: store_di,
-                      isUpdated: false,
-                    };
-                    navigation.navigate('ProductMerchant', {
-                      data: item,
-                    });
-                    bottomSheetModalRef.current?.close();
-                  }}>
-                  <UText>Thêm món mới</UText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.btnTab}
-                  onPress={() => {
-                    const item = {
-                      products: products,
-                      addons: addons,
-                      store_id: store_di,
-                      isAddCategories: false,
-                    };
-                    navigation.navigate('AddItems', {
-                      data: item,
-                    });
-                    bottomSheetModalRef.current?.close();
-                  }}>
-                  <UText>Món thêm</UText>
+                  <UText
+                    style={{
+                      alignSelf: 'center',
+                      color: 'black',
+                      fontWeight: 'bold',
+                    }}>
+                    Thêm món mới hoặc danh sách
+                  </UText>
                 </TouchableOpacity>
               </View>
-            </BottomSheetModal>
-          </View>
+              <BottomSheetModal
+                ref={bottomSheetModalRef}
+                index={1}
+                snapPoints={snapPoints}
+                onChange={handleSheetChanges}>
+                <View style={styles.contentContainer}>
+                  <Text
+                    style={{fontWeight: '700', fontSize: 16, color: 'black'}}>
+                    Thêm danh sách / món mới
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.btnTab}
+                    onPress={() => {
+                      const item = {
+                        products: products,
+                        addons: addons,
+                        store_id: store_di,
+                        isAddCategories: true,
+                      };
+                      navigation.navigate('AddItems', {
+                        data: item,
+                      });
+                      bottomSheetModalRef.current?.close();
+                    }}>
+                    <UText>Thêm danh sách mới</UText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.btnTab}
+                    onPress={() => {
+                      const item = {
+                        products: products,
+                        addons: addons,
+                        store_id: store_di,
+                        isUpdated: false,
+                      };
+                      navigation.navigate('ProductMerchant', {
+                        data: item,
+                      });
+                      bottomSheetModalRef.current?.close();
+                    }}>
+                    <UText>Thêm món mới</UText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.btnTab}
+                    onPress={() => {
+                      const item = {
+                        products: products,
+                        addons: addons,
+                        store_id: store_di,
+                        isAddCategories: false,
+                      };
+                      navigation.navigate('AddItems', {
+                        data: item,
+                      });
+                      bottomSheetModalRef.current?.close();
+                    }}>
+                    <UText>Món thêm</UText>
+                  </TouchableOpacity>
+                </View>
+              </BottomSheetModal>
+            </View>
+          </>
         )}
       </BottomSheetModalProvider>
-      {/* {visible && (
-        <TouchableOpacity
-          style={{
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            backgroundColor: 'red',
-          }}
-          onPress={() => {
-            setVisible(false);
-          }}></TouchableOpacity>
-      )} */}
     </View>
   );
 };

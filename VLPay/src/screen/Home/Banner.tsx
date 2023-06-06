@@ -155,24 +155,6 @@ const Banner = (props: Props) => {
                       }
                     }}>
                     <View style={styles.buttonTranfer}>
-                      <Image
-                        source={require('../../assets/img/scan.png')}
-                        style={{width: 52, height: 52}}
-                        alt={'just image'}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                  <Text style={styles.text}>GỬI XE 3K</Text>
-                </View>
-              )}
-
-              {props?.isSecurity !== 0 && (
-                <View style={styles.wrapperButton}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('QRCodeCheck', props.wallet);
-                    }}>
-                    <View style={styles.buttonTranfer}>
                       <View
                         style={{
                           backgroundColor: 'white',
@@ -188,6 +170,24 @@ const Banner = (props: Props) => {
                           alt={'just image'}
                         />
                       </View>
+                    </View>
+                  </TouchableOpacity>
+                  <Text style={styles.text}>GỬI XE 3K</Text>
+                </View>
+              )}
+
+              {props?.isSecurity !== 0 && (
+                <View style={styles.wrapperButton}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('QRCodeCheck', props.wallet);
+                    }}>
+                    <View style={styles.buttonTranfer}>
+                      <Image
+                        source={require('../../assets/img/scan.png')}
+                        style={{width: 52, height: 52}}
+                        alt={'just image'}
+                      />
                     </View>
                   </TouchableOpacity>
                   <Text style={styles.text}>KIỂM TRA MÃ</Text>
