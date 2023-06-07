@@ -24,7 +24,7 @@
         <p>Tài khoản bảo vệ:</p>
         <form id="sercurity" class="row g-3">
             @csrf
-            <select name="sercurities[]" id="sercurity" required multiple=true class="js-example-basic-multiple form-control" style="width: 100%">
+            <select name="securities[]" id="sercurity" required multiple=true class="js-example-basic-multiple form-control" style="width: 100%">
                 @foreach($users as $user)
                 <option value="{{ $user->id }}" {{ ($user->is_sercurity) ? 'selected="selected"' : '' }}>
                     {{ $user->phone }}({{ $user->f_name }})
@@ -66,6 +66,33 @@
         });
         $.post({
             url: "{{route('organiser.parking.fee')}}",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                $('#modelImage').attr('src', data.img);
+                $('#modalMessage').html(data.message);
+                $('#successModal').modal('show');
+            },
+            error: function(xhr, status, error) {
+                $('#modelImage').attr('src', "{{ asset('img/error.png') }}");
+                $('#modalMessage').html(error);
+                $('#successModal').modal('show');
+            }
+        });
+    });
+
+    $('#sercurity').on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.post({
+            url: "{{route('organiser.parking.security')}}",
             data: formData,
             cache: false,
             contentType: false,

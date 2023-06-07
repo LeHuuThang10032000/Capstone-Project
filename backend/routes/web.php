@@ -64,5 +64,6 @@ Route::group(['middleware' => ['auth', 'role:organiser']], function () {
     Route::group(['prefix' => 'parking', 'as' => 'organiser.parking.'], function () {
         Route::get('', [OrganiserController::class, 'parking'])->name('index');
         Route::post('fee', [OrganiserController::class, 'updateFee'])->name('fee');
+        Route::post('security', [OrganiserController::class, 'updateSecurity'])->name('security');
     });
 });

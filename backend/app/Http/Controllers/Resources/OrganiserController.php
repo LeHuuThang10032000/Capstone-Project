@@ -537,7 +537,28 @@ class OrganiserController extends Controller
             ]);
             return response()->json(['message' => 'Cập nhật phí gửi xe thành công', 'img' => asset('img/success.png')]);
         } catch(Exception $e) {
-            return response()->json(['message' => 'Cập nhật phí gửi không xe thành công. Đã có lỗi xảy ra', 'img' => asset('img/error.png')]);
+            return response()->json(['message' => 'Cập nhật phí gửi xe không thành công. Đã có lỗi xảy ra', 'img' => asset('img/error.png')]);
+        }
+    }
+
+    public function updateSecurity(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'securities' => 'required|array',
+        ], [
+            'securities.required' => 'Vui lòng chọn số điện thoại để cấp quyền bảo vệ',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json(['message' => $validate->messages()->first(), 'img' => asset('img/error.png')]);
+        }
+
+        try {
+            $ids = $request->securities;
+            User::whereIn('id', $ids)->update(["is_sercurity" => 1]);
+            return response()->json(['message' => 'Cập nhật tài khoản bảo vệ thành công', 'img' => asset('img/success.png')]);
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'img' => asset('img/error.png')]);
         }
     }
 }
